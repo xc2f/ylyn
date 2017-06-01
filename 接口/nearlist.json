@@ -1,0 +1,41 @@
+[{
+  "shop_id": 1,
+  "shop_name": "一枚时光咖啡",
+  "desc_pic": "",
+  "in_sales": true,
+  "man_in": 20,
+  "female_in": 15,
+  "distance": 200
+}, {
+  "shop_id": 2,
+  "shop_name": "一枚时光咖啡",
+  "desc_pic": "",
+  "in_sales": false,
+  "man_in": 20,
+  "female_in": 15,
+  "distance": 200
+}, {
+  "shop_id": 3,
+  "shop_name": "一枚时光咖啡",
+  "desc_pic": "",
+  "in_sales": true,
+  "man_in": 20,
+  "female_in": 15,
+  "distance": 200
+}, {
+  "shop_id": 4,
+  "shop_name": "一枚时光咖啡",
+  "desc_pic": "",
+  "in_sales": true,
+  "man_in": 20,
+  "female_in": 15,
+  "distance": 900
+}, {
+  "shop_id": 5,
+  "shop_name": "一枚时光咖啡",
+  "desc_pic": "",
+  "in_sales": true,
+  "man_in": 20,
+  "female_in": 15,
+  "distance": 1200
+}]

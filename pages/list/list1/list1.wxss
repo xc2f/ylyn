@@ -1,0 +1,9 @@
+button {
+    width: 700rpx;
+    margin: 200rpx auto 0 auto;
+}
+map {
+    width: 700rpx;
+    height: 600rpx;
+    margin: 30rpx auto;
+}

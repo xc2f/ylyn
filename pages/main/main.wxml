@@ -1,0 +1,115 @@
+<!--pages/main/main.wxml-->
+<view class="container">
+
+  <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ systemInfo.windowWidth }}px">
+    <view class="wrap">
+      <view class="shopBanner" style="width: {{ systemInfo.windowWidth }}px">
+        <view class="shopAvatar">
+          <image src="/images/banner.png"></image>
+        </view>
+        <view class="shopName">{{shop.shop_name}}</view>
+        <view class="flipConner" wx:if="{{showMeSwitch}}" bindtap="switchToMe" style="left: {{ systemInfo.windowWidth-49 }}px">
+          <image class="flipConnerImg" src="/images/flipConner.png"></image>
+          <text class="flipConnerText">我的</text>
+        </view>
+      </view>
+
+      <view class="userBanner" style="width: {{ systemInfo.windowWidth }}px; left: {{ systemInfo.windowWidth }}px">
+        <view class="shopAvatar">
+          <image src="/images/banner.png"></image>
+        </view>
+        <view class="shopName">人名</view>
+        <view class="flipConner" wx:if="{{showShopSwitch}}" bindtap="switchToShop" style="left: {{ systemInfo.windowWidth-49 }}px">
+          <image class="flipConnerImg" src="/images/flipConner.png"></image>
+          <text class="flipConnerText">首页</text>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <scroll-view scroll-y="true" class="body" style="height: {{ systemInfo.windowHeight-170 }}px">
+    <import src="/pages/common/tableList/tableList" />
+    <template is="tableList" data="{{tableData}}" />
+  </scroll-view>
+
+  <!--注册 begin-->
+  <view class="register" wx:if="{{registerShow}}">
+
+    <view class="main">
+      <view class="block nickName" animation="{{nickNameAnimation}}">
+        <view class="section">
+          <text class="title">昵称</text>
+          <input class="input" placeholder="NickName" value="{{wxUserInfo.nickName}}" cursor-spacing="50" />
+        </view>
+        <view class="down" bindtap="tapNickName">
+          <image class="img" src="/images/arrowDown.png"></image>
+        </view>
+      </view>
+      <view class="block gender" animation="{{genderAnimation}}">
+        <view class="section">
+          <text class="title">性别</text>
+          <!--<picker class="picker" range="{{genderRange}}" value="0"></picker>-->
+          <radio-group class="genderRadio" bindchange="radioChange">
+            <label class="radio" wx:for="{{genderRange}}" wx:key="{{title}}">
+              <radio value="{{item.title}}" checked="{{wxUserInfo.gender==item.gender ? 'checked' : false }}" />{{item.value}}
+            </label>
+          </radio-group>
+        </view>
+        <view class="down" bindtap="tapGender">
+          <image class="img" src="/images/arrowDown.png"></image>
+        </view>
+      </view>
+      <view class="block age" animation="{{ageAnimation}}">
+        <view class="section">
+          <text class="title">年龄</text>
+          <slider class="slider" min="17" max="100" step="1" value="20" show-value />
+        </view>
+        <view class="down" bindtap="tapAge">
+          <image class="img" src="/images/arrowDown.png"></image>
+        </view>
+      </view>
+      <view class="block tall" animation="{{tallAnimation}}">
+        <view class="section">
+          <text class="title">身高</text>
+          <input class="input" placeholder="Tall" cursor-spacing="50" />
+        </view>
+        <view class="down" bindtap="tapTall">
+          <image class="img" src="/images/arrowDown.png"></image>
+        </view>
+      </view>
+      <view class="block intro" animation="{{introAnimation}}">
+        <view class="section">
+          <text class="title">简介</text>
+          <textarea class="textarea" wx:if="{{textareaShow}}" cursor-spacing="50" />
+        </view>
+        <view class="down" bindtap="tapIntro">
+          <image class="img" src="/images/arrowDown.png"></image>
+        </view>
+      </view>
+      <view class="block avatar" animation="{{avatarAnimation}}">
+        <view class="avatarShow" bindtap="pickAvatar" animation="{{avatarShowAnimation}}" wx:if="{{avatarShow}}">
+          <image src="{{avatarPath!==null ? avatarPath : wxUserInfo.avatarUrl}}" class="img"></image>
+          <view class="userName">
+            <text>{{wxUserInfo.nickName}}</text>
+          </view>
+        </view>
+        <view class="section">
+          <text class="title">头像</text>
+          <button class="pickAvatar" bindtap="pickAvatar" type="primary">选择头像</button>
+        </view>
+        <!--<view class="down" bindtap="tapAvatar">
+          <image class="img" src="/images/arrowDown.png"></image>
+        </view>-->
+      </view>
+    </view>
+    <!--main end-->
+
+    <view class="exitRegister" bindtap="exitRegister">
+      <text>退出注册</text>
+    </view>
+
+  </view>
+  <!--注册 end-->
+</view>
+<!--container end-->

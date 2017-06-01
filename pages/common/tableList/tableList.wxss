@@ -1,0 +1,5 @@
+/* tableList.wxss */
+
+.test {
+  color: red
+}

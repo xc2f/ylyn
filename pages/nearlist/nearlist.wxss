@@ -1,0 +1,76 @@
+/* pages/nearlist/nearlist.wxss */
+
+.container {
+  background: #eee;
+}
+.head {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.head .fa {
+  padding-right: 10px;
+}
+.shopList .item {
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.shopList .item image {
+  flex: 1.3;
+  height: 100px;
+}
+
+.shopList .item .right {
+  flex: 2;
+  padding: 10px 10px 10px 20px;
+  position: relative;
+}
+.shopList .item .shopName {
+  font-weight: bold;
+}
+/*活动标签*/
+.shopList .item .right .inSales {
+  position: absolute;
+  right: -25px;
+  top: -25px;
+  background: rgb(255, 150, 0);
+  /*padding: 10px;*/
+  width: 50px;
+  height: 50px;
+  padding-bottom: 0;
+  transform: rotate(45deg);
+}
+.shopList .item .right .inSaleText {
+  position: absolute;
+  bottom: 0;
+  left:12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.shopList .item .persons {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 10px;
+  margin-top: 30px;
+}
+.shopList .item .man {
+  height: 25px;
+  line-height: 25px;
+}
+.shopList .item .distance {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.shopList .item .fa text {
+  padding-left: 7px;
+  color: #222;
+}

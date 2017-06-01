@@ -1,0 +1,59 @@
+<!--pages/main/main.wxml-->
+<view class="container">
+  <view class="banner" style="height: 200px;">
+    <image src="/images/banner.png"></image>
+  </view>
+  <scroll-view scroll-y="true" class="body" style="height: {{ bH }}px">
+    <!--<view style="height: 200px">
+      <text>123</text>
+    </view>
+    <view style="height: 200px">
+      <text>123</text>
+    </view>
+    <view style="height: 200px">
+      <text>123</text>
+    </view>-->
+    <view style="height: 200px">
+      <text>111</text>
+    </view>
+    <view style="height: 200px">
+      <text>111</text>
+    </view>
+    <view style="height: 200px">
+      <text>111</text>      
+    </view>
+    <view style="height: 100px">
+      <button bindtap="register">注册</button>
+    </view>
+    <view style="height: 100px">
+      <text>111</text>    
+    </view>
+  </scroll-view>
+
+  <!--注册 begin-->
+  <view class="register" style="">
+    <!--main begin-->
+    <view class="main">
+      <!--block begin-->
+      <view class="block" animation="{{animateRotate}}">
+        <view class="item nickName">
+          <text>昵称</text>
+        </view>
+        <view class="item gender">
+          <text>性别</text>
+        </view>
+        <view class="item age">
+          <text>年龄</text>
+        </view>
+      </view>
+      <!--block end-->
+      <view class="input">
+        <text>123</text>
+      </view>
+    </view>
+      <!--main end-->
+  </view>
+  <!--注册 end-->
+  <button bindtap="rotateStep">下一步</button>
+</view>
+<!--container end-->

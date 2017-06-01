@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/main/main"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#eee"
+  }
+}

@@ -1,0 +1,21 @@
+<!--<scroll-view scroll-x="true" style="width: 100%;">
+  <view style="width: 200px">
+    <image src="/images/banner.png" style="width: 100%"></image>
+  </view>
+  <view style="width: 200px">
+    <image src="/images/banner.png" style="width: 100%"></image>
+  </view>
+  <view style="width: 200px">
+    <image src="/images/banner.png" style="width: 100%"></image>
+  </view>
+  <view style="width: 200px">
+    <image src="/images/banner.png" style="width: 100%"></image>
+  </view>
+</scroll-view>-->
+
+<scroll-view class="scroll-view_H" scroll-x="true" style="width: 100%"  bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll"  scroll-left="{{scrollLeft}}">
+    <view style="background: red" class="scroll-view-item_H bc_green"></view>
+    <view style="background: green" id="red"  class="scroll-view-item_H bc_red"></view>
+    <view style="background: blue" id="yellow" class="scroll-view-item_H bc_yellow"></view>
+    <view style="background: yellow" id="blue" class="scroll-view-item_H bc_blue"></view>
+</scroll-view>

@@ -15,8 +15,8 @@ Page({
     avatarAnimation: {},
     textareaShow: false,
     genderRange: [
-      {title: 'man', value: '男', gender: 1},
-      {title: 'female', value: '女', gender: 2}
+      { title: 'man', value: '男', gender: 1 },
+      { title: 'female', value: '女', gender: 2 }
     ],
 
     wxUserInfo: {},
@@ -27,21 +27,21 @@ Page({
     exitRegisterText: '退出注册',
 
     tableData: [
-      { 
+      {
         tableIndex: 1,
         userList: [
           { img: '/images/EatHow.png', name: 'xm' },
           { img: '/images/EatHow.png', name: 'as' },
         ]
       },
-      { 
+      {
         tableIndex: 3,
         userList: [
           { img: '/images/EatHow.png', name: 'haha' },
           { img: '/images/EatHow.png', name: 'hasd' },
-          ]
+        ]
       },
-      { 
+      {
         tableIndex: 4,
         userList: [
           { img: '/images/EatHow.png', name: 'haha' },
@@ -52,47 +52,91 @@ Page({
     shop: {},
     showMeSwitch: true,
     showShopSwitch: false,
-    bannerSwitchAnimation: {}
+    bannerSwitchAnimation: {},
+    bannerSwitchTranslate: {}
   },
 
 
   switchToMe() {
-    this.setData({
-      showMeSwitch: false,
-      bannerSwitchAnimation: this.bannerSwitchToMe(),
-      showShopSwitch: true
-    })
+    let that = this;
+    // that.setData({
+    //   bannerSwitchTranslate: that.bannerSwitchTranslateIn()
+    // })
+    // setTimeout(function(){
+
+      that.setData({
+        showMeSwitch: false,
+        bannerSwitchAnimation: that.bannerSwitchToMe(),
+        showShopSwitch: true
+      })
+
+    // }, 800)
+    // setTimeout(function () {
+    //   that.setData({
+    //     bannerSwitchTranslate: that.bannerSwitchTranslateOut()
+    //   })
+    // }, 2000)
   },
 
-  switchToShop(){
-    this.setData({
-      showShopSwitch: false,
-      bannerSwitchAnimation: this.bannerSwitchToShop(),
-      showMeSwitch: true,
-    })
- },
- 
- bannerSwitchToMe() {
-  //  let that = this;
+  switchToShop() {
+    let that = this;
+    // that.setData({
+    //   bannerSwitchTranslate: that.bannerSwitchTranslateIn()
+    // })
+    // setTimeout(function(){
+
+      that.setData({
+        showShopSwitch: false,
+        bannerSwitchAnimation: that.bannerSwitchToShop(),
+        showMeSwitch: true,
+      })
+      
+    // }, 800)
+    // setTimeout(function () {
+    //   that.setData({
+    //     bannerSwitchTranslate: that.bannerSwitchTranslateOut()
+    //   })
+    // }, 2000)
+  },
+
+  bannerSwitchTranslateIn() {
     var animation = wx.createAnimation({
-      duration: 2000,
+      duration: 800,
+      timingFunction: "ease",
+      delay: 0
+    })
+    return animation.translateZ(-170).step().export();
+  },
+  bannerSwitchTranslateOut() {
+    var animation = wx.createAnimation({
+      duration: 800,
+      timingFunction: "ease",
+      delay: 0
+    })
+    return animation.translateZ(0).step().export();
+  },
+
+  bannerSwitchToMe() {
+    //  let that = this;
+    var animation = wx.createAnimation({
+      duration: 700,
       timingFunction: "ease",
       delay: 0,
       transformOrigin: this.data.systemInfo.windowWidth / 2 + 'px'
     })
-    return animation.opacity(0).rotateY(180).opacity(1).step().export();
+    return animation.scale(0.7).step({ duration: 300 }).opacity(0).rotateY(180).opacity(1).step({ duration: 700 }).scale(1).step({ duration: 300 }).export();
   },
 
- bannerSwitchToShop() {
-  //  let that = this;
-   var animation = wx.createAnimation({
-     duration: 2000,
-     timingFunction: "ease",
-     delay: 0,
-     transformOrigin: this.data.systemInfo.windowWidth / 2 + 'px'
-   })
-   return animation.opacity(0).rotateY(0).opacity(1).step().export();
- },
+  bannerSwitchToShop() {
+    //  let that = this;
+    var animation = wx.createAnimation({
+      duration: 700,
+      timingFunction: "ease",
+      delay: 0,
+      transformOrigin: this.data.systemInfo.windowWidth / 2 + 'px'
+    })
+    return animation.opacity(0).rotateY(0).opacity(1).step().export();
+  },
 
   register() {
     this.setData({
@@ -126,7 +170,7 @@ Page({
       data: {
         shopid: options.shopid
       },
-      success: function(res) {
+      success: function (res) {
         console.log('店铺id: ' + options.shopid + '响应已收到')
         that.setData({
           shop: res.data
@@ -152,7 +196,7 @@ Page({
 
     wx.getStorage({
       key: 'avatar',
-      success: function(res) {
+      success: function (res) {
         that.setData({
           avatarPath: res.data
         })
@@ -161,10 +205,10 @@ Page({
 
     // 获取微信用户信息用作注册预填
     wx.login({
-      success: function(res) {
-        if(res.code) {
+      success: function (res) {
+        if (res.code) {
           wx.getUserInfo({
-            success: function(res) {
+            success: function (res) {
               that.setData({
                 wxUserInfo: res.userInfo
               })
@@ -173,7 +217,7 @@ Page({
         }
       }
     })
-    
+
   },
 
 
@@ -190,7 +234,7 @@ Page({
       timingFunction: "ease",
       delay: 0,
     })
-    return animation.opacity(0.7).translateY(-500).rotate(Math.random()*180).scale(Math.random()).step().export();
+    return animation.opacity(0.7).translateY(-500).rotate(Math.random() * 180).scale(Math.random()).step().export();
   },
 
   introHeightenAnimation() {
@@ -261,7 +305,7 @@ Page({
 
         // 先删除保存的文件路径，保证同时间只保存一张头像
         let path = res.tempFilePaths[0]
-        if ( that.data.avatarPath !== null) {
+        if (that.data.avatarPath !== null) {
           wx.removeSavedFile({
             filePath: that.data.avatarPath,
           })

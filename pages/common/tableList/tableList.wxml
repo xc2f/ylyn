@@ -4,10 +4,7 @@
 <template name="tableList">
   <block wx:for="{{tableData}}" wx:key="{{item}}">
     <view style="height: 300px">
-      <template is="eachTableList" data="{{item}}"></template>
+      <template is="eachTableList" data="{{item: item, isRegister: isRegister}}"></template>
     </view>
   </block>
-  <view style="height: 100px">
-    <button bindtap="register">注册</button>
-  </view>
 </template>

@@ -15,11 +15,16 @@ Page({
     avatarAnimation: {},
     textareaShow: false,
     genderRange: [
-      { title: 'man', value: '男', gender: 1 },
-      { title: 'female', value: '女', gender: 2 }
+      { title: '男', value: 1 },
+      { title: '女', value: 2 }
     ],
 
     wxUserInfo: {},
+    userInfo: {
+      isRegister: false
+    },
+    tempChange: null,
+
     avatarShow: false,
     avatarShowAnimation: {},
     avatarPath: null,
@@ -64,11 +69,11 @@ Page({
     // })
     // setTimeout(function(){
 
-      that.setData({
-        showMeSwitch: false,
-        bannerSwitchAnimation: that.bannerSwitchToMe(),
-        showShopSwitch: true
-      })
+    that.setData({
+      showMeSwitch: false,
+      bannerSwitchAnimation: that.bannerSwitchToMe(),
+      showShopSwitch: true
+    })
 
     // }, 800)
     // setTimeout(function () {
@@ -85,12 +90,12 @@ Page({
     // })
     // setTimeout(function(){
 
-      that.setData({
-        showShopSwitch: false,
-        bannerSwitchAnimation: that.bannerSwitchToShop(),
-        showMeSwitch: true,
-      })
-      
+    that.setData({
+      showShopSwitch: false,
+      bannerSwitchAnimation: that.bannerSwitchToShop(),
+      showMeSwitch: true,
+    })
+
     // }, 800)
     // setTimeout(function () {
     //   that.setData({
@@ -99,22 +104,23 @@ Page({
     // }, 2000)
   },
 
-  bannerSwitchTranslateIn() {
-    var animation = wx.createAnimation({
-      duration: 800,
-      timingFunction: "ease",
-      delay: 0
-    })
-    return animation.translateZ(-170).step().export();
-  },
-  bannerSwitchTranslateOut() {
-    var animation = wx.createAnimation({
-      duration: 800,
-      timingFunction: "ease",
-      delay: 0
-    })
-    return animation.translateZ(0).step().export();
-  },
+  // bannertranslate效果，暂不用
+  // bannerSwitchTranslateIn() {
+  //   var animation = wx.createAnimation({
+  //     duration: 800,
+  //     timingFunction: "ease",
+  //     delay: 0
+  //   })
+  //   return animation.translateZ(-170).step().export();
+  // },
+  // bannerSwitchTranslateOut() {
+  //   var animation = wx.createAnimation({
+  //     duration: 800,
+  //     timingFunction: "ease",
+  //     delay: 0
+  //   })
+  //   return animation.translateZ(0).step().export();
+  // },
 
   bannerSwitchToMe() {
     //  let that = this;
@@ -143,7 +149,13 @@ Page({
       registerShow: true
     })
   },
-  exitRegister() {
+  exitRegister(e) {
+    let target = e.currentTarget.dataset.exitRegisterText;
+    if (target === '完成注册') {
+      this.setData({
+        'userInfo.isRegister': true,
+      })
+    }
     this.setData({
       registerShow: false
     })
@@ -218,6 +230,7 @@ Page({
       }
     })
 
+    // end onload
   },
 
 
@@ -228,6 +241,7 @@ Page({
 
   },
 
+  // 注册界面的卡片动画
   exitAnimation() {
     var animation = wx.createAnimation({
       duration: 1000,
@@ -258,36 +272,73 @@ Page({
     return animation.opacity(1).step().export();
   },
 
-  tapNickName() {
+  changeHandle(e) {
+    console.log(e)
     this.setData({
+      tempChange: e.detail.value
+    })
+  },
+
+  tapNickName(e) {
+    this.setData({
+      'userInfo.nickName': this.data.tempChange !== null ? this.data.tempChange : this.data.wxUserInfo.nickName,
       nickNameAnimation: this.exitAnimation()
     })
+
+    // 保证tempChange被使用后清除
+    this.setData({
+      tempChange: null
+    })
+
   },
 
   tapGender() {
     this.setData({
+      'userInfo.gender': this.data.tempChange !== null ? parseInt(this.data.tempChange) : this.data.wxUserInfo.gender,
       genderAnimation: this.exitAnimation()
     })
-  },
-  tapAge() {
+
+    // 保证tempChange被使用后清除
     this.setData({
-      ageAnimation: this.exitAnimation()
+      tempChange: null
     })
   },
+
+
+  tapAge() {
+    this.setData({
+      'userInfo.age': this.data.tempChange !== null ? this.data.tempChange : 20,
+      ageAnimation: this.exitAnimation()
+    })
+    // 保证tempChange被使用后清除
+    this.setData({
+      tempChange: null
+    })
+  },
+
   tapTall() {
     this.setData({
+      'userInfo.tall': this.data.tempChange !== null ? parseInt(this.data.tempChange) : null,
       tallAnimation: this.exitAnimation(),
       introAnimation: this.introHeightenAnimation(),
       textareaShow: true
     })
+
+    // 保证tempChange被使用后清除
+    this.setData({
+      tempChange: null
+    })
   },
+
   tapIntro() {
     this.setData({
+      'userInfo.intro': this.data.tempChange !== null ? this.data.tempChange : '',
       introAnimation: this.exitAnimation(),
       avatarShowAnimation: this.avatarFadeShow(),
       exitRegisterText: '完成注册'
     })
   },
+
   tapAvatar() {
     this.setData({
       avatarAnimation: this.exitAnimation()
@@ -321,6 +372,7 @@ Page({
             })
             // 更新
             that.setData({
+              'userInfo.avatar': res.savedFilePath,
               avatarPath: res.savedFilePath
             })
           }
@@ -373,5 +425,17 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+
+  userTap(e) {
+    if (this.data.userInfo.isRegister) {
+      console.log('用户id: ' + e.currentTarget.dataset.userid)
+    } else {
+      this.setData({
+        registerShow: true
+      })
+    }
   }
+
 })

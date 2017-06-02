@@ -224,3 +224,18 @@
   color:#fff;
   padding-top:7px;
 }
+
+.allInOne {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.allInOne .big {
+  margin-top: 15px;
+}
+.allInOne .small {
+  font-size: 12px;
+  color: #ccc;
+  margin-top: 7px;
+}

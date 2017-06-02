@@ -1,5 +1,89 @@
 {
   "shop_name": "咖啡故事",
+  "shop_id": 2,
   "man_in": 12,
-  "female_in": 23
+  "female_in": 23,
+  "tables": [{
+      "table_id": 1,
+      "users": [{
+          "user_id": 1,
+          "avatar": "/images/boy.png",
+          "nick_name": "xm",
+          "age": 22,
+          "gender": 1
+        },
+        {
+          "user_id": 2,
+          "avatar": "/images/girl.png",
+          "nick_name": "as",
+          "age": 39,
+          "gender": 2
+        }
+      ]
+    },
+    {
+      "table_id": 2,
+      "users": [{
+          "user_id": 1,
+          "avatar": "/images/boy.png",
+          "nick_name": "xm",
+          "age": 22,
+          "gender": 1
+        },
+        {
+          "user_id": 2,
+          "avatar": "/images/girl.png",
+          "nick_name": "as",
+          "age": 39,
+          "gender": 2
+        },
+        {
+          "user_id": 2,
+          "avatar": "/images/girl.png",
+          "nick_name": "as",
+          "age": 39,
+          "gender": 2
+        },
+        {
+          "user_id": 2,
+          "avatar": "/images/boy.png",
+          "nick_name": "as",
+          "age": 39,
+          "gender": 1
+        }
+      ]
+    },
+    {
+      "table_id": 5,
+      "users": [{
+          "user_id": 1,
+          "avatar": "/images/boy.png",
+          "nick_name": "xm",
+          "age": 22,
+          "gender": 1
+        },
+        {
+          "user_id": 2,
+          "avatar": "/images/girl.png",
+          "nick_name": "as",
+          "age": 39,
+          "gender": 2
+        },
+        {
+          "user_id": 2,
+          "avatar": "/images/boy.png",
+          "nick_name": "as",
+          "age": 39,
+          "gender": 1
+        },
+        {
+          "user_id": 2,
+          "avatar": "/images/girl.png",
+          "nick_name": "as",
+          "age": 39,
+          "gender": 2
+        }
+      ]
+    }
+  ]
 }

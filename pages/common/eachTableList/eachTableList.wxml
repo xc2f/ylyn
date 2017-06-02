@@ -1,14 +1,12 @@
 <!--店铺首页，每桌的用户列表-->
 
 <template name="eachTableList">
-  <text>{{item.tableIndex}}</text>
   <scroll-view class="container" scroll-x style="width: 100%; white-space: nowrap; margin: 10px 0;">
-    <block wx:for="{{item.userList}}" wx:key="{{item.name}}">
-      <view class="item" style="display: inline-block; width: 300px; flex-direction: column;" bindtap="userTap" data-userid="{{item.name}}">
-        <image src="{{item.img}}" style="width: 90%; height: 150px;"></image>
-        <text style="display: block; text-align:center">{{item.name}}</text>
+    <block wx:for="{{users}}" wx:key="user_id">
+      <view class="item" style="display: inline-block; width: 150px; flex-direction: column;" bindtap="userTap" data-userid="{{item.user_id}}" wx:if="{{item.gender !== 0}}">
+        <image src="{{item.avatar}}" style="width: 90%; height: 130px;"></image>
+        <text style="display: block; text-align:center">{{item.nick_name}}</text>
       </view>
     </block>
-    <button bindtap="register" wx:if="{{isRegister===false}}">注册</button>
   </scroll-view>
 </template>

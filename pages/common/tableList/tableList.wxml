@@ -2,9 +2,10 @@
 <import src="/pages/common/eachTableList/eachTableList" />
 
 <template name="tableList">
-  <block wx:for="{{tableData}}" wx:key="{{item}}">
-    <view style="height: 300px">
-      <template is="eachTableList" data="{{item: item, isRegister: isRegister}}"></template>
+  <block wx:for="{{tables}}" wx:key="table_id">
+    <text><text class="fa fa-anchor"></text> 桌号：{{item.table_id}}号</text>
+    <view style="height: 200px">
+      <template is="eachTableList" data="{{users: item.users, isRegister: isRegister}}"></template>
     </view>
   </block>
 </template>

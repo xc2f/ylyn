@@ -31,29 +31,30 @@ Page({
 
     exitRegisterText: '退出注册',
 
-    tableData: [
-      {
-        tableIndex: 1,
-        userList: [
-          { img: '/images/EatHow.png', name: 'xm' },
-          { img: '/images/EatHow.png', name: 'as' },
-        ]
-      },
-      {
-        tableIndex: 3,
-        userList: [
-          { img: '/images/EatHow.png', name: 'haha' },
-          { img: '/images/EatHow.png', name: 'hasd' },
-        ]
-      },
-      {
-        tableIndex: 4,
-        userList: [
-          { img: '/images/EatHow.png', name: 'haha' },
-          { img: '/images/EatHow.png', name: 'asd' },
-        ]
-      }
-    ],
+    // tableData: [
+    //   {
+    //     tableIndex: 1,
+    //     userList: [
+    //       { img: '/images/EatHow.png', name: 'xm' },
+    //       { img: '/images/EatHow.png', name: 'as' },
+    //     ]
+    //   },
+    //   {
+    //     tableIndex: 3,
+    //     userList: [
+    //       { img: '/images/EatHow.png', name: 'haha' },
+    //       { img: '/images/EatHow.png', name: 'hasd' },
+    //     ]
+    //   },
+    //   {
+    //     tableIndex: 4,
+    //     userList: [
+    //       { img: '/images/EatHow.png', name: 'haha' },
+    //       { img: '/images/EatHow.png', name: 'asd' },
+    //     ]
+    //   }
+    // ],
+
     shop: {},
     showMeSwitch: true,
     showShopSwitch: false,
@@ -178,10 +179,10 @@ Page({
 
     wx.request({
       url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
-      method: 'POST',
-      data: {
-        shopid: options.shopid
-      },
+      // method: 'POST',
+      // data: {
+      //   shopid: options.shopid
+      // },
       success: function (res) {
         console.log('店铺id: ' + options.shopid + '响应已收到')
         that.setData({
@@ -189,6 +190,7 @@ Page({
         })
       }
     })
+
     // console.log('店铺id: ' + options.shopid)
     // wx.getSavedFileList({
     //   success: function (res) {
@@ -431,6 +433,9 @@ Page({
   userTap(e) {
     if (this.data.userInfo.isRegister) {
       console.log('用户id: ' + e.currentTarget.dataset.userid)
+      wx.navigateTo({
+        url: '/pages/chat/chat',
+      })
     } else {
       this.setData({
         registerShow: true

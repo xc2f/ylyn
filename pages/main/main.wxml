@@ -16,7 +16,7 @@
 
       <view class="userBanner" style="width: {{ systemInfo.windowWidth }}px; left: {{ systemInfo.windowWidth }}px">
         <view class="shopAvatar">
-          <image src="/images/banner.png"></image>
+          <image src="/images/girl.png"></image>
         </view>
         <view class="shopName">人名</view>
         <view class="flipConner" wx:if="{{showShopSwitch}}" bindtap="switchToShop" style="left: {{ systemInfo.windowWidth-49 }}px">
@@ -30,10 +30,11 @@
 
   <scroll-view scroll-y="true" class="body" style="height: {{ systemInfo.windowHeight-170 }}px">
     <view class="allInOne">
-      <text>同店的人</text>
+      <text class="big">同店的人</text>
+      <text class="small">在这里找到你心动的ta</text>
     </view>
     <import src="/pages/common/tableList/tableList" />
-    <template is="tableList" data="{{tableData: tableData, isRegister: userInfo.isRegister}}" />
+    <template is="tableList" data="{{tables: shop.tables, isRegister: userInfo.isRegister}}" />
   </scroll-view>
 
   <!--注册 begin-->

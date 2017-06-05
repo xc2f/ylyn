@@ -1,1 +1,116 @@
 /* pages/chat/chat.wxss */
+
+.container {
+  /*position: relative;*/
+}
+.chatBody {
+  /*margin-bottom: 50px;*/
+}
+.chatBody .item {
+  height: 100px;
+}
+.chatBar {
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+}
+
+.chatBar {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  width: 100%;
+  border-top: 1px solid #bbb;
+}
+.chatBar .fa {
+  font-size: 30px;
+  line-height: 50px;
+  color: #222;
+}
+.userCard, .face, .pic {
+  flex: 1;
+  text-align: center;
+}
+.inputWrap {
+  flex: 4;
+}
+.chatBar .input {
+  height: 40px;
+  padding-top: 5px;
+  padding-bottom: 0;
+  border-bottom: 1px solid #bbb;
+}
+.chatBar .submit {
+  padding: 7px 5px;
+  height: 50px;
+  line-height: 50px;
+  background: green;
+  border-radius: 3px;
+  color: #fff;
+}
+.messageBlock {
+  width: 80%;
+  margin-top: 17px;
+}
+.message {
+  min-height: 30px;
+  padding: 10px;
+  border-radius: 7px;
+  position: relative;
+  max-width: 70%;
+}
+
+.messageBlock.me image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  float: right;
+}
+.messageBlock.me .message {
+  float: right;
+  background: rgb(69, 155, 253);
+  margin-right: 20px;
+}
+.messageBlock.me {
+  margin-left: 20%;
+  float: right;
+  padding-right: 10px;
+}
+.messageBlock.me .message .angle {
+  border: 7px solid rgb(69, 155, 253);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  position: absolute;
+  /*为border的两倍*/
+  right: -14px;
+  top: 10px;
+}
+
+.messageBlock.friend image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  float: left;
+}
+.messageBlock.friend .message {
+  float: left;
+  background: #eee;
+  margin-left: 20px;
+}
+.messageBlock.friend {
+  margin-right: 20%;
+  float: left;
+  padding-left: 10px;
+}
+.messageBlock.friend .message .angle {
+  border: 7px solid #eee;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  position: absolute;
+  /*为border的两倍*/
+  left: -14px;
+  top: 10px;
+}
+

@@ -1,2 +1,32 @@
 <!--pages/chat/chat.wxml-->
-<text>pages/chat/chat.wxml</text>
+<view class="container">
+  <scroll-view class="chatBody" scroll-top="{{toTop}}" scroll-y="true" style="height: {{chatBodyHeight}}px">
+    <block wx:for="{{messages}}" wx:key="message_id">
+      <view class="me messageBlock" wx:if="{{item.user_id === userInfo.user_id}}">
+        <image src="{{userInfo.avatar}}"></image>
+        <view class="message">
+          {{item.content}}
+          <view class="angle"></view>
+        </view>
+      </view>
+      <view class="friend messageBlock" wx:if="{{item.user_id !== userInfo.user_id}}">
+        <image src="{{friendInfo.avatar}}"></image>
+        <view class="message">
+          {{item.content}}
+          <view class="angle"></view>
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+  <view class="chatBar">
+    <view class="userCard"><text class="fa fa-vcard-o"></text></view>
+    <view class="inputWrap">
+      <input class="input" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" bindinput="inputHandle" />
+    </view>
+    <view class="face"><text class="fa fa-meh-o"></text></view>
+    <view class="pic">
+      <text class="fa fa-picture-o" wx:if="{{!isFocus}}"></text>
+      <text class="submit" wx:if="{{isFocus}}" bindtap="submit">发送</text>
+    </view>
+  </view>
+</view>

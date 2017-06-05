@@ -34,7 +34,7 @@
       <text class="small">在这里找到你心动的ta</text>
     </view>
     <import src="/pages/common/tableList/tableList" />
-    <template is="tableList" data="{{tables: shop.tables, isRegister: userInfo.isRegister}}" />
+    <template is="tableList" data="{{tables: shop.tables, isRegister: isRegister}}" />
   </scroll-view>
 
   <!--注册 begin-->
@@ -55,7 +55,7 @@
           <text class="title">性别</text>
           <!--<picker class="picker" range="{{genderRange}}" value="0"></picker>-->
           <radio-group class="genderRadio" bindchange="changeHandle">
-            <label class="radio" wx:for="{{genderRange}}" wx:key="{{title}}">
+            <label class="radio" wx:for="{{genderRange}}" wx:key="title">
               <radio value="{{item.value}}" checked="{{wxUserInfo.gender==item.value ? 'checked' : false }}" />{{item.title}}
             </label>
           </radio-group>

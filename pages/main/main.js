@@ -6,6 +6,7 @@ Page({
   data: {
     systemInfo: {},
     registerShow: false,
+    isRegister: false,
 
     nickNameAnimation: {},
     genderAnimation: {},
@@ -21,7 +22,7 @@ Page({
 
     wxUserInfo: {},
     userInfo: {
-      isRegister: false
+      avatar: null
     },
     tempChange: null,
 
@@ -30,30 +31,6 @@ Page({
     avatarPath: null,
 
     exitRegisterText: '退出注册',
-
-    // tableData: [
-    //   {
-    //     tableIndex: 1,
-    //     userList: [
-    //       { img: '/images/EatHow.png', name: 'xm' },
-    //       { img: '/images/EatHow.png', name: 'as' },
-    //     ]
-    //   },
-    //   {
-    //     tableIndex: 3,
-    //     userList: [
-    //       { img: '/images/EatHow.png', name: 'haha' },
-    //       { img: '/images/EatHow.png', name: 'hasd' },
-    //     ]
-    //   },
-    //   {
-    //     tableIndex: 4,
-    //     userList: [
-    //       { img: '/images/EatHow.png', name: 'haha' },
-    //       { img: '/images/EatHow.png', name: 'asd' },
-    //     ]
-    //   }
-    // ],
 
     shop: {},
     showMeSwitch: true,
@@ -154,7 +131,26 @@ Page({
     let target = e.currentTarget.dataset.exitRegisterText;
     if (target === '完成注册') {
       this.setData({
-        'userInfo.isRegister': true,
+        isRegister: true,
+      })
+
+      // 如果没有上传头像，使用微信的
+      if(this.data.userInfo.avatar === null) {
+        this.setData({
+          'userInfo.avatar': this.data.wxUserInfo.avatarUrl
+        })
+      }
+      // 向服务端发送注册信息，并拉取分配的user_id合并
+      wx.request({
+        url: 'http://easy-mock.com/mock/5935079e91470c0ac1011705/ylyn_1496647582974/user',
+        method: 'POST',
+        data: this.data.userInfo,
+        success: function(res) {
+          wx.setStorage({
+            key: 'userInfo',
+            data: res.data,
+          })
+        }
       })
     }
     this.setData({
@@ -170,7 +166,6 @@ Page({
     // 获取屏幕高度撑满下部滚动视图
     wx.getSystemInfo({
       success: function (res) {
-        console.log(res)
         that.setData({
           systemInfo: res
         })
@@ -209,10 +204,10 @@ Page({
     // })
 
     wx.getStorage({
-      key: 'avatar',
+      key: 'userInfo',
       success: function (res) {
         that.setData({
-          avatarPath: res.data
+          avatarPath: res.data.avatar
         })
       },
     })
@@ -275,7 +270,6 @@ Page({
   },
 
   changeHandle(e) {
-    console.log(e)
     this.setData({
       tempChange: e.detail.value
     })
@@ -367,11 +361,6 @@ Page({
           tempFilePath: path,
           success: function (res) {
             console.log('Saved avatar success!')
-            // 写入缓存记录
-            wx.setStorage({
-              key: 'avatar',
-              data: res.savedFilePath
-            })
             // 更新
             that.setData({
               'userInfo.avatar': res.savedFilePath,
@@ -431,16 +420,16 @@ Page({
 
 
   userTap(e) {
-    if (this.data.userInfo.isRegister) {
-      console.log('用户id: ' + e.currentTarget.dataset.userid)
+    // if (this.data.isRegister) {
+      // console.log('用户信息: ' + JSON.stringify(e.currentTarget.dataset.userinfo))
       wx.navigateTo({
-        url: '/pages/chat/chat',
+        url: '/pages/chat/chat?friend=' + JSON.stringify(e.currentTarget.dataset.userinfo),
       })
-    } else {
-      this.setData({
-        registerShow: true
-      })
-    }
+    // } else {
+    //   this.setData({
+    //     registerShow: true
+    //   })
+    // }
   }
 
 })

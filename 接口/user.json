@@ -1,4 +1,9 @@
 {
   "user_id": 7,
-  "user_name": "Pysics"
+  "nickName": "Pysics",
+  "age": 20,
+  "avatar": "http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlJWibJZnnAWV84jLeh0ajwva1Y80uz5XOjr87EdVqygucvcD1kdJUbRInCckslQP6pJgSvpO2TAw/0",
+  "gender": 1,
+  "intro": "",
+  "tall": null
 }

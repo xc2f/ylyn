@@ -8,14 +8,14 @@
       "users": [{
           "user_id": 1,
           "avatar": "/images/boy.png",
-          "nick_name": "xm",
+          "nickName": "xm",
           "age": 22,
           "gender": 1
         },
         {
           "user_id": 2,
           "avatar": "/images/girl.png",
-          "nick_name": "as",
+          "nickName": "as",
           "age": 39,
           "gender": 2
         }
@@ -26,28 +26,28 @@
       "users": [{
           "user_id": 1,
           "avatar": "/images/boy.png",
-          "nick_name": "xm",
+          "nickName": "xm",
           "age": 22,
           "gender": 1
         },
         {
           "user_id": 2,
           "avatar": "/images/girl.png",
-          "nick_name": "as",
+          "nickName": "as",
           "age": 39,
           "gender": 2
         },
         {
           "user_id": 2,
           "avatar": "/images/girl.png",
-          "nick_name": "as",
+          "nickName": "as",
           "age": 39,
           "gender": 2
         },
         {
           "user_id": 2,
           "avatar": "/images/boy.png",
-          "nick_name": "as",
+          "nickName": "as",
           "age": 39,
           "gender": 1
         }
@@ -58,28 +58,28 @@
       "users": [{
           "user_id": 1,
           "avatar": "/images/boy.png",
-          "nick_name": "xm",
+          "nickName": "xm",
           "age": 22,
           "gender": 1
         },
         {
           "user_id": 2,
           "avatar": "/images/girl.png",
-          "nick_name": "as",
+          "nickName": "as",
           "age": 39,
           "gender": 2
         },
         {
           "user_id": 2,
           "avatar": "/images/boy.png",
-          "nick_name": "as",
+          "nickName": "as",
           "age": 39,
           "gender": 1
         },
         {
           "user_id": 2,
           "avatar": "/images/girl.png",
-          "nick_name": "as",
+          "nickName": "as",
           "age": 39,
           "gender": 2
         }

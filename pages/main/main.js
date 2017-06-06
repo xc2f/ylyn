@@ -142,7 +142,7 @@ Page({
       }
       // 向服务端发送注册信息，并拉取分配的user_id合并
       wx.request({
-        url: 'http://easy-mock.com/mock/5935079e91470c0ac1011705/ylyn_1496647582974/user',
+        url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/user',
         method: 'POST',
         data: this.data.userInfo,
         success: function(res) {

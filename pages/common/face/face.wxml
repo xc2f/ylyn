@@ -1,0 +1,44 @@
+<!--表情内容页-->
+<!--略显啰嗦-->
+<template name="face">
+  <swiper class="faceSwiper" circular="true">
+    <swiper-item class="page1">
+      <!--第一页-->
+        <!--每一行-->
+        <view class="row row1">
+          <block wx:for="{{faces[0].map1}}" wx:key="key">
+            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
+          </block>
+        </view>
+        <view class="row row2">
+          <block wx:for="{{faces[0].map2}}" wx:key="key">
+            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
+          </block>
+        </view>
+        <view class="row row3">
+          <block wx:for="{{faces[0].map3}}" wx:key="key">
+            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
+          </block>
+        </view>
+    </swiper-item>
+    <swiper-item class="page2">
+      <!--第一页-->
+        <!--每一行-->
+        <view class="row row1">
+          <block wx:for="{{faces[1].map4}}" wx:key="key">
+            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
+          </block>
+        </view>
+        <view class="row row2">
+          <block wx:for="{{faces[1].map5}}" wx:key="key">
+            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
+          </block>
+        </view>
+        <view class="row row3">
+          <block wx:for="{{faces[1].map6}}" wx:key="key">
+            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
+          </block>
+        </view>
+    </swiper-item>
+  </swiper>
+</template>

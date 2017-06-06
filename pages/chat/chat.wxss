@@ -9,18 +9,26 @@
 .chatBody .item {
   height: 100px;
 }
-.chatBar {
-  height: 50px;
-  position: fixed;
-  bottom: 0;
-}
+
 
 .chatBar {
   display: flex;
   flex: 1;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   border-top: 1px solid #bbb;
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+}
+.chatBarContent {
+  flex-direction: row;
+  display: flex;
+  flex: 1;
+  height: 50px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 .chatBar .fa {
   font-size: 30px;
@@ -51,6 +59,7 @@
 .messageBlock {
   width: 80%;
   margin-top: 17px;
+  margin-bottom: 17px;
 }
 .message {
   min-height: 30px;
@@ -60,7 +69,7 @@
   max-width: 70%;
 }
 
-.messageBlock.me image {
+.messageBlock.me image.avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -87,7 +96,7 @@
   top: 10px;
 }
 
-.messageBlock.friend image {
+.messageBlock.friend image.avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -114,3 +123,50 @@
   top: 10px;
 }
 
+.messageBlock .message image {
+  max-width: 100%;
+}
+
+.faceContent {
+  height: 134px;
+}
+.faceDivision {
+  width: 0%;
+  height: 1px;
+  background: #ccc;
+}
+
+.faceContent .faceSwiper,
+.faceContent .faceSwiper .page1,
+.faceContent .faceSwiper .page2 {
+  height: 134px;
+}
+.faceContent .faceSwiper .page1,
+.faceContent .faceSwiper .page2 {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.faceContent .row {
+  height: 54px;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+}
+.faceContent .row image {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  /*padding: 7px;*/
+}
+
+.faceImg {
+  width: 27px;
+  height: 27px;
+}
+
+.multMsg {
+  display: flex;
+  align-items: center;
+}

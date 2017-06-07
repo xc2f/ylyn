@@ -31,7 +31,7 @@
     </block>
   </scroll-view>
   <view class="chatBar" animation="{{chatBarChangeHeightAnimation}}">
-    <view class="faceContent">
+    <view class="faceContent" animation="{{faceOpacityAnimation}}">
 
       <import src="/pages/common/face/face" />
       <template is="face" data="{{faces}}" />
@@ -41,12 +41,12 @@
     <view class="chatBarContent">
       <view class="userCard"><text class="fa fa-vcard-o"></text></view>
       <view class="inputWrap">
-        <input class="input" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" bindinput="inputHandle" />
+        <textarea class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" bindinput="inputHandle" auto-height="true" />
       </view>
       <view class="face" bindtap="toggleFace"><text class="fa fa-meh-o"></text></view>
       <view class="pic">
         <view class="fa fa-picture-o" wx:if="{{!isFocus}}" bindtap="sendPic"></view>
-        <view class="submit" wx:if="{{isFocus}}" bindtap="submit">发送</view>
+        <view class="submit" wx:if="{{isFocus}}" bindtap="submit"><text>发送</text></view>
       </view>
     </view>
     

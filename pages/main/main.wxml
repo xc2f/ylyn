@@ -28,7 +28,7 @@
 
   </view>
 
-  <scroll-view scroll-y="true" class="body" style="height: {{ systemInfo.windowHeight-170 }}px">
+  <scroll-view scroll-y="true" class="body" style="height: {{ systemInfo.windowHeight-170 }}px;" animation="{{tablesOpacityAnimation}}">
     <view class="allInOne">
       <text class="big">同店的人</text>
       <text class="small">在这里找到你心动的ta</text>
@@ -37,6 +37,55 @@
     <template is="tableList" data="{{tables: shop.tables, isRegister: isRegister}}" />
   </scroll-view>
 
+  <view class="userShow" animation="{{userOpacityAnimation}}">
+    <view class="title">
+      <text class="fa fa-picture-o">个人展示</text>
+    </view>
+
+    <!--<swiper current="1" circular='true'>
+        <swiper-item>
+          <image src="/images/EatHow.png"></image>
+        </swiper-item>
+        <swiper-item>
+          <image src="/images/coffee.png"></image>
+        </swiper-item>
+        <swiper-item>
+          <image src="/images/banner.png"></image>
+        </swiper-item>
+      </swiper>-->
+    <view class="gallery">
+      <block wx:for="{{gallery}}">
+          <view class="item item{{index}} {{item.idx}}" bindtap="tapGalleryImg" data-idx="{{index}}" animation="{{item.idx}}">
+            <image src="{{item.src}}"></image>
+          </view>
+        </block>
+
+      <!--<view class="item itemL" bindtap="galleryImgL" animation="{{galleryImgLeftAnimation}}">
+        <image src="/images/EatHow.png"></image>
+      </view>
+      <view class="item itemM" animation="{{galleryImgMiddleAnimation}}">
+        <image src="/images/coffee.png"></image>
+      </view>
+      <view class="item itemR" bindtap="galleryImgR" animation="{{galleryImgRightAnimation}}">
+        <image src="/images/banner.png"></image>
+      </view>-->
+
+    </view>
+
+    <!--<swiper>
+      <swiper-item>
+        <image src="/images/EatHow.png"></image>
+      </swiper-item>
+      <swiper-item>
+        <image src="src"></image>
+      </swiper-item>
+      <swiper-item></swiper-item>
+      <swiper-item></swiper-item>
+      <swiper-item></swiper-item>
+    </swiper>-->
+
+  </view>
+
   <!--注册 begin-->
   <view class="register" wx:if="{{registerShow}}">
 
@@ -44,7 +93,7 @@
       <view class="block nickName" animation="{{nickNameAnimation}}">
         <view class="section">
           <text class="title">昵称</text>
-          <input class="input" placeholder="NickName" value="{{wxUserInfo.nickName}}" cursor-spacing="50" bindinput="changeHandle" />
+          <input class="input" placeholder="NickName" value="{{wxMeInfo.nickName}}" cursor-spacing="50" bindinput="changeHandle" />
         </view>
         <view class="down" bindtap="tapNickName">
           <image class="img" src="/images/arrowDown.png"></image>
@@ -56,7 +105,7 @@
           <!--<picker class="picker" range="{{genderRange}}" value="0"></picker>-->
           <radio-group class="genderRadio" bindchange="changeHandle">
             <label class="radio" wx:for="{{genderRange}}" wx:key="title">
-              <radio value="{{item.value}}" checked="{{wxUserInfo.gender==item.value ? 'checked' : false }}" />{{item.title}}
+              <radio value="{{item.value}}" checked="{{wxMeInfo.gender==item.value ? 'checked' : false }}" />{{item.title}}
             </label>
           </radio-group>
         </view>
@@ -85,7 +134,7 @@
       <view class="block intro" animation="{{introAnimation}}">
         <view class="section">
           <text class="title">简介</text>
-          <textarea class="textarea" wx:if="{{textareaShow}}" cursor-spacing="50"  bindinput="changeHandle" />
+          <textarea class="textarea" wx:if="{{textareaShow}}" cursor-spacing="50" bindinput="changeHandle" />
         </view>
         <view class="down" bindtap="tapIntro">
           <image class="img" src="/images/arrowDown.png"></image>
@@ -93,9 +142,9 @@
       </view>
       <view class="block avatar" animation="{{avatarAnimation}}">
         <view class="avatarShow" bindtap="pickAvatar" animation="{{avatarShowAnimation}}" wx:if="{{avatarShow}}">
-          <image src="{{avatarPath!==null ? avatarPath : wxUserInfo.avatarUrl}}" class="img"></image>
+          <image src="{{avatarPath!==null ? avatarPath : wxMeInfo.avatarUrl}}" class="img"></image>
           <view class="userName">
-            <text>{{wxUserInfo.nickName}}</text>
+            <text>{{wxMeInfo.nickName}}</text>
           </view>
         </view>
         <view class="section">

@@ -1,9 +1,14 @@
 {
-  "user_id": 7,
-  "nickName": "Pysics",
+  "user_id": 2,
+  "nickName": "美人如诗",
+  "gender": 2,
   "age": 20,
-  "avatar": "http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlJWibJZnnAWV84jLeh0ajwva1Y80uz5XOjr87EdVqygucvcD1kdJUbRInCckslQP6pJgSvpO2TAw/0",
-  "gender": 1,
-  "intro": "",
-  "tall": null
+  "intro": "通话",
+  "tall": 165,
+  "avatar": "/images/girl.png",
+  "pics": [
+    "/images/EatHow.png",
+    "/images/banner.png",
+    "/images/coffee.png"
+  ]
 }

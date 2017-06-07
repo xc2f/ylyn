@@ -60,5 +60,23 @@ App({
 
   globalData: {
     userInfo: null
+  },
+
+  onShow: function(){
+    console.log('on hide')
+
+    wx.connectSocket({
+      url: 'wss://192.168.0.119'
+    })
+
+    wx.onSocketOpen(function (res) {
+      console.log('WebSocket连接已打开！')
+      setInterval(function(){
+        var time = new Date().toString()
+        wx.sendSocketMessage({
+          data: time
+        })
+      }, 5000)
+    })
   }
 })

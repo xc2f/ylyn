@@ -2,7 +2,8 @@
   "pages": [
     "pages/main/main",
     "pages/chat/chat",
-    "pages/common/face/face"
+    "pages/common/face/face",
+    "pages/test/test"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",

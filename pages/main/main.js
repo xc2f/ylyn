@@ -20,8 +20,8 @@ Page({
       { title: '女', value: 2 }
     ],
 
-    wxUserInfo: {},
-    userInfo: {
+    wxMeInfo: {},
+    meInfo: {
       avatar: null
     },
     tempChange: null,
@@ -36,10 +36,66 @@ Page({
     showMeSwitch: true,
     showShopSwitch: false,
     bannerSwitchAnimation: {},
-    bannerSwitchTranslate: {}
+    bannerSwitchTranslate: {},
+
+    // 选择主页为店铺还是用户
+    shopShow: true,
+    userShow: false,
+
+    tablesOpacityAnimation: {},
+    userOpacityAnimation: {},
+    gallery: [
+      { src: '/images/EatHow.png', idx: 'picIdx0' },
+      { src: '/images/coffee.png', idx: 'picIdx1' },
+      { src: '/images/EatHow.png', idx: 'picIdx2' },
+      { src: '/images/banner.png', idx: 'picIdx3' },
+      { src: '/images/EatHow.png', idx: 'picIdx4' },
+      { src: '/images/coffee.png', idx: 'picIdx5' },
+    ],
+    // galleryImgLeftAnimation: {},
+    // galleryImgMiddleAnimation: {},
+    // galleryImgRightAnimation: {},
+    picIdx0: {},
+    picIdx1: {},
+    picIdx2: {},
+    picIdx3: {},
+    picIdx4: {},
+    picIdx5: {},
+    picIdx6: {},
+    picIdx7: {},
+    picIdx8: {}
   },
 
+  basicAnimation(duration, delay) {
+    let animation = wx.createAnimation({
+      duration: duration,
+      timingFunction: "ease",
+      delay: delay
+    });
+    return animation;
+  },
 
+  // galleryImgL() {
+  //   this.setData({
+  //     galleryImgLeftAnimation: this.basicAnimation(5000, 0).translate3d(0, 0, 50).left('25%').step().export(),
+  //     galleryImgMiddleAnimation: this.basicAnimation(5000, 0).translate3d(0, 0, -50).left('50%').step().export()
+  //   })
+  // },
+
+  tapGalleryImg(e) {
+    let idx = e.currentTarget.dataset.idx
+    if(idx === 0) {
+      console.log('in')
+      this.setData({
+        picIdx0: this.basicAnimation(5000, 0).translate3d(0, 0, 50).left('25%').step().export(),
+        picIdx1: this.basicAnimation(5000, 0).translate3d(0, 0, -50).left('50%').step().export(),
+      })
+    } else if(idx === 1){
+
+    }
+
+  },
+  
   switchToMe() {
     let that = this;
     // that.setData({
@@ -50,7 +106,11 @@ Page({
     that.setData({
       showMeSwitch: false,
       bannerSwitchAnimation: that.bannerSwitchToMe(),
-      showShopSwitch: true
+      showShopSwitch: true,
+      shopShow: false,
+      userShow: true,
+      tablesOpacityAnimation: that.basicAnimation(500, 0).opacity(0).step().export(),
+      userOpacityAnimation: that.basicAnimation(500, 0).opacity(1).step().export(),
     })
 
     // }, 800)
@@ -72,6 +132,10 @@ Page({
       showShopSwitch: false,
       bannerSwitchAnimation: that.bannerSwitchToShop(),
       showMeSwitch: true,
+      shopShow: true,
+      userShow: false,
+      tablesOpacityAnimation: that.basicAnimation(500, 0).opacity(1).step().export(),
+      userOpacityAnimation: that.basicAnimation(500, 0).opacity(0).step().export(),
     })
 
     // }, 800)
@@ -135,19 +199,19 @@ Page({
       })
 
       // 如果没有上传头像，使用微信的
-      if(this.data.userInfo.avatar === null) {
+      if (this.data.meInfo.avatar === null) {
         this.setData({
-          'userInfo.avatar': this.data.wxUserInfo.avatarUrl
+          'meInfo.avatar': this.data.wxMeInfo.avatarUrl
         })
       }
       // 向服务端发送注册信息，并拉取分配的user_id合并
       wx.request({
-        url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/user',
+        url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/me',
         method: 'POST',
-        data: this.data.userInfo,
-        success: function(res) {
+        data: this.data.meInfo,
+        success: function (res) {
           wx.setStorage({
-            key: 'userInfo',
+            key: 'meInfo',
             data: res.data,
           })
         }
@@ -204,7 +268,7 @@ Page({
     // })
 
     wx.getStorage({
-      key: 'userInfo',
+      key: 'meInfo',
       success: function (res) {
         that.setData({
           avatarPath: res.data.avatar
@@ -219,7 +283,7 @@ Page({
           wx.getUserInfo({
             success: function (res) {
               that.setData({
-                wxUserInfo: res.userInfo
+                wxMeInfo: res.meInfo
               })
             }
           })
@@ -277,7 +341,7 @@ Page({
 
   tapNickName(e) {
     this.setData({
-      'userInfo.nickName': this.data.tempChange !== null ? this.data.tempChange : this.data.wxUserInfo.nickName,
+      'meInfo.nickName': this.data.tempChange !== null ? this.data.tempChange : this.data.wxMeInfo.nickName,
       nickNameAnimation: this.exitAnimation()
     })
 
@@ -290,7 +354,7 @@ Page({
 
   tapGender() {
     this.setData({
-      'userInfo.gender': this.data.tempChange !== null ? parseInt(this.data.tempChange) : this.data.wxUserInfo.gender,
+      'meInfo.gender': this.data.tempChange !== null ? parseInt(this.data.tempChange) : this.data.wxMeInfo.gender,
       genderAnimation: this.exitAnimation()
     })
 
@@ -303,7 +367,7 @@ Page({
 
   tapAge() {
     this.setData({
-      'userInfo.age': this.data.tempChange !== null ? this.data.tempChange : 20,
+      'meInfo.age': this.data.tempChange !== null ? this.data.tempChange : 20,
       ageAnimation: this.exitAnimation()
     })
     // 保证tempChange被使用后清除
@@ -314,7 +378,7 @@ Page({
 
   tapTall() {
     this.setData({
-      'userInfo.tall': this.data.tempChange !== null ? parseInt(this.data.tempChange) : null,
+      'meInfo.tall': this.data.tempChange !== null ? parseInt(this.data.tempChange) : null,
       tallAnimation: this.exitAnimation(),
       introAnimation: this.introHeightenAnimation(),
       textareaShow: true
@@ -328,7 +392,7 @@ Page({
 
   tapIntro() {
     this.setData({
-      'userInfo.intro': this.data.tempChange !== null ? this.data.tempChange : '',
+      'meInfo.intro': this.data.tempChange !== null ? this.data.tempChange : '',
       introAnimation: this.exitAnimation(),
       avatarShowAnimation: this.avatarFadeShow(),
       exitRegisterText: '完成注册'
@@ -363,7 +427,7 @@ Page({
             console.log('Saved avatar success!')
             // 更新
             that.setData({
-              'userInfo.avatar': res.savedFilePath,
+              'meInfo.avatar': res.savedFilePath,
               avatarPath: res.savedFilePath
             })
           }
@@ -420,16 +484,19 @@ Page({
 
 
   userTap(e) {
-    // if (this.data.isRegister) {
-      // console.log('用户信息: ' + JSON.stringify(e.currentTarget.dataset.userinfo))
+    if (this.data.shopShow) {
+      // if (this.data.isRegister && this.data.shopShow) {
+      // console.log('用户信息: ' + JSON.stringify(e.currentTarget.dataset.meInfo))
       wx.navigateTo({
-        url: '/pages/chat/chat?friend=' + JSON.stringify(e.currentTarget.dataset.userinfo),
+        url: '/pages/chat/chat?friend=' + JSON.stringify(e.currentTarget.dataset.meinfo),
       })
-    // } else {
-    //   this.setData({
-    //     registerShow: true
-    //   })
-    // }
+      // } else {
+      //   this.setData({
+      //     registerShow: true
+      //   })
+      // }
+
+    }
   }
 
 })

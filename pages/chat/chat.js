@@ -25,13 +25,87 @@ Page({
         content: [{ type: 'face', src: 'ee_1.png' }],
         type: 'mult',
         date: '1496647271712'
-      }
+      },
+      {
+        user_id: 7,
+        content: [{ type: 'text', content: 'hello' }],
+        type: 'mult',
+        date: '1496647266112'
+      },
+      {
+        user_id: 2,
+        content: [{ type: 'face', src: 'ee_1.png' }],
+        type: 'mult',
+        date: '1496647271712'
+      },
+      {
+        user_id: 7,
+        content: [{ type: 'text', content: 'hello' }],
+        type: 'mult',
+        date: '1496647266112'
+      },
+      {
+        user_id: 2,
+        content: [{ type: 'face', src: 'ee_1.png' }],
+        type: 'mult',
+        date: '1496647271712'
+      },
+      {
+        user_id: 7,
+        content: [{ type: 'text', content: 'hello' }],
+        type: 'mult',
+        date: '1496647266112'
+      },
+      {
+        user_id: 2,
+        content: [{ type: 'face', src: 'ee_1.png' }],
+        type: 'mult',
+        date: '1496647271712'
+      },
+      {
+        user_id: 7,
+        content: [{ type: 'text', content: 'hello' }],
+        type: 'mult',
+        date: '1496647266112'
+      },
+      {
+        user_id: 2,
+        content: [{ type: 'face', src: 'ee_1.png' }],
+        type: 'mult',
+        date: '1496647271712'
+      },
+      {
+        user_id: 7,
+        content: [{ type: 'text', content: 'hello' }],
+        type: 'mult',
+        date: '1496647266112'
+      },
+      {
+        user_id: 2,
+        content: [{ type: 'face', src: 'ee_1.png' }],
+        type: 'mult',
+        date: '1496647271712'
+      },
+      {
+        user_id: 7,
+        content: [{ type: 'text', content: 'hello' }],
+        type: 'mult',
+        date: '1496647266112'
+      },
+      {
+        user_id: 2,
+        content: [{ type: 'face', src: 'ee_1.png' }],
+        type: 'mult',
+        date: '1496647271712'
+      },
     ],
 
     // 表情
     faceShow: false,
     chatBarChangeHeightAnimation: {},
     divisionSlideToRightAnimation: {},
+    faceOpacityAnimation: {},
+
     faceMap: {
       '[:)]': 'ee_1.png',
       '[:D]': 'ee_2.png',
@@ -262,7 +336,11 @@ Page({
     this.setData({
       messages: tempMessageList,
       inputValue: '',
-      isFocus: false
+      isFocus: false,
+    })
+    // 消息发送后滚动到底部，在上一setData后
+    this.setData({
+      toTop: this.data.toTop + 500
     })
   },
 
@@ -310,12 +388,14 @@ Page({
     if (this.data.faceShow) {
       this.setData({
         chatBarChangeHeightAnimation: this.faceShowAnimation(500, 0).height(184).step().export(),
-        divisionSlideToRightAnimation: this.faceShowAnimation(100, 500).width('100%').step().export()
+        divisionSlideToRightAnimation: this.faceShowAnimation(100, 500).width('100%').step().export(),
+        faceOpacityAnimation: this.faceShowAnimation(500, 0).opacity(1).step().export()
       })
     } else {
       this.setData({
         divisionSlideToRightAnimation: this.faceShowAnimation(100, 0).width('0%').step().export(),
-        chatBarChangeHeightAnimation: this.faceShowAnimation(500, 500).height(50).step().export()
+        chatBarChangeHeightAnimation: this.faceShowAnimation(500, 0).height(50).step().export(),
+        faceOpacityAnimation: this.faceShowAnimation(500, 0).opacity(0).step().export()
       })
     }
 
@@ -329,6 +409,7 @@ Page({
     });
     return animation;
   },
+
 
   sendFace(e){
     // console.log(e.currentTarget.dataset.face)

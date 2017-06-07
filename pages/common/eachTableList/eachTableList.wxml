@@ -3,7 +3,7 @@
 <template name="eachTableList">
   <scroll-view class="container" scroll-x style="width: 100%; white-space: nowrap; margin: 10px 0;">
     <block wx:for="{{users}}" wx:key="user_id">
-      <view class="item" style="display: inline-block; width: 150px; flex-direction: column;" bindtap="userTap" data-userinfo="{{item}}" wx:if="{{item.gender !== 0}}">
+      <view class="item" style="display: inline-block; width: 150px; flex-direction: column;" bindtap="userTap" data-meinfo="{{item}}" wx:if="{{item.gender !== 0}}">
         <image src="{{item.avatar}}" style="width: 90%; height: 130px;"></image>
         <text style="display: block; text-align:center">{{item.nick_name}}</text>
       </view>

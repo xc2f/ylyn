@@ -11,7 +11,6 @@
 }
 
 .banner .wrap {
-
 }
 
 .shopBanner {
@@ -22,6 +21,7 @@
   background: red;
   /*backface-visibility: hidden;*/
 }
+
 .userBanner {
   position: absolute;
   top: 0;
@@ -32,8 +32,7 @@
   /*backface-visibility: hidden;*/
 }
 
-.shopBanner,
-.userBanner {
+.shopBanner, .userBanner {
   /*filter: blur(1px);
   opacity: .7;*/
   display: flex;
@@ -46,8 +45,7 @@
   overflow: hidden;
 }
 
-.shopBanner .shopAvatar,
-.userBanner .shopAvatar {
+.shopBanner .shopAvatar, .userBanner .shopAvatar {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -55,33 +53,30 @@
   top: -10px;
 }
 
-.shopBanner .shopAvatar image,
-.userBanner .shopAvatar image {
+.shopBanner .shopAvatar image, .userBanner .shopAvatar image {
   width: 100%;
   height: 100%;
   border-radius: 50%;
 }
 
-.shopBanner .shopName,
-.userBanner .shopName {
+.shopBanner .shopName, .userBanner .shopName {
   color: #fff;
 }
 
-.shopBanner .flipConner,
-.userBanner .flipConner {
+.shopBanner .flipConner, .userBanner .flipConner {
   position: absolute;
   bottom: -1px;
   width: 50px;
   height: 50px;
   z-index: 999;
 }
-.shopBanner .flipConnerImg,
-.userBanner .flipConnerImg {
+
+.shopBanner .flipConnerImg, .userBanner .flipConnerImg {
   width: 100%;
   height: 100%;
 }
-.shopBanner .flipConnerText,
-.userBanner .flipConnerText {
+
+.shopBanner .flipConnerText, .userBanner .flipConnerText {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -95,6 +90,7 @@
   /*border: 1px solid red;*/
   top: 170px;
   position: absolute;
+  opacity: 1;
 }
 
 .register {
@@ -107,8 +103,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column
+  flex-direction: column;
 }
+
 .exitRegister {
   color: #fff;
   margin-top: 20px;
@@ -119,6 +116,7 @@
   height: 70px;
   position: relative;
 }
+
 .register .block {
   width: 100%;
   background: #fff;
@@ -132,30 +130,34 @@
   border: 1px solid #eee;
   border-radius: 3px;
 }
+
 .register .block .section {
   flex: 5;
   flex-direction: row;
   display: flex;
 }
+
 .register .avatar .section .pickAvatar {
   margin-right: 20px;
 }
+
 .register .block .section .title {
   flex: 1;
   text-align: center;
   align-self: center;
 }
-.register .block .section .input,
-.register .block .section .slider,
-.register .block .section .genderRadio,
-.register .block .section .textarea,
+
+.register .block .section .input, .register .block .section .slider,
+.register .block .section .genderRadio, .register .block .section .textarea,
 .register .block .section .pickAvatar {
   /*display: flex;*/
   flex: 2;
 }
+
 .register .block .section .genderRadio label {
   padding-right: 15px;
 }
+
 .register .block .section .textarea {
   width: auto;
   height: 100px;
@@ -165,42 +167,51 @@
 .register .block .down {
   flex: 1;
 }
+
 .register .block .down .img {
   width: 25px;
   height: 25px;
 }
+
 .nickName {
   /*transform: scale(0.2)*/
   z-index: 99;
-  transform: rotate(1.7deg)
+  transform: rotate(1.7deg);
 }
+
 .gender {
   z-index: 98;
-  transform: rotate(1.4deg)
+  transform: rotate(1.4deg);
 }
+
 .age {
   z-index: 97;
-  transform: rotate(1.1deg)
+  transform: rotate(1.1deg);
 }
+
 .tall {
   z-index: 96;
-  transform: rotate(0.8deg)
+  transform: rotate(0.8deg);
 }
+
 .intro {
   z-index: 95;
-  transform: rotate(0.4deg)
+  transform: rotate(0.4deg);
 }
+
 .intro .title {
-  align-self: flex-start!important;
+  align-self: flex-start !important;
 }
+
 .intro .down {
   align-self: flex-end;
   text-align: center;
   padding-bottom: 13px;
 }
+
 .avatar {
   z-index: 94;
-  transform: rotate(0deg)
+  transform: rotate(0deg);
 }
 
 .avatar .avatarShow {
@@ -220,9 +231,9 @@
 }
 
 .avatar .userName {
-  text-align:center;
-  color:#fff;
-  padding-top:7px;
+  text-align: center;
+  color: #fff;
+  padding-top: 7px;
 }
 
 .allInOne {
@@ -231,11 +242,88 @@
   align-items: center;
   flex-direction: column;
 }
+
 .allInOne .big {
   margin-top: 15px;
 }
+
 .allInOne .small {
   font-size: 12px;
   color: #ccc;
   margin-top: 7px;
+}
+
+.userShow {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.userShow swiper {
+  width: 100%;
+  text-align: center;
+}
+
+.userShow swiper swiper-item {
+  width: 33% !important;
+}
+
+.userShow .gallery {
+  position: relative;
+  /*backface-visibility: hidden;*/
+  transform-style: preserve-3d;
+  perspective: 500px;
+  /*perspective-origin: 50%;*/
+}
+
+.userShow .gallery .item {
+  position: absolute;
+  width: 50%;
+}
+
+.userShow .gallery .item image {
+  width: 100%;
+}
+
+.userShow .gallery .item0 {
+  left: 0;
+  transform: translate3d(0, 0, -50px);
+}
+
+.userShow .gallery .item1 {
+  left: 25%;
+  transform: translate3d(0, 0, 51px);
+}
+
+.userShow .gallery .item2,
+.userShow .gallery .item3,
+.userShow .gallery .item4,
+.userShow .gallery .item5,
+.userShow .gallery .item6,
+.userShow .gallery .item7,
+.userShow .gallery .item8 {
+  left: 50%;
+  transform: translate3d(0, 0, -52px);
+}
+
+.userShow .gallery .item3 {
+  transform: translate3d(0, 0, -53px);
+}
+.userShow .gallery .item4 {
+  transform: translate3d(0, 0, -54px);
+}
+
+.userShow .gallery .item5 {
+  transform: translate3d(0, 0, -55px);
+}
+
+.userShow .gallery .item6 {
+  transform: translate3d(0, 0, -56px);
+}
+
+.userShow .gallery .item7 {
+  transform: translate3d(0, 0, -57px);
+}
+.userShow .gallery .item8 {
+  transform: translate3d(0, 0, -58px);
 }

@@ -44,26 +44,17 @@ Page({
 
     tablesOpacityAnimation: {},
     userOpacityAnimation: {},
+
     gallery: [
-      { src: '/images/EatHow.png', idx: 'picIdx0' },
-      { src: '/images/coffee.png', idx: 'picIdx1' },
-      { src: '/images/EatHow.png', idx: 'picIdx2' },
-      { src: '/images/banner.png', idx: 'picIdx3' },
-      { src: '/images/EatHow.png', idx: 'picIdx4' },
-      { src: '/images/coffee.png', idx: 'picIdx5' },
-    ],
-    // galleryImgLeftAnimation: {},
-    // galleryImgMiddleAnimation: {},
-    // galleryImgRightAnimation: {},
-    picIdx0: {},
-    picIdx1: {},
-    picIdx2: {},
-    picIdx3: {},
-    picIdx4: {},
-    picIdx5: {},
-    picIdx6: {},
-    picIdx7: {},
-    picIdx8: {}
+      { src: '/images/EatHow.png' },
+      { src: '/images/banner.png' },
+      { src: '/images/coffee.png' },
+      { src: '/images/boy.png' },
+      { src: '/images/girl.png' },
+      { src: '/images/banner.png' },
+      { src: '/images/coffee.png' },
+    ]
+
   },
 
   basicAnimation(duration, delay) {
@@ -75,27 +66,23 @@ Page({
     return animation;
   },
 
-  // galleryImgL() {
-  //   this.setData({
-  //     galleryImgLeftAnimation: this.basicAnimation(5000, 0).translate3d(0, 0, 50).left('25%').step().export(),
-  //     galleryImgMiddleAnimation: this.basicAnimation(5000, 0).translate3d(0, 0, -50).left('50%').step().export()
-  //   })
-  // },
-
-  tapGalleryImg(e) {
-    let idx = e.currentTarget.dataset.idx
-    if(idx === 0) {
-      console.log('in')
-      this.setData({
-        picIdx0: this.basicAnimation(5000, 0).translate3d(0, 0, 50).left('25%').step().export(),
-        picIdx1: this.basicAnimation(5000, 0).translate3d(0, 0, -50).left('50%').step().export(),
-      })
-    } else if(idx === 1){
-
-    }
-
+  galleryImgChange(e) {
+    console.log(e)
   },
-  
+  galleryImgPrev(e) {
+    let that = this;
+    wx.previewImage({
+      current: e.currentTarget.dataset.src,
+      urls: (function(){
+        let imgList = []
+        for(let i=0; i<that.data.gallery.length; i++) {
+          imgList.push(that.data.gallery[i].src)
+        }
+        console.log(e.currentTarget.dataset.src)
+        return imgList
+      }()),
+    })
+  },
   switchToMe() {
     let that = this;
     // that.setData({

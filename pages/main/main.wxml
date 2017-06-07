@@ -42,47 +42,23 @@
       <text class="fa fa-picture-o">个人展示</text>
     </view>
 
-    <!--<swiper current="1" circular='true'>
-        <swiper-item>
-          <image src="/images/EatHow.png"></image>
-        </swiper-item>
-        <swiper-item>
-          <image src="/images/coffee.png"></image>
-        </swiper-item>
-        <swiper-item>
-          <image src="/images/banner.png"></image>
-        </swiper-item>
-      </swiper>-->
-    <view class="gallery">
-      <block wx:for="{{gallery}}">
-          <view class="item item{{index}} {{item.idx}}" bindtap="tapGalleryImg" data-idx="{{index}}" animation="{{item.idx}}">
-            <image src="{{item.src}}"></image>
-          </view>
-        </block>
 
-      <!--<view class="item itemL" bindtap="galleryImgL" animation="{{galleryImgLeftAnimation}}">
-        <image src="/images/EatHow.png"></image>
-      </view>
-      <view class="item itemM" animation="{{galleryImgMiddleAnimation}}">
-        <image src="/images/coffee.png"></image>
-      </view>
-      <view class="item itemR" bindtap="galleryImgR" animation="{{galleryImgRightAnimation}}">
-        <image src="/images/banner.png"></image>
-      </view>-->
+    <view class="gallery">
+
 
     </view>
 
-    <!--<swiper>
-      <swiper-item>
-        <image src="/images/EatHow.png"></image>
-      </swiper-item>
-      <swiper-item>
-        <image src="src"></image>
-      </swiper-item>
-      <swiper-item></swiper-item>
-      <swiper-item></swiper-item>
-      <swiper-item></swiper-item>
-    </swiper>-->
+
+    <view class="swiper">
+      <swiper current="1" bindchange="galleryImgChange">
+        <block wx:for="{{gallery}}">
+          <swiper-item>
+            <image src="{{item.src}}" bindtap="galleryImgPrev" data-src="{{item.src}}"></image>
+          </swiper-item>
+        </block>
+      </swiper>
+    
+    </view>
 
   </view>
 

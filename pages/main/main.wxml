@@ -4,7 +4,7 @@
   <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ systemInfo.windowWidth }}px">
     <view class="wrap" animation="{{bannerSwitchTranslate}}">
       <view class="shopBanner" style="width: {{ systemInfo.windowWidth }}px">
-        <view class="shopAvatar">
+        <view class="shopAvatar" bindtap="shopTap" data-shopid="{{shop.shop_id}}">
           <image src="/images/banner.png"></image>
         </view>
         <view class="shopName">{{shop.shop_name}}</view>

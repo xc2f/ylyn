@@ -66,9 +66,6 @@ Page({
     return animation;
   },
 
-  galleryImgChange(e) {
-    console.log(e)
-  },
   galleryImgPrev(e) {
     let that = this;
     wx.previewImage({
@@ -83,12 +80,10 @@ Page({
       }()),
     })
   },
+
+
   switchToMe() {
     let that = this;
-    // that.setData({
-    //   bannerSwitchTranslate: that.bannerSwitchTranslateIn()
-    // })
-    // setTimeout(function(){
 
     that.setData({
       showMeSwitch: false,
@@ -100,20 +95,20 @@ Page({
       userOpacityAnimation: that.basicAnimation(500, 0).opacity(1).step().export(),
     })
 
-    // }, 800)
-    // setTimeout(function () {
-    //   that.setData({
-    //     bannerSwitchTranslate: that.bannerSwitchTranslateOut()
-    //   })
-    // }, 2000)
+    wx.getStorage({
+      key: 'meInfo',
+      success: function(res) {
+        console.log(res)
+      },
+      fail: function(e) {
+        console.log(e)
+      }
+    })
+
   },
 
   switchToShop() {
     let that = this;
-    // that.setData({
-    //   bannerSwitchTranslate: that.bannerSwitchTranslateIn()
-    // })
-    // setTimeout(function(){
 
     that.setData({
       showShopSwitch: false,
@@ -125,31 +120,8 @@ Page({
       userOpacityAnimation: that.basicAnimation(500, 0).opacity(0).step().export(),
     })
 
-    // }, 800)
-    // setTimeout(function () {
-    //   that.setData({
-    //     bannerSwitchTranslate: that.bannerSwitchTranslateOut()
-    //   })
-    // }, 2000)
   },
 
-  // bannertranslate效果，暂不用
-  // bannerSwitchTranslateIn() {
-  //   var animation = wx.createAnimation({
-  //     duration: 800,
-  //     timingFunction: "ease",
-  //     delay: 0
-  //   })
-  //   return animation.translateZ(-170).step().export();
-  // },
-  // bannerSwitchTranslateOut() {
-  //   var animation = wx.createAnimation({
-  //     duration: 800,
-  //     timingFunction: "ease",
-  //     delay: 0
-  //   })
-  //   return animation.translateZ(0).step().export();
-  // },
 
   bannerSwitchToMe() {
     //  let that = this;
@@ -178,6 +150,8 @@ Page({
       registerShow: true
     })
   },
+
+
   exitRegister(e) {
     let target = e.currentTarget.dataset.exitRegisterText;
     if (target === '完成注册') {
@@ -204,10 +178,14 @@ Page({
         }
       })
     }
+
     this.setData({
       registerShow: false
     })
+
   },
+
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -425,6 +403,12 @@ Page({
           }
         })
       }
+    })
+  },
+
+  shopTap(e){
+    wx.navigateTo({
+      url: '/pages/shopDetail/shopDetail?shop_id='+e.currentTarget.dataset.shop_id,
     })
   },
   /**

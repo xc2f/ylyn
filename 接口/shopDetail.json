@@ -1,0 +1,37 @@
+{
+  "shop_name": "咖啡故事",
+  "shop_id": 2,
+  "man_in": 12,
+  "female_in": 23,
+  "address": "唐延南路",
+  "distance": "200m",
+  "coordinate": {
+    "longitude": 108.9619100000,
+    "latitude": 34.2771700000
+  },
+  "phone": "1320000",
+  "in_sales": true,
+  "sales_content": ["满100-90", "满200-10送菜品"],
+  "foods": [
+    {
+      "pic": "/images/coffee.png",
+      "title": "精品咖啡",
+      "price": 12
+    },
+    {
+      "pic": "/images/boy.png",
+      "title": "汗腺一面",
+      "price": 21
+    },
+    {
+      "pic": "/images/girl.png",
+      "title": "精品寿司",
+      "price": 22
+    },
+    {
+      "pic": "/images/boy.png",
+      "title": "哈哈哈哈",
+      "price": 23
+    }
+  ]
+}

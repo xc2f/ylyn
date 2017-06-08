@@ -1,26 +1,48 @@
-// pages/test/test.js
+// pages/shopDetail/shopDetail.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    gallery: [
-      '/images/EatHow.png',
-      '/images/banner.png',
-      '/images/coffee.png',
-      '/images/boy.png',
-      '/images/girl.png',
-      '/images/EatHow.png',
-      '/images/coffee.png'
-    ]
+    shop: null
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    let that = this
+    wx.request({
+      url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop_detail',
+      method: 'POST',
+      data: {
+        shop_id: options.shop_id
+      },
+      success: function (res) {
+        let data = res.data
+        data.total = data.man_in + data.female_in
+        that.setData({
+          shop: data
+        })        
+      }
+    })
+  },
+
+  mapNavigation(){
+    let shop = this.data.shop
+    wx.openLocation({
+      latitude: shop.coordinate.latitude,
+      longitude: shop.coordinate.longitude,
+      scale: 20,
+      name: shop.shop_name,
+      address: shop.address
+    })
+  },
+  callPhone(){
+    wx.makePhoneCall({
+      phoneNumber: this.data.shop.phone,
+    })
   },
 
   /**
@@ -55,7 +77,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+    
   },
 
   /**

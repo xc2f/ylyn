@@ -1,9 +1,10 @@
 {
   "pages": [
+    "pages/test/test",
+    "pages/nearlist/nearlist",
     "pages/main/main",
-    "pages/chat/chat",
-    "pages/common/face/face",
-    "pages/test/test"
+    "pages/shopDetail/shopDetail",
+    "pages/chat/chat"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",

@@ -1,0 +1,208 @@
+/* pages/shopDetail/shopDetail.wxss */
+.container {
+  position: relative;
+  background: #eee;
+}
+
+.banner {
+  position: relative;
+  height: 170px;
+  overflow: hidden;
+}
+
+.banner .wrap {
+
+}
+
+.shopBanner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: url('https://img.souche.com/20161226/jpg/2766f2af8b08397675217bfacc0f9701.jpg') no-repeat 100% 100%;
+  height: 170px;
+  overflow: hidden;
+}
+
+.shopBanner .shopAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: relative;
+  top: -10px;
+}
+
+.shopBanner .shopAvatar image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.shopBanner .shopName, .userBanner .shopName {
+  color: #fff;
+}
+
+/*活动标签*/
+.inSales {
+  position: absolute;
+  right: -25px;
+  top: -25px;
+  background: rgb(255, 150, 0);
+  /*padding: 10px;*/
+  width: 50px;
+  height: 50px;
+  padding-bottom: 0;
+  transform: rotate(45deg);
+}
+.inSales .inSaleText {
+  position: absolute;
+  bottom: 0;
+  left:12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.userCount {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  background: #fff;
+}
+.userCount .total,
+.userCount .man,
+.userCount .female {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #ccc;
+}
+.userCount .total,
+.userCount .man {
+  border-right: 1px solid #eee;
+}
+.userCount .num {
+  font-size: 20px;
+  display: block;
+  color: #222;
+  font-weight: bold;
+}
+.shopInfo,
+.inSalesInfo {
+  margin-top: 10px;
+  background: #fff;
+}
+.shopInfo .row {
+  /*display: flex;
+  flex-direction: row;*/
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #eee;
+  clear: both;
+}
+.shopInfo text {
+  line-height: 40px;
+}
+.iconLeft, .iconRight {
+  /*flex: 1;*/
+  width: 10%;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+}
+.iconRight {
+  float: right;
+}
+.shopInfo .address {
+  /*flex: 10;*/
+  /*width: 80%;*/
+}
+.shopInfo .phoneNum {
+  /*flex: 10;*/
+  /*width: 80%;*/
+}
+.shopInfo .row.foods {
+  height: 150px;
+  border-bottom: none;
+}
+.foods .list {
+  /*flex: 11;*/
+  height: 150px;
+  width: 90%;
+  float: right;
+}
+
+.foods .list .scrollH {
+  white-space: nowrap;
+}
+.foods .list .item {
+  display: inline-block;
+  width: 120px;
+  height: 130px;
+  margin: 10px 10px 10px 0;
+}
+
+.foods .list image {
+  height: 100px;
+  width: 100%;
+}
+.foods .list .info {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-weight: bold;
+}
+.foods .list .info .price {
+  color: red;
+}
+
+.inSalesInfo {
+  /*padding-top: 10px;*/
+}
+.inSalesInfo:after {
+  display: block;
+  content: ".";
+  visibility: hidden;
+  height: 0;
+  clear: both;
+}
+.inSalesInfo .content {
+  width: 90%;
+  float: right;
+}
+.inSalesInfo .content text {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+}
+.customPic {
+  margin-top: 10px;
+}
+.customPic image {
+  width: 100%;
+}
+
+.toHere {
+  background: rgba(0, 0, 0, .7);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.toHere text {
+  font-size: 14px;
+}

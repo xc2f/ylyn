@@ -1,9 +1,8 @@
 <!--pages/test/test.wxml-->
 <text>pages/test/test.wxml</text>
-<scroll-view style="height: 300px" scroll-y='true' scroll-top="20000">
-  <view style="height: 200px">1</view>
-  <view style="height: 200px">2</view>
-  <view style="height: 200px">3</view>
-  <view style="height: 200px">4</view>
-  <view style="height: 200px">5</view>
-</scroll-view>
+
+<view class="wrap">
+  <view class="item" wx:for="{{gallery}}">
+    <image src="{{item}}"></image>
+  </view>
+</view>

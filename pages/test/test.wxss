@@ -1,1 +1,13 @@
 /* pages/test/test.wxss */
+
+.wrap {
+  width: 100%;
+  height: 300px;
+  position: relative;
+}
+
+.item {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

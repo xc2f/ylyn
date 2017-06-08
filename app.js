@@ -1,6 +1,5 @@
 App({
   onLaunch: function () {
-
     
     // wx.getStorageInfo({
     //   success: function(res) {
@@ -63,7 +62,6 @@ App({
   },
 
   onShow: function(){
-    console.log('on hide')
 
     wx.connectSocket({
       url: 'wss://192.168.0.119'

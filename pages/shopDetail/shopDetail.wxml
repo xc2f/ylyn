@@ -1,0 +1,71 @@
+<view class="container">
+
+  <view class="banner">
+    <view wx:if="{{shop.in_sales}}" class="inSales">
+      <text class="inSaleText">活动</text>
+    </view>
+    <view class="wrap">
+      <view class="shopBanner">
+        <view class="shopAvatar">
+          <image src="/images/banner.png"></image>
+        </view>
+        <view class="shopName">{{shop.shop_name}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="userCount">
+    <view class="total">
+      <text class="num">{{shop.total}}</text>人数</view>
+    <view class="man">
+      <text class="num">{{shop.man_in}}</text>男士</view>
+    <view class="female">
+      <text class="num">{{shop.female_in}}</text>女士</view>
+  </view>
+
+  <view class="shopInfo">
+    <view class="location row" bindtap="mapNavigation">
+      <text class="fa fa-map-marker iconLeft"></text>
+      <text class="address">距离你{{shop.distance}} | {{shop.address}}</text>
+      <text class="fa fa-angle-right iconRight"></text>
+    </view>
+    <view class="phone row" bindtap="callPhone">
+      <text class="fa fa-phone iconLeft"></text>
+      <text class="phoneNum">{{shop.phone}}</text>
+      <text class="fa fa-angle-right iconRight"></text>
+    </view>
+    <view class="foods row">
+      <text class="fa fa-birthday-cake iconLeft"></text>
+      <view class="list">
+        <scroll-view scroll-x="true" class="scrollH">
+          <view class="item" wx:for="{{shop.foods}}" wx:key="title">
+            <image src="{{item.pic}}"></image>
+            <view class="info">
+              <text class="name">{{item.title}}|</text>
+              <text class="price">¥{{item.price}}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <view class="inSalesInfo">
+    <text class="fa fa-bullhorn iconLeft"></text>
+    <view class="content">
+      <block wx:for="{{shop.sales_content}}">
+        <text>{{item}}</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="customPic">
+    <image src="/images/EatHow.png"></image>
+  </view>
+
+
+  <!--右下角去这里-->
+  <view class="toHere" bindtap="mapNavigation"> 
+    <text class="fa fa-level-up"></text>
+    <text class="text">去这里</text>
+  </view>
+</view>

@@ -1,19 +1,11 @@
-// pages/test/test.js
+// page/shopDetail/shopDetail.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    gallery: [
-      '/images/EatHow.png',
-      '/images/banner.png',
-      '/images/coffee.png',
-      '/images/boy.png',
-      '/images/girl.png',
-      '/images/EatHow.png',
-      '/images/coffee.png'
-    ]
+  
   },
 
   /**

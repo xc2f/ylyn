@@ -1,0 +1,79 @@
+<!--index.wxml-->
+<view class="container">
+
+  <view class="city-input">
+    <input type="text" placeholder="请输入城市名字" bindinput="getCity1" />
+    <button type="primary" bindtap="getCity2">确定</button>
+  </view>
+
+  <view class="head-weather">
+    <view class="wendu">8℃</view>
+    <view class="tianqiqingkuang">晴转多云</view>
+    <view class="head-date">
+      <view class="riqi">
+        <text>星期一</text>
+      </view>
+      <view class="shijian">
+        <text>更新时间：</text>
+        <text>22:11</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="content-title">
+    <text>一周天气预报</text>
+  </view>
+
+  
+  <view wx:for="{{weatherInfo}}">
+  {{item.date}}  {{item.week}}  {{item.temperature}}  {{item.weather}}  {{item.wind}} 
+  </view>
+
+
+  <!--<view class="content-info">
+    <view class="weatherinfo" wx:for="{{weatherInfo}}">
+      <text class="weatherinfo1">{{item.week}}</text>
+      <text class="weatherinfo2">{{item.temperature}}</text>
+      <text class="weatherinfo3">{{item.weather}}</text>
+    </view>
+
+    <view class="weatherinfo">
+      <text class="weatherinfo1">星期一</text>
+      <text class="weatherinfo2">28℃~36℃</text>
+      <text class="weatherinfo3">晴转多云</text>
+    </view>
+
+    <view class="weatherinfo">
+      <text class="weatherinfo1">星期一</text>
+      <text class="weatherinfo2">28℃~36℃</text>
+      <text class="weatherinfo3">晴转多云</text>
+    </view>
+    
+    <view class="weatherinfo">
+      <text class="weatherinfo1">星期一</text>
+      <text class="weatherinfo2">28℃~36℃</text>
+      <text class="weatherinfo3">晴转多云</text>
+    </view>
+
+    <view class="weatherinfo">
+      <text class="weatherinfo1">星期一</text>
+      <text class="weatherinfo2">28℃~36℃</text>
+      <text class="weatherinfo3">晴转多云</text>
+    </view>
+
+    <view class="weatherinfo">
+      <text class="weatherinfo1">星期一</text>
+      <text class="weatherinfo2">28℃~36℃</text>
+      <text class="weatherinfo3">晴转多云</text>
+    </view>
+
+    <view class="weatherinfo">
+      <text class="weatherinfo1">星期一</text>
+      <text class="weatherinfo2">28℃~36℃</text>
+      <text class="weatherinfo3">晴转多云</text>
+    </view>
+
+  </view>-->
+
+
+</view>

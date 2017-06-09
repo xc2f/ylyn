@@ -1,13 +1,51 @@
 /* pages/test/test.wxss */
 
-.wrap {
-  width: 100%;
-  height: 300px;
-  position: relative;
+image {
+  transform: scale(1)
 }
 
-.item {
-  position: absolute;
-  top: 0;
-  left: 0;
+/*.gallery {
+  perspective: 1000px;
+  position: relative;
+  height: 400px;
 }
+
+.wrap {
+  transform-style: preserve-3d;
+  height: inherit;
+}
+
+.wrap .item {
+  position: absolute;
+  width: 108px;
+  height: 108px;
+  padding: 10px;
+  background: #eee;
+}
+.wrap .item {
+  width: 100%;
+  height: 100%;
+}
+.wrap .item0 {
+  transform: rotateY(0deg) translateZ(150px);
+}
+
+.wrap .item1 {
+  transform: rotateY(60deg) translateZ(150px);
+}
+
+.wrap .item2 {
+  transform: rotateY(120deg) translateZ(150px);
+}
+
+.wrap .item3 {
+  transform: rotateY(180deg) translateZ(150px);
+}
+
+.wrap .item4 {
+  transform: rotateY(240deg) translateZ(150px);
+}
+
+.wrap .item5 {
+  transform: rotateY(300deg) translateZ(150px);
+}*/

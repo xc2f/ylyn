@@ -1,8 +1,27 @@
 <!--pages/test/test.wxml-->
 <text>pages/test/test.wxml</text>
 
-<view class="wrap">
-  <view class="item" wx:for="{{gallery}}">
-    <image src="{{item}}"></image>
+<view class="gallery">
+  <view class="wrap">
+    <!--<block wx:for="{{gallery}}">
+      <view class="item item{{index}}" animation="{{'animation' + index}}" bindtap="{{'tap' + index}}">
+        <image src="{{item}}"></image>
+      </view>
+    </block>-->
+    <view class="c1" wx:if="{{size > 1}}">
+      <view class="d1">1</view>
+    </view>
+    <view class="c2" wx:if="{{size > 2}}">
+      <view class="d2">2</view>
+    </view>
+        <view class="c3" wx:if="{{size > 3}}">
+      <view class="d3">3</view>
+    </view>
+        <view class="c4" wx:if="{{size > 4}}">
+      <view class="d4">4</view>
+    </view>
+        <view class="c5" wx:if="{{size > 5}}">
+      <view class="d5">5</view>
+    </view>
   </view>
 </view>

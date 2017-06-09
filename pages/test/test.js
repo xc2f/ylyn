@@ -6,21 +6,48 @@ Page({
    */
   data: {
     gallery: [
-      '/images/EatHow.png',
-      '/images/banner.png',
-      '/images/coffee.png',
+      '/images/man.jpg',
+      '/images/female.jpg',
       '/images/boy.png',
       '/images/girl.png',
-      '/images/EatHow.png',
+      '/images/banner.png',
       '/images/coffee.png'
-    ]
+    ],
+
+    animation0: {},
+    animation1: {},
+    size: 5
+  },
+
+  basicAnimation(){
+    var animation = wx.createAnimation({
+      transformOrigin: "50% 50%",
+      duration: 1000,
+      timingFunction: "ease",
+      delay: 0
+    })
+    return animation
+  },
+
+  tap0(e){
+    console.log(e)
+    this.setData({
+      animation0: this.basicAnimation().scale(1.2).step().export()
+    })
+
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    for(let i=0; i<this.data.gallery.length; i++){
+      this.setData({
+        
+      })
+    }
+
+    console.log(this.data.gallery)
   },
 
   /**

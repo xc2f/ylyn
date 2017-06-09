@@ -10,47 +10,81 @@
   /*transform: scale(0.7);*/
 }
 
-.banner .wrap {
-}
-
-.shopBanner {
-  background: red;
+.banner .bannerImg {
   position: absolute;
   top: 0;
   left: 0;
-  background: red;
-  /*backface-visibility: hidden;*/
+  right: 0;
+  bottom: 0;
+  opacity: 0.3;
+  width: 100%;
+  height: 100%;
+}
+.shopName {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.shopName .line {
+  width: 30px;
+  height: 2px;
+  background: #333;
+}
+.shopName .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #333;
+  margin: 0 3px 0 3px;
+}
+.shopName text {
+  margin-left: 17px;
+  margin-right: 17px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.bottomText {
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 15px;
+}
+
+.shopBanner {
+  backface-visibility: hidden;
 }
 
 .userBanner {
-  position: absolute;
-  top: 0;
-  background: blue;
   transform-style: preserve-3d;
   transform-origin: 0;
   transform: rotateY(180deg);
-  /*backface-visibility: hidden;*/
+  backface-visibility: hidden;
 }
 
 .shopBanner, .userBanner {
-  /*filter: blur(1px);
-  opacity: .7;*/
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /*position: relative;*/
-  background: url('https://img.souche.com/20161226/jpg/2766f2af8b08397675217bfacc0f9701.jpg') no-repeat 100% 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   height: 170px;
   overflow: hidden;
 }
 
 .shopBanner .shopAvatar, .userBanner .shopAvatar {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   position: relative;
-  top: -10px;
+  /*top: -10px;*/
+  /*z-index: 99;*/
+  margin-bottom: 10px;
 }
 
 .shopBanner .shopAvatar image, .userBanner .shopAvatar image {
@@ -60,7 +94,7 @@
 }
 
 .shopBanner .shopName, .userBanner .shopName {
-  color: #fff;
+  /*color: #fff;*/
 }
 
 .shopBanner .flipConner, .userBanner .flipConner {
@@ -68,7 +102,7 @@
   bottom: -1px;
   width: 50px;
   height: 50px;
-  z-index: 999;
+  /*z-index: 999;*/
 }
 
 .shopBanner .flipConnerImg, .userBanner .flipConnerImg {
@@ -93,164 +127,34 @@
   opacity: 1;
 }
 
-.register {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.exitRegister {
-  color: #fff;
-  margin-top: 20px;
-}
-
-.register .main {
-  width: 80%;
-  height: 70px;
-  position: relative;
-}
-
-.register .block {
-  width: 100%;
-  background: #fff;
-  flex-direction: row;
-  display: flex;
-  height: 70px;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  /*box-shadow: 1px 1px 1px #eee;*/
-  border: 1px solid #eee;
-  border-radius: 3px;
-}
-
-.register .block .section {
-  flex: 5;
-  flex-direction: row;
-  display: flex;
-}
-
-.register .avatar .section .pickAvatar {
-  margin-right: 20px;
-}
-
-.register .block .section .title {
-  flex: 1;
-  text-align: center;
-  align-self: center;
-}
-
-.register .block .section .input, .register .block .section .slider,
-.register .block .section .genderRadio, .register .block .section .textarea,
-.register .block .section .pickAvatar {
-  /*display: flex;*/
-  flex: 2;
-}
-
-.register .block .section .genderRadio label {
-  padding-right: 15px;
-}
-
-.register .block .section .textarea {
-  width: auto;
-  height: 100px;
-  overflow: hidden;
-}
-
-.register .block .down {
-  flex: 1;
-}
-
-.register .block .down .img {
-  width: 25px;
-  height: 25px;
-}
-
-.nickName {
-  /*transform: scale(0.2)*/
-  z-index: 99;
-  transform: rotate(1.7deg);
-}
-
-.gender {
-  z-index: 98;
-  transform: rotate(1.4deg);
-}
-
-.age {
-  z-index: 97;
-  transform: rotate(1.1deg);
-}
-
-.tall {
-  z-index: 96;
-  transform: rotate(0.8deg);
-}
-
-.intro {
-  z-index: 95;
-  transform: rotate(0.4deg);
-}
-
-.intro .title {
-  align-self: flex-start !important;
-}
-
-.intro .down {
-  align-self: flex-end;
-  text-align: center;
-  padding-bottom: 13px;
-}
-
-.avatar {
-  z-index: 94;
-  transform: rotate(0deg);
-}
-
-.avatar .avatarShow {
-  position: absolute;
-  top: -150px;
-  border-radius: 50%;
-  border: 2px solid #eee;
-  width: 100px;
-  height: 100px;
-  opacity: 0;
-}
-
-.avatar .avatarShow .img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-}
-
-.avatar .userName {
-  text-align: center;
-  color: #fff;
-  padding-top: 7px;
-}
-
 .allInOne {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-
-.allInOne .big {
   margin-top: 15px;
 }
 
-.allInOne .small {
+.allInOne .up {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.allInOne .up .big {
+  font-weight: bold;
+}
+.allInOne .down text {
   font-size: 12px;
   color: #ccc;
   margin-top: 7px;
+}
+
+.allInOne .line {
+  width: 30px;
+  height: 1px;
+  background: #ccc;
+  margin: 0 7px;
 }
 
 .userShow {

@@ -1,17 +1,19 @@
 {
   "pages": [
-    "pages/test/test",
-    "pages/nearlist/nearlist",
     "pages/main/main",
+"pages/nearlist/nearlist",
     "pages/shopDetail/shopDetail",
-    "pages/chat/chat"
+    "pages/chat/chat",
+    "pages/user/user",
+    "pages/msgList/msgList"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true,
+    "enablePullDownRefresh": false,
     "backgroundTextStyle": "light",
     "backgroundColor": "#eee"
-  }
+  },
+  "debug": true
 }

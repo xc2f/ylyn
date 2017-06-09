@@ -1,80 +1,78 @@
 App({
-  onLaunch: function () {
-    
-    // wx.getStorageInfo({
-    //   success: function(res) {
-    //     console.log(res)
-    //     res.keys.map(function(key, idx){
-    //       wx.getStorage({
-    //         key: key,
-    //         success: function (res) {
-    //           let item = JSON.parse(res.data)
-    //           if (item.date < 1495511141224) {
-    //             wx.removeStorage({
-    //               key: key,
-    //               success: function (res) {
-    //                 console.log('delete ' + key)
-    //               }
-    //             })
-    //           }
-    //         }
-    //       })
-    //     })
-    //   },
-    // }),
-    // wx.checkSession({
-    //   success: function (res) {
-    //     console.log('success ---- start')
-    //     console.log(res)
-    //     console.log('success ---- end')
-    //     //session 未过期，并且在本生命周期一直有效
-    //   },
-    //   fail: function (res) {
-    //     console.log('fail------ start')
-    //     console.log(res)
-    //     console.log('fail------ end')        
-    //     //登录态过期
-    //     // wx.login() //重新登录
-    //   }
-    // })
-    // wx.getSavedFileList({
-    //   success: function (res) {
-    //     console.log(res)
-    //   }
-    // })
-    // this.tempStorage()
-  },
-  tempStorage: function() {
-    for(let i=0; i<10; i++) {
-      
-      wx.setStorage({
-        key: "key" + i,
-        data: JSON.stringify({value: "value" + i, date: new Date().getTime()}),
-        success: function (res) {
-          // console.log(res)
-        }
-      })  
-    }
-  },
 
   globalData: {
-    userInfo: null
+    meInfo: null,
+    deviceInfo: null
   },
 
-  onShow: function(){
+  onLaunch: function () {
+    let that = this
 
+    // 获取设备信息
+    that.getDeviceInfo()
+
+    // that.getMeInfo()
+
+    // 连接websocket
     wx.connectSocket({
       url: 'wss://192.168.0.119'
     })
 
-    wx.onSocketOpen(function (res) {
-      console.log('WebSocket连接已打开！')
-      setInterval(function(){
-        var time = new Date().toString()
-        wx.sendSocketMessage({
-          data: time
-        })
-      }, 5000)
+    // wx.onSocketOpen(function (res) {
+    //   console.log('WebSocket连接已打开！')
+    //   setInterval(function () {
+    //     var time = new Date().toString()
+    //     wx.sendSocketMessage({
+    //       data: time
+    //     })
+    //   }, 5000)
+    // })
+
+  },
+
+  getMeInfo() {
+    let that = this
+    wx.login({
+      success: function (res) {
+        if (res.code) {
+          let code = res.code
+          wx.getUserInfo({
+            success: function(res){
+              // 发起请求
+              wx.request({
+                url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/me',
+                method: 'POST',
+                data: {
+                  userInfo: res,
+                  code: code
+                },
+                success: function(res){
+                  that.globalData.meInfo = res.data
+                  wx.setStorage({
+                    key: 'meInfo',
+                    data: res.data,
+                  })
+                }
+              })
+            }
+          })
+        } else {
+          console.log('获取用户登录态失败！' + res.errMsg)
+        }
+      }
+    });
+  },
+
+  getDeviceInfo: function(){
+    let that = this
+    wx.getSystemInfo({
+      success: function (res) {
+        that.globalData.deviceInfo = res
+      }
     })
+  },
+
+  onShow: function(){
+
   }
 })

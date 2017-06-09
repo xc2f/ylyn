@@ -2,15 +2,19 @@
 
 .container {
   background: #eee;
+  position: relative;
 }
+
 .head {
   text-align: center;
   padding-top: 20px;
   padding-bottom: 20px;
 }
+
 .head .fa {
   padding-right: 10px;
 }
+
 .shopList .item {
   background: #fff;
   display: flex;
@@ -29,10 +33,13 @@
   padding: 10px 10px 10px 20px;
   position: relative;
 }
+
 .shopList .item .shopName {
   font-weight: bold;
 }
+
 /*活动标签*/
+
 .shopList .item .right .inSales {
   position: absolute;
   right: -25px;
@@ -44,10 +51,11 @@
   padding-bottom: 0;
   transform: rotate(45deg);
 }
+
 .shopList .item .right .inSaleText {
   position: absolute;
   bottom: 0;
-  left:12px;
+  left: 12px;
   color: #fff;
   font-size: 12px;
   font-weight: bold;
@@ -60,10 +68,12 @@
   bottom: 10px;
   margin-top: 30px;
 }
+
 .shopList .item .man {
   height: 25px;
   line-height: 25px;
 }
+
 .shopList .item .distance {
   position: absolute;
   right: 10px;
@@ -73,4 +83,49 @@
 .shopList .item .fa text {
   padding-left: 7px;
   color: #222;
+}
+
+.bottomIcon {
+  background: rgba(0, 0, 0, 0.7);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: fixed;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.bottomIcon text {
+  font-size: 14px;
+}
+
+.toMe {
+  left: 10px;
+  bottom: 10px;
+}
+
+.toMsgList {
+  right: 10px;
+  bottom: 10px;
+}
+
+.shopList .empty {
+  height: 100px;
+  background: #fff;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.msgNew {
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+  position: absolute;
 }

@@ -3,8 +3,8 @@
 
 <template name="tableList">
   <block wx:for="{{tables}}" wx:key="table_id">
-    <text><text class="fa fa-anchor"></text> 桌号：{{item.table_id}}号</text>
-    <view style="height: 200px">
+    <view style="margin-left: 10px; height: 20px; display: flex; justify-content: flex-start; align-items: center;"><image src="/images/table.png" style="width: 17px; height: 14px; padding-right: 5px;"></image><text style="font-size: 14px;">桌号：{{item.table_id}}号</text></view>
+    <view style="height: 172px; margin: 10px 0 10px 10px">
       <template is="eachTableList" data="{{users: item.users, isRegister: isRegister}}"></template>
     </view>
   </block>

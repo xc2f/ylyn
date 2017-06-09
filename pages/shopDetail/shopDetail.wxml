@@ -40,7 +40,8 @@
           <view class="item" wx:for="{{shop.foods}}" wx:key="title">
             <image src="{{item.pic}}"></image>
             <view class="info">
-              <text class="name">{{item.title}}|</text>
+              <text class="name">{{item.title}}</text>
+              <text style="padding: 0 3px">|</text>
               <text class="price">¥{{item.price}}</text>
             </view>
           </view>

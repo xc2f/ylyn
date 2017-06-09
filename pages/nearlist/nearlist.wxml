@@ -2,6 +2,7 @@
 <!--附近商家-->
 
 <view class="container">
+
   <view class="head">
     <text>—— · </text>
     <text class="fa fa-institution"></text>
@@ -10,9 +11,9 @@
   </view>
 
   <view class="shopList">
-    <block wx:if="{{shopListEmpty}}">
+    <view class="empty" wx:if="{{shopListEmpty}}"> 
       <text>附近无可用商家</text>
-    </block>
+    </view>
     <block wx:for="{{shopList}}" wx:key="{{item.shop_id}}">
       <navigator url="/pages/main/main?shopid={{item.shop_id}}">
         <view class="item">
@@ -23,16 +24,32 @@
             </view>
             <text class="shopName">{{item.shop_name}}</text>
             <view class="persons">
-              <view class="fa fa-male man" style="color: rgb(2, 113, 188)"><text>{{item.man_in}}</text></view>
-              <view class="fa fa-female man" style="color: rgb(123, 54, 118)"><text>{{item.female_in}}</text></view>
+              <view class="fa fa-male man" style="color: rgb(2, 113, 188)">
+                <text>{{item.man_in}}</text>
+              </view>
+              <view class="fa fa-female man" style="color: rgb(123, 54, 118)">
+                <text>{{item.female_in}}</text>
+              </view>
             </view>
             <view class="distance">
-              <view class="fa fa-location-arrow"><text>{{item.distance}}</text></view>
+              <view class="fa fa-location-arrow">
+                <text>{{item.distance}}</text>
+              </view>
             </view>
           </view>
         </view>
       </navigator>
     </block>
+  </view>
+
+  <view class="toMe bottomIcon" bindtap="toMe" wx:if="{{showMeIcon}}">
+    <text class="fa fa-user-o"></text>
+    <text class="text">我的</text>
+  </view>
+  <view class="toMsgList bottomIcon" bindtap="toMsgList" wx:if="{{showMeIcon}}">
+    <text class="fa fa-commenting-o"></text>
+    <text class="text">消息列表</text>
+    <view class="msgNew"></view>
   </view>
 
 </view>

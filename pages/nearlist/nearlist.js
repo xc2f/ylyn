@@ -7,40 +7,86 @@ Page({
   data: {
     request_fail: false,
     shopList: [],
-    shopListEmpty: true
+    shopListEmpty: true,
+    showMeIcon: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    let that = this
+    that.fetchShopList()
+
+    // 如果本机存有用户个人信息，说明登录过，显示下面的个人信息和消息列表图标
+    wx.getStorage({
+      key: 'meInfo',
+      success: function(res) {
+        that.setData({
+          showMeIcon: true
+        })
+      },
+      fail: function(e) {
+        that.setData({
+          showMeIcon: false
+        })
+      }
+    })
+  },
+
+  fetchShopList(){
     let that = this;
     wx.showLoading({
       title: '数据获取中，请稍后',
     })
-    wx.request({
-      url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/nearlist',
+
+    // 定位
+    wx.getLocation({
+      type: 'gcj02',
       success: function(res) {
-        // console.log(res)
-        if (res.statusCode === 200) {
-          wx.hideLoading()
-          if(res.data.length !== 0) {
+        let coordinate = {
+          latitude: res.latitude,
+          longitude: res.longitude
+        }
+        wx.request({
+          url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/nearlist',
+          method: 'POST',
+          data: coordinate,
+          success: function (res) {
+            // console.log(res)
+            if (res.statusCode === 200) {
+              wx.hideLoading()
+              if (res.data.length !== 0) {
+                that.setData({
+                  shopList: res.data,
+                  shopListEmpty: false
+                })
+              } else {
+                that.setData({
+                  shopListEmpty: true
+                })
+              }
+            }
+          },
+          fail: function () {
             that.setData({
-              shopList: res.data,
-              shopListEmpty: false
-            })
-          } else {
-            that.setData({
-              shopListEmpty: true
+              request_fail: true
             })
           }
-        }
-      },
-      fail: function() {
-        that.setData({
-          request_fail: true
         })
-      }
+      },
+    })
+  },
+
+  toMe() {
+    wx.navigateTo({
+      url: '/pages/user/user',
+    })
+  },
+
+  toMsgList() {
+    wx.navigateTo({
+      url: '/pages/msgList/msgList',
     })
   },
 

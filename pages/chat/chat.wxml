@@ -1,9 +1,9 @@
 <!--pages/chat/chat.wxml-->
 <view class="container">
-  <scroll-view class="chatBody" scroll-top="{{toTop}}" scroll-y="true" style="height: {{chatBodyHeight}}px">
+  <scroll-view class="chatBody" scroll-top="{{toTop}}" scroll-y="true" style="height: {{chatBodyHeight}}px;" bindtap="inputFocus">
     <block wx:for="{{messages}}" wx:key="message_id">
-      <view class="me messageBlock" wx:if="{{item.user_id === userInfo.user_id}}">
-        <image src="{{userInfo.avatar}}" class="avatar"></image>
+      <view class="me messageBlock" wx:if="{{item.user_id === meInfo.user_id}}">
+        <image src="{{meInfo.avatar}}" class="avatar"></image>
         <view class="message">
           <view wx:if="{{item.type === 'mult'}}" class="multMsg">
             <block wx:for="{{item.content}}" wx:key="type">
@@ -15,7 +15,7 @@
           <view class="angle"></view>
         </view>
       </view>
-      <view class="friend messageBlock" wx:if="{{item.user_id !== userInfo.user_id}}">
+      <view class="friend messageBlock" wx:if="{{item.user_id !== meInfo.user_id}}">
         <image src="{{friendInfo.avatar}}" class="avatar"></image>
         <view class="message">
           <view wx:if="{{item.type === 'mult'}}" class="multMsg">
@@ -30,25 +30,32 @@
       </view>
     </block>
   </scroll-view>
-  <view class="chatBar" animation="{{chatBarChangeHeightAnimation}}">
-    <view class="faceContent" animation="{{faceOpacityAnimation}}">
 
-      <import src="/pages/common/face/face" />
-      <template is="face" data="{{faces}}" />
 
-    </view>
-    <view class="faceDivision" animation="{{divisionSlideToRightAnimation}}"></view>
-    <view class="chatBarContent">
-      <view class="userCard"><text class="fa fa-vcard-o"></text></view>
-      <view class="inputWrap">
-        <textarea class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" bindinput="inputHandle" auto-height="true" />
+  <view class="chatBar" style="min-height: {{faceShow ? '184px' : 'auto'}}">
+    <view class="topBar">
+      <view class="userCard">
+        <text class="fa fa-vcard-o"></text>
       </view>
-      <view class="face" bindtap="toggleFace"><text class="fa fa-meh-o"></text></view>
+      <view class="inputWrap">
+        <textarea class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" auto-height fixed="{{true}}" bindinput="inputHandle"/>
+      </view>
+      <view class="face" bindtap="toggleFace">
+        <text class="fa fa-meh-o"></text>
+      </view>
       <view class="pic">
         <view class="fa fa-picture-o" wx:if="{{!isFocus}}" bindtap="sendPic"></view>
-        <view class="submit" wx:if="{{isFocus}}" bindtap="submit"><text>发送</text></view>
+        <view class="submit" wx:if="{{isFocus}}" bindtap="submit">
+          <text>发送</text>
+        </view>
       </view>
     </view>
-    
+
+  <view class="faceContent" hidden="{{!faceShow}}">
+    <import src="/pages/common/face/face" />
+    <template is="face" data="{{faces}}" />
   </view>
+
+  </view>
+
 </view>

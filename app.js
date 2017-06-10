@@ -18,15 +18,17 @@ App({
       url: 'wss://192.168.0.119'
     })
 
-    // wx.onSocketOpen(function (res) {
-    //   console.log('WebSocket连接已打开！')
-    //   setInterval(function () {
-    //     var time = new Date().toString()
-    //     wx.sendSocketMessage({
-    //       data: time
-    //     })
-    //   }, 5000)
-    // })
+    wx.onSocketOpen(function (res) {
+      console.log('WebSocket连接已打开！')
+    })
+
+    wx.onSocketError(function(){
+      // wx.showModal({
+      //   title: '连接失败',
+      //   content: '连接超时，请检查您的网络连接或稍后重试！',
+      //   showCancel: false
+      // })
+    })
 
   },
 

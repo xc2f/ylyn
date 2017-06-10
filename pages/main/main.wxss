@@ -4,10 +4,17 @@
 
 .banner {
   transform-style: preserve-3d;
-  position: relative;
-  height: 170px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
   perspective: 300px;
   /*transform: scale(0.7);*/
+}
+.banner .wrap {
+  width: 100%;
+  height: 100%;
 }
 
 .banner .bannerImg {
@@ -47,7 +54,7 @@
 
 .bottomText {
   font-size: 14px;
-  color: #ccc;
+  color: #777;
   margin-top: 15px;
 }
 
@@ -73,7 +80,7 @@
   align-items: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  height: 170px;
+  height: 150px;
   overflow: hidden;
 }
 
@@ -103,6 +110,7 @@
   width: 50px;
   height: 50px;
   /*z-index: 999;*/
+  /*display: none;*/
 }
 
 .shopBanner .flipConnerImg, .userBanner .flipConnerImg {
@@ -122,7 +130,7 @@
 
 .body {
   /*border: 1px solid red;*/
-  top: 170px;
+  top: 150px;
   position: absolute;
   opacity: 1;
 }
@@ -190,4 +198,80 @@
   transform-style: preserve-3d;
   perspective: 500px;
   /*perspective-origin: 50%;*/
+}
+
+
+/*底部工具栏*/
+.toolBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  display: flex;
+  flex: 1;
+  background: #fff;
+  justify-content: center;
+  align-items: center;
+}
+
+.toolBar > view {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  /*border: 1px solid red;*/
+}
+.toolBar .waiter,
+.toolBar .message {
+  flex: 1;
+}
+.toolBar .middleWrap {
+  flex: 2;
+}
+.toolBar image,
+.toolBar image {
+  width: 30px;
+  height: 30px;
+}
+.toolBar .fa-plus {
+  width: 50px;
+  height: 50px;
+  line-height: 47px;
+  text-align: center;
+  color: #fff;
+  background: #333;
+  border-radius: 50%;
+}
+.toolBar .filter {
+  display: block!important;
+  border: 1px solid #333;
+  border-radius: 50px;
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.filter .showGirl,
+.filter .showBoy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 10px;
+}
+.filter .showGirl {
+  float: left;
+}
+.filter .showBoy {
+  float: right;
+}
+.filter text {
+  font-size: 12px;
+  margin-top: 2px;
+}
+.filter image {
+  width: 20px;
+  height: 25px;
 }

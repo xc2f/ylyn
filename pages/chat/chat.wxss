@@ -1,15 +1,17 @@
 /* pages/chat/chat.wxss */
 
 .container {
-  /*position: relative;*/
+  position: relative;
+  width: 100%;
 }
 
 .chatBody {
   /*margin-bottom: 50px;*/
+  width: 100%;
 }
 
 .chatBody .item {
-  height: 100px;
+  /*height: 100px;*/
 }
 
 .chatBar {
@@ -20,17 +22,13 @@
   border-top: 1px solid #bbb;
   position: fixed;
   bottom: 0;
-  height: 50px;
+  /*height: 50px;*/
+  background: #fff;
 }
 
-.chatBarContent {
-  flex-direction: row;
+.chatBar .topBar {
   display: flex;
-  flex: 1;
-  height: 50px;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  flex-direction: row;
 }
 
 .chatBar .fa {
@@ -41,7 +39,10 @@
 
 .userCard, .face, .pic {
   flex: 1;
+  display: flex;
   text-align: center;
+  justify-content: center;
+  align-items: flex-end
 }
 
 .inputWrap {
@@ -49,12 +50,16 @@
 }
 
 .chatBar .textarea {
-  height: 37px !important;
-  line-height: 37px;
+  /*height: 37px;*/
+  /*line-height: 37px;*/
   width: 100%;
-  padding-top: 5px;
-  padding-bottom: 0;
+  /*padding-top: 5px;
+  padding-bottom: 0;*/
   border-bottom: 1px solid #bbb;
+  padding-top: 10px;
+  /*height: 40px!important;*/
+  /*line-height: 50px;*/
+  /*font-size: 14px;*/
 }
 
 .chatBar .submit {
@@ -63,18 +68,21 @@
   background: green;
   border-radius: 3px;
   color: #fff;
-  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 5px;
+  align-self: flex-end;
+  margin-bottom: 10px;
 }
+
+
 
 .messageBlock {
   width: 80%;
   margin-top: 17px;
   margin-bottom: 17px;
   min-height: 50px;
+  clear: both;
 }
 
 .message {
@@ -82,7 +90,9 @@
   padding: 10px;
   border-radius: 7px;
   position: relative;
-  max-width: 70%;
+  max-width: 60%;
+  display: flex;
+  align-items: center;
 }
 
 .messageBlock.me image.avatar {
@@ -149,15 +159,13 @@
   max-width: 100%;
 }
 
+
+
+
 .faceContent {
   height: 134px;
-  opacity: 0;
-}
-
-.faceDivision {
-  width: 0%;
-  height: 1px;
-  background: #ccc;
+  opacity: 1;
+  background: #eee;
 }
 
 .faceContent .faceSwiper, .faceContent .faceSwiper .page1,

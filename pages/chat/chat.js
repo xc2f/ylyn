@@ -6,12 +6,12 @@ Page({
    */
   data: {
     toTop: 0,
-    systemInfo: null,
+    deviceInfo: null,
     chatBodyHeight: 0,
 
     isFocus: false,
     inputValue: '',
-    userInfo: null,
+    meInfo: null,
     friendInfo: null,
     messages: [
       {
@@ -25,79 +25,7 @@ Page({
         content: [{ type: 'face', src: 'ee_1.png' }],
         type: 'mult',
         date: '1496647271712'
-      },
-      {
-        user_id: 7,
-        content: [{ type: 'text', content: 'hello' }],
-        type: 'mult',
-        date: '1496647266112'
-      },
-      {
-        user_id: 2,
-        content: [{ type: 'face', src: 'ee_1.png' }],
-        type: 'mult',
-        date: '1496647271712'
-      },
-      {
-        user_id: 7,
-        content: [{ type: 'text', content: 'hello' }],
-        type: 'mult',
-        date: '1496647266112'
-      },
-      {
-        user_id: 2,
-        content: [{ type: 'face', src: 'ee_1.png' }],
-        type: 'mult',
-        date: '1496647271712'
-      },
-      {
-        user_id: 7,
-        content: [{ type: 'text', content: 'hello' }],
-        type: 'mult',
-        date: '1496647266112'
-      },
-      {
-        user_id: 2,
-        content: [{ type: 'face', src: 'ee_1.png' }],
-        type: 'mult',
-        date: '1496647271712'
-      },
-      {
-        user_id: 7,
-        content: [{ type: 'text', content: 'hello' }],
-        type: 'mult',
-        date: '1496647266112'
-      },
-      {
-        user_id: 2,
-        content: [{ type: 'face', src: 'ee_1.png' }],
-        type: 'mult',
-        date: '1496647271712'
-      },
-      {
-        user_id: 7,
-        content: [{ type: 'text', content: 'hello' }],
-        type: 'mult',
-        date: '1496647266112'
-      },
-      {
-        user_id: 2,
-        content: [{ type: 'face', src: 'ee_1.png' }],
-        type: 'mult',
-        date: '1496647271712'
-      },
-      {
-        user_id: 7,
-        content: [{ type: 'text', content: 'hello' }],
-        type: 'mult',
-        date: '1496647266112'
-      },
-      {
-        user_id: 2,
-        content: [{ type: 'face', src: 'ee_1.png' }],
-        type: 'mult',
-        date: '1496647271712'
-      },
+      }
     ],
 
     // 表情
@@ -211,25 +139,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+
     let that = this;
-    wx.getSystemInfo({
-      success: function (res) {
-        that.setData({
-          systemInfo: res,
-          // 屏幕高度减去chatBar的高度，为消息窗口高度
-          chatBodyHeight: res.windowHeight - 50
-        })
-      }
-    })
-    wx.getStorage({
-      key: 'userInfo',
-      success: function (res) {
-        that.setData({
-          userInfo: res.data
-        })
-      },
-    })
+    let globalData = getApp().globalData
+
     that.setData({
+      deviceInfo: globalData.deviceInfo,
+      // 屏幕高度减去chatBar的高度，为消息窗口高度
+      chatBodyHeight: globalData.deviceInfo.windowHeight - 50
+    })
+
+
+    that.setData({
+      meInfo: globalData.meInfo,
       friendInfo: JSON.parse(options.friend),
       toTop: 10000
     })
@@ -247,13 +169,14 @@ Page({
 
     // 设置导航条
     wx.setNavigationBarTitle({
-      title: that.data.friendInfo.nick_name
+      title: that.data.friendInfo.nickName
     })
   },
 
   inputFocus() {
     this.setData({
-      isFocus: true
+      isFocus: true,
+      faceShow: false
     })
   },
 
@@ -328,7 +251,7 @@ Page({
 
     let tempMessageList = this.data.messages;
     tempMessageList.push({
-      user_id: this.data.userInfo.user_id,
+      user_id: this.data.meInfo.user_id,
       content: multiList,
       type: 'mult',
       date: new Date().getTime()
@@ -358,13 +281,16 @@ Page({
             // 存储图片到消息
             let tempMessageList = that.data.messages;
             tempMessageList.push({
-              user_id: that.data.userInfo.user_id,
+              user_id: that.data.meInfo.user_id,
               content: res.savedFilePath,
               type: 'img',
               date: new Date().getTime()
             })
             that.setData({
               messages: tempMessageList,
+            })
+            that.setData({
+              toTop: that.data.toTop + 500
             })
           }
         })
@@ -382,23 +308,21 @@ Page({
   // 发送表情
   toggleFace() {
     this.setData({
-      faceShow: !this.data.faceShow
+      faceShow: !this.data.faceShow,
     })
-
-    if (this.data.faceShow) {
+    // 避免表情弹起后遮挡聊天内容
+    if(this.data.faceShow){
       this.setData({
-        chatBarChangeHeightAnimation: this.faceShowAnimation(500, 0).height(184).step().export(),
-        divisionSlideToRightAnimation: this.faceShowAnimation(100, 500).width('100%').step().export(),
-        faceOpacityAnimation: this.faceShowAnimation(500, 0).opacity(1).step().export()
+        chatBodyHeight: this.data.deviceInfo.windowHeight - 184
+      })
+      this.setData({
+        toTop: this.data.toTop + 500
       })
     } else {
       this.setData({
-        divisionSlideToRightAnimation: this.faceShowAnimation(100, 0).width('0%').step().export(),
-        chatBarChangeHeightAnimation: this.faceShowAnimation(500, 0).height(50).step().export(),
-        faceOpacityAnimation: this.faceShowAnimation(500, 0).opacity(0).step().export()
+        chatBodyHeight: this.data.deviceInfo.windowHeight - 50
       })
     }
-
   },
 
   faceShowAnimation(duration, delay) {
@@ -414,14 +338,20 @@ Page({
   sendFace(e){
     // console.log(e.currentTarget.dataset.face)
     let face = e.currentTarget.dataset.face
-    let inputFace = this.data.inputValue
+    let inputValue = this.data.inputValue
     if(face !== '[del]') {
       this.setData({
-        inputValue: inputFace + e.currentTarget.dataset.face,
+        inputValue: inputValue + e.currentTarget.dataset.face,
         isFocus: true
       })
     } else {
-      let restFace = inputFace.substring(0, inputFace.lastIndexOf('['))
+      // 如果字符串最后一位不是以]结尾，暂不考虑是不是表情
+      let restFace
+      if (inputValue[inputValue.length-1] !== ']'){
+        restFace = inputValue.substring(0, inputValue.length-1)
+      } else {
+        restFace = inputValue.substring(0, inputValue.lastIndexOf('['))
+      }
       this.setData({
         inputValue: restFace,
         isFocus: true

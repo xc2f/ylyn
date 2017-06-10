@@ -27,7 +27,12 @@ Page({
       { src: '/images/girl.png' },
       { src: '/images/banner.png' },
       { src: '/images/coffee.png' },
-    ]
+    ],
+
+    filterShow: false,
+    filterShowAnimation: {},
+    filterGirlMoveLeftAnimation: {},
+    filterBoyMoveRightAnimation: {}
 
   },
 
@@ -42,9 +47,19 @@ Page({
     that.setData({
       deviceInfo: getApp().globalData.deviceInfo
     })
-
     // 请求店铺信息
     that.fetchShopInfo(options)
+
+    wx.getStorage({
+      key: 'meInfo',
+      success: function(res) {
+        getApp().globalData.meInfo = res.data
+      },
+      fail: function(res) {
+        // 重新获取微信用户信息
+        getApp().getMeInfo()
+      }
+    })
 
 
     // end onload
@@ -78,11 +93,39 @@ Page({
 
   basicAnimation(duration, delay) {
     let animation = wx.createAnimation({
-      duration: duration,
+      duration: duration || 500,
       timingFunction: "ease",
-      delay: delay
+      delay: delay || 0
     });
     return animation;
+  },
+
+  showFilter(){
+    let that = this
+    if (that.data.filterShow){
+      that.setData({
+        filterShow: false,
+      })
+      setTimeout(function () {
+        that.setData({
+          filterShowAnimation: that.basicAnimation(300, 0).width(45).step().export(),
+          // filterGirlMoveLeftAnimation: that.basicAnimation(3000, 1000).right(27).step().export(),
+          // filterBoyMoveRightAnimation: that.basicAnimation(3000, 1000).left(27).step().export()
+        })
+      }, 10)
+    }else {
+      that.setData({
+        filterShow: true,
+      })
+      setTimeout(function () {
+        that.setData({
+          filterShowAnimation: that.basicAnimation(300, 0).width(170).step().export(),
+          // filterGirlMoveLeftAnimation: that.basicAnimation(3000, 1000).right(27).step().export(),
+          // filterBoyMoveRightAnimation: that.basicAnimation(3000, 1000).left(27).step().export()
+        })
+      }, 10)
+    }
+
   },
 
   galleryImgPrev(e) {
@@ -223,6 +266,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
+    console.log('pull down')
 
   },
 
@@ -246,7 +290,7 @@ Page({
       // if (this.data.isRegister && this.data.shopShow) {
       // console.log('用户信息: ' + JSON.stringify(e.currentTarget.dataset.meInfo))
       wx.navigateTo({
-        url: '/pages/chat/chat?friend=' + JSON.stringify(e.currentTarget.dataset.meinfo),
+        url: '/pages/chat/chat?friend=' + JSON.stringify(e.currentTarget.dataset.userinfo),
       })
       // } else {
       //   this.setData({

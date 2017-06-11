@@ -13,15 +13,21 @@ Page({
       '/images/banner.png',
       '/images/coffee.png'
     ],
+    size: 6,
 
-    animation0: {},
-    animation1: {},
-    size: 5
+    tx0: 0,
+    tx1: 50,
+    tx2: 100,
+    tx3: 150,
+    tx4: 200,
+    tx5: 250,
+    // ty: 50,
+    // tz: 0
+    currentPic: 1,
   },
 
-  basicAnimation(){
+  basicAnimation() {
     var animation = wx.createAnimation({
-      transformOrigin: "50% 50%",
       duration: 1000,
       timingFunction: "ease",
       delay: 0
@@ -29,21 +35,41 @@ Page({
     return animation
   },
 
-  tap0(e){
-    console.log(e)
-    this.setData({
-      animation0: this.basicAnimation().scale(1.2).step().export()
-    })
+  prev() {
+    if (this.data.currentPic > 0) {
+      this.setData({
+        tx0: this.data.tx0 + 50,
+        tx1: this.data.tx1 + 50,
+        tx2: this.data.tx2 + 50,
+        tx3: this.data.tx3 + 50,
+        tx4: this.data.tx4 + 50,
+        tx5: this.data.tx5 + 50,
+        currentPic: this.data.currentPic - 1
+      })
+    }
+  },
 
+  next() {
+    if (this.data.currentPic < this.data.size-2) {
+      this.setData({
+        tx0: this.data.tx0 - 50,
+        tx1: this.data.tx1 - 50,
+        tx2: this.data.tx2 - 50,
+        tx3: this.data.tx3 - 50,
+        tx4: this.data.tx4 - 50,
+        tx5: this.data.tx5 - 50,
+        currentPic: this.data.currentPic + 1
+      })
+    }
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    for(let i=0; i<this.data.gallery.length; i++){
+    for (let i = 0; i < this.data.gallery.length; i++) {
       this.setData({
-        
+
       })
     }
 
@@ -54,48 +80,48 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+
   }
 })

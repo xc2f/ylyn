@@ -1,5 +1,7 @@
 <!--pages/test/test.wxml-->
-<text>pages/test/test.wxml</text>
+<button bindtap="prev">prev</button>
+<button bindtap="next">next</button>
+
 
 <view class="gallery">
   <view class="wrap">
@@ -8,20 +10,23 @@
         <image src="{{item}}"></image>
       </view>
     </block>-->
-    <view class="c1" wx:if="{{size > 1}}">
-      <view class="d1">1</view>
+    <view class="g0" wx:if="{{size > 1}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}})">
+      <image src="{{gallery[0]}}"></image>
     </view>
-    <view class="c2" wx:if="{{size > 2}}">
-      <view class="d2">2</view>
+    <view class="g1" wx:if="{{size > 2}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}})">
+      <image src="{{gallery[1]}}"></image>
     </view>
-        <view class="c3" wx:if="{{size > 3}}">
-      <view class="d3">3</view>
+    <view class="g2" wx:if="{{size > 3}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}})">
+      <image src="{{gallery[2]}}"></image>
     </view>
-        <view class="c4" wx:if="{{size > 4}}">
-      <view class="d4">4</view>
+    <view class="g3" wx:if="{{size > 4}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}})">
+      <image src="{{gallery[3]}}"></image>
     </view>
-        <view class="c5" wx:if="{{size > 5}}">
-      <view class="d5">5</view>
+    <view class="g4" wx:if="{{size > 5}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}})">
+      <image src="{{gallery[4]}}"></image>
+    </view>
+    <view class="g5" wx:if="{{size > 6}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}})">
+      <image src="{{gallery[5]}}"></image>
     </view>
   </view>
 </view>

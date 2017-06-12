@@ -4,9 +4,9 @@
   <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ deviceInfo.windowWidth }}px">
     <view class="wrap">
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
-        <image class="bannerImg" src="{{shop.shop_banner}}" animation="{{bannerSwitchAnimation}}"></image>
+        <image class="bannerImg" src="/images/banner.png" animation="{{bannerSwitchAnimation}}"></image>
         <view class="shopAvatar" bindtap="shopTap" data-shopid="{{shop.shop_id}}">
-          <image src="/images/banner.png"></image>
+          <image src="/images/avatar.png"></image>
         </view>
         <view class="shopName">
           <view class="line"></view>
@@ -45,7 +45,7 @@
 
   </view>
 
-  <scroll-view scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-200 }}px;" animation="{{tablesOpacityAnimation}}">
+  <scroll-view scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;" animation="{{tablesOpacityAnimation}}">
     <view class="allInOne">
       <view class="up">
         <view class="line"></view>
@@ -85,19 +85,33 @@
 
 
   <view class="toolBar" wx:if="{{shopShow}}">
-    <view class="waiter"><image src="/images/waiter.png"></image></view>
+    <view class="message">
+      <image src="/images/message.png"></image>
+      <text>消息列表</text>
+      <view class="msgStatus" wx:if="{{hasNewMsg}}"></view>
+    </view>
 
 
-    <view class="middleWrap" style="z-index: 1;" bindtap="showFilter">
-      <view class="fa fa-plus" wx:if="{{!filterShow}}"></view>
-      <image src="/images/all.png" wx:if="{{filterShow}}"></image>
+    <view class="middleWrap" style="z-index: 1;">
+      <view class="fa fa-plus" wx:if="{{!filterShow}}" bindtap="showFilter"></view>
+      <image src="/images/all.png" wx:if="{{filterShow}}" bindtap="showFilter"></image>
     </view>
 
     <view class="filter" style="z-index: 0;" animation="{{filterShowAnimation}}">
-      <view class="showGirl"><image src="/images/show_girl.png"></image><text>只看女生</text></view>
-      <view class="showBoy"><image src="/images/show_boy.png"></image><text>只看男生</text></view>
+      <view class="showGirl">
+        <image src="/images/show_girl.png"></image>
+        <text>只看女生</text>
+      </view>
+      <view class="showBoy">
+        <image src="/images/show_boy.png"></image>
+        <text>只看男生</text>
+      </view>
     </view>
-    <view class="message"><image src="/images/message.png"></image></view>
+
+    <view class="waiter">
+      <image src="/images/waiter.png"></image>
+      <text>呼叫维特</text>
+    </view>
   </view>
 
 </view>

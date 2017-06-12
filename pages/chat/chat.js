@@ -13,20 +13,7 @@ Page({
     inputValue: '',
     meInfo: null,
     friendInfo: null,
-    messages: [
-      {
-        user_id: 7,
-        content: [{ type: 'text', content: 'hello' }],
-        type: 'mult',
-        date: '1496647266112'
-      },
-      {
-        user_id: 2,
-        content: [{ type: 'face', src: 'ee_1.png' }],
-        type: 'mult',
-        date: '1496647271712'
-      }
-    ],
+    messages: [],
 
     // 表情
     faceShow: false,
@@ -160,7 +147,10 @@ Page({
     wx.getStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       success: function (res) {
-
+        console.log(res)
+        that.setData({
+          messages: res.data
+        })
       },
       fail: function (e) {
         console.log(e)
@@ -171,12 +161,22 @@ Page({
     wx.setNavigationBarTitle({
       title: that.data.friendInfo.nickName
     })
+
   },
 
   inputFocus() {
+    if (this.data.inputValue !== '') {
+      this.setData({
+        isFocus: true,
+      })
+    } else {
+      this.setData({
+        isFocus: false,
+      })
+    }
     this.setData({
-      isFocus: true,
-      faceShow: false
+      faceShow: false,
+      chatBodyHeight: this.data.deviceInfo.windowHeight - 50
     })
   },
 
@@ -190,32 +190,71 @@ Page({
     this.setData({
       inputValue: e.detail.value
     })
+    if (this.data.inputValue !== '') {
+      this.setData({
+        isFocus: true,
+      })
+    } else {
+      this.setData({
+        isFocus: false,
+      })
+    }
   },
 
 
   // 发送文本消息，包括表情
   submit() {
     let inputValue = this.data.inputValue
+    
     if (inputValue.trim() === '') {
       return false
     }
 
+    let multiList = this.parseMsg(inputValue)
+
+    let tempMessageList = this.data.messages;
+
+    tempMessageList.push({
+      user_id: this.data.meInfo.user_id,
+      content: multiList,
+      type: 'mult',
+      date: new Date().getTime(),
+      status: 'sending'
+    })
+    this.setData({
+      messages: tempMessageList,
+      inputValue: '',
+      isFocus: false,
+    })
+    // 消息发送后滚动到底部，在上一setData后
+    this.setData({
+      toTop: this.data.toTop + 500
+    })
+    
+    wx.setStorage({
+      key: 'chatWith'+this.data.friendInfo.user_id,
+      data: this.data.messages,
+    })
+  },
+
+  // 消息中文字与表情的处理
+  parseMsg(inputValue){
     let multiList = []
 
-    while(inputValue.length !== 0 ) {
+    while (inputValue.length !== 0) {
 
       // 如果找到表情开头的[
       if (inputValue.indexOf('[') !== -1) {
         let left = inputValue.indexOf('[')
         let right = inputValue.indexOf(']')
         // 提取第一个边界为[]的字符串
-        let faceChar = inputValue.substring(left, right+1)
+        let faceChar = inputValue.substring(left, right + 1)
         // 如果在faceMap中有映射，说明是表情
         if (this.data.faceMap[faceChar] !== undefined) {
           // 拿到表情对应的图片地址
           let faceCharSrc = this.data.faceMap[faceChar]
           // 文字和表情存到数组
-          if(left !== 0 ) {
+          if (left !== 0) {
             multiList.push({
               type: 'text',
               content: inputValue.substring(0, left)
@@ -225,7 +264,7 @@ Page({
             type: 'face',
             src: faceCharSrc
           })
-          inputValue = inputValue.substring(right+1, inputValue.length)
+          inputValue = inputValue.substring(right + 1, inputValue.length)
           // 继续查找下一个
         } else {
           // 在faceMap中没有对应
@@ -233,7 +272,7 @@ Page({
           // 查找下一个
           multiList.push({
             type: 'text',
-            content: inputValue.substring(0, right+1)
+            content: inputValue.substring(0, right + 1)
           })
           inputValue = inputValue.substring(right + 1, inputValue.length)
         }
@@ -246,25 +285,9 @@ Page({
         })
         inputValue = ''
       }
-
     }
 
-    let tempMessageList = this.data.messages;
-    tempMessageList.push({
-      user_id: this.data.meInfo.user_id,
-      content: multiList,
-      type: 'mult',
-      date: new Date().getTime()
-    })
-    this.setData({
-      messages: tempMessageList,
-      inputValue: '',
-      isFocus: false,
-    })
-    // 消息发送后滚动到底部，在上一setData后
-    this.setData({
-      toTop: this.data.toTop + 500
-    })
+    return multiList
   },
 
   sendPic() {
@@ -316,7 +339,7 @@ Page({
         chatBodyHeight: this.data.deviceInfo.windowHeight - 184
       })
       this.setData({
-        toTop: this.data.toTop + 500
+        toTop: this.data.toTop + 200
       })
     } else {
       this.setData({
@@ -391,14 +414,20 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    wx.onSocketMessage(function (res) {
+      
+      wx.setStorage({
+        key: 'hasNewMsg',
+        data: true,
+      })
+    })
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    
   },
 
   /**

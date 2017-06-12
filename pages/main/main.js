@@ -32,8 +32,9 @@ Page({
     filterShow: false,
     filterShowAnimation: {},
     filterGirlMoveLeftAnimation: {},
-    filterBoyMoveRightAnimation: {}
+    filterBoyMoveRightAnimation: {},
 
+    hasNewMsg: false
   },
 
 
@@ -61,6 +62,9 @@ Page({
       }
     })
 
+    wx.onSocketMessage(function (res) {
+      console.log(res)
+    })
 
     // end onload
   },
@@ -75,6 +79,9 @@ Page({
 
   fetchShopInfo(options){
     let that = this
+    wx.showLoading({
+      title: '数据获取中',
+    })
     wx.request({
       url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
       method: 'POST',
@@ -86,6 +93,9 @@ Page({
         that.setData({
           shop: res.data
         })
+        // 隐藏加载动画和下拉刷新动作
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
       }
     })
   },
@@ -245,6 +255,16 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    let that = this
+    that.setData({
+      hasNewMsg: wx.getStorageSync('hasNewMsg')
+    })
+    
+    getApp().globalData.getMsgStatusInterval = setInterval(function(){
+      that.setData({
+        hasNewMsg: wx.getStorageSync('hasNewMsg')
+      })
+    }, 5000)
 
   },
 
@@ -252,22 +272,21 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    clearInterval(getApp().globalData.getMsgStatusInterval)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    clearInterval(getApp().globalData.getMsgStatusInterval)
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    console.log('pull down')
-
+    this.fetchShopInfo(this.data.shop.shop_id)
   },
 
   /**

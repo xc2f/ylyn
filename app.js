@@ -2,33 +2,18 @@ App({
 
   globalData: {
     meInfo: null,
-    deviceInfo: null
+    deviceInfo: null,
+    getMsgStatusInterval: null
   },
 
   onLaunch: function () {
-    let that = this
+    // let that = this
 
     // 获取设备信息
-    that.getDeviceInfo()
+    this.getDeviceInfo()
 
     // that.getMeInfo()
-
-    // 连接websocket
-    wx.connectSocket({
-      url: 'wss://192.168.0.119'
-    })
-
-    wx.onSocketOpen(function (res) {
-      console.log('WebSocket连接已打开！')
-    })
-
-    wx.onSocketError(function(){
-      // wx.showModal({
-      //   title: '连接失败',
-      //   content: '连接超时，请检查您的网络连接或稍后重试！',
-      //   showCancel: false
-      // })
-    })
+    this.connectWebsocket()
 
   },
 
@@ -74,7 +59,36 @@ App({
     })
   },
 
+  // 连接websocket
+  connectWebsocket(){
+    // 连接websocket
+    wx.connectSocket({
+      url: 'wss://192.168.0.119'
+    })
+
+    wx.onSocketOpen(function (res) {
+      console.log('WebSocket连接已打开！')
+    })
+
+    wx.onSocketError(function (res) {
+      console.log(res)
+      // wx.showModal({
+      //   title: '连接失败',
+      //   content: '连接超时，请检查您的网络连接或稍后重试！',
+      //   showCancel: false
+      // })
+    })
+  },
+
+
   onShow: function(){
 
+  },
+
+  onUnlaunch: function(){
+    wx.closeSocket()
+    wx.onSocketClose(function (res) {
+      console.log('WebSocket 已关闭！')
+    })
   }
 })

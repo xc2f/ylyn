@@ -50,19 +50,22 @@
 }
 
 .chatBar .textarea {
+  height: 30px;
   /*height: 37px;*/
   /*line-height: 37px;*/
   width: 100%;
   /*padding-top: 5px;
   padding-bottom: 0;*/
   border-bottom: 1px solid #bbb;
-  padding-top: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   /*height: 40px!important;*/
   /*line-height: 50px;*/
   /*font-size: 14px;*/
 }
 
 .chatBar .submit {
+  width: 90%;
   height: 30px;
   line-height: 50px;
   background: green;
@@ -72,6 +75,7 @@
   align-items: center;
   justify-content: center;
   align-self: flex-end;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
@@ -89,12 +93,23 @@
   min-height: 30px;
   padding: 10px;
   border-radius: 7px;
-  position: relative;
-  max-width: 60%;
   display: flex;
+  max-width: 60%;
   align-items: center;
+  position: relative;
 }
-
+.msgSending {
+  float: right;
+  padding-right: 3px;
+  color: #ccc;
+  font-size: 15px;
+}
+.msgFail {
+  float: right;
+  padding-right: 3px;
+  color: red;
+  font-size: 15px;
+}
 .messageBlock.me image.avatar {
   width: 50px;
   height: 50px;

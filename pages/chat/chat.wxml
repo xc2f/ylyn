@@ -4,16 +4,18 @@
     <block wx:for="{{messages}}" wx:key="message_id">
       <view class="me messageBlock" wx:if="{{item.user_id === meInfo.user_id}}">
         <image src="{{meInfo.avatar}}" class="avatar"></image>
-        <view class="message">
-          <view wx:if="{{item.type === 'mult'}}" class="multMsg">
-            <block wx:for="{{item.content}}" wx:key="type">
-              <text wx:if="{{item.type ==='text'}}">{{item.content}}</text>
-              <image wx:if="{{item.type === 'face'}}" src="/images/faces/{{item.src}}" class="faceImg"></image>
-            </block>
+          <view class="message">
+            <view wx:if="{{item.type === 'mult'}}" class="multMsg">
+              <block wx:for="{{item.content}}" wx:key="type">
+                <text wx:if="{{item.type ==='text'}}">{{item.content}}</text>
+                <image wx:if="{{item.type === 'face'}}" src="/images/faces/{{item.src}}" class="faceImg"></image>
+              </block>
+            </view>
+            <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg"></image>
+            <view class="angle"></view>
           </view>
-          <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg"></image>
-          <view class="angle"></view>
-        </view>
+          <view class="msgSending fa fa-spinner fa-spin fa-fw margin-bottom" wx:if="{{item.status === 'sending'}}"></view>
+          <view class="msgFail fa fa-exclamation-circle" wx:if="{{item.status === 'fail'}}"></view>
       </view>
       <view class="friend messageBlock" wx:if="{{item.user_id !== meInfo.user_id}}">
         <image src="{{friendInfo.avatar}}" class="avatar"></image>
@@ -38,7 +40,7 @@
         <text class="fa fa-vcard-o"></text>
       </view>
       <view class="inputWrap">
-        <textarea class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" auto-height fixed="{{true}}" bindinput="inputHandle"/>
+        <input class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" bindinput="inputHandle" cursor-spacing='10' maxlength="-1" />
       </view>
       <view class="face" bindtap="toggleFace">
         <text class="fa fa-meh-o"></text>
@@ -51,10 +53,10 @@
       </view>
     </view>
 
-  <view class="faceContent" hidden="{{!faceShow}}">
-    <import src="/pages/common/face/face" />
-    <template is="face" data="{{faces}}" />
-  </view>
+    <view class="faceContent" hidden="{{!faceShow}}">
+      <import src="/pages/common/face/face" />
+      <template is="face" data="{{faces}}" />
+    </view>
 
   </view>
 

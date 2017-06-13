@@ -272,6 +272,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
+    console.log('main hide')
     clearInterval(getApp().globalData.getMsgStatusInterval)
   },
 
@@ -279,6 +280,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
+    console.log('main unload')
     clearInterval(getApp().globalData.getMsgStatusInterval)
   },
 
@@ -309,7 +311,7 @@ Page({
       // if (this.data.isRegister && this.data.shopShow) {
       // console.log('用户信息: ' + JSON.stringify(e.currentTarget.dataset.meInfo))
       wx.navigateTo({
-        url: '/pages/chat/chat?friend=' + JSON.stringify(e.currentTarget.dataset.userinfo),
+        url: '/pages/chat/chat?shopname='+ this.data.shop.shop_name +'&friend=' + JSON.stringify(e.currentTarget.dataset.friendinfo),
       })
       // } else {
       //   this.setData({
@@ -318,6 +320,12 @@ Page({
       // }
 
     }
+  },
+
+  toChatRecords(){
+    wx.navigateTo({
+      url: '/pages/msgList/msgList',
+    })
   }
 
 })

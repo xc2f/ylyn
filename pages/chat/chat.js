@@ -13,7 +13,10 @@ Page({
     inputValue: '',
     meInfo: null,
     friendInfo: null,
+    shopName: null,
     messages: [],
+
+    setChatRecordOk: false,
 
     // 表情
     faceShow: false,
@@ -138,9 +141,10 @@ Page({
 
 
     that.setData({
+      toTop: 10000,
       meInfo: globalData.meInfo,
       friendInfo: JSON.parse(options.friend),
-      toTop: 10000
+      shopName: options.shopname
     })
 
     // 获取聊天信息
@@ -204,37 +208,47 @@ Page({
 
   // 发送文本消息，包括表情
   submit() {
-    let inputValue = this.data.inputValue
+    let that = this
+    let inputValue = that.data.inputValue
     
     if (inputValue.trim() === '') {
       return false
     }
 
-    let multiList = this.parseMsg(inputValue)
+    let multiList = that.parseMsg(inputValue)
 
-    let tempMessageList = this.data.messages;
+    let tempMessageList = that.data.messages;
 
-    tempMessageList.push({
-      user_id: this.data.meInfo.user_id,
-      content: multiList,
+    let postData = {
+      user_id: that.data.meInfo.user_id,
+      friend_id: that.data.friendInfo.user_id,
       type: 'mult',
+      content: multiList,
       date: new Date().getTime(),
-      status: 'sending'
-    })
-    this.setData({
+      status: getApp().globalData.webSocketError ? 'error' : ''
+    }
+
+    tempMessageList.push(postData)
+
+    that.setData({
       messages: tempMessageList,
       inputValue: '',
       isFocus: false,
     })
     // 消息发送后滚动到底部，在上一setData后
-    this.setData({
-      toTop: this.data.toTop + 500
+    that.setData({
+      toTop: that.data.toTop + 500
     })
     
     wx.setStorage({
-      key: 'chatWith'+this.data.friendInfo.user_id,
-      data: this.data.messages,
+      key: 'chatWith' + that.data.friendInfo.user_id,
+      data: that.data.messages,
     })
+
+    // 将本次会话记录写入消息列表
+    getApp().refreshChatRecords(postData)
+    
+
   },
 
   // 消息中文字与表情的处理
@@ -414,13 +428,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    wx.onSocketMessage(function (res) {
-      
-      wx.setStorage({
-        key: 'hasNewMsg',
-        data: true,
-      })
-    })
+
   },
 
   /**

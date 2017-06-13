@@ -3,7 +3,8 @@ App({
   globalData: {
     meInfo: null,
     deviceInfo: null,
-    getMsgStatusInterval: null
+    getMsgStatusInterval: null,
+    webSocketError: false
   },
 
   onLaunch: function () {
@@ -68,9 +69,40 @@ App({
 
     wx.onSocketOpen(function (res) {
       console.log('WebSocket连接已打开！')
+
+      // 监听消息
+      wx.onSocketMessage(function (res) {
+
+        let NewMessage = res.data
+        wx.getStorage({
+          key: 'chatWith' + NewMessage.friend_id,
+          success: function(res) {
+            let messages = res.data
+            messages.push(NewMessage)
+            wx.setStorage({
+              key: 'chatWith' + NewMessage.friend_id,
+              data: messages,
+            })
+            this.refreshChatRecords(NewMessage)
+          },
+          fail: function(){
+            wx.setStorage({
+              key: 'chatWith' + NewMessage.friend_id,
+              data: [NewMessage],
+            })
+            this.refreshChatRecords(NewMessage)
+          }
+        })
+
+        // wx.setStorage({
+        //   key: 'hasNewMsg',
+        //   data: true,
+        // })
+      })
     })
 
     wx.onSocketError(function (res) {
+      this.globalData.webSocketError = true
       console.log(res)
       // wx.showModal({
       //   title: '连接失败',
@@ -80,6 +112,46 @@ App({
     })
   },
 
+
+  refreshChatRecords(NewMessage){
+
+    wx.getStorage({
+      key: 'chatRecords',
+      success: function (res) {
+        let records = res.data
+        // 查找之前是否保存过两人会话
+        for (let i = 0; i < records.length; i++) {
+          if (records[i].chatName === 'chatWith' + NewMessage.friend_id) {
+            // 将最新聊天置顶
+            records.unshift(records.splice(i)[0])
+            // break
+            return false
+          }
+        }
+        // 如果有这个key但是没有当前聊天会话记录则新建
+        records.unshift({
+          chatName: 'chatWith' + NewMessage.friend_id,
+          chatId: '',
+          msgClean: false
+        })
+        wx.setStorage({
+          key: 'chatRecords',
+          data: records,
+        })
+      },
+      fail: function () {
+        // 第一次创建
+        wx.setStorage({
+          key: 'chatRecords',
+          data: [{
+            chatName: 'chatWith' + NewMessage.friend_id,
+            chatId: '',
+            msgClean: false
+          }]
+        })
+      }
+    })
+  },
 
   onShow: function(){
 

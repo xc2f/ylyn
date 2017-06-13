@@ -1,2 +1,33 @@
 <!--pages/msgList/msgList.wxml-->
-<text>pages/msgList/msgList.wxml</text>
+
+<view class="conatiner">
+  <view class="topBan">
+    <view class="line"></view>
+    <view class="dot"></view>
+    <text>最近联系人</text>
+    <view class="dot"></view>
+    <view class="line"></view>
+  </view>
+
+  <view class="recordList">
+    <block wx:for="{{chatRecords}}">
+      <view class="block">
+        <view class="left">
+          <image src="/images/boy.png"></image>
+        </view>
+        <view class="middle">
+          <view class="name"><text>用户id: {{item.friend_id}}</text></view>
+          <view class="userInfo">
+            <view class="gender"><image src="/images/boy.png"></image></view>
+            <view class="age"><text>23岁</text></view>
+          </view>
+          <view class="newestMsg"><text>{{item.newestMsg}}</text></view>
+        </view>
+        <view class="right">
+          <view class="date">{{item.date}}</view>
+          <view class="shopName"><text>咖啡故事</text></view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

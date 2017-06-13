@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/msgList/msgList",
     "pages/main/main",
     "pages/nearlist/nearlist",
     "pages/shopDetail/shopDetail",
     "pages/chat/chat",
     "pages/user/user",
-    "pages/msgList/msgList",
     "pages/test/test"
   ],
   "window": {

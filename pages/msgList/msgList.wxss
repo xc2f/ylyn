@@ -1,1 +1,96 @@
 /* pages/msgList/msgList.wxss */
+
+
+.topBan {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.topBan .line {
+  width: 30px;
+  height: 2px;
+  background: #333;
+}
+.topBan .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #333;
+  margin: 0 3px 0 3px;
+}
+
+.block {
+  display: flex;
+  flex-direction: row;
+  height: 100px;
+  border: 1px solid red;
+  position: relative;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.right {
+  flex: 1;
+}
+
+.left image {
+  width: 70px;
+  height: 70px;
+}
+
+.middle {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+.middle .name {
+  font-size: 20px;
+  font-weight: bold;
+}
+.middle .userInfo {
+  display: flex;
+  flex-direction: row;
+  margin: 3px 0;
+  align-items: center;
+  height: 20px;
+}
+.middle .userInfo .gender {
+  height: 20px;
+}
+.middle .userInfo .gender image {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.middle .userInfo .age {
+  font-size: 12px;
+}
+.middle .newestMsg {
+  color: #777;
+  font-size: 14px;
+}
+
+.right .date {
+  margin-top: 25px;
+  font-size: 14px;
+  color: #777;
+}
+
+.right .shopName {
+  position: absolute;
+  bottom: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}

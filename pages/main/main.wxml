@@ -85,7 +85,7 @@
 
 
   <view class="toolBar" wx:if="{{shopShow}}">
-    <view class="message">
+    <view class="message" bindtap="toChatRecords">
       <image src="/images/message.png"></image>
       <text>消息列表</text>
       <view class="msgStatus" wx:if="{{hasNewMsg}}"></view>

@@ -1,0 +1,18 @@
+<!--pages/changePic/changePic.wxml-->
+<view class="container">
+  <view class="hd">
+    <text>个人展示</text>
+  </view>
+  <view class="bd">
+    <view class="item" style="width: {{itemWidth}}px; height: {{itemWidth}}px">
+      <view class="picWrap" style="width: {{itemWidth-20}}px; height: {{itemWidth-20}}px">
+        <image src="/images/userShowPic.png" class="pic" mode="widthFix"></image>
+      </view>
+      <image src="/images/close.png" class="close"></image>
+    </view>
+
+    <view class="item" style="width: {{itemWidth}}px; height: {{itemWidth}}px">
+      <view class="add" style="width: {{itemWidth-20}}px; height: {{itemWidth-20}}px"><text>+</text></view>
+    </view>
+  </view>
+</view>

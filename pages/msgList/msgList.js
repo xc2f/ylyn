@@ -27,7 +27,8 @@ Page({
             recordList.push({
               friend_id: newestMsg.friend_id,
               newestMsg: newestMsg.content[0].content,
-              date: newestMsg.date
+              date: that.parseDate(newestMsg.date),
+              msgClean: records[i].msgClean
             })
           } else {
 
@@ -36,6 +37,7 @@ Page({
         that.setData({
           chatRecords: recordList
         })
+        console.log(that.data.chatRecords)
       },
       fail: function (res) {
         console.log('no records')
@@ -43,6 +45,23 @@ Page({
     })
   },
 
+  parseDate(date){
+    let msgTime = new Date(date)
+    let today = new Date().getDate()
+    if(today === msgTime.getDate() ) {
+      return msgTime.getHours() + ':' + (msgTime.getMinutes() < 10 ? ('0' + msgTime.getMinutes()) : msgTime.getMinutes())
+    } else if (today === msgTime.getDate() + 1) {
+      return '昨天'
+    } else {
+      return (msgTime.getMonth()+1) + '月' + msgTime.getDate() + '日'
+    }
+  },
+
+  tapToChat(e){
+    wx.navigateTo({
+      url: '/pages/chat/chat?friend='+e.currentTarget.dataset.userid,
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -75,7 +94,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+    return false;
   },
 
   /**

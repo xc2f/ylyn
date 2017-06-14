@@ -1,11 +1,13 @@
 {
   "pages": [
-    "pages/msgList/msgList",
+    "pages/changePic/changePic",
     "pages/main/main",
+    "pages/config/config",
+    "pages/user/user",
+    "pages/msgList/msgList",
     "pages/nearlist/nearlist",
     "pages/shopDetail/shopDetail",
     "pages/chat/chat",
-    "pages/user/user",
     "pages/test/test"
   ],
   "window": {

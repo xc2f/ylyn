@@ -155,17 +155,22 @@ Page({
 
 
   switchToMe() {
-    let that = this;
 
-    that.setData({
-      showMeSwitch: false,
-      bannerSwitchAnimation: that.bannerSwitchToMe(),
-      showShopSwitch: true,
-      shopShow: false,
-      userShow: true,
-      tablesOpacityAnimation: that.basicAnimation(500, 0).opacity(0).step().export(),
-      userOpacityAnimation: that.basicAnimation(500, 0).opacity(1).step().export(),
+    wx.navigateTo({
+      url: '/pages/user/user',
     })
+
+    // let that = this;
+
+    // that.setData({
+    //   showMeSwitch: false,
+    //   bannerSwitchAnimation: that.bannerSwitchToMe(),
+    //   showShopSwitch: true,
+    //   shopShow: false,
+    //   userShow: true,
+    //   tablesOpacityAnimation: that.basicAnimation(500, 0).opacity(0).step().export(),
+    //   userOpacityAnimation: that.basicAnimation(500, 0).opacity(1).step().export(),
+    // })
 
 
   },

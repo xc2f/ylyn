@@ -1,6 +1,8 @@
 // pages/chat/chat.js
 Page({
 
+  pageName: 'chat',
+
   /**
    * 页面的初始数据
    */

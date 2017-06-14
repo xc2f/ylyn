@@ -1,1 +1,193 @@
 /* pages/user/user.wxss */
+.container {
+  position: relative;
+}
+
+.banner {
+  transform-style: preserve-3d;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+}
+.banner .wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.banner .bannerImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.3;
+  width: 100%;
+  height: 100%;
+}
+
+.userBanner {
+  width: 100%;
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  height: 130px;
+  overflow: hidden;
+}
+
+.userName {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.userName .line {
+  width: 30px;
+  height: 2px;
+  background: #333;
+}
+.userName .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #333;
+  margin: 0 3px 0 3px;
+}
+.userName text {
+  margin-left: 17px;
+  margin-right: 17px;
+  font-weight: bold;
+  font-size: 20px;
+}
+.bottomText {
+  font-size: 14px;
+  color: #777;
+  margin-top: 10px;
+}
+
+.userBanner .userAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: relative;
+  /*top: -10px;*/
+  /*z-index: 99;*/
+  margin-bottom: 10px;
+}
+
+.userBanner .userAvatar image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.userBanner .flipConner {
+  right: 0;
+  position: absolute;
+  bottom: -1px;
+  width: 50px;
+  height: 50px;
+  /*z-index: 999;*/
+  /*display: none;*/
+}
+
+.userBanner .flipConnerImg {
+  width: 100%;
+  height: 100%;
+}
+
+.userBanner .flipConnerText {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 12px;
+  font-weight: bold;
+  transform: rotate(-45deg);
+  padding-bottom: 7px;
+}
+
+
+
+.gallery {
+  padding-top: 200px;
+  height: 350px;
+  margin-left: 10px;
+  margin-right: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.gallery .wrap {
+  position: relative;
+  perspective: 700px;
+  transform-style: preserve-3d;
+  height: 300px;
+}
+.gallery .wrap > view {
+  transition:transform 1000ms ease 0ms;
+  position: absolute;
+  width: 50%;
+  height: 300px;
+  border-radius: 7px;
+}
+.gallery .wrap image {
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+}
+ /*style="transform: translateX({{tx}}px)"
+ style="transform: translateX({{tx}}px)"
+ style="transform: translateX({{tx}}px)"
+ style="transform: translateX({{tx}}px)"
+ style="transform: translateX({{tx}}px)"
+ style="transform: translateX({{tx}}px)"*/
+/*.g0 {
+  transform: translateX(0%)
+}
+.g1 {
+  transform: translateZ(100px)
+}
+.g2 {
+  transform: translateX(200%)
+}
+.g3 {
+  transform: translateX(300%)
+}
+.g4 {
+  transform: translateX(400%)
+}
+.g5 {
+  transform: translateX(500%)
+}*/
+
+#prev {
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, .3);
+  transform: translateZ(10px);
+  transition: background 1000ms ease 0ms!important;
+}
+#next {
+  right: 0;
+  top: 0;
+  background: rgba(0, 0, 0, .3);
+  transform: translateZ(10px);
+  transition: background 1000ms ease 0ms!important;
+}
+.galleryHD {
+  position: absolute;
+  top: 145px;
+  margin-left: 10px;
+}
+.galleryHD image {
+  width: 20px;
+  height: 15px;
+  margin-right: 5px;
+}

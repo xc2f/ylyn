@@ -1,0 +1,55 @@
+/* pages/changePic/changePic.wxss */
+
+.container {
+  position: relative;
+  background: #eee;
+}
+
+.hd {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  background: #fff;
+  margin: 10px 0;
+}
+.hd text {
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.bd {
+  margin: 10px;
+}
+.bd .item {
+  position: relative;
+}
+.bd .picWrap {
+  overflow: hidden;
+  margin: 10px;
+}
+.bd .item .pic {
+  width: 100%;
+  height: 100%;
+}
+.bd .item .close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+}
+.bd .item {
+  float: left;
+}
+.bd .add {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #aaa;
+}
+.bd .add text {
+  font-size: 50px;
+  font-weight: bold;
+}

@@ -15,7 +15,13 @@ App({
 
     // that.getMeInfo()
     this.connectWebsocket()
+    
 
+    // setTimeout(function(){
+    //   console.log('----------')
+    //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
+    // }, 10000)
+    this.refreshStorage()
   },
 
   getMeInfo() {
@@ -102,8 +108,8 @@ App({
     })
 
     wx.onSocketError(function (res) {
-      this.globalData.webSocketError = true
-      console.log(res)
+      // console.log(this.globalData)
+      // this.globalData.webSocketError = true
       // wx.showModal({
       //   title: '连接失败',
       //   content: '连接超时，请检查您的网络连接或稍后重试！',
@@ -114,6 +120,14 @@ App({
 
 
   refreshChatRecords(NewMessage){
+    // 在chat页面消息clean
+    // TODO 只能在当前用户的chat页消息clean
+    let msgClean = false
+    if (getCurrentPages()[getCurrentPages().length - 1].pageName === 'chat'){
+      msgClean = true
+    } else {
+      msgClean = false
+    }
 
     wx.getStorage({
       key: 'chatRecords',
@@ -121,9 +135,12 @@ App({
         let records = res.data
         // 查找之前是否保存过两人会话
         for (let i = 0; i < records.length; i++) {
+          // TODO 加一个消息是否clean
           if (records[i].chatName === 'chatWith' + NewMessage.friend_id) {
             // 将最新聊天置顶
             records.unshift(records.splice(i)[0])
+            // 更新缓存
+            wx.setStorageSync('chatRecords', records)
             // break
             return false
           }
@@ -132,7 +149,7 @@ App({
         records.unshift({
           chatName: 'chatWith' + NewMessage.friend_id,
           chatId: '',
-          msgClean: false
+          msgClean: msgClean
         })
         wx.setStorage({
           key: 'chatRecords',
@@ -146,11 +163,54 @@ App({
           data: [{
             chatName: 'chatWith' + NewMessage.friend_id,
             chatId: '',
-            msgClean: false
+            msgClean: msgClean
           }]
         })
       }
     })
+  },
+
+  // 清除3天外的文件和缓存
+  refreshStorage(){
+    let deadline = new Date().getTime() - 1000 * 60 * 60 * 24 * 3
+    wx.getStorage({
+      key: 'chatRecords',
+      success: function (res) {
+        let records = res.data
+        // 查找之前是否保存过两人会话
+        for (let i = 0; i < records.length; i++) {
+          let delCounts = 0;
+          let currentStorage = wx.getStorageSync(records[i].chatName)
+          for (let j = 0; j < currentStorage.length; j++){
+            if (currentStorage[j].date < deadline){
+              delCounts++
+            }
+            if (j === currentStorage.length-1){
+              // TODO 清除到最后一条消息，只能清除消息内容，用户信息保留
+              delCounts--
+            }
+          }
+          currentStorage.splice(0, delCounts)
+          wx.setStorageSync(records[i].chatName, currentStorage)
+        }
+      }
+    })
+    wx.getSavedFileList({
+      success: function (res) {
+        let files = res.fileList
+        for(let i=0; i<files.length; i++){
+          if (files[i].createTime < deadline) {
+            wx.removeSavedFile({
+              filePath: files[i].filePath,
+            })
+          }
+        }
+      },
+      fail:function(res) {
+        console.log(res)
+      }
+    })
+
   },
 
   onShow: function(){

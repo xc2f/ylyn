@@ -1,17 +1,19 @@
 <!--pages/msgList/msgList.wxml-->
 
-<view class="conatiner">
+<view class="container">
   <view class="topBan">
     <view class="line"></view>
     <view class="dot"></view>
+    <image src="/images/zjlxr.png"></image>
     <text>最近联系人</text>
     <view class="dot"></view>
     <view class="line"></view>
   </view>
 
   <view class="recordList">
-    <block wx:for="{{chatRecords}}">
-      <view class="block">
+    <block wx:for="{{chatRecords}}" wx:key="chatId">
+      <view class="block" bindtap="tapToChat" data-userid='{{item.friend_id}}'>
+        <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
         <view class="left">
           <image src="/images/boy.png"></image>
         </view>
@@ -25,7 +27,7 @@
         </view>
         <view class="right">
           <view class="date">{{item.date}}</view>
-          <view class="shopName"><text>咖啡故事</text></view>
+          <view class="shopName"><image src="/images/zjlxr-dp.png"></image><text>咖啡故事</text></view>
         </view>
       </view>
     </block>

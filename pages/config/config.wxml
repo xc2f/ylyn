@@ -1,0 +1,28 @@
+<!--pages/config/config.wxml-->
+
+<view class="container">
+  <view class="name">
+    <view class="l"><text>昵称</text></view>
+    <view class="r"><input value="会飞的鱼" /></view>
+  </view>
+  <view class="gender">
+    <view class="l"><text>性别</text></view>
+    <view class="r"><input value="女" /></view>
+  </view>
+  <view class="age">
+    <view class="l"><text>年龄</text></view>
+    <view class="r"><input value='23' /></view>
+  </view>
+  <view class="info">
+    <view class="l"><text>简介</text></view>
+    <view class="r"><input value="骗人的" /></view>
+  </view>
+  <view class="tall">
+    <view class="l"><text>身高</text></view>
+    <view class="r"><input value="160cm"  /></view>
+  </view>
+  <view class="show" bindtap="changePic">
+    <view class="l"><text>个人展示</text></view>
+    <view class="r"><image src="/images/arrowRight.png"></image></view>
+  </view>
+</view>

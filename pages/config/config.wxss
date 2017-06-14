@@ -1,0 +1,36 @@
+/* pages/config/config.wxss */
+
+.container {
+  position: relative;
+}
+
+.container > view {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  background: #fff;
+  align-items: center;
+  border: 1px solid red;
+  margin-top: 20px;
+}
+
+.container .l {
+  flex: 1;
+  padding-left: 10px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.container .r {
+  flex: 2;
+  font-size: 16px;
+  color: #777;
+}
+.show .r {
+  text-align: right;
+  padding-right: 10px;
+}
+.show .r image {
+  width: 10px;
+  height: 20px;
+}

@@ -1,1 +1,8 @@
-{}
+{
+  "window": {
+    "navigationBarTitleText": "个人展示",
+    "backgroundColor": "#eeeeee",
+    "backgroundTextStyle": "light",
+    "enablePullDownRefresh": false
+  }
+}

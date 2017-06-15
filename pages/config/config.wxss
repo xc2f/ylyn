@@ -2,6 +2,7 @@
 
 .container {
   position: relative;
+  background: #eee;
 }
 
 .container > view {
@@ -10,12 +11,13 @@
   height: 50px;
   background: #fff;
   align-items: center;
-  border: 1px solid red;
   margin-top: 20px;
+  width: 100%;
 }
 
 .container .l {
   flex: 1;
+  /*width: 20%;*/
   padding-left: 10px;
   font-weight: bold;
   font-size: 18px;
@@ -23,14 +25,63 @@
 
 .container .r {
   flex: 2;
+  /*width: 60%;*/
   font-size: 16px;
   color: #777;
 }
+
+.container .s {
+  flex: 1;
+  /*width: 20%;*/
+}
+
+/*.info .r, {
+  width: 80%;
+  padding-right: 10px;
+}*/
+
 .show .r {
   text-align: right;
   padding-right: 10px;
 }
+
+.show .r {
+  width: 70%;
+}
+
 .show .r image {
   width: 10px;
   height: 20px;
+}
+
+.container .bottom {
+  display: flex;
+  justify-content: center;
+  /*margin-top: 20px;*/
+  position: fixed;
+  width: 100%;
+  bottom: 20px;
+  background: #eee;
+}
+
+.bottom .btn {
+  width: 70%;
+  height: 50px;
+  border-radius: 50px;
+  background: rgb(51, 51, 51);
+}
+.bottom .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.genderRadio label {
+  margin-right: 10px;
+}
+
+.tall .r {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

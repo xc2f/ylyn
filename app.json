@@ -1,11 +1,11 @@
 {
   "pages": [
-    "pages/changePic/changePic",
     "pages/main/main",
     "pages/config/config",
-    "pages/user/user",
     "pages/msgList/msgList",
     "pages/nearlist/nearlist",
+    "pages/changePic/changePic",
+    "pages/user/user",
     "pages/shopDetail/shopDetail",
     "pages/chat/chat",
     "pages/test/test"

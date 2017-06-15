@@ -4,7 +4,8 @@ App({
     meInfo: null,
     deviceInfo: null,
     getMsgStatusInterval: null,
-    webSocketError: false
+    webSocketError: false,
+    requestHost: 'http://192.168.0.110:8080/index.php/yl/'
   },
 
   onLaunch: function () {

@@ -5,7 +5,12 @@ Page({
    * 页面的初始数据
    */
   data: {
-    chatRecords: null
+    chatRecords: null,
+    isFullStorage: false,
+    moveXStamp: 0,
+    wrapAnimation: {},
+    removeAnimation: {},
+    toLeft: true
   },
 
   /**
@@ -37,11 +42,32 @@ Page({
         that.setData({
           chatRecords: recordList
         })
-        console.log(that.data.chatRecords)
       },
       fail: function (res) {
         console.log('no records')
       }
+    })
+
+    // 获取本地缓存和文件大小
+    wx.getStorageInfo({
+      success: function(res) {
+        let limitSize = res.limitSize
+        let storageSize = res.currentSize
+        wx.getSavedFileList({
+          success: function(res){
+            let fileSize = 0
+            for(let i=0; i< res.fileList.length; i++){
+              fileSize += res.fileList[i].size
+            }
+            let totalSize = storageSize + fileSize
+            if(totalSize > limitSize - 1024 * 2) {
+              that.setData({
+                isFullStorage: true
+              })
+            }
+          }
+        })
+      },
     })
   },
 
@@ -61,6 +87,72 @@ Page({
     wx.navigateTo({
       url: '/pages/chat/chat?friend='+e.currentTarget.dataset.userid,
     })
+  },
+
+  removeChat(e) {
+    let userId = e.currentTarget.dataset.userid
+    wx.getStorage({
+      key: 'chatWith'+userId,
+      success: function(res) {
+        // TODO删除对话缓存中的链接的图片
+      },
+    })
+
+    // 删除具体缓存
+    wx.removeStorage({
+      key: 'chatWith'+userId,
+      success: function(res) {
+        console.log('chatWith' + userId + '已删除!')
+      },
+    })
+    // 从chatRecords中移除该key
+    wx.getStorage({
+      key: 'chatRecords',
+      success: function(res) {
+        let data = res.data
+        for(let i=0; i<data.length; i++){
+          if(data[i].chatName === 'chatWith'+userId){
+            data.splice(i, 1)
+            wx.setStorageSync(chatRecords, data)
+            break
+          }
+        }
+      },
+    })
+  },
+
+  basicAnimation(duration, delay) {
+    let animation = wx.createAnimation({
+      duration: duration || 500,
+      timingFunction: "ease",
+      delay: delay || 0
+    });
+    return animation;
+  },
+
+  blockMove(e){
+    let mx = e.changedTouches[0].pageX
+    let moveXStamp = this.data.moveXStamp
+    if (moveXStamp === 0) {
+      this.setData({
+        moveXStamp: mx
+      })
+    }
+    if (mx < moveXStamp && this.data.toLeft) {
+      // 只调用一次
+      this.setData({
+        wrapAnimation: this.basicAnimation(300, 0).left(-100).step().export(),
+        removeAnimation: this.basicAnimation(300, 0).right(0).step().export(),
+        toLeft: false
+      })
+    } else {
+      this.setData({
+        wrapAnimation: this.basicAnimation(300, 0).left(0).step().export(),
+        removeAnimation: this.basicAnimation(300, 0).right(-100).step().export(),
+        toLeft: true
+      })
+    }
+    // console.log('mx: '+mx, 'moveXStamp: '+moveXStamp)
   },
   /**
    * 生命周期函数--监听页面初次渲染完成

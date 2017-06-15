@@ -1,6 +1,7 @@
 <!--pages/msgList/msgList.wxml-->
 
 <view class="container">
+
   <view class="topBan">
     <view class="line"></view>
     <view class="dot"></view>
@@ -9,10 +10,19 @@
     <view class="dot"></view>
     <view class="line"></view>
   </view>
+  <view class="empty" wx:if="{{!chatRecords}}">
+  <image src="/images/xj.png"></image>
+  <text>这里为空哦，快找些小伙伴聊一聊！</text>
+  </view>
 
+  <view class="fullStorage" wx:if="{{isFullStorage}}">
+    <text>存储空间将满，请删除部分聊天会话！</text>
+  </view>
   <view class="recordList">
     <block wx:for="{{chatRecords}}" wx:key="chatId">
-      <view class="block" bindtap="tapToChat" data-userid='{{item.friend_id}}'>
+
+    <view class="block" bindtouchmove="blockMove">
+      <view class="wrap" bindtap="tapToChat" data-userid='{{item.friend_id}}' animation="{{wrapAnimation}}">
         <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
         <view class="left">
           <image src="/images/boy.png"></image>
@@ -30,6 +40,11 @@
           <view class="shopName"><image src="/images/zjlxr-dp.png"></image><text>咖啡故事</text></view>
         </view>
       </view>
+
+      <view class="remove" animation="{{removeAnimation}}" bindtap="removeChat" data-userid='{{item.friend_id}}'><text>删除</text></view>
+    
+    </view>
     </block>
   </view>
+
 </view>

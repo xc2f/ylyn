@@ -4,25 +4,27 @@
   <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ deviceInfo.windowWidth }}px">
     <view class="wrap">
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
-        <image class="bannerImg" src="/images/banner.png" animation="{{bannerSwitchAnimation}}"></image>
-        <view class="shopAvatar" bindtap="shopTap" data-shopid="{{shop.shop_id}}">
-          <image src="/images/avatar.png"></image>
-        </view>
+        <image class="bannerImg" src="{{store.store_bgimg}}" animation="{{bannerSwitchAnimation}}"></image>
+        <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}">
+          <view class="shopAvatar">
+            <image src="{{store.store_logo}}"></image>
+          </view>
+        </navigator>
         <view class="shopName">
           <view class="line"></view>
           <view class="dot"></view>
-          <text>{{shop.shop_name}}</text>
+          <text>{{store.store_name}}</text>
           <view class="dot"></view>
           <view class="line"></view>
         </view>
-        <view class="bottomText">本店正有{{shop.man_in + shop.female_in}}位小伙伴使用</view>
+        <view class="bottomText">本店正有{{store.total_number}}位小伙伴使用</view>
         <view class="flipConner" wx:if="{{showMeSwitch}}" bindtap="switchToMe" style="left: {{ deviceInfo.windowWidth-49 }}px">
           <image class="flipConnerImg" src="/images/flipConner.png"></image>
           <text class="flipConnerText">我的</text>
         </view>
       </view>
 
-      <view class="userBanner" style="width: {{ deviceInfo.windowWidth }}px; left: {{ deviceInfo.windowWidth }}px">
+      <!--<view class="userBanner" style="width: {{ deviceInfo.windowWidth }}px; left: {{ deviceInfo.windowWidth }}px">
         <image class="bannerImg" src="{{shop.shop_banner}}" animation="{{bannerSwitchAnimation}}"></image>
         <view class="shopAvatar">
           <image src="/images/girl.png"></image>
@@ -39,7 +41,7 @@
           <image class="flipConnerImg" src="/images/flipConner.png"></image>
           <text class="flipConnerText">首页</text>
         </view>
-      </view>
+      </view>-->
 
     </view>
 
@@ -57,7 +59,7 @@
       </view>
     </view>
     <import src="/pages/common/tableList/tableList" />
-    <template is="tableList" data="{{tables: shop.tables, isRegister: isRegister}}" />
+    <template is="tableList" data="{{tables: store.table_list}}" />
   </scroll-view>
 
 

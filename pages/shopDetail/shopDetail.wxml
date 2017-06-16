@@ -24,17 +24,27 @@
 
   <view class="shopInfo">
     <view class="location row" bindtap="mapNavigation">
-      <text class="fa fa-map-marker iconLeft"></text>
+      <view class="iconWrap">
+        <image src="/images/location.png" class="iconLeft"></image>
+      </view>
       <text class="address">距离你{{shop.distance}} | {{shop.address}}</text>
-      <text class="fa fa-angle-right iconRight"></text>
+            <view class="arrowWrap">
+        <image src="/images/arrowRight.png" class="iconRight"></image>
+      </view>
     </view>
     <view class="phone row" bindtap="callPhone">
-      <text class="fa fa-phone iconLeft"></text>
+      <view class="iconWrap">
+        <image src="/images/phone.png" class="iconLeft"></image>
+      </view>
       <text class="phoneNum">{{shop.phone}}</text>
-      <text class="fa fa-angle-right iconRight"></text>
+      <view class="arrowWrap">
+        <image src="/images/arrowRight.png" class="iconRight"></image>
+      </view>
     </view>
     <view class="foods row">
-      <text class="fa fa-birthday-cake iconLeft"></text>
+      <view class="iconWrap">
+        <image src="/images/foods.png" class="iconLeft"></image>
+      </view>
       <view class="list">
         <scroll-view scroll-x="true" class="scrollH">
           <view class="item" wx:for="{{shop.foods}}" wx:key="title">
@@ -51,7 +61,9 @@
   </view>
 
   <view class="inSalesInfo">
-    <text class="fa fa-bullhorn iconLeft"></text>
+    <view class="iconWrap">
+      <image src="/images/speaker.png" class="iconLeft"></image>
+    </view>
     <view class="content">
       <block wx:for="{{shop.sales_content}}">
         <text>{{item}}</text>
@@ -65,7 +77,7 @@
 
 
   <!--右下角去这里-->
-  <view class="toHere" bindtap="mapNavigation"> 
+  <view class="toHere" bindtap="mapNavigation">
     <text class="fa fa-level-up"></text>
     <text class="text">去这里</text>
   </view>

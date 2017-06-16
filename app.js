@@ -1,12 +1,14 @@
 App({
 
   globalData: {
-    meInfo: null,
     deviceInfo: null,
     getMsgStatusInterval: null,
     webSocketError: false,
-    requestHost: 'http://192.168.0.110:8080/index.php/yl/'
+    coordinate: null
   },
+
+  TOKEN: null,
+  requestHost: 'http://192.168.0.110:8080/index.php/yl/',
 
   onLaunch: function () {
     // let that = this
@@ -14,7 +16,6 @@ App({
     // 获取设备信息
     this.getDeviceInfo()
 
-    // that.getMeInfo()
     this.connectWebsocket()
     
 
@@ -25,37 +26,100 @@ App({
     this.refreshStorage()
   },
 
-  getMeInfo() {
+  login(callback) {
     let that = this
     wx.login({
       success: function (res) {
         if (res.code) {
           let code = res.code
-          wx.getUserInfo({
-            success: function(res){
-              // 发起请求
-              wx.request({
-                url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/me',
-                method: 'POST',
-                data: {
-                  userInfo: res,
-                  code: code
-                },
-                success: function(res){
-                  that.globalData.meInfo = res.data
-                  wx.setStorage({
-                    key: 'meInfo',
-                    data: res.data,
-                  })
-                }
-              })
+          wx.getSetting({
+            success: function (res) {
+              if (res.authSetting['scope.userInfo'] == false) {
+                wx.openSetting({
+                  success: function(res){
+                    if (res.authSetting['scope.userInfo'] == true){
+                      that.getMeInfo(code, callback)
+                    }
+                  }
+                })
+              } else {
+                that.getMeInfo(code, callback)
+              }
             }
           })
         } else {
-          console.log('获取用户登录态失败！' + res.errMsg)
+          console.log('无code！' + res.errMsg)
         }
+      },
+      fail: function(res) {
+        console.log('------wx login fail--------')
+        console.log(res)
       }
     });
+  },
+
+  getLocation(){
+    let that = this
+    wx.getSetting({
+      success: function (res) {
+        if (res.authSetting['scope.userLocation'] == false) {
+          wx.openSetting({
+            success: function (res) {
+              if (res.authSetting['scope.userLocation'] == true) {
+                wx.getLocation({
+                  type: 'gcj02',
+                  success: function(res) {
+                    that.globalData.coordinate = {
+                      latitude: res.latitude,
+                      longitude: res.longitude
+                    }
+                  },
+                })
+              }
+            }
+          })
+        } else {
+          wx.getLocation({
+            type: 'gcj02',
+            success: function (res) {
+              that.globalData.coordinate = {
+                latitude: res.latitude,
+                longitude: res.longitude
+              }
+            },
+          })
+        }
+      }
+    })
+  },
+
+  getMeInfo(code, callback){
+    let that = this
+    wx.getUserInfo({
+      success: function (res) {
+        // 发起请求
+        wx.request({
+          url: that.requestHost +'User/wxLogin/',
+          method: 'POST',
+          data: {
+            code: code,
+            encrypted_data: res.encryptedData,
+            iv: res.iv
+          },
+          success: function (res) {
+            // 存储TOKEN
+            that.TOKEN = res.data.result.token
+            wx.setStorageSync('TOKEN', res.data.result.token)
+            // 执行回调
+            callback()
+          }
+        })
+      },
+      fail: function (res) {
+        console.log('-----get wx userInfo fail--------')
+        console.log(res)
+      }
+    })
   },
 
   getDeviceInfo: function(){

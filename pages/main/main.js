@@ -1,3 +1,6 @@
+
+var app = getApp()
+
 Page({
 
   /**
@@ -5,7 +8,8 @@ Page({
    */
   data: {
     deviceInfo: null,
-    shop: {},
+    store: {},
+    qrcodeInfo: null,
 
     showMeSwitch: true,
     showShopSwitch: false,
@@ -18,16 +22,6 @@ Page({
 
     tablesOpacityAnimation: {},
     userOpacityAnimation: {},
-
-    gallery: [
-      { src: '/images/EatHow.png' },
-      { src: '/images/banner.png' },
-      { src: '/images/coffee.png' },
-      { src: '/images/boy.png' },
-      { src: '/images/girl.png' },
-      { src: '/images/banner.png' },
-      { src: '/images/coffee.png' },
-    ],
 
     filterShow: false,
     filterShowAnimation: {},
@@ -43,28 +37,26 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-
-    // 获取屏幕高度撑满下部滚动视图
     that.setData({
-      deviceInfo: getApp().globalData.deviceInfo
-    })
-    // 请求店铺信息
-    that.fetchShopInfo(options)
-
-    wx.getStorage({
-      key: 'meInfo',
-      success: function(res) {
-        getApp().globalData.meInfo = res.data
-      },
-      fail: function(res) {
-        // 重新获取微信用户信息
-        getApp().getMeInfo()
+      qrcodeInfo: {
+        store_id: options.store_id || 1,
+        table_id: options.table_id || 1
       }
     })
 
-    wx.onSocketMessage(function (res) {
-      console.log(res)
+    // 获取屏幕高度撑满下部滚动视图
+    that.setData({
+      deviceInfo: app.globalData.deviceInfo
     })
+
+    let token = wx.getStorageSync('TOKEN')
+    if(token === ''){
+      app.login(that.fetchShopInfo)
+    } else {
+      // 请求店铺信息
+      that.fetchShopInfo()
+    }
+
 
     // end onload
   },
@@ -77,29 +69,52 @@ Page({
 
   },
 
-  fetchShopInfo(options){
+  fetchShopInfo(gender, currentPage){
+    let that = this
+    app.getLocation()
+    let interval = setInterval(function () {
+      if (app.globalData.coordinate !== null) {
+        let coordinate = app.globalData.coordinate
+        app.globalData.coordinate = null
+        // 获取到坐标请求
+        that.toFetch(coordinate, gender, currentPage)
+        clearInterval(interval)
+      }
+    }, 500)
+
+  },
+
+  toFetch(coordinate, gender, currentPage){
     let that = this
     wx.showLoading({
       title: '数据获取中',
     })
+    let token = wx.getStorageSync('TOKEN')
     wx.request({
-      url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
+      // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
+      url: app.requestHost + 'Store/store_user/',
       method: 'POST',
       data: {
-        shop_id: options.shopid
+        longitude: coordinate.longitude,
+        latitude: coordinate.latitude,
+        token: token,
+        store_id: that.data.qrcodeInfo.store_id,
+        table_id: that.data.qrcodeInfo.table_id,
+        gender_type: gender || 0,
+        page: currentPage || 1
       },
       success: function (res) {
-        console.log('店铺id: ' + options.shopid + '响应已收到')
         that.setData({
-          shop: res.data
+          store: res.data.result
         })
         // 隐藏加载动画和下拉刷新动作
-        wx.hideLoading()
-        wx.stopPullDownRefresh()
+        if (res.data.code === 201) {
+          wx.hideLoading()
+          wx.stopPullDownRefresh()
+        }
       }
     })
   },
-
 
   basicAnimation(duration, delay) {
     let animation = wx.createAnimation({

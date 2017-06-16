@@ -4,37 +4,40 @@
 <view class="container">
 
   <view class="head">
-    <text>—— · </text>
-    <text class="fa fa-institution"></text>
+    <view class="line"></view>
+    <view class="dot"></view>
+    <image src="/images/zjlxr-dp.png"></image>
     <text>附近商家</text>
-    <text> · ——</text>
+    <view class="dot"></view>
+    <view class="line"></view>
   </view>
 
   <view class="shopList">
-    <view class="empty" wx:if="{{shopListEmpty}}"> 
+    <view class="empty" wx:if="{{shopListEmpty}}">
       <text>附近无可用商家</text>
     </view>
-    <block wx:for="{{shopList}}" wx:key="{{item.shop_id}}">
-      <navigator url="/pages/main/main?shopid={{item.shop_id}}">
+    <block wx:for="{{shopList}}" wx:key="store_id">
+      <navigator url="/pages/main/main?store_id={{item.store_id}}" open-type="redirect">
         <view class="item">
-          <image src="/images/res.png"></image>
+          <image src="{{store_bgimg}}"></image>
           <view class="right">
             <view wx:if="{{item.in_sales}}" class="inSales">
               <text class="inSaleText">活动</text>
             </view>
-            <text class="shopName">{{item.shop_name}}</text>
+            <text class="shopName">{{item.store_name}}</text>
             <view class="persons">
-              <view class="fa fa-male man" style="color: rgb(2, 113, 188)">
-                <text>{{item.man_in}}</text>
+              <view class="boy">
+                <image src="/images/show_boy.png"></image>
+                <text>{{item.man_count}}</text>
               </view>
-              <view class="fa fa-female man" style="color: rgb(123, 54, 118)">
-                <text>{{item.female_in}}</text>
+              <view class="girl">
+                <image src="/images/show_girl.png"></image>
+                <text>{{item.woman_count}}</text>
               </view>
             </view>
             <view class="distance">
-              <view class="fa fa-location-arrow">
-                <text>{{item.distance}}</text>
-              </view>
+              <image src="/images/run.png"></image>
+              <text>{{item.distance}}</text>
             </view>
           </view>
         </view>

@@ -1,12 +1,12 @@
 {
   "pages": [
     "pages/main/main",
+    "pages/shopDetail/shopDetail",
+    "pages/nearlist/nearlist",
     "pages/config/config",
     "pages/msgList/msgList",
-    "pages/nearlist/nearlist",
     "pages/changePic/changePic",
     "pages/user/user",
-    "pages/shopDetail/shopDetail",
     "pages/chat/chat",
     "pages/test/test"
   ],

@@ -1,4 +1,5 @@
 // pages/msgList/msgList.js
+
 Page({
 
   /**

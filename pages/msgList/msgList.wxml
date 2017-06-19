@@ -22,7 +22,7 @@
     <block wx:for="{{chatRecords}}" wx:key="chatId">
 
     <view class="block" bindtouchmove="blockMove">
-      <view class="wrap" bindtap="tapToChat" data-userid='{{item.friend_id}}' animation="{{wrapAnimation}}">
+      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}' animation="{{wrapAnimation}}">
         <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
         <view class="left">
           <image src="/images/boy.png"></image>

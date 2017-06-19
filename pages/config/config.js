@@ -1,4 +1,5 @@
 // pages/config/config.js
+var app = getApp()
 Page({
 
   /**
@@ -24,14 +25,20 @@ Page({
   onLoad: function (options) {
     let that = this
     wx.request({
-      url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/config',
+      // url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/config',
+      url: app.requestHost + 'member/get_userinfo/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN
+      },
       success: function(res){
         that.setData({
-          userInfo: res.data
+          userInfo: res.data.result
         })
       }
     })
   },
+
 
   changePic(){
     wx.navigateTo({
@@ -49,15 +56,28 @@ Page({
       nameBtnShow: false
     })
   },
-
-  wxIdChange(e){
+  nameChange(e) {
     this.setData({
-      'userInfo.wxId': e.detail.value
+      'userInfo.nickname': e.detail.value
     })
   },
+  nameSubmit() {
+    wx.request({
+      url: app.requestHost + 'member/update_userinfo/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        nickname: this.data.userInfo.nickname
+      },
+      success: function (res) {
+        console.log(res)
+      }
+    })
+  },
+
   wxIdFocus() {
     this.setData({
-    wxIdBtnShow: true
+      wxIdBtnShow: true
     })
   },
   wxIdBlur() {
@@ -65,25 +85,43 @@ Page({
       wxIdBtnShow: false
     })
   },
-
-  nameChange(e) {
+  wxIdChange(e){
     this.setData({
-      'userInfo.nickName': e.detail.value
+      'userInfo.wechat_num': e.detail.value
     })
   },
+  wxIdSubmit() {
+    wx.request({
+      url: app.requestHost + 'member/update_userinfo/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        wechat_num: this.data.userInfo.wechat_num
+      },
+      success: function (res) {
+        console.log(res)
+      }
+    })
+  },
+
 
   genderChange(e){
     this.setData({
       'userInfo.gender': e.detail.value
     })
-  },
-
-  
-  ageChange(e){
-    this.setData({
-      'userInfo.age': e.detail.value
+    wx.request({
+      url: app.requestHost + 'member/update_userinfo/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        gender: this.data.userInfo.gender
+      },
+      success: function (res) {
+        console.log(res)
+      }
     })
   },
+
   ageFocus() {
     this.setData({
       ageBtnShow: true
@@ -94,11 +132,39 @@ Page({
       ageBtnShow: false
     })
   },
-
+  ageChange(e) {
+    this.setData({
+      'userInfo.age': e.detail.value
+    })
+  },
+  ageSubmit(){
+    wx.request({
+      url: app.requestHost + 'member/update_userinfo/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        age: this.data.userInfo.age
+      },
+      success: function (res) {
+        console.log(res)
+      }
+    })
+  },
 
   infoChange(e){
     this.setData({
       'userInfo.info': e.detail.value
+    })
+  },
+
+  tallFocus() {
+    this.setData({
+      tallBtnShow: true
+    })
+  },
+  tallBlur() {
+    this.setData({
+      tallBtnShow: false
     })
   },
   tallChange(e){
@@ -110,27 +176,30 @@ Page({
       let tall2 = tall % 100 % 10
       if (nums.indexOf(tall0) !== -1 && nums.indexOf(tall1) !== -1 && nums.indexOf(tall2) !== -1){
         this.setData({
-          'userInfo.tall': e.detail.value + 'cm',
+          'userInfo.height': e.detail.value + 'cm',
           'tallUnit': ''
         })
       }
     } else {
       this.setData({
-        'userInfo.tall': e.detail.value,
+        'userInfo.height': e.detail.value,
         'tallUnit': ''
       })
     }
   },
-  tallFocus() {
-    this.setData({
-      tallBtnShow: true
-    })
-  },
-  tallBlur() {
-    this.setData({
-      tallBtnShow: false
-    })
-  },
+tallSubmit(){
+  wx.request({
+    url: app.requestHost + 'member/update_userinfo/',
+    method: 'POST',
+    data: {
+      token: app.TOKEN,
+      height: this.data.userInfo.height
+    },
+    success: function (res) {
+      console.log(res)
+    }
+  })
+},
 
   postConfig(){
     console.log(this.data.userInfo)

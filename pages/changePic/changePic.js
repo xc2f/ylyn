@@ -1,4 +1,7 @@
 // pages/changePic/changePic.js
+
+var app = getApp()
+
 Page({
 
   /**
@@ -29,11 +32,16 @@ Page({
     })
 
     wx.request({
-      url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/uploadPic',
+      // url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/uploadPic',
+      url: app.requestHost + 'member/get_user_album/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN
+      },
       success:function(res){
         that.setData({
-          pics: res.data,
-          picLength: res.data.length
+          pics: res.data.result,
+          picLength: res.data.result.length
         })
       }
     })
@@ -57,6 +65,15 @@ Page({
   removePic(e) {
     let that = this
     let idx = e.currentTarget.dataset.idx
+    wx.request({
+      url: app.requestHost + 'member/del_user_album/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        album_id: that.data.pics[idx].album_id
+      }
+    })
+
     let tempList = that.data.pics
     tempList.splice(idx, 1)
     that.setData({
@@ -76,6 +93,7 @@ Page({
         let tempFilePaths = res.tempFilePaths
         let tempList = that.data.pics
         for(let i=0; i<tempFilePaths.length; i++){
+          // TODO 上传照片
           tempList.push(tempFilePaths[i])
         }
         that.setData({

@@ -4,7 +4,8 @@ App({
     deviceInfo: null,
     getMsgStatusInterval: null,
     webSocketError: false,
-    coordinate: null
+    coordinate: null,
+    userId: null,
   },
 
   TOKEN: null,
@@ -18,7 +19,7 @@ App({
 
     this.connectWebsocket()
     
-
+    this.login()
     // setTimeout(function(){
     //   console.log('----------')
     //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
@@ -28,37 +29,97 @@ App({
 
   login(callback) {
     let that = this
-    wx.login({
-      success: function (res) {
-        if (res.code) {
-          let code = res.code
-          wx.getSetting({
-            success: function (res) {
-              if (res.authSetting['scope.userInfo'] == false) {
-                wx.openSetting({
-                  success: function(res){
-                    if (res.authSetting['scope.userInfo'] == true){
-                      that.getMeInfo(code, callback)
-                    }
-                  }
-                })
-              } else {
-                that.getMeInfo(code, callback)
-              }
-            }
+    let token = wx.getStorageSync('TOKEN')
+    if(token){
+      that.TOKEN = token
+      wx.request({
+        url: that.requestHost +'User/token_login/',
+        method: 'POST',
+        data: {
+          token: token
+        },
+        success: function(res){
+          // 存储userid
+          that.globalData.userId = res.data.result.user_id
+          // 未读消息
+          // 覆盖用户信息
+          wx.setStorage({
+            key: 'meInfo',
+            data: res.data.result.user_info,
           })
-        } else {
-          console.log('无code！' + res.errMsg)
         }
-      },
-      fail: function(res) {
-        console.log('------wx login fail--------')
-        console.log(res)
-      }
-    });
+      })
+    } else {
+      wx.login({
+        success: function (res) {
+          if (res.code) {
+            let code = res.code
+            wx.getSetting({
+              success: function (res) {
+                if (res.authSetting['scope.userInfo'] == false) {
+                  wx.openSetting({
+                    success: function (res) {
+                      if (res.authSetting['scope.userInfo'] == true) {
+                        that.getMeInfo(code, callback)
+                      }
+                    }
+                  })
+                } else {
+                  that.getMeInfo(code, callback)
+                }
+              }
+            })
+          } else {
+            console.log('无code！' + res.errMsg)
+          }
+        },
+        fail: function (res) {
+          console.log('------wx login fail--------')
+          console.log(res)
+        }
+      });
+    }
   },
 
-  getLocation(){
+  getMeInfo(code, callback){
+    let that = this
+    wx.getUserInfo({
+      success: function (res) {
+        // 发起请求
+        wx.request({
+          url: that.requestHost +'User/wxLogin/',
+          method: 'POST',
+          data: {
+            code: code,
+            encrypted_data: res.encryptedData,
+            iv: res.iv
+          },
+          success: function (res) {
+            // 存储userid
+            that.globalData.userId = res.data.result.user_id
+            // 存储TOKEN
+            that.TOKEN = res.data.result.token
+            wx.setStorageSync('TOKEN', res.data.result.token)
+            // 未读消息
+
+            // 覆盖用户信息
+            wx.setStorage({
+              key: 'meInfo',
+              data: res.data.result.user_info,
+            })
+            // 执行回调
+            callback()
+          }
+        })
+      },
+      fail: function (res) {
+        console.log('-----get wx userInfo fail--------')
+        console.log(res)
+      }
+    })
+  },
+
+  getLocation() {
     let that = this
     wx.getSetting({
       success: function (res) {
@@ -68,7 +129,7 @@ App({
               if (res.authSetting['scope.userLocation'] == true) {
                 wx.getLocation({
                   type: 'gcj02',
-                  success: function(res) {
+                  success: function (res) {
                     that.globalData.coordinate = {
                       latitude: res.latitude,
                       longitude: res.longitude
@@ -89,35 +150,6 @@ App({
             },
           })
         }
-      }
-    })
-  },
-
-  getMeInfo(code, callback){
-    let that = this
-    wx.getUserInfo({
-      success: function (res) {
-        // 发起请求
-        wx.request({
-          url: that.requestHost +'User/wxLogin/',
-          method: 'POST',
-          data: {
-            code: code,
-            encrypted_data: res.encryptedData,
-            iv: res.iv
-          },
-          success: function (res) {
-            // 存储TOKEN
-            that.TOKEN = res.data.result.token
-            wx.setStorageSync('TOKEN', res.data.result.token)
-            // 执行回调
-            callback()
-          }
-        })
-      },
-      fail: function (res) {
-        console.log('-----get wx userInfo fail--------')
-        console.log(res)
       }
     })
   },
@@ -201,7 +233,7 @@ App({
         // 查找之前是否保存过两人会话
         for (let i = 0; i < records.length; i++) {
           // TODO 加一个消息是否clean
-          if (records[i].chatName === 'chatWith' + NewMessage.friend_id) {
+          if (records[i].chatName === 'chatWith' + NewMessage.friendInfo.user_id) {
             // 将最新聊天置顶
             records.unshift(records.splice(i)[0])
             // 更新缓存
@@ -212,8 +244,8 @@ App({
         }
         // 如果有这个key但是没有当前聊天会话记录则新建
         records.unshift({
-          chatName: 'chatWith' + NewMessage.friend_id,
-          chatId: '',
+          chatName: 'chatWith' + NewMessage.friendInfo.user_id,
+          friendInfo: NewMessage.friendInfo,
           msgClean: msgClean
         })
         wx.setStorage({
@@ -226,8 +258,8 @@ App({
         wx.setStorage({
           key: 'chatRecords',
           data: [{
-            chatName: 'chatWith' + NewMessage.friend_id,
-            chatId: '',
+            chatName: 'chatWith' + NewMessage.friendInfo.user_id,
+            friendInfo: NewMessage.friendInfo,
             msgClean: msgClean
           }]
         })

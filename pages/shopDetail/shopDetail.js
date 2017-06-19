@@ -1,4 +1,7 @@
 // pages/shopDetail/shopDetail.js
+
+var app = getApp()
+
 Page({
 
   /**
@@ -13,18 +16,58 @@ Page({
    */
   onLoad: function (options) {
     let that = this
+
+    that.fetchShop(options)
+    // wx.request({
+    //   url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop_detail',
+    //   method: 'POST',
+    //   data: {
+    //     shop_id: options.shop_id
+    //   },
+    //   success: function (res) {
+    //     let data = res.data
+    //     data.total = data.man_in + data.female_in
+    //     that.setData({
+    //       shop: data
+    //     })        
+    //   }
+    // })
+  },
+
+  fetchShop(options){
+    let that = this;
+    wx.showLoading({
+      title: '数据获取中，请稍后',
+    })
+    app.getLocation()
+    let interval = setInterval(function () {
+      if (app.globalData.coordinate !== null) {
+        let coordinate = app.globalData.coordinate
+        app.globalData.coordinate = null
+        // 获取到坐标请求
+        that.toFetch(coordinate, options)
+        clearInterval(interval)
+      }
+    }, 500)
+  },
+
+  toFetch(coordinate, options){
+    let that = this
     wx.request({
-      url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop_detail',
+      url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
-        shop_id: options.shop_id
+        store_id: options.store_id,
+        longitude: coordinate.longitude,
+        latitude: coordinate.latitude
       },
-      success: function (res) {
-        let data = res.data
-        data.total = data.man_in + data.female_in
-        that.setData({
-          shop: data
-        })        
+      success: function(res){
+        if(res.data.code === 201){
+          that.setData({
+            shop: res.data.result
+          })
+          wx.hideLoading()
+        }
       }
     })
   },
@@ -32,10 +75,10 @@ Page({
   mapNavigation(){
     let shop = this.data.shop
     wx.openLocation({
-      latitude: shop.coordinate.latitude,
-      longitude: shop.coordinate.longitude,
+      latitude: shop.store_latitude,
+      longitude: shop.store_longitude,
       scale: 20,
-      name: shop.shop_name,
+      name: shop.store_name,
       address: shop.address
     })
   },

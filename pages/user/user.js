@@ -1,19 +1,16 @@
 // pages/user/user.js
+
+var app = getApp()
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
-    gallery: [
-      '/images/man.jpg',
-      '/images/female.jpg',
-      '/images/userShowPic.png',
-      '/images/man.jpg',
-      '/images/female.jpg',
-      '/images/userShowPic.png'
-    ],
+    userId: null,
+    userInfo: null,
+    gallery: [],
     size: 6,
 
     tx0: 0,
@@ -32,7 +29,25 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    let that = this
+    wx.request({
+      url: app.requestHost + 'Store/get_tuser_info/',
+      method: 'POST',
+      data: {
+        tuser_id: options.user_id,
+        token: app.TOKEN
+      },
+      success: function(res){
+        that.setData({
+          userInfo: res.data.result,
+          gallery: res.data.result.album,
+          size: res.data.result.album.length
+        })
+      }
+    })
+    that.setData({
+      userId: app.globalData.userId
+    })
   },
 
   switchToShop(){
@@ -74,7 +89,7 @@ Page({
 
   toChatOrConfig(){
     wx.navigateTo({
-      url: '/pages/config/config',
+      url: this.data.userId === this.data.userInfo.user_id ? '/pages/config/config' : '/pages/chat/chat?',
     })
   },
   /**

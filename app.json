@@ -7,8 +7,7 @@
     "pages/msgList/msgList",
     "pages/changePic/changePic",
     "pages/user/user",
-    "pages/chat/chat",
-    "pages/test/test"
+    "pages/chat/chat"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",

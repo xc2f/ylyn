@@ -6,18 +6,18 @@
       <text>昵称</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.nickName}}" bindinput="nameChange" bindfocus="nameFocus" bindblur="nameBlur"/>
+      <input value="{{userInfo.nickname}}" bindinput="nameChange" bindfocus="nameFocus" bindblur="nameBlur"/>
     </view>
-    <view class="s" style="visibility:{{nameBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="">确认</button></view>
+    <view class="s" style="visibility:{{nameBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="nameSubmit">确认</button></view>
   </view>
   <view class="wxId">
     <view class="l">
       <text>微信号</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.wxId}}" bindinput="wxIdChange"  bindfocus="wxIdFocus" bindblur="wxIdBlur"/>
+      <input value="{{userInfo.wechat_num}}" bindinput="wxIdChange"  bindfocus="wxIdFocus" bindblur="wxIdBlur"/>
     </view>
-    <view class="s"  style="visibility:{{wxIdBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini">确认</button></view>
+    <view class="s"  style="visibility:{{wxIdBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="wxIdSubmit">确认</button></view>
   </view>
   <view class="gender">
     <view class="l">
@@ -26,7 +26,7 @@
     <view class="r">
       <radio-group class="genderRadio" bindchange="genderChange">
         <label class="radio" wx:for="{{genderRange}}" wx:key="title">
-          <radio value="{{item.title}}" checked="{{userInfo.gender==item.gender ? 'checked' : false }}" />{{item.value}}
+          <radio value="{{item.gender}}" checked="{{userInfo.gender==item.gender ? 'checked' : false }}" />{{item.value}}
         </label>
       </radio-group>
     </view>
@@ -39,23 +39,23 @@
     <view class="r">
       <input value='{{userInfo.age}}' bindinput="ageChange" type="number" maxlength='3'  bindfocus="ageFocus" bindblur="ageBlur"/>
     </view>
-    <view class="s"  style="visibility:{{ageBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini">确认</button></view>
+    <view class="s"  style="visibility:{{ageBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="ageSubmit">确认</button></view>
   </view>
   <view class="tall">
     <view class="l">
       <text>身高</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.tall}}" bindinput="tallChange" type="number" maxlength='5'  bindfocus="tallFocus" bindblur="tallBlur"/>
+      <input value="{{userInfo.height}}" bindinput="tallChange" type="number" maxlength='5'  bindfocus="tallFocus" bindblur="tallBlur"/>
     </view>
-    <view class="s"  style="visibility:{{tallBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini">确认</button></view>
+    <view class="s"  style="visibility:{{tallBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="tallSubmit">确认</button></view>
   </view>
   <view class="info">
     <view class="l">
       <text>简介</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.info}}" bindinput="infoChange" />
+      <input value="{{userInfo.introduction}}" bindinput="infoChange" />
       <!--<textarea value="{{userInfo.info}}" bindinput="infoChange" />-->
     </view>
   </view>

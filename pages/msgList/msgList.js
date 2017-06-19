@@ -29,10 +29,10 @@ Page({
           // 防止异步
           let msg = wx.getStorageSync(records[i].chatName)
           let newestMsg = msg[msg.length-1]
-          if (newestMsg.type === 'mult') {
+          if (newestMsg.type === 'text') {
             recordList.push({
-              friend_id: newestMsg.friend_id,
-              newestMsg: newestMsg.content[0].content,
+              friendInfo: records[i].friendInfo,
+              newestMsg: newestMsg.content,
               date: that.parseDate(newestMsg.date),
               msgClean: records[i].msgClean
             })
@@ -86,7 +86,7 @@ Page({
 
   tapToChat(e){
     wx.navigateTo({
-      url: '/pages/chat/chat?friend='+e.currentTarget.dataset.userid,
+      url: '/pages/chat/chat?friendinfo='+JSON.stringify()
     })
   },
 

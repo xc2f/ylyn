@@ -4,13 +4,13 @@
   <view class="banner">
     <view class="userBanner">
       <image class="bannerImg" src="/images/banner.png"></image>
-      <view class="userAvatar" bindtap="shopTap" data-shopid="{{shop.shop_id}}">
-        <image src="/images/avatar.png"></image>
+      <view class="userAvatar" bindtap="shopTap">
+        <image src="{{userInfo.avatar}}"></image>
       </view>
       <view class="userName">
         <view class="line"></view>
         <view class="dot"></view>
-        <text>{{shop.shop_name}}</text>
+        <text>{{userInfo.nickname}}</text>
         <view class="dot"></view>
         <view class="line"></view>
       </view>
@@ -53,14 +53,14 @@
     </view>
 
     
-    <view bindtap="prev" id="prev" wx:if="{{currentPic !== 0}}"></view>
-    <view bindtap="next" id="next"></view>
+    <view bindtap="prev" id="prev" wx:if="{{size>2 && currentPic !== 0}}"></view>
+    <view bindtap="next" id="next" wx:if="{{size>2 && currentPic !== size-2}}"></view>
   </view>
 </view>
 
 <view class="bottom">
   <view class="btn" bindtap="toChatOrConfig">
-    <text>修改资料</text>
+    <text>{{userId===userInfo.user_id ? '修改资料' : '开始聊天'}}</text>
   </view>
 </view>
 

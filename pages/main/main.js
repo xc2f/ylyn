@@ -57,6 +57,7 @@ Page({
       that.fetchShopInfo()
     }
 
+    // 获取用户信息
 
     // end onload
   },
@@ -170,9 +171,8 @@ Page({
 
 
   switchToMe() {
-
     wx.navigateTo({
-      url: '/pages/user/user',
+      url: '/pages/user/user?user_id=' + app.globalData.userId,
     })
 
     // let that = this;
@@ -327,19 +327,9 @@ Page({
 
 
   userTap(e) {
-    if (this.data.shopShow) {
-      // if (this.data.isRegister && this.data.shopShow) {
-      // console.log('用户信息: ' + JSON.stringify(e.currentTarget.dataset.meInfo))
-      wx.navigateTo({
-        url: '/pages/chat/chat?shopname='+ this.data.shop.shop_name +'&friend=' + JSON.stringify(e.currentTarget.dataset.friendinfo),
-      })
-      // } else {
-      //   this.setData({
-      //     registerShow: true
-      //   })
-      // }
-
-    }
+    wx.navigateTo({
+      url: '/pages/chat/chat?storeid=' + this.data.qrcodeInfo.store_id+'&friendinfo='+JSON.stringify(e.currentTarget.dataset.friendinfo),
+    })
   },
 
   toChatRecords(){

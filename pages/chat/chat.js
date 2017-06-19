@@ -1,4 +1,6 @@
 // pages/chat/chat.js
+var app = getApp()
+
 Page({
 
   pageName: 'chat',
@@ -7,7 +9,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    toTop: 0,
+    toView: null,
     deviceInfo: null,
     chatBodyHeight: 0,
 
@@ -15,7 +17,7 @@ Page({
     inputValue: '',
     meInfo: null,
     friendInfo: null,
-    shopName: null,
+    storeId: null,
     messages: [],
 
     setChatRecordOk: false,
@@ -132,30 +134,38 @@ Page({
    */
   onLoad: function (options) {
 
+    console.log(options)
+
     let that = this;
     let globalData = getApp().globalData
 
     that.setData({
       deviceInfo: globalData.deviceInfo,
       // 屏幕高度减去chatBar的高度，为消息窗口高度
-      chatBodyHeight: globalData.deviceInfo.windowHeight - 50
+      chatBodyHeight: globalData.deviceInfo.windowHeight - 50,
     })
 
-
     that.setData({
-      toTop: 10000,
-      meInfo: globalData.meInfo,
-      friendInfo: JSON.parse(options.friend),
-      shopName: options.shopname
+      friendInfo: JSON.parse(options.friendinfo),
+      storeId: options.storeid
+    })
+
+    // 获取本人信息
+    wx.getStorage({
+      key: 'meInfo',
+      success: function(res) {
+        that.setData({
+          meInfo: res.data
+        })
+      },
     })
 
     // 获取聊天信息
     wx.getStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       success: function (res) {
-        console.log(res)
         that.setData({
-          messages: res.data
+          messages: res.data,
         })
       },
       fail: function (e) {
@@ -165,8 +175,23 @@ Page({
 
     // 设置导航条
     wx.setNavigationBarTitle({
-      title: that.data.friendInfo.nickName
+      title: that.data.friendInfo.nickname
     })
+
+
+    // 滚动到页面底部
+    let checkToViewTimeStamp = new Date().getTime()
+    let checkToView = setInterval(function(){
+      if(that.data.messages !== []){
+        that.setData({
+          toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
+        })
+        clearInterval(checkToView)
+      }
+      if (new Date().getTime() - checkToViewTimeStamp > 3000){
+        clearInterval(checkToView)
+      }
+    }, 50)
 
   },
 
@@ -208,7 +233,7 @@ Page({
   },
 
 
-  // 发送文本消息，包括表情
+  // 发送文本消息
   submit() {
     let that = this
     let inputValue = that.data.inputValue
@@ -217,17 +242,18 @@ Page({
       return false
     }
 
-    let multiList = that.parseMsg(inputValue)
+
+    // let multiList = that.parseMsg(inputValue)
 
     let tempMessageList = that.data.messages;
 
+    // 创建一个msgid用作后面的消息状态更新
+    let msgId = new Date().getTime() + '-' + app.globalData.userId
     let postData = {
-      user_id: that.data.meInfo.user_id,
-      friend_id: that.data.friendInfo.user_id,
-      type: 'mult',
-      content: multiList,
-      date: new Date().getTime(),
-      status: getApp().globalData.webSocketError ? 'error' : ''
+      type: 'text',
+      content: inputValue,
+      msgId: msgId,
+      status: 'sending'
     }
 
     tempMessageList.push(postData)
@@ -237,19 +263,52 @@ Page({
       inputValue: '',
       isFocus: false,
     })
+
     // 消息发送后滚动到底部，在上一setData后
     that.setData({
-      toTop: that.data.toTop + 500
+      toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
     })
+
     
     wx.setStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       data: that.data.messages,
     })
 
+    wx.request({
+      url: app.requestHost + 'Chat/send_message/',
+      method: 'POST',
+      data: {
+        tuser_id: that.data.friendInfo.user_id,
+        token: app.TOKEN,
+        content: postData,
+        store_id: that.data.storeId
+      },
+      success: function(res){
+        if(res.data.code === 201){
+          let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
+          for (let i = messages.length; i--; i > 0) {
+            if (messages[i].msgId === msgId) {
+              messages[i].status = 'sendOk'
+              break
+            }
+          }
+          that.setData({
+            messages: messages
+          })
+          wx.setStorage({
+            key: 'chatWith' + that.data.friendInfo.user_id,
+            data: messages,
+          })
+        }
+      }
+    })
+
     // 将本次会话记录写入消息列表
-    getApp().refreshChatRecords(postData)
-    
+    getApp().refreshChatRecords({
+      newMessage: postData,
+      friendInfo: that.data.friendInfo
+    })
 
   },
 
@@ -329,7 +388,7 @@ Page({
               messages: tempMessageList,
             })
             that.setData({
-              toTop: that.data.toTop + 500
+              toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
             })
           }
         })
@@ -354,8 +413,8 @@ Page({
       this.setData({
         chatBodyHeight: this.data.deviceInfo.windowHeight - 184
       })
-      this.setData({
-        toTop: this.data.toTop + 200
+      that.setData({
+        toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
       })
     } else {
       this.setData({

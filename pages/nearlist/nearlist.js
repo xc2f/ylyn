@@ -21,19 +21,19 @@ Page({
     that.fetchShopList()
 
     // 如果本机存有用户个人信息，说明登录过，显示下面的个人信息和消息列表图标
-    wx.getStorage({
-      key: 'meInfo',
-      success: function (res) {
-        that.setData({
-          showMeIcon: true
-        })
-      },
-      fail: function (e) {
-        that.setData({
-          showMeIcon: false
-        })
-      }
-    })
+    // wx.getStorage({
+    //   key: 'meInfo',
+    //   success: function (res) {
+    //     that.setData({
+    //       showMeIcon: true
+    //     })
+    //   },
+    //   fail: function (e) {
+    //     that.setData({
+    //       showMeIcon: false
+    //     })
+    //   }
+    // })
   },
 
   fetchShopList() {
@@ -64,7 +64,6 @@ Page({
         latitude: coordinate.latitude
       },
       success: function (res) {
-        console.log(res)
         let result = res.data.result
         if (res.statusCode === 200) {
           if(res.data.code === 201){

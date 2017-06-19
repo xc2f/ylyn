@@ -5,21 +5,21 @@
       <text class="inSaleText">活动</text>
     </view>
     <view class="wrap">
-      <view class="shopBanner">
+      <view class="shopBanner" style="background: url({{logo_bgimg}}) no-repeat 100% 100%;">
         <view class="shopAvatar">
-          <image src="/images/banner.png"></image>
+          <image src="{{logo}}"></image>
         </view>
-        <view class="shopName">{{shop.shop_name}}</view>
+        <view class="shopName">{{shop.store_name}}</view>
       </view>
     </view>
   </view>
   <view class="userCount">
     <view class="total">
-      <text class="num">{{shop.total}}</text>人数</view>
+      <text class="num">{{shop.all_count}}</text>人数</view>
     <view class="man">
-      <text class="num">{{shop.man_in}}</text>男士</view>
+      <text class="num">{{shop.man_count}}</text>男士</view>
     <view class="female">
-      <text class="num">{{shop.female_in}}</text>女士</view>
+      <text class="num">{{shop.woman_count}}</text>女士</view>
   </view>
 
   <view class="shopInfo">
@@ -28,7 +28,7 @@
         <image src="/images/location.png" class="iconLeft"></image>
       </view>
       <text class="address">距离你{{shop.distance}} | {{shop.address}}</text>
-            <view class="arrowWrap">
+        <view class="arrowWrap">
         <image src="/images/arrowRight.png" class="iconRight"></image>
       </view>
     </view>
@@ -47,6 +47,7 @@
       </view>
       <view class="list">
         <scroll-view scroll-x="true" class="scrollH">
+          <!-- TODO 接口为foot-->
           <view class="item" wx:for="{{shop.foods}}" wx:key="title">
             <image src="{{item.pic}}"></image>
             <view class="info">
@@ -65,14 +66,14 @@
       <image src="/images/speaker.png" class="iconLeft"></image>
     </view>
     <view class="content">
-      <block wx:for="{{shop.sales_content}}">
+      <block wx:for="{{shop.activity}}">
         <text>{{item}}</text>
       </block>
     </view>
   </view>
 
   <view class="customPic">
-    <image src="/images/EatHow.png"></image>
+    <image src="{{shop.image}}"></image>
   </view>
 
 

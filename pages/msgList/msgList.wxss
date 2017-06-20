@@ -71,6 +71,7 @@
 
 .right {
   flex: 1;
+  text-align: right;
 }
 
 .left image {
@@ -114,11 +115,13 @@
   margin-top: 25px;
   font-size: 14px;
   color: #777;
+  padding-right: 10px;
 }
 
 .right .shopName {
   position: absolute;
   bottom: 17px;
+  right: 10px;
   font-size: 12px;
   font-weight: bold;
   display: flex;

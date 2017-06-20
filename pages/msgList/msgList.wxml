@@ -11,14 +11,14 @@
     <view class="line"></view>
   </view>
   <view class="empty" wx:if="{{!chatRecords}}">
-  <image src="/images/xj.png"></image>
-  <text>这里为空哦，快找些小伙伴聊一聊！</text>
+    <image src="/images/xj.png"></image>
+    <text>这里为空哦，快找些小伙伴聊一聊！</text>
   </view>
 
   <view class="fullStorage" wx:if="{{isFullStorage}}">
     <text>存储空间将满，请删除部分聊天会话！</text>
   </view>
-  <view class="recordList">
+  <view class="recordList" wx:if="{{chatRecords}}">
     <block wx:for="{{chatRecords}}" wx:key="chatId">
 
     <view class="block" bindtouchmove="blockMove">
@@ -37,11 +37,11 @@
         </view>
         <view class="right">
           <view class="date">{{item.date}}</view>
-          <view class="shopName"><image src="/images/zjlxr-dp.png"></image><text>咖啡故事</text></view>
+          <view class="shopName"><image src="/images/zjlxr-dp.png"></image><text>{{item.storeInfo.storeName}}</text></view>
         </view>
       </view>
 
-      <view class="remove" animation="{{removeAnimation}}" bindtap="removeChat" data-userid='{{item.friend_id}}'><text>删除</text></view>
+      <view class="remove" animation="{{removeAnimation}}" bindtap="removeChat" data-userid='{{item.friendInfo.user_id}}'><text>删除</text></view>
     
     </view>
     </block>

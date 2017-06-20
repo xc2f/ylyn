@@ -6,20 +6,24 @@ App({
     webSocketError: false,
     coordinate: null,
     userId: null,
+    storeInfo: null,
+    client_id: null
   },
 
   TOKEN: null,
   requestHost: 'http://192.168.0.110:8080/index.php/yl/',
 
   onLaunch: function () {
-    // let that = this
+    let that = this
+
+    this.connectWebsocket()
+    
+    // this.login()
+
 
     // 获取设备信息
     this.getDeviceInfo()
 
-    this.connectWebsocket()
-    
-    this.login()
     // setTimeout(function(){
     //   console.log('----------')
     //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
@@ -27,7 +31,8 @@ App({
     this.refreshStorage()
   },
 
-  login(callback) {
+  login(callback, client_id) {
+    console.log('login --------------')
     let that = this
     let token = wx.getStorageSync('TOKEN')
     if(token){
@@ -39,6 +44,8 @@ App({
           token: token
         },
         success: function(res){
+          // 执行回调
+          callback() || null
           // 存储userid
           that.globalData.userId = res.data.result.user_id
           // 未读消息
@@ -60,12 +67,12 @@ App({
                   wx.openSetting({
                     success: function (res) {
                       if (res.authSetting['scope.userInfo'] == true) {
-                        that.getMeInfo(code, callback)
+                        that.getMeInfo(code, callback, client_id)
                       }
                     }
                   })
                 } else {
-                  that.getMeInfo(code, callback)
+                  that.getMeInfo(code, callback, client_id)
                 }
               }
             })
@@ -81,7 +88,7 @@ App({
     }
   },
 
-  getMeInfo(code, callback){
+  getMeInfo(code, callback, client_id){
     let that = this
     wx.getUserInfo({
       success: function (res) {
@@ -92,7 +99,8 @@ App({
           data: {
             code: code,
             encrypted_data: res.encryptedData,
-            iv: res.iv
+            iv: res.iv,
+            client_id: client_id
           },
           success: function (res) {
             // 存储userid
@@ -108,7 +116,7 @@ App({
               data: res.data.result.user_info,
             })
             // 执行回调
-            callback()
+            callback() || null
           }
         })
       },
@@ -165,9 +173,10 @@ App({
 
   // 连接websocket
   connectWebsocket(){
+    let that = this
     // 连接websocket
     wx.connectSocket({
-      url: 'wss://192.168.0.119'
+      url: 'ws://192.168.0.110:8282'
     })
 
     wx.onSocketOpen(function (res) {
@@ -175,27 +184,32 @@ App({
 
       // 监听消息
       wx.onSocketMessage(function (res) {
-
-        let NewMessage = res.data
-        wx.getStorage({
-          key: 'chatWith' + NewMessage.friend_id,
-          success: function(res) {
-            let messages = res.data
-            messages.push(NewMessage)
-            wx.setStorage({
-              key: 'chatWith' + NewMessage.friend_id,
-              data: messages,
-            })
-            this.refreshChatRecords(NewMessage)
-          },
-          fail: function(){
-            wx.setStorage({
-              key: 'chatWith' + NewMessage.friend_id,
-              data: [NewMessage],
-            })
-            this.refreshChatRecords(NewMessage)
-          }
-        })
+        console.log('--------------------')
+        console.log(res)
+        if(res.data.type === 'init'){
+          that.globalData.client_id = res.data.client_id
+        }
+        // that.login(res.data.client_id)
+        // let NewMessage = res.data
+        // wx.getStorage({
+        //   key: 'chatWith' + NewMessage.friend_id,
+        //   success: function(res) {
+        //     let messages = res.data
+        //     messages.push(NewMessage)
+        //     wx.setStorage({
+        //       key: 'chatWith' + NewMessage.friend_id,
+        //       data: messages,
+        //     })
+        //     that.refreshChatRecords(NewMessage)
+        //   },
+        //   fail: function(){
+        //     wx.setStorage({
+        //       key: 'chatWith' + NewMessage.friend_id,
+        //       data: [NewMessage],
+        //     })
+        //     that.refreshChatRecords(NewMessage)
+        //   }
+        // })
 
         // wx.setStorage({
         //   key: 'hasNewMsg',
@@ -216,15 +230,15 @@ App({
   },
 
 
-  refreshChatRecords(NewMessage){
+  refreshChatRecords(NewMessage, msgClean=false){
     // 在chat页面消息clean
     // TODO 只能在当前用户的chat页消息clean
-    let msgClean = false
-    if (getCurrentPages()[getCurrentPages().length - 1].pageName === 'chat'){
-      msgClean = true
-    } else {
-      msgClean = false
-    }
+    // let msgClean = false
+    // if (getCurrentPages()[getCurrentPages().length - 1].pageName === 'chat'){
+    //   msgClean = true
+    // } else {
+    //   msgClean = false
+    // }
 
     wx.getStorage({
       key: 'chatRecords',
@@ -246,6 +260,7 @@ App({
         records.unshift({
           chatName: 'chatWith' + NewMessage.friendInfo.user_id,
           friendInfo: NewMessage.friendInfo,
+          storeInfo: NewMessage.storeInfo,
           msgClean: msgClean
         })
         wx.setStorage({
@@ -260,6 +275,7 @@ App({
           data: [{
             chatName: 'chatWith' + NewMessage.friendInfo.user_id,
             friendInfo: NewMessage.friendInfo,
+            storeInfo: NewMessage.storeInfo,
             msgClean: msgClean
           }]
         })
@@ -287,6 +303,7 @@ App({
               delCounts--
             }
           }
+          
           currentStorage.splice(0, delCounts)
           wx.setStorageSync(records[i].chatName, currentStorage)
         }

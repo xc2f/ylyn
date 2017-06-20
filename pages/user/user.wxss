@@ -10,6 +10,7 @@
   left: 0;
   right: 0;
   height: 130px;
+  z-index: 99;
 }
 .banner .wrap {
   width: 100%;
@@ -213,4 +214,24 @@
   align-items: center;
   justify-content: center;
   color: #fff;
+}
+
+.s0 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.s1 {
+  display: flex;
+  justify-content: center;
+}
+.s1 image {
+  width: 50%;
+}
+.s2 {
+  display: flex;
+}
+.s2 image {
+  margin: 3px;
 }

@@ -4,7 +4,7 @@
   <view class="banner">
     <view class="userBanner">
       <image class="bannerImg" src="/images/banner.png"></image>
-      <view class="userAvatar" bindtap="shopTap">
+      <view class="userAvatar" bindtap="changeAvatar">
         <image src="{{userInfo.avatar}}"></image>
       </view>
       <view class="userName">
@@ -27,7 +27,17 @@
     <text>个人展示</text>
   </view>
 <view class="gallery">
-  <view class="wrap">
+  <view class="wrap s0" wx:if="{{size === 0}}">
+    <text>空空如也</text>
+  </view>
+  <view class="wrap s1" wx:if="{{size === 1}}">
+    <image src="/images/man.jpg"></image>
+  </view>
+  <view class="wrap s2" wx:if="{{size === 2}}">
+    <image src="/images/man.jpg"></image>
+    <image src="/images/female.jpg"></image>
+  </view>
+  <view class="wrap" wx:if="{{size > 2}}">
     <!--<block wx:for="{{gallery}}">
       <view class="item item{{index}}" animation="{{'animation' + index}}" bindtap="{{'tap' + index}}">
         <image src="{{item}}"></image>
@@ -59,7 +69,7 @@
 </view>
 
 <view class="bottom">
-  <view class="btn" bindtap="toChatOrConfig">
+  <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}">
     <text>{{userId===userInfo.user_id ? '修改资料' : '开始聊天'}}</text>
   </view>
 </view>

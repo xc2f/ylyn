@@ -1,22 +1,35 @@
 <!--pages/chat/chat.wxml-->
-<!--<view class="container">-->
+<view class="container">
+  <view class="shield" wx:if="{{showShield}}">
+    <view class="outer">如果你不想接受对方消息可以选择
+      <view class="inner" bindtap="toShield">屏蔽ta</view>
+    </view>
+    <image src="/images/close2.png" bindtap="closeShield"></image>
+  </view>
   <scroll-view class="chatBody" scroll-y="{{true}}" style="height: {{chatBodyHeight}}px;" bindtap="inputFocus" scroll-into-view="{{toView}}">
     <block wx:for="{{messages}}" wx:key="message_id">
+
+      <!--新加-->
+      <view class="shieldMsg" wx:if="{{item.type==='shield'}}">
+        {{item.content}}
+      </view>
+
       <view class="me messageBlock" wx:if="{{item.tuser_id !== meInfo.user_id}}" id="m{{item.msgId}}">
         <image src="{{meInfo.avatar}}" class="avatar"></image>
-          <view class="message">
-            <view wx:if="{{item.type === 'text'}}" class="multMsg">
-              <!--<block wx:for="{{item.content}}" wx:key="type">
+        <view class="message">
+          <view wx:if="{{item.type === 'text'}}" class="multMsg">
+            <!--<block wx:for="{{item.content}}" wx:key="type">
                 <text wx:if="{{item.type ==='text'}}">{{item.content}}</text>
                 <image wx:if="{{item.type === 'face'}}" src="/images/faces/{{item.src}}" class="faceImg"></image>
               </block>-->
-              <text>{{item.content}}</text>
-            </view>
-            <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg"></image>
-            <view class="angle"></view>
+            <text>{{item.content}}</text>
           </view>
-          <view class="msgSending fa fa-spinner fa-spin fa-fw margin-bottom" wx:if="{{item.status === 'sending'}}"></view>
-          <view class="msgFail fa fa-exclamation-circle" wx:if="{{item.status === 'fail'}}"></view>
+          <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg"></image>
+          <view class="angle"></view>
+        </view>
+        <view class="msgSending" wx:if="{{item.status === 'sending'}}">发送中</view>
+        <view class="msgSendOk" wx:if="{{item.status === 'sendOk'}}"></view>
+        <view class="msgFail" wx:if="{{item.status === 'fail'}}">发送失败</view>
       </view>
       <view class="friend messageBlock" wx:if="{{item.user_id === meInfo.user_id}}">
         <image src="{{friendInfo.avatar}}" class="avatar"></image>
@@ -39,16 +52,16 @@
   <view class="chatBar" style="min-height: {{faceShow ? '184px' : 'auto'}}">
     <view class="topBar">
       <view class="userCard">
-        <text class="fa fa-vcard-o"></text>
+        <image src="/images/card.png"></image>
       </view>
       <view class="inputWrap">
         <input class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{inputValue}}" bindinput="inputHandle" cursor-spacing='10' maxlength="-1" />
       </view>
       <view class="face" bindtap="toggleFace">
-        <text class="fa fa-meh-o"></text>
+        <image src="/images/face.png"></image>
       </view>
       <view class="pic">
-        <view class="fa fa-picture-o" wx:if="{{!isFocus}}" bindtap="sendPic"></view>
+        <image src="/images/img.png" wx:if="{{!isFocus}}" bindtap="sendPic"></image>
         <view class="submit" wx:if="{{isFocus}}" bindtap="submit">
           <text>发送</text>
         </view>
@@ -62,4 +75,4 @@
 
   </view>
 
-<!--</view>-->
+</view>

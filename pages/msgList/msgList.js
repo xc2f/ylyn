@@ -19,49 +19,32 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-    wx.getStorage({
-      key: 'chatRecords',
-      success: function (res) {
-        let records = res.data
-        let recordList = []
-        // 获取每条聊天记录的最后一条内容
-        for(let i=0; i<records.length; i++){
-          // 防止异步
-          let msg = wx.getStorageSync(records[i].chatName)
-          let newestMsg = msg[msg.length-1]
-          if (newestMsg.type === 'text') {
-            recordList.push({
-              friendInfo: records[i].friendInfo,
-              newestMsg: newestMsg.content,
-              date: that.parseDate(newestMsg.date),
-              msgClean: records[i].msgClean
-            })
-          } else {
 
-          }
-        }
-        that.setData({
-          chatRecords: recordList
-        })
-      },
-      fail: function (res) {
-        console.log('no records')
-      }
-    })
+    that.renderList()
 
+    that.computeFileSize()
+    
+    // setTimeout(function(){
+    //   console.log(that.data.chatRecords.length === 0)
+    // }, 1000)
+  },
+
+  computeFileSize(){
+    let that = this
     // 获取本地缓存和文件大小
     wx.getStorageInfo({
-      success: function(res) {
+      success: function (res) {
         let limitSize = res.limitSize
         let storageSize = res.currentSize
         wx.getSavedFileList({
-          success: function(res){
+          success: function (res) {
             let fileSize = 0
-            for(let i=0; i< res.fileList.length; i++){
-              fileSize += res.fileList[i].size
+            for (let i = 0; i < res.fileList.length; i++) {
+              fileSize += res.fileList[i].size / 1000
             }
             let totalSize = storageSize + fileSize
-            if(totalSize > limitSize - 1024 * 2) {
+            console.log('totalSize: ' + totalSize)
+            if (totalSize > limitSize - 1024 * 2) {
               that.setData({
                 isFullStorage: true
               })
@@ -69,6 +52,55 @@ Page({
           }
         })
       },
+    })
+  },
+
+  renderList(){
+    let that = this
+    wx.getStorage({
+      key: 'chatRecords',
+      success: function (res) {
+        let records = res.data
+        let recordList = []
+        // 获取每条聊天记录的最后一条内容
+        for (let i = 0; i < records.length; i++) {
+          // 防止异步
+          let msg = wx.getStorageSync(records[i].chatName)
+          let newestMsg = msg[msg.length - 1]
+          console.log(newestMsg)
+          if (newestMsg.type === 'text') {
+            recordList.push({
+              friendInfo: records[i].friendInfo,
+              storeInfo: records[i].storeInfo,
+              newestMsg: newestMsg.content,
+              date: that.parseDate(newestMsg.time),
+              msgClean: records[i].msgClean
+            })
+          } else if (newestMsg.type === 'img') {
+            recordList.push({
+              friendInfo: records[i].friendInfo,
+              storeInfo: records[i].storeInfo,
+              newestMsg: '[图片]',
+              date: that.parseDate(newestMsg.time),
+              msgClean: records[i].msgClean
+            })
+          } else if (newestMsg.type === 'face') {
+            recordList.push({
+              friendInfo: records[i].friendInfo,
+              storeInfo: records[i].storeInfo,
+              newestMsg: '[表情]',
+              date: that.parseDate(newestMsg.time),
+              msgClean: records[i].msgClean
+            })
+          }
+        }
+        that.setData({
+          chatRecords: recordList.length === 0 ? null : recordList
+        })
+      },
+      fail: function (res) {
+        console.log('no records')
+      }
     })
   },
 
@@ -86,7 +118,7 @@ Page({
 
   tapToChat(e){
     wx.navigateTo({
-      url: '/pages/chat/chat?friendinfo='+JSON.stringify()
+      url: '/pages/chat/chat?friendinfo='+JSON.stringify(e.currentTarget.dataset.friendinfo)
     })
   },
 
@@ -95,6 +127,15 @@ Page({
     wx.getStorage({
       key: 'chatWith'+userId,
       success: function(res) {
+        for(let i=0; i<res.data.length; i++){
+          if(res.data[i].type === 'img'){
+            wx.removeSavedFile({
+              filePath: res.data[i].content,
+              complete: function (res) {
+              }
+            })
+          }
+        }
         // TODO删除对话缓存中的链接的图片
       },
     })
@@ -114,12 +155,19 @@ Page({
         for(let i=0; i<data.length; i++){
           if(data[i].chatName === 'chatWith'+userId){
             data.splice(i, 1)
-            wx.setStorageSync(chatRecords, data)
+            wx.setStorageSync('chatRecords', data)
             break
           }
         }
       },
     })
+
+    let that = this
+    setTimeout(function(){
+      that.renderList()
+    }, 500)
+
+    that.computeFileSize()
   },
 
   basicAnimation(duration, delay) {

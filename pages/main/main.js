@@ -49,14 +49,14 @@ Page({
       deviceInfo: app.globalData.deviceInfo
     })
 
-    let token = wx.getStorageSync('TOKEN')
-    if(token === ''){
-      app.login(that.fetchShopInfo)
-    } else {
-      // 请求店铺信息
-      that.fetchShopInfo()
-    }
-
+    // let token = wx.getStorageSync('TOKEN')
+    // if(token === ''){
+    //   app.login(that.fetchShopInfo, app.globalData.client_id)
+    // } else {
+    //   // 请求店铺信息
+    //   that.fetchShopInfo()
+    // }
+    app.login(that.fetchShopInfo, app.globalData.client_id)
     // 获取用户信息
 
     // end onload
@@ -90,7 +90,7 @@ Page({
     wx.showLoading({
       title: '数据获取中',
     })
-    let token = wx.getStorageSync('TOKEN')
+    // let token = wx.getStorageSync('TOKEN')
     wx.request({
       // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
       url: app.requestHost + 'Store/store_user/',
@@ -98,7 +98,7 @@ Page({
       data: {
         longitude: coordinate.longitude,
         latitude: coordinate.latitude,
-        token: token,
+        token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
         gender_type: gender || 0,
@@ -108,6 +108,10 @@ Page({
         that.setData({
           store: res.data.result
         })
+        app.globalData.storeInfo= {
+          storeId: that.data.qrcodeInfo.store_id,
+          storeName: res.data.result.store_name
+        }        
         // 隐藏加载动画和下拉刷新动作
         if (res.data.code === 201) {
           wx.hideLoading()
@@ -292,7 +296,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    console.log('main hide')
+    // console.log('main hide')
     clearInterval(getApp().globalData.getMsgStatusInterval)
   },
 
@@ -300,7 +304,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log('main unload')
+    // console.log('main unload')
     clearInterval(getApp().globalData.getMsgStatusInterval)
   },
 
@@ -328,7 +332,7 @@ Page({
 
   userTap(e) {
     wx.navigateTo({
-      url: '/pages/chat/chat?storeid=' + this.data.qrcodeInfo.store_id+'&friendinfo='+JSON.stringify(e.currentTarget.dataset.friendinfo),
+      url: '/pages/user/user?user_id='+e.currentTarget.dataset.userid,
     })
   },
 

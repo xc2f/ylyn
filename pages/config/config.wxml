@@ -50,14 +50,15 @@
     </view>
     <view class="s"  style="visibility:{{tallBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="tallSubmit">确认</button></view>
   </view>
-  <view class="info">
+  <view class="intro">
     <view class="l">
       <text>简介</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.introduction}}" bindinput="infoChange" />
+      <input value="{{userInfo.introduction}}" bindinput="introChange" bindfocus="introFocus" bindblur="introBlur" />
       <!--<textarea value="{{userInfo.info}}" bindinput="infoChange" />-->
     </view>
+    <view class="s"  style="visibility:{{introBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="introSubmit">确认</button></view>
   </view>
 
   <view class="show" bindtap="changePic">

@@ -11,7 +11,7 @@ Page({
     userId: null,
     userInfo: null,
     gallery: [],
-    size: 6,
+    size: 0,
 
     tx0: 0,
     tx1: 50,
@@ -38,6 +38,7 @@ Page({
         token: app.TOKEN
       },
       success: function(res){
+        console.log(res)
         that.setData({
           userInfo: res.data.result,
           gallery: res.data.result.album,
@@ -87,9 +88,35 @@ Page({
     }
   },
 
-  toChatOrConfig(){
+  toChatOrConfig(e){
     wx.navigateTo({
-      url: this.data.userId === this.data.userInfo.user_id ? '/pages/config/config' : '/pages/chat/chat?',
+      url: this.data.userId === this.data.userInfo.user_id ? '/pages/config/config' : '/pages/chat/chat?friendinfo='+JSON.stringify(e.currentTarget.dataset.friendinfo),
+    })
+  },
+
+  changeAvatar(){
+    let that = this
+    wx.chooseImage({
+      count: 1, // 默认9
+      sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+      success: function(res) {
+        let tempFilePaths = res.tempFilePaths[0]
+        wx.request({
+          url: app.requestHost + 'member/update_user_avatar/',
+          data: {
+            token: app.TOKEN,
+            avatar: 'http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlJWibJZnnAWV84jLeh0ajwva1Y80uz5XOjr87EdVqygucvcD1kdJUbRInCckslQP6pJgSvpO2TAw/0'
+          },
+          success: function(res) {
+            if(res.code === 201){
+              that.setData({
+                'userInfo.avatar': 'http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlJWibJZnnAWV84jLeh0ajwva1Y80uz5XOjr87EdVqygucvcD1kdJUbRInCckslQP6pJgSvpO2TAw/0'
+              })
+            }
+          }
+        })
+      },
     })
   },
   /**
@@ -103,7 +130,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    
   },
 
   /**

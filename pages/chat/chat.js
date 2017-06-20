@@ -22,6 +22,8 @@ Page({
 
     setChatRecordOk: false,
 
+    showShield: true,
+
     // 表情
     faceShow: false,
     chatBarChangeHeightAnimation: {},
@@ -29,10 +31,10 @@ Page({
     faceOpacityAnimation: {},
 
     faceMap: {
-      '[:)]': 'ee_1.png',
-      '[:D]': 'ee_2.png',
-      '[;)]': 'ee_3.png',
-      '[:-o]': 'ee_4.png',
+      '[:)]': 'e1.png',
+      '[:D]': 'e2.png',
+      '[;)]': 'e3.png',
+      '[:-o]': 'e4.png',
       '[:p]': 'ee_5.png',
       '[(H)]': 'ee_6.png',
       '[:@]': 'ee_7.png',
@@ -70,61 +72,31 @@ Page({
     faces: [
       {
         map1: [
-          { key: '[:)]', value: 'ee_1.png' },
-          { key: '[:D]', value: 'ee_2.png' },
-          { key: '[;)]', value: 'ee_3.png' },
-          { key: '[:-o]', value: 'ee_4.png' },
-          { key: '[:p]', value: 'ee_5.png' },
-          { key: '[(H)]', value: 'ee_6.png' },
-          { key: '[:@]', value: 'ee_7.png' }
+          { key: '[:)]', value: 'e1.png' },
+          { key: '[:D]', value: 'e2.png' },
+          { key: '[;)]', value: 'e3.png' },
+          { key: '[:-o]', value: 'e4.png' },
         ],
         map2: [
           { key: '[:s]', value: 'ee_8.png' },
           { key: '[:$]', value: 'ee_9.png' },
           { key: '[:(]', value: 'ee_10.png' },
           { key: '[:\'(]', value: 'ee_11.png' },
-          { key: '[:|]', value: 'ee_12.png' },
-          { key: '[(a)]', value: 'ee_13.png' },
-          { key: '[8o|]', value: 'ee_14.png' }
         ],
-        map3: [
-          { key: '[8-|]', value: 'ee_15.png' },
-          { key: '[+o(]', value: 'ee_16.png' },
-          { key: '[<o)]', value: 'ee_17.png'},
-          { key: '[|-)]', value: 'ee_18.png' },
-          { key: '[*-)]', value: 'ee_19.png' },
-          { key: '[:-#]', value: 'ee_20.png' },
-          { key: '[del]', value: 'del.png' }
-        ]
       },
       {
-        map4: [
+        map3: [
           { key: '[:-*]', value: 'ee_21.png' },
           { key: '[^o)]', value: 'ee_22.png' },
           { key: '[8-)]', value: 'ee_23.png' },
           { key: '[(|)]', value: 'ee_24.png' },
-          { key: '[(u)]', value: 'ee_25.png' },
-          { key: '[(S)]', value: 'ee_26.png' },
-          { key: '[(*)]', value: 'ee_27.png' }
         ],
-        map5: [
+        map4: [
           { key: '[(#)]', value: 'ee_28.png' },
           { key: '[(R)]', value: 'ee_29.png' },
           { key: '[({)]', value: 'ee_30.png' },
           { key: '[(})]', value: 'ee_31.png' },
-          { key: '[(k)]', value: 'ee_32.png' },
-          { key: '[(F)]', value: 'ee_33.png' },
-          { key: '[(D)]', value: 'ee_34.png' }
         ],
-        map6: [
-          { key: '[:\'(]', value: 'ee_11.png' },
-          { key: '[:|]', value: 'ee_12.png' },
-          { key: '[(a)]', value: 'ee_13.png' },
-          { key: '[8o|]', value: 'ee_14.png' },
-          { key: '[(D)]', value: 'ee_35.png' },
-          { key: '[:s]', value: 'ee_8.png' },
-          { key: '[del]', value: 'del.png' }
-        ]
       }
     ]
   },
@@ -133,9 +105,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
-    console.log(options)
-
     let that = this;
     let globalData = getApp().globalData
 
@@ -147,13 +116,13 @@ Page({
 
     that.setData({
       friendInfo: JSON.parse(options.friendinfo),
-      storeId: options.storeid
+      storeId: app.globalData.storeInfo ? app.globalData.storeInfo.storeId : null
     })
 
     // 获取本人信息
     wx.getStorage({
       key: 'meInfo',
-      success: function(res) {
+      success: function (res) {
         that.setData({
           meInfo: res.data
         })
@@ -169,7 +138,6 @@ Page({
         })
       },
       fail: function (e) {
-        console.log(e)
       }
     })
 
@@ -181,17 +149,47 @@ Page({
 
     // 滚动到页面底部
     let checkToViewTimeStamp = new Date().getTime()
-    let checkToView = setInterval(function(){
-      if(that.data.messages !== []){
+    let checkToView = setInterval(function () {
+      if (that.data.messages.length !== 0) {
         that.setData({
           toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
         })
-        clearInterval(checkToView)
       }
-      if (new Date().getTime() - checkToViewTimeStamp > 3000){
+      if (new Date().getTime() - checkToViewTimeStamp > 3000) {
         clearInterval(checkToView)
       }
     }, 50)
+
+  },
+
+
+  closeShield() {
+    this.setData({
+      showShield: false
+    })
+  },
+
+  toShield() {
+    console.log('11')
+    let that = this
+    let tempMessageList = that.data.messages;
+
+    let postData = {
+      type: 'shield',
+      content: '你已将' + that.data.friendInfo.nickname + '屏蔽',
+    }
+
+    tempMessageList.push(postData)
+
+    that.setData({
+      messages: tempMessageList,
+    })
+
+
+    wx.setStorage({
+      key: 'chatWith' + that.data.friendInfo.user_id,
+      data: that.data.messages,
+    })
 
   },
 
@@ -237,7 +235,7 @@ Page({
   submit() {
     let that = this
     let inputValue = that.data.inputValue
-    
+
     if (inputValue.trim() === '') {
       return false
     }
@@ -269,51 +267,66 @@ Page({
       toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
     })
 
-    
+
     wx.setStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       data: that.data.messages,
     })
 
+    // console.log(that.data.friendInfo.user_id, postData, that.data.storeId)
     wx.request({
       url: app.requestHost + 'Chat/send_message/',
       method: 'POST',
       data: {
         tuser_id: that.data.friendInfo.user_id,
         token: app.TOKEN,
-        content: postData,
+        content: JSON.stringify(postData),
         store_id: that.data.storeId
       },
-      success: function(res){
-        if(res.data.code === 201){
-          let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
-          for (let i = messages.length; i--; i > 0) {
-            if (messages[i].msgId === msgId) {
+      success: function (res) {
+        console.log(res)
+        let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
+        for (let i = messages.length; i--; i > 0) {
+          if (messages[i].msgId === msgId) {
+            if (res.data.code === 201) {
               messages[i].status = 'sendOk'
-              break
+              messages[i].time = res.data.result.time * 1000
+            } else {
+              messages[i].status = 'fail'
             }
+            break
           }
-          that.setData({
-            messages: messages
-          })
-          wx.setStorage({
-            key: 'chatWith' + that.data.friendInfo.user_id,
-            data: messages,
-          })
         }
-      }
+      },
+      fail: function(){
+        let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
+        for (let i = messages.length; i--; i > 0) {
+          if (messages[i].msgId === msgId) {
+            messages[i].status = 'fail'
+            break
+          }
+        }
+        that.setData({
+          messages: messages
+        })
+        wx.setStorage({
+          key: 'chatWith' + that.data.friendInfo.user_id,
+          data: messages,
+        })
+      },
     })
 
     // 将本次会话记录写入消息列表
     getApp().refreshChatRecords({
       newMessage: postData,
-      friendInfo: that.data.friendInfo
-    })
+      friendInfo: that.data.friendInfo,
+      storeInfo: app.globalData.storeInfo
+    }, true)
 
   },
 
   // 消息中文字与表情的处理
-  parseMsg(inputValue){
+  parseMsg(inputValue) {
     let multiList = []
 
     while (inputValue.length !== 0) {
@@ -373,23 +386,56 @@ Page({
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success: function (res) {
         let tempFilePaths = res.tempFilePaths
+        let msgId = new Date().getTime() + '-' + app.globalData.userId
         wx.saveFile({
           tempFilePath: tempFilePaths[0],
           success: function (res) {
+            let savedFilePath = res.savedFilePath
             // 存储图片到消息
             let tempMessageList = that.data.messages;
-            tempMessageList.push({
-              user_id: that.data.meInfo.user_id,
-              content: res.savedFilePath,
+            let postData = {
               type: 'img',
-              date: new Date().getTime()
-            })
+              content: savedFilePath,
+              msgId: msgId,
+              status: 'sending'
+            }
+            tempMessageList.push(postData)
             that.setData({
               messages: tempMessageList,
             })
             that.setData({
               toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
             })
+            wx.setStorage({
+              key: 'chatWith' + that.data.friendInfo.user_id,
+              data: that.data.messages,
+            })
+            // 将本次会话记录写入消息列表
+            app.refreshChatRecords({
+              newMessage: postData,
+              friendInfo: that.data.friendInfo,
+              storeInfo: app.globalData.storeInfo
+            }, true)
+          }
+        })
+      },
+    })
+
+    // 获取本地缓存和文件大小
+    wx.getStorageInfo({
+      success: function (res) {
+        let limitSize = res.limitSize
+        let storageSize = res.currentSize
+        wx.getSavedFileList({
+          success: function (res) {
+            let fileSize = 0
+            for (let i = 0; i < res.fileList.length; i++) {
+              fileSize += res.fileList[i].size
+            }
+            let totalSize = storageSize + fileSize
+            if (totalSize < limitSize - 1024 * 2) {
+
+            }
           }
         })
       },
@@ -409,7 +455,7 @@ Page({
       faceShow: !this.data.faceShow,
     })
     // 避免表情弹起后遮挡聊天内容
-    if(this.data.faceShow){
+    if (this.data.faceShow) {
       this.setData({
         chatBodyHeight: this.data.deviceInfo.windowHeight - 184
       })
@@ -433,11 +479,11 @@ Page({
   },
 
 
-  sendFace(e){
+  sendFace(e) {
     // console.log(e.currentTarget.dataset.face)
     let face = e.currentTarget.dataset.face
     let inputValue = this.data.inputValue
-    if(face !== '[del]') {
+    if (face !== '[del]') {
       this.setData({
         inputValue: inputValue + e.currentTarget.dataset.face,
         isFocus: true
@@ -445,8 +491,8 @@ Page({
     } else {
       // 如果字符串最后一位不是以]结尾，暂不考虑是不是表情
       let restFace
-      if (inputValue[inputValue.length-1] !== ']'){
-        restFace = inputValue.substring(0, inputValue.length-1)
+      if (inputValue[inputValue.length - 1] !== ']') {
+        restFace = inputValue.substring(0, inputValue.length - 1)
       } else {
         restFace = inputValue.substring(0, inputValue.lastIndexOf('['))
       }
@@ -457,6 +503,9 @@ Page({
     }
   },
 
+  sendEmoji() {
+
+  },
   // chatBarChangeHeight() {
   //   let animation = wx.createAnimation({
   //     duration: 500,
@@ -496,7 +545,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    
+
   },
 
   /**

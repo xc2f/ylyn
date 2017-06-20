@@ -17,6 +17,7 @@ Page({
     wxIdBtnShow: false,
     ageBtnShow: false,
     tallBtnShow: false,
+    introBtnShow: false
   },
 
   /**
@@ -201,6 +202,34 @@ tallSubmit(){
   })
 },
 
+introFocus() {
+  this.setData({
+    introBtnShow: true
+  })
+},
+introBlur() {
+  this.setData({
+    introBtnShow: false
+  })
+},
+introChange(e) {
+  this.setData({
+    'userInfo.introduction': e.detail.value
+  })
+},
+introSubmit() {
+  wx.request({
+    url: app.requestHost + 'member/update_userinfo/',
+    method: 'POST',
+    data: {
+      token: app.TOKEN,
+      introduction: this.data.userInfo.introduction
+    },
+    success: function (res) {
+      console.log(res)
+    }
+  })
+},
   postConfig(){
     console.log(this.data.userInfo)
   },

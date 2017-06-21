@@ -28,7 +28,9 @@ Page({
     //   console.log(that.data.chatRecords.length === 0)
     // }, 1000)
   },
-
+  closesocket(){
+    wx.closeSocket()
+  },
   computeFileSize(){
     let that = this
     // 获取本地缓存和文件大小
@@ -67,6 +69,7 @@ Page({
           // 防止异步
           let msg = wx.getStorageSync(records[i].chatName)
           let newestMsg = msg[msg.length - 1]
+          console.log(records[i])
           console.log(newestMsg)
           if (newestMsg.type === 'text') {
             recordList.push({

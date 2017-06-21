@@ -237,7 +237,7 @@
   /*padding-right: 10px;*/
 }
 
-.shield text {
+.shield .outer {
   font-size: 16px;
 }
 

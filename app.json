@@ -1,13 +1,13 @@
 {
   "pages": [
     "pages/main/main",
+    "pages/chat/chat",
     "pages/shopDetail/shopDetail",
     "pages/nearlist/nearlist",
     "pages/config/config",
     "pages/msgList/msgList",
     "pages/changePic/changePic",
-    "pages/user/user",
-    "pages/chat/chat"
+    "pages/user/user"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",

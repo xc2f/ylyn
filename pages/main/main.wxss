@@ -141,7 +141,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 20px;
+  padding-top: 20px;
 }
 
 .allInOne .up {
@@ -228,13 +228,19 @@
   flex: 1;
   flex-direction: column;
 }
-.toolBar .middleWrap {
+.toolBar .middleBlock {
+  display: flex;
   flex: 2;
+  position: relative;
+  text-align: center;
 }
-
+.toolBar .middleWrap {
+  display: flex;
+}
 .toolBar .middleWrap image {
   width: 46px;
   height: 46px;
+  position: relative;
 }
 .toolBar .waiter image{
   width: 20px;

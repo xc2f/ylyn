@@ -1,7 +1,8 @@
 <!--pages/chat/chat.wxml-->
 <view class="container">
   <view class="shield" wx:if="{{showShield}}">
-    <view class="outer">如果你不想接受对方消息可以选择
+    <view class="outer">
+      <view style="float: left;">如果你不想接受对方消息可以选择</view>
       <view class="inner" bindtap="toShield">屏蔽ta</view>
     </view>
     <image src="/images/close2.png" bindtap="closeShield"></image>
@@ -14,7 +15,7 @@
         {{item.content}}
       </view>
 
-      <view class="me messageBlock" wx:if="{{item.tuser_id !== meInfo.user_id}}" id="m{{item.msgId}}">
+      <view class="me messageBlock" wx:if="{{item.user_id === meInfo.user_id}}" id="m{{item.msgId}}">
         <image src="{{meInfo.avatar}}" class="avatar"></image>
         <view class="message">
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
@@ -31,7 +32,7 @@
         <view class="msgSendOk" wx:if="{{item.status === 'sendOk'}}"></view>
         <view class="msgFail" wx:if="{{item.status === 'fail'}}">发送失败</view>
       </view>
-      <view class="friend messageBlock" wx:if="{{item.user_id === meInfo.user_id}}">
+      <view class="friend messageBlock" wx:if="{{item.user_id !== meInfo.user_id}}">
         <image src="{{friendInfo.avatar}}" class="avatar"></image>
         <view class="message">
           <view wx:if="{{item.type === 'text'}}" class="multMsg">

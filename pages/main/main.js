@@ -279,14 +279,15 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    // console.log(app.globalData.msgClean)
     let that = this
     that.setData({
-      hasNewMsg: wx.getStorageSync('hasNewMsg')
+      hasNewMsg: !app.globalData.msgClean
     })
     
     getApp().globalData.getMsgStatusInterval = setInterval(function(){
       that.setData({
-        hasNewMsg: wx.getStorageSync('hasNewMsg')
+        hasNewMsg: !app.globalData.msgClean
       })
     }, 5000)
 

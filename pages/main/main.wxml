@@ -93,20 +93,21 @@
       <view class="msgStatus" wx:if="{{hasNewMsg}}"></view>
     </view>
 
-
-    <view class="middleWrap" style="z-index: 1;">
-      <view class="fa fa-plus" wx:if="{{!filterShow}}" bindtap="showFilter"></view>
-      <image src="/images/all.png" wx:if="{{filterShow}}" bindtap="showFilter"></image>
-    </view>
-
-    <view class="filter" style="z-index: 0;" animation="{{filterShowAnimation}}">
-      <view class="showGirl">
-        <image src="/images/show_girl.png"></image>
-        <text>只看女生</text>
+    <view class="middleBlock">
+      <view class="middleWrap">
+        <image src="/images/plus.png" wx:if="{{!filterShow}}" bindtap="showFilter" style="z-index: 1;"></image>
+        <image src="/images/all.png" wx:if="{{filterShow}}" bindtap="showFilter" style="z-index: 1;"></image>
       </view>
-      <view class="showBoy">
-        <image src="/images/show_boy.png"></image>
-        <text>只看男生</text>
+
+      <view class="filter" style="z-index: 0;" animation="{{filterShowAnimation}}">
+        <view class="showGirl">
+          <image src="/images/show_girl.png"></image>
+          <text>只看女生</text>
+        </view>
+        <view class="showBoy">
+          <image src="/images/show_boy.png"></image>
+          <text>只看男生</text>
+        </view>
       </view>
     </view>
 

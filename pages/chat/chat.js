@@ -105,7 +105,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+
     let that = this;
+
     let globalData = getApp().globalData
 
     that.setData({
@@ -159,6 +161,21 @@ Page({
         clearInterval(checkToView)
       }
     }, 50)
+
+    // 重置消息状态
+    wx.getStorage({
+      key: 'chatRecords',
+      success: function(res) {
+        let data = res.data
+        for(let i=0; i<data.length; i++){
+          if (data[i].chatName === 'chatWith' + that.data.friendInfo.user_id){
+            data[i].msgClean = true
+            break
+          }
+        }
+        wx.setStorageSync('chatRecords', data)
+      },
+    })
 
   },
 
@@ -251,6 +268,7 @@ Page({
       type: 'text',
       content: inputValue,
       msgId: msgId,
+      user_id: app.globalData.userId,
       status: 'sending'
     }
 
@@ -297,6 +315,13 @@ Page({
             break
           }
         }
+        that.setData({
+          messages: messages
+        })
+        wx.setStorage({
+          key: 'chatWith' + that.data.friendInfo.user_id,
+          data: messages,
+        })
       },
       fail: function(){
         let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)

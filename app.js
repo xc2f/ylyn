@@ -15,6 +15,10 @@ App({
   requestHost: 'http://192.168.0.110:8080/index.php/yl/',
 
   onLaunch: function () {
+    // setInterval(function(){
+    //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
+    // }, 2000)
+    
     let that = this
 
     this.connectWebsocket()
@@ -72,6 +76,7 @@ App({
   },
 
   login(callback, client_id) {
+    console.log(client_id)
     wx.showLoading({
       title: '登陆中',
       mask: true
@@ -157,6 +162,9 @@ App({
     let that = this
     wx.getUserInfo({
       success: function (res) {
+        // console.log(encrypted_data)
+        // console.log(iv)
+        console.log(that.globalData)
         // 发起请求
         wx.request({
           url: that.requestHost + 'User/wxLogin/',
@@ -308,6 +316,10 @@ App({
       //   showCancel: false
       // })
     })
+
+    wx.onSocketClose(function (res) {
+      console.log('WebSocket 已关闭！')
+    })
   },
 
   loadMsg(msg) {
@@ -325,6 +337,17 @@ App({
       storeId: msg.store_id,
       storeName: msg.store_name
     }
+    // 如果在当前消息来的聊天页，消息clean
+    let msgclean = getCurrentPages()[getCurrentPages().length - 1].pageName === 'chatWith' + msg.from_user_id ? true : false
+    // 如果clean，说明在该聊天页
+    // if(msgclean){
+    //   let m = 'chatWith' + msg.from_user_id
+    //   that.globalData.m = true
+    // }
+    // setTimeout(function(){
+    //   let m = 'chatWith' + msg.from_user_id
+    //   that.globalData.m = false
+    // }, 3000)
     // 如果本地存有这个消息缓存
     if (messageList !== '') {
       messageList.push(postData)
@@ -333,7 +356,7 @@ App({
         newMessage: postData,
         friendInfo: friendInfo,
         storeInfo: storeInfo
-      }, false)
+      }, msgclean)
     } else {
       let messageList = []
       messageList.push(postData)
@@ -342,7 +365,7 @@ App({
         newMessage: postData,
         friendInfo: friendInfo,
         storeInfo: storeInfo
-      }, false)
+      }, msgclean)
     }
   },
 

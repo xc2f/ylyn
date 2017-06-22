@@ -57,7 +57,12 @@ Page({
     //   // 请求店铺信息
     //   that.fetchShopInfo()
     // }
-    app.login(that.fetchShopInfo, app.globalData.client_id)
+    let checkClientId = setInterval(function () {
+      if (app.globalData.client_id !== null) {
+        app.login(that.fetchShopInfo, app.globalData.client_id)
+        clearInterval(checkClientId)
+      }
+    }, 50)
     // 获取用户信息
 
     // end onload

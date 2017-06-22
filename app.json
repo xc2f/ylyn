@@ -1,13 +1,18 @@
 {
   "pages": [
+    "pages/changePic/changePic",
+    "pages/nearlist/nearlist",
     "pages/main/main",
     "pages/chat/chat",
     "pages/shopDetail/shopDetail",
-    "pages/nearlist/nearlist",
     "pages/config/config",
     "pages/msgList/msgList",
     "pages/changePic/changePic",
-    "pages/user/user"
+    "pages/user/user",
+
+    "pages/common/eachTableList/eachTableList",
+    "pages/common/face/face",
+    "pages/common/tableList/tableList"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",

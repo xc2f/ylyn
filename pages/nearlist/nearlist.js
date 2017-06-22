@@ -20,7 +20,14 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-    app.login(that.fetchShopList, app.globalData.client_id)
+
+    let checkClientId = setInterval(function(){
+      if (app.globalData.client_id !== null){
+        app.login(that.fetchShopList, app.globalData.client_id)
+        clearInterval(checkClientId)
+      }
+    }, 50)
+    
     // that.fetchShopList()
     // 如果本机存有用户个人信息，说明登录过，显示下面的个人信息和消息列表图标
     // wx.getStorage({
@@ -91,6 +98,7 @@ Page({
             })
           }
         }
+        wx.stopPullDownRefresh()
       },
       fail: function () {
         that.setData({
@@ -101,6 +109,7 @@ Page({
   },
 
   toMe() {
+    console.log(app.globalData)
     wx.navigateTo({
       url: '/pages/user/user?user_id=' + app.globalData.userId,
     })

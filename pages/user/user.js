@@ -38,7 +38,6 @@ Page({
         token: app.TOKEN
       },
       success: function(res){
-        console.log(res)
         that.setData({
           userInfo: res.data.result,
           gallery: res.data.result.album,

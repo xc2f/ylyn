@@ -28,6 +28,7 @@ Page({
     filterGirlMoveLeftAnimation: {},
     filterBoyMoveRightAnimation: {},
 
+    getMsgStatusInterval: null,
     hasNewMsg: false
   },
 
@@ -110,7 +111,8 @@ Page({
         })
         app.globalData.storeInfo= {
           storeId: that.data.qrcodeInfo.store_id,
-          storeName: res.data.result.store_name
+          storeName: res.data.result.store_name,
+          tableId: that.data.qrcodeInfo.table_id
         }        
         // 隐藏加载动画和下拉刷新动作
         if (res.data.code === 201) {
@@ -285,7 +287,7 @@ Page({
       hasNewMsg: !app.globalData.msgClean
     })
     
-    getApp().globalData.getMsgStatusInterval = setInterval(function(){
+    that.data.getMsgStatusInterval = setInterval(function(){
       that.setData({
         hasNewMsg: !app.globalData.msgClean
       })
@@ -298,7 +300,7 @@ Page({
    */
   onHide: function () {
     // console.log('main hide')
-    clearInterval(getApp().globalData.getMsgStatusInterval)
+    clearInterval(this.data.getMsgStatusInterval)
   },
 
   /**
@@ -306,7 +308,7 @@ Page({
    */
   onUnload: function () {
     // console.log('main unload')
-    clearInterval(getApp().globalData.getMsgStatusInterval)
+    clearInterval(this.data.getMsgStatusInterval)
   },
 
   /**

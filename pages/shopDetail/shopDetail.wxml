@@ -76,10 +76,13 @@
     <image src="{{shop.image}}"></image>
   </view>
 
+  <!--左下角离开本店-->
+  <view class="quit" bindtap="quit" wx:if="{{showQuit}}">
+    <image src="/images/quit.png"></image>
+  </view>
 
   <!--右下角去这里-->
   <view class="toHere" bindtap="mapNavigation">
-    <text class="fa fa-level-up"></text>
-    <text class="text">去这里</text>
+    <image src="/images/tohere.png"></image>
   </view>
 </view>

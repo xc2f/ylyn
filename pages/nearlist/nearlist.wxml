@@ -17,7 +17,7 @@
       <text>附近无可用商家</text>
     </view>
     <block wx:for="{{shopList}}" wx:key="store_id">
-      <navigator url="/pages/main/main?store_id={{item.store_id}}" open-type="redirect">
+      <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
         <view class="item">
           <image src="{{store_bgimg}}"></image>
           <view class="right">
@@ -52,7 +52,7 @@
   <view class="toMsgList bottomIcon" bindtap="toMsgList" wx:if="{{showMeIcon}}">
     <text class="fa fa-commenting-o"></text>
     <text class="text">消息列表</text>
-    <view class="msgNew"></view>
+    <view class="msgNew" wx:if="{{hasNewMsg}}"></view>
   </view>
 
 </view>

@@ -8,7 +8,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    shop: null
+    shop: null,
+    showQuit: true
   },
 
   /**
@@ -32,6 +33,11 @@ Page({
     //     })        
     //   }
     // })
+    if(app.globalData.storeInfo === null){
+      that.setData({
+        showQuit: false
+      })
+    }
   },
 
   fetchShop(options){
@@ -88,6 +94,25 @@ Page({
     })
   },
 
+  quit(){
+    let storeInfo = app.globalData.storeInfo
+    wx.request({
+      url: app.requestHost + 'Store/logout_store/',
+      data: {
+        token: app.TOKEN,
+        store_id: storeInfo.storeId,
+        table_id: storeInfo.table_id
+      },
+      success: function(res){
+        console.log(res)
+        if(res.data.code === 201){
+          wx.redirectTo({
+            url: '/pages/nearlist/nearlist',
+          })
+        }
+      }
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

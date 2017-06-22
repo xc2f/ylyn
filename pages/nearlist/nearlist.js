@@ -10,7 +10,9 @@ Page({
     request_fail: false,
     shopList: [],
     shopListEmpty: true,
-    showMeIcon: false
+    showMeIcon: false,
+    hasNewMsg: false,
+    getMsgStatusInterval: null
   },
 
   /**
@@ -18,8 +20,8 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-    that.fetchShopList()
-
+    app.login(that.fetchShopList, app.globalData.client_id)
+    // that.fetchShopList()
     // 如果本机存有用户个人信息，说明登录过，显示下面的个人信息和消息列表图标
     // wx.getStorage({
     //   key: 'meInfo',
@@ -34,6 +36,15 @@ Page({
     //     })
     //   }
     // })
+
+    let checkLogin = setInterval(function(){
+      if(app.globalData.userId !== null){
+        that.setData({
+          showMeIcon: true
+        })
+        clearInterval(checkLogin)
+      }
+    }, 500)
   },
 
   fetchShopList() {
@@ -91,7 +102,7 @@ Page({
 
   toMe() {
     wx.navigateTo({
-      url: '/pages/user/user',
+      url: '/pages/user/user?user_id=' + app.globalData.userId,
     })
   },
 
@@ -112,21 +123,26 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    let that = this
+    that.data.getMsgStatusInterval = setInterval(function () {
+      that.setData({
+        hasNewMsg: !app.globalData.msgClean
+      })
+    }, 500)
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    clearInterval(this.data.getMsgStatusInterval)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    clearInterval(this.data.getMsgStatusInterval)
   },
 
   /**

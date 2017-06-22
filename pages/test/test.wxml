@@ -1,3 +1,0 @@
-<scroll-view style="height: 300px" scroll-top="{{toTop}}" scroll-y="true">
-  <view class="" style="height: 700px; background: red"></view>
-</scroll-view>

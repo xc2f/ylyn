@@ -14,7 +14,7 @@
         <view class="dot"></view>
         <view class="line"></view>
       </view>
-      <view class="bottomText">本店正有{{shop.man_in + shop.female_in}}位小伙伴使用</view>
+      <view class="bottomText">{{userInfo.introduction}}</view>
       <view class="flipConner"  bindtap="switchToShop">
         <image class="flipConnerImg" src="/images/flipConner.png"></image>
         <text class="flipConnerText">首页</text>

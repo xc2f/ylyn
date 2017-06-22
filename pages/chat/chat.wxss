@@ -253,3 +253,15 @@
   right: 20px;
   top: 4px;
 }
+
+.shieldMsg {
+  text-align: center;
+  font-size: 14px;
+  width: 50%;
+  margin: 0 auto;
+  background: rgb(221, 221, 221);
+  clear: both;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 3px;
+}

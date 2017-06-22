@@ -20,8 +20,8 @@ Page({
     storeId: null,
     messages: [],
 
-    setChatRecordOk: false,
-
+    checkMsgStatusInterval: null,
+    isShield: false,
     showShield: true,
 
     // 表情
@@ -162,13 +162,26 @@ Page({
       }
     }, 50)
 
+    // 检查是否屏蔽
+    wx.getStorage({
+      key: 'chatStatusWith' + that.data.friendInfo.user_id,
+      success: function(res) {
+        if (res.data.isShield === true) {
+          that.setData({
+            isShield: true
+          })
+        }
+      },
+      fail: function(){}
+    })
+
     // 重置消息状态
     wx.getStorage({
       key: 'chatRecords',
-      success: function(res) {
+      success: function (res) {
         let data = res.data
-        for(let i=0; i<data.length; i++){
-          if (data[i].chatName === 'chatWith' + that.data.friendInfo.user_id){
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].chatName === 'chatWith' + that.data.friendInfo.user_id) {
             data[i].msgClean = true
             break
           }
@@ -187,19 +200,20 @@ Page({
   },
 
   toShield() {
-    console.log('11')
     let that = this
     let tempMessageList = that.data.messages;
 
     let postData = {
       type: 'shield',
       content: '你已将' + that.data.friendInfo.nickname + '屏蔽',
+      time: new Date().getTime()
     }
 
     tempMessageList.push(postData)
 
     that.setData({
       messages: tempMessageList,
+      showShield: false
     })
 
 
@@ -208,6 +222,19 @@ Page({
       data: that.data.messages,
     })
 
+    // 将本次会话记录写入消息列表
+    app.refreshChatRecords({
+      newMessage: postData,
+      friendInfo: that.data.friendInfo,
+      storeInfo: app.globalData.storeInfo
+    }, true)
+
+    wx.setStorage({
+      key: 'chatStatusWith' + that.data.friendInfo.user_id,
+      data: {
+        isShield: true
+      }
+    })
   },
 
   inputFocus() {
@@ -302,7 +329,6 @@ Page({
         store_id: that.data.storeId
       },
       success: function (res) {
-        console.log(res)
         let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {
@@ -322,8 +348,22 @@ Page({
           key: 'chatWith' + that.data.friendInfo.user_id,
           data: messages,
         })
+
+        let chat_id = res.data.result.chat_id
+        wx.getStorage({
+          key: 'chatIdWidth' + that.data.friendInfo.user_id,
+          success: function(res) {},
+          fail: function(){
+            wx.setStorage({
+              key: 'chatIdWidth' + that.data.friendInfo.user_id,
+              data: {
+                chat_id: chat_id,
+              }
+            })
+          }
+        })
       },
-      fail: function(){
+      fail: function () {
         let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {
@@ -563,21 +603,36 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    let that = this
+    that.pageName = 'chatWith' + that.data.friendInfo.user_id,
 
+    // 监听消息
+      that.data.checkMsgStatusInterval = setInterval(function () {
+        wx.getStorage({
+          key: 'chatWith' + that.data.friendInfo.user_id,
+          success: function (res) {
+            that.setData({
+              messages: res.data
+            })
+          },
+        })
+      }, 2000)
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    let that = this
+    clearInterval(that.data.checkMsgStatusInterval)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    let that = this
+    clearInterval(that.data.checkMsgStatusInterval)
   },
 
   /**

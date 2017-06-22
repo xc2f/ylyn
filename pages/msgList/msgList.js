@@ -11,7 +11,8 @@ Page({
     moveXStamp: 0,
     wrapAnimation: {},
     removeAnimation: {},
-    toLeft: true
+    toLeft: true,
+    checkMsgStatusInterval: null
   },
 
   /**
@@ -69,8 +70,6 @@ Page({
           // 防止异步
           let msg = wx.getStorageSync(records[i].chatName)
           let newestMsg = msg[msg.length - 1]
-          console.log(records[i])
-          console.log(newestMsg)
           if (newestMsg.type === 'text') {
             recordList.push({
               friendInfo: records[i].friendInfo,
@@ -92,6 +91,14 @@ Page({
               friendInfo: records[i].friendInfo,
               storeInfo: records[i].storeInfo,
               newestMsg: '[表情]',
+              date: that.parseDate(newestMsg.time),
+              msgClean: records[i].msgClean
+            })
+          } else if (newestMsg.type === 'shield') {
+            recordList.push({
+              friendInfo: records[i].friendInfo,
+              storeInfo: records[i].storeInfo,
+              newestMsg: newestMsg.content,
               date: that.parseDate(newestMsg.time),
               msgClean: records[i].msgClean
             })
@@ -217,21 +224,26 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    let that = this
+    that.data.checkMsgStatusInterval = setInterval(function(){
+      that.renderList()
+    }, 3000)
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    console.log('msg hide')
+    let that = this
+    clearInterval(that.data.checkMsgStatusInterval)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log('msg unload')
+    let that = this
+    clearInterval(that.data.checkMsgStatusInterval)
   },
 
   /**

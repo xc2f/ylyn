@@ -83,20 +83,20 @@ Page({
       },
       success: function (res) {
         let result = res.data.result
-        if (res.statusCode === 200) {
-          if(res.data.code === 201){
-            wx.hideLoading()
-          }
-          if (result.store_list.length !== 0) {
-            that.setData({
-              shopList: result.store_list,
-              shopListEmpty: false
-            })
-          } else {
-            that.setData({
-              shopListEmpty: true
-            })
-          }
+        // console.log(res)
+        // if(res.data.code === 201){
+        //   wx.hideLoading()
+        // }
+        wx.hideLoading()
+        if (result !== false) {
+          that.setData({
+            shopList: result.store_list,
+            shopListEmpty: false
+          })
+        } else {
+          that.setData({
+            shopListEmpty: true
+          })
         }
         wx.stopPullDownRefresh()
       },
@@ -172,7 +172,20 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
-
+  onShareAppMessage: function (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '你附近有这些商家',
+      path: '/pages/nearList',
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
   }
 })

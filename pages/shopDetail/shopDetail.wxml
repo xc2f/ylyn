@@ -23,7 +23,7 @@
   </view>
 
   <view class="shopInfo">
-    <view class="location row" bindtap="mapNavigation">
+    <view class="location row noWrap" bindtap="mapNavigation">
       <view class="iconWrap">
         <image src="/images/location.png" class="iconLeft"></image>
       </view>
@@ -32,7 +32,7 @@
         <image src="/images/arrowRight.png" class="iconRight"></image>
       </view>
     </view>
-    <view class="phone row" bindtap="callPhone">
+    <view class="phone row noWrap" bindtap="callPhone">
       <view class="iconWrap">
         <image src="/images/phone.png" class="iconLeft"></image>
       </view>

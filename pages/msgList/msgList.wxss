@@ -43,9 +43,7 @@
   flex-direction: row;
   height: 100px;
   position: relative;
-  box-shadow: 1px 2px 2px rgba(225, 225, 225, .7);
   border-radius: 5px;
-  margin-bottom: 10px;
 }
 .wrap .msgClean {
   width: 10px;
@@ -109,6 +107,7 @@
 .middle .newestMsg {
   color: #777;
   font-size: 14px;
+  max-width: 200px;
 }
 
 .right .date {
@@ -124,9 +123,10 @@
   right: 10px;
   font-size: 12px;
   font-weight: bold;
-  display: flex;
+  display: block;
   flex-direction: row;
   align-items: center;
+  max-width: 150px;
 }
 .right image {
   width: 15px;
@@ -149,6 +149,8 @@
 .block {
   position: relative;
   overflow: hidden;
+  box-shadow: 0 0 7px rgba(225, 225, 225, .7);
+  margin: 5px 0;
 }
 .block .wrap {
   left: 0;

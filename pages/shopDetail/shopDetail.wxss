@@ -114,6 +114,13 @@
 .shopInfo text {
   line-height: 50px;
 }
+.shopInfo .address {
+  width: 80%;
+  float: left;
+  white-space:nowrap;          /* 不换行 */
+  overflow:hidden;               /* 内容超出宽度时隐藏超出部分的内容 */
+  text-overflow:ellipsis;   
+}
 .location .iconLeft {
   width: 16px;
   height: 17px;

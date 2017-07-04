@@ -64,7 +64,7 @@
 }
 
 .bottom {
-  background: #eee;
+  background: #fff;
   display: flex;
   justify-content: center;
   /*margin-top: 20px;*/

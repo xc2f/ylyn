@@ -80,6 +80,7 @@ Page({
 
   mapNavigation(){
     let shop = this.data.shop
+    console.log(shop)
     wx.openLocation({
       latitude: shop.store_latitude,
       longitude: shop.store_longitude,
@@ -159,6 +160,15 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+    return {
+      title: this.data.shop.store_name,
+      path: '/pages/shopDetail',
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
   }
 })

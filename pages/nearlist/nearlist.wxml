@@ -24,7 +24,7 @@
             <view wx:if="{{item.in_sales}}" class="inSales">
               <text class="inSaleText">活动</text>
             </view>
-            <text class="shopName">{{item.store_name}}</text>
+            <text class="shopName noWrap">{{item.store_name}}</text>
             <view class="persons">
               <view class="boy">
                 <image src="/images/show_boy.png"></image>

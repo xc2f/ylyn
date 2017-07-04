@@ -337,6 +337,7 @@ Page({
               messages[i].time = res.data.result.time * 1000
             } else {
               messages[i].status = 'fail'
+              // 失败消息的时间？
             }
             break
           }
@@ -351,11 +352,11 @@ Page({
 
         let chat_id = res.data.result.chat_id
         wx.getStorage({
-          key: 'chatIdWidth' + that.data.friendInfo.user_id,
+          key: 'chatIdWith' + that.data.friendInfo.user_id,
           success: function(res) {},
           fail: function(){
             wx.setStorage({
-              key: 'chatIdWidth' + that.data.friendInfo.user_id,
+              key: 'chatIdWith' + that.data.friendInfo.user_id,
               data: {
                 chat_id: chat_id,
               }

@@ -37,6 +37,12 @@ App({
 
     // 获取本地消息状态
     that.getMsgStatus()
+
+    setTimeout(()=>{
+      console.log(this.TOKEN)
+      console.log(that.globalData.userId)
+    }, 10000)
+
   },
 
   getMsgStatus(){
@@ -390,12 +396,14 @@ App({
           if (records[i].chatName === 'chatWith' + NewMessage.friendInfo.user_id) {
             // 将最新聊天置顶
             records.unshift(records.splice(i)[0])
+            records[0].msgClean = msgClean
             // 更新缓存
             wx.setStorageSync('chatRecords', records)
             // break
             return false
           }
         }
+
         // 如果有这个key但是没有当前聊天会话记录则新建
         records.unshift({
           chatName: 'chatWith' + NewMessage.friendInfo.user_id,

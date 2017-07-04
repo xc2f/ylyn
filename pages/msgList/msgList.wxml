@@ -33,11 +33,11 @@
             <view class="gender"><image src="/images/boy.png"></image></view>
             <view class="age"><text>23岁</text></view>
           </view>
-          <view class="newestMsg"><text>{{item.newestMsg}}</text></view>
+          <view class="newestMsg noWrap"><text>{{item.newestMsg}}</text></view>
         </view>
         <view class="right">
           <view class="date">{{item.date}}</view>
-          <view class="shopName"><image src="/images/zjlxr-dp.png"></image><text>{{item.storeInfo.storeName}}</text></view>
+          <view class="shopName noWrap"><image src="/images/zjlxr-dp.png"></image><text>{{item.storeInfo.storeName}}</text></view>
         </view>
       </view>
 
@@ -47,4 +47,9 @@
     </block>
   </view>
 <button bindtap="closesocket">close socket</button>
+
+<button bindtap="cstp">test</button>
+
+<image src="{{testSrc}}"></image>
+
 </view>

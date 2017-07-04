@@ -42,6 +42,8 @@ Page({
       qrcodeInfo: {
         store_id: options.store_id || 1,
         table_id: options.table_id || 1
+        // store_id: 1,
+        // table_id: 1,
       }
     })
 
@@ -111,6 +113,7 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
+        console.log(res)
         that.setData({
           store: res.data.result
         })
@@ -120,9 +123,23 @@ Page({
           tableId: that.data.qrcodeInfo.table_id
         }        
         // 隐藏加载动画和下拉刷新动作
-        if (res.data.code === 201) {
+        // if (res.data.code === 201) {
           wx.hideLoading()
           wx.stopPullDownRefresh()
+        // }
+        if(res.data.code === 101 || res.data.code === 102){
+          wx.showModal({
+            title: '提示',
+            content: '不在店铺范围内',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                wx.redirectTo({
+                  url: '/pages/nearlist/nearlist',
+                })
+              }
+            }
+          })
         }
       }
     })

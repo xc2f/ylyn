@@ -100,11 +100,11 @@
       </view>
 
       <view class="filter" style="z-index: 0;" animation="{{filterShowAnimation}}">
-        <view class="showGirl">
+        <view class="showGirl" bindtap="showGirl">
           <image src="/images/show_girl.png"></image>
           <text>只看女生</text>
         </view>
-        <view class="showBoy">
+        <view class="showBoy" bindtap="showBoy">
           <image src="/images/show_boy.png"></image>
           <text>只看男生</text>
         </view>

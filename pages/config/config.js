@@ -75,6 +75,10 @@ Page({
         console.log(res)
       }
     })
+    wx.setStorage({
+      key: 'meInfo',
+      data: this.data.userInfo,
+    })
   },
 
   wxIdFocus() {
@@ -104,6 +108,10 @@ Page({
         console.log(res)
       }
     })
+    wx.setStorage({
+      key: 'meInfo',
+      data: this.data.userInfo,
+    })
   },
 
 
@@ -121,6 +129,10 @@ Page({
       success: function (res) {
         console.log(res)
       }
+    })
+    wx.setStorage({
+      key: 'meInfo',
+      data: this.data.userInfo,
     })
   },
 
@@ -150,6 +162,10 @@ Page({
       success: function (res) {
         console.log(res)
       }
+    })
+    wx.setStorage({
+      key: 'meInfo',
+      data: this.data.userInfo,
     })
   },
 
@@ -201,6 +217,10 @@ tallSubmit(){
       console.log(res)
     }
   })
+  wx.setStorage({
+    key: 'meInfo',
+    data: this.data.userInfo,
+  })
 },
 
 introFocus() {
@@ -230,6 +250,10 @@ introSubmit() {
       console.log(res)
     }
   })
+  wx.setStorage({
+    key: 'meInfo',
+    data: this.data.userInfo,
+  })
 },
   postConfig(){
     console.log(this.data.userInfo)
@@ -245,7 +269,15 @@ introSubmit() {
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    // let that = this
+    // wx.getStorage({
+    //   key: 'meInfo',
+    //   success: function(res) {
+    //     that.setData({
+    //       meInfo: res.data
+    //     })
+    //   },
+    // })
   },
 
   /**

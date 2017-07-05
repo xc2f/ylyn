@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/nearlist/nearlist",
     "pages/main/main",
+    "pages/nearlist/nearlist",
     "pages/user/user",
     "pages/msgList/msgList",
     "pages/config/config",

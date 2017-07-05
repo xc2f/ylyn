@@ -102,7 +102,17 @@
   align-items: center;
   position: relative;
 }
-
+.faceMsg {
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content:flex-end;
+}
+.faceMsg image {
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+}
 .msgSending {
   float: right;
   padding-right: 3px;

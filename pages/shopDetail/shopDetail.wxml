@@ -11,6 +11,9 @@
         </view>
         <view class="shopName">{{shop.store_name}}</view>
       </view>
+      <view class="share">
+        <button open-type="share" type="primary" size="mini">分享</button>
+      </view>
     </view>
   </view>
   <view class="userCount">

@@ -59,11 +59,11 @@ Page({
     wx.showLoading({
       title: '数据获取中，请稍后',
     })
-    app.getLocation()
+    // app.getLocation()
     let interval = setInterval(function () {
       if (app.globalData.coordinate !== null) {
         let coordinate = app.globalData.coordinate
-        app.globalData.coordinate = null
+        // app.globalData.coordinate = null
         // 获取到坐标请求
         that.toFetch(coordinate)
         clearInterval(interval)
@@ -83,6 +83,7 @@ Page({
       },
       success: function (res) {
         let result = res.data.result
+        // console.log(result)
         // console.log(res)
         // if(res.data.code === 201){
         //   wx.hideLoading()

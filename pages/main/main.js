@@ -3,6 +3,8 @@ var app = getApp()
 
 Page({
 
+  pageName: 'shopMain',
+
   /**
    * 页面的初始数据
    */
@@ -67,6 +69,7 @@ Page({
     }, 50)
     // 获取用户信息
 
+    // setInterval(()=>{console.log(this.data.store)}, 3000)
     // end onload
   },
 
@@ -80,11 +83,11 @@ Page({
 
   fetchShopInfo(gender, currentPage){
     let that = this
-    app.getLocation()
+    // app.getLocation()
     let interval = setInterval(function () {
       if (app.globalData.coordinate !== null) {
         let coordinate = app.globalData.coordinate
-        app.globalData.coordinate = null
+        // app.globalData.coordinate = null
         // 获取到坐标请求
         that.toFetch(coordinate, gender, currentPage)
         clearInterval(interval)
@@ -104,8 +107,8 @@ Page({
       url: app.requestHost + 'Store/store_user/',
       method: 'POST',
       data: {
-        longitude: coordinate.longitude,
-        latitude: coordinate.latitude,
+        longitude: 108.8871237 || coordinate.longitude,
+        latitude: 34.1863376 || coordinate.latitude,
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
@@ -157,6 +160,7 @@ Page({
   showFilter(){
     let that = this
     if (that.data.filterShow){
+      that.showAll()
       that.setData({
         filterShow: false,
       })
@@ -299,6 +303,19 @@ Page({
       url: '/pages/shopDetail/shopDetail?shop_id='+e.currentTarget.dataset.shop_id,
     })
   },
+
+  showGirl(){
+    // console.log('girl')
+    this.toFetch(app.globalData.coordinate, 2)
+  },
+
+  showBoy(){
+    this.toFetch(app.globalData.coordinate, 1)
+  },
+
+  showAll(){
+    this.toFetch(app.globalData.coordinate, 0)
+  },
   /**
    * 生命周期函数--监听页面显示
    */
@@ -350,9 +367,6 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
-
-  },
 
 
   userTap(e) {

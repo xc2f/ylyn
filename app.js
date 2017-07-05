@@ -2,7 +2,7 @@ App({
 
   globalData: {
     deviceInfo: null,
-    getMsgStatusInterval: null,
+    checkLocationInterval: null,
     webSocketError: false,
     coordinate: null,
     userId: null,
@@ -19,12 +19,14 @@ App({
     //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
     // }, 2000)
     
-    let that = this
+    // let that = this
 
     this.connectWebsocket()
 
     // this.login()
 
+    // 检查位置
+    this.checkLocation()
 
     // 获取设备信息
     this.getDeviceInfo()
@@ -36,12 +38,7 @@ App({
     this.refreshStorage()
 
     // 获取本地消息状态
-    that.getMsgStatus()
-
-    setTimeout(()=>{
-      console.log(this.TOKEN)
-      console.log(that.globalData.userId)
-    }, 10000)
+    this.getMsgStatus()
 
   },
 
@@ -82,7 +79,7 @@ App({
   },
 
   login(callback, client_id) {
-    console.log(client_id)
+    // console.log(client_id)
     wx.showLoading({
       title: '登陆中',
       mask: true
@@ -170,7 +167,7 @@ App({
       success: function (res) {
         // console.log(encrypted_data)
         // console.log(iv)
-        console.log(that.globalData)
+        // console.log(that.globalData)
         // 发起请求
         wx.request({
           url: that.requestHost + 'User/wxLogin/',
@@ -191,6 +188,7 @@ App({
               // 未读消息
               let unreadMsg = res.data.result.unread_msg
               if (unreadMsg.length) {
+                // TODO
                 for (let i = 2; i < unreadMsg.length; i++) {
                   that.loadMsg(unreadMsg[i])
                 }
@@ -214,12 +212,12 @@ App({
       },
       fail: function (res) {
         console.log('-----get wx userInfo fail--------')
-        console.log(res)
+        // console.log(res)
       }
     })
   },
 
-  getLocation() {
+  getLocation(callback) {
     let that = this
     wx.getSetting({
       success: function (res) {
@@ -234,6 +232,7 @@ App({
                       latitude: res.latitude,
                       longitude: res.longitude
                     }
+                    // callback() || null
                   },
                 })
               }
@@ -247,6 +246,7 @@ App({
                 latitude: res.latitude,
                 longitude: res.longitude
               }
+              // callback() || null
             },
           })
         }
@@ -276,8 +276,8 @@ App({
 
       // 监听消息
       wx.onSocketMessage(function (res) {
-        console.log('--------------------')
-        console.log(res)
+        // console.log('--------------------')
+        // console.log(res)
         let data = JSON.parse(res.data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
@@ -438,10 +438,12 @@ App({
       key: 'chatRecords',
       success: function (res) {
         let records = res.data
+        // console.log(records)
         // 查找之前是否保存过两人会话
         for (let i = 0; i < records.length; i++) {
           let delCounts = 0;
           let currentStorage = wx.getStorageSync(records[i].chatName)
+          // console.log(currentStorage)
           for (let j = 0; j < currentStorage.length; j++) {
             if (currentStorage[j].date < deadline) {
               delCounts++
@@ -475,6 +477,65 @@ App({
 
   },
 
+  checkLocation(){
+    let that = this
+    
+    that.getLocation()
+
+    let gd = that.globalData
+    this.globalData.checkLocationInterval = setInterval(()=>{
+      wx.request({
+        url: that.requestHost + '/Store/check_address/',
+        method: 'POST',
+        data: {
+          latitude: gd.coordinate.latitude,
+          longitude: gd.coordinate.longitude,
+          token: that.TOKEN,
+          store_id: gd.storeInfo.storeId,
+          table_id: gd.storeInfo.tableId
+        },
+        success: function (res) {
+          
+          // 重新获取位置
+          that.getLocation()
+          if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain'){
+            if (res.data.code === 103 || res.data.code === 102) {
+              wx.showModal({
+                title: '提示',
+                content: res.data.code === 103 ? '您已离开本店' : '商家已关闭服务',
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                    wx.redirectTo({
+                      url: '/pages/nearlist/nearlist',
+                    })
+                  }
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '提示',
+                content: '与服务器通信错误',
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                    wx.redirectTo({
+                      url: '/pages/nearlist/nearlist',
+                    })
+                  }
+                }
+              })
+            }
+          }
+        },
+        fail: function (err) {
+          console.log(err)
+        }
+      })
+    }, 1000 * 60 * 2)
+  },
+
+
   onShow: function () {
 
   },
@@ -484,5 +545,9 @@ App({
     wx.onSocketClose(function (res) {
       console.log('WebSocket 已关闭！')
     })
+
+
+    clearInterval(this.globalData.checkLocationInterval)
   }
+
 })

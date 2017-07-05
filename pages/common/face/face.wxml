@@ -7,7 +7,7 @@
         <!--每一行-->
         <view class="row row1">
           <block wx:for="{{faces[0].map1}}" wx:key="key">
-            <image src="/images/faces/{{item.value}}" data-face="{{item.value}}" bindtap="sendEmoji"></image>
+            <image src="/images/faces/{{item.value}}.png" data-face="{{item.value}}" bindtap="sendEmoji"></image>
           </block>
         </view>
         <view class="row row2">

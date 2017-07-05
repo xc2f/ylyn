@@ -45,11 +45,11 @@ Page({
     wx.showLoading({
       title: '数据获取中，请稍后',
     })
-    app.getLocation()
+    // app.getLocation()
     let interval = setInterval(function () {
       if (app.globalData.coordinate !== null) {
         let coordinate = app.globalData.coordinate
-        app.globalData.coordinate = null
+        // app.globalData.coordinate = null
         // 获取到坐标请求
         that.toFetch(coordinate, options)
         clearInterval(interval)
@@ -106,11 +106,11 @@ Page({
       },
       success: function(res){
         console.log(res)
-        if(res.data.code === 201){
+        // if(res.data.code === 201){
           wx.redirectTo({
             url: '/pages/nearlist/nearlist',
           })
-        }
+        // }
       }
     })
   },
@@ -162,7 +162,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: this.data.shop.store_name,
-      path: '/pages/shopDetail',
+      path: '/pages/shopDetail/shopDetail',
       success: function (res) {
         // 转发成功
       },

@@ -65,6 +65,7 @@ Page({
       key: 'chatRecords',
       success: function (res) {
         let records = res.data
+        console.log(records)
         let recordList = []
         // 获取每条聊天记录的最后一条内容
         for (let i = 0; i < records.length; i++) {
@@ -96,6 +97,14 @@ Page({
               msgClean: records[i].msgClean
             })
           } else if (newestMsg.type === 'shield') {
+            recordList.push({
+              friendInfo: records[i].friendInfo,
+              storeInfo: records[i].storeInfo,
+              newestMsg: newestMsg.content,
+              date: that.parseDate(newestMsg.time),
+              msgClean: records[i].msgClean
+            })
+          } else if (newestMsg.type === 'card') {
             recordList.push({
               friendInfo: records[i].friendInfo,
               storeInfo: records[i].storeInfo,

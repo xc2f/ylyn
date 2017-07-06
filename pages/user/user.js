@@ -1,5 +1,7 @@
 // pages/user/user.js
 
+import { upload, deleteFile, getFileInfo } from '../../untils/update.js'
+
 var app = getApp()
 
 Page({
@@ -29,6 +31,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+
     let that = this
     wx.request({
       url: app.requestHost + 'Store/get_tuser_info/',
@@ -98,21 +101,13 @@ Page({
       sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success: function(res) {
-        let tempFilePaths = res.tempFilePaths[0]
-        wx.request({
-          url: app.requestHost + 'member/update_user_avatar/',
-          data: {
-            token: app.TOKEN,
-            avatar: 'http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlJWibJZnnAWV84jLeh0ajwva1Y80uz5XOjr87EdVqygucvcD1kdJUbRInCckslQP6pJgSvpO2TAw/0'
-          },
-          success: function(res) {
-            if(res.code === 201){
-              that.setData({
-                'userInfo.avatar': 'http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlJWibJZnnAWV84jLeh0ajwva1Y80uz5XOjr87EdVqygucvcD1kdJUbRInCckslQP6pJgSvpO2TAw/0'
-              })
-            }
-          }
-        })
+        let tempFilePath = res.tempFilePaths[0]
+        let suffix = tempFilePath.slice(tempFilePath.lastIndexOf('.'))
+        let fileName = 'avatar-' + app.globalData.userId + '-' + new Date().getTime() + suffix
+        upload('userAvatar', tempFilePath, fileName)
+        // upload('userAvatar', 2, tempFilePath, fileName)
+        // update('userAvatar', 1, )
+        // getFileInfo('userAvatar', 'avatar-ba964cda-d4cc-355a-14fe-59439868c188-1499325633335.png')
       },
     })
   },

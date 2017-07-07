@@ -107,6 +107,7 @@
   align-items: center;
   position: relative;
   justify-content:flex-end;
+  float: right;
 }
 .faceMsg image {
   width: 100px;

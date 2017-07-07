@@ -42,17 +42,16 @@ function getSignature(type, dirName, callback) {
 export const upload = function (dirName, filePath, fileName, callback) {
   getSignature(2, dirName, res => {
     let signal = res.data.result.upload_token
-    console.log(signal)
     // 头部带上签名，上传文件至COS
     wx.uploadFile({
       url: cosUrl + '/' + dirName + '/' + fileName,
       // url: 'http://192.168.0.119:3000',
       filePath: filePath,
       header: { 'Authorization': signal},
-      name: 'avatar',
+      name: 'filecontent',
       formData: { op: 'upload' },
       success: function (res) {
-        console.log(JSON.parse(res.data))
+        callback(JSON.parse(res.data))
       },
       fail: function(err){
         console.log(err)
@@ -70,7 +69,7 @@ export const deleteFile = function (dirName, fileName, callback){
       method: 'POST',
       header: { 'Authorization': signal },
       data: {
-        'op': 'delete'
+        op: 'delete'
       },
       success: function(res){
         console.log(res)

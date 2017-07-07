@@ -25,13 +25,13 @@
       <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}' animation="{{wrapAnimation}}">
         <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
         <view class="left">
-          <image src="/images/boy.png"></image>
+          <image src="{{item.friendInfo.avatar}}"></image>
         </view>
         <view class="middle">
-          <view class="name"><text>用户id: {{item.friend_id}}</text></view>
+          <view class="name"><text>{{item.friendInfo.nickname}}</text></view>
           <view class="userInfo">
-            <view class="gender"><image src="/images/boy.png"></image></view>
-            <view class="age"><text>23岁</text></view>
+            <view class="gender"><image src="{{item.friendInfo.gender==='1' ? '/images/boy.png' : '/images/girl.png'}}"></image></view>
+            <view class="age"><text>{{item.friendInfo.age}}岁</text></view>
           </view>
           <view class="newestMsg noWrap"><text>{{item.newestMsg}}</text></view>
         </view>
@@ -49,6 +49,8 @@
 <button bindtap="closesocket">close socket</button>
 
 <button bindtap="cstp">test</button>
+
+<button bindtap="delcos">delete cos file</button>
 
 <image src="{{testSrc}}"></image>
 

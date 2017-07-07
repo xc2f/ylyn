@@ -21,7 +21,7 @@
 
       <view class="me messageBlock" wx:if="{{item.user_id === meInfo.user_id}}" id="m{{item.msgId}}">
         <!--<image src="{{meInfo.avatar}}" class="avatar"></image>-->
-        <image src="http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlJWibJZnnAWV84jLeh0ajwva1Y80uz5XOjr87EdVqygucvcD1kdJUbRInCckslQP6pJgSvpO2TAw/0" class="avatar" wx:if="{{item.type !== 'shield'}}"></image>
+        <image src="{{meInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image>
         <view class="message" wx:if="{{item.type === 'text' || item.type === 'card'}}">
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
             <text>{{item.content}}</text>

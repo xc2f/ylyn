@@ -21,6 +21,9 @@ Page({
     tx3: 150,
     tx4: 200,
     tx5: 250,
+    tx6: 300,
+    tx7: 350,
+    tx8: 400,
     // ty: 50,
     // tz: 0
     currentPic: 1,
@@ -41,6 +44,7 @@ Page({
         token: app.TOKEN
       },
       success: function(res){
+        console.log(res)
         that.setData({
           userInfo: res.data.result,
           gallery: res.data.result.album,
@@ -104,10 +108,30 @@ Page({
         let tempFilePath = res.tempFilePaths[0]
         let suffix = tempFilePath.slice(tempFilePath.lastIndexOf('.'))
         let fileName = 'avatar-' + app.globalData.userId + '-' + new Date().getTime() + suffix
-        upload('userAvatar', tempFilePath, fileName)
+        upload('userAvatar', tempFilePath, fileName, resUrl => {
+          wx.request({
+            url: app.requestHost + 'member/update_user_avatar/',
+            method: 'POST',
+            data: {
+              token: app.TOKEN,
+              avatar: resUrl.data.access_url
+            },
+            success: function(res){
+              if(res.data.code === 201){
+                // TODO
+                that.setData({
+                  'userInfo.avatar': resUrl.data.access_url
+                })
+              }
+            },
+            fail: function(res){
+              console.log(res)
+            }
+          })
+        })
         // upload('userAvatar', 2, tempFilePath, fileName)
         // update('userAvatar', 1, )
-        // getFileInfo('userAvatar', 'avatar-ba964cda-d4cc-355a-14fe-59439868c188-1499325633335.png')
+        // deleteFile('userAvatar', 'avatar-ba964cda-d4cc-355a-14fe-59439868c188-1499325633335.png')
       },
     })
   },

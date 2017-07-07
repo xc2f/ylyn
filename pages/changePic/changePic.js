@@ -1,5 +1,5 @@
 // pages/changePic/changePic.js
-
+import { upload, deleteFile, getFileInfo } from '../../untils/update.js'
 var app = getApp()
 
 Page({
@@ -39,6 +39,7 @@ Page({
         token: app.TOKEN
       },
       success:function(res){
+        console.log(res)
         that.setData({
           pics: res.data.result,
           picLength: res.data.result.length
@@ -55,7 +56,7 @@ Page({
       urls: (function () {
         let imgList = []
         for (let i = 0; i < that.data.pics.length; i++) {
-          imgList.push(that.data.pics[i])
+          imgList.push(that.data.pics[i].album)
         }
         return imgList
       }()),
@@ -71,14 +72,17 @@ Page({
       data: {
         token: app.TOKEN,
         album_id: that.data.pics[idx].album_id
+      },
+      success: function(res){
+        if(res.data.code === 201){
+          let tempList = that.data.pics
+          tempList.splice(idx, 1)
+          that.setData({
+            pics: tempList,
+            picLength: tempList.length
+          })
+        }
       }
-    })
-
-    let tempList = that.data.pics
-    tempList.splice(idx, 1)
-    that.setData({
-      pics: tempList,
-      picLength: tempList.length
     })
   },
 
@@ -94,12 +98,42 @@ Page({
         let tempList = that.data.pics
         for(let i=0; i<tempFilePaths.length; i++){
           // TODO 上传照片
-          tempList.push(tempFilePaths[i])
+          let suffix = tempFilePaths[i].slice(tempFilePaths[i].lastIndexOf('.'))
+          let fileName = 'album-' + app.globalData.userId + '-' + new Date().getTime() + suffix
+          upload('userAlbum', tempFilePaths[i], fileName, resUrl => {
+            // console.log(resUrl)
+            wx.request({
+              url: app.requestHost + 'member/update_user_album/',
+              method: 'POST',
+              data: {
+                token: app.TOKEN,
+                album: resUrl.data.access_url
+              },
+              success: function (res) {
+                if (res.data.code === 201) {
+                  // TODO
+                  tempList.push({
+                    album: tempFilePaths[i],
+                    album_id: res.data.result.album_id
+                  })
+                  if (i === tempFilePaths.length - 1) {
+                    console.log('in')
+                    console.log(tempList)
+                    setTimeout(function(){
+                      that.setData({
+                        pics: tempList,
+                        picLength: tempList.length
+                      })
+                    }, 1000)
+                  }
+                }
+              },
+              fail: function (res) {
+                console.log(res)
+              }
+            })
+          })
         }
-        that.setData({
-          pics: tempList,
-          picLength: tempList.length
-        })
       }
     })
   },

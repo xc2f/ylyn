@@ -31,45 +31,6 @@ Page({
     divisionSlideToRightAnimation: {},
     faceOpacityAnimation: {},
 
-    faceMap: {
-      '[:)]': 'e1.png',
-      '[:D]': 'e2.png',
-      '[;)]': 'e3.png',
-      '[:-o]': 'e4.png',
-      '[:p]': 'ee_5.png',
-      '[(H)]': 'ee_6.png',
-      '[:@]': 'ee_7.png',
-      '[:s]': 'ee_8.png',
-      '[:$]': 'ee_9.png',
-      '[:(]': 'ee_10.png',
-      '[:\'(]': 'ee_11.png',
-      '[:|]': 'ee_12.png',
-      '[(a)]': 'ee_13.png',
-      '[8o|]': 'ee_14.png',
-      '[8-|]': 'ee_15.png',
-      '[+o(]': 'ee_16.png',
-      '[<o)]': 'ee_17.png',
-      '[|-)]': 'ee_18.png',
-      '[*-)]': 'ee_19.png',
-      '[:-#]': 'ee_20.png',
-      '[:-*]': 'ee_21.png',
-      '[^o)]': 'ee_22.png',
-      '[8-)]': 'ee_23.png',
-      // '[del]': 'btn_del.png',
-      '[(|)]': 'ee_24.png',
-      '[(u)]': 'ee_25.png',
-      '[(S)]': 'ee_26.png',
-      '[(*)]': 'ee_27.png',
-      '[(#)]': 'ee_28.png',
-      '[(R)]': 'ee_29.png',
-      '[({)]': 'ee_30.png',
-      '[(})]': 'ee_31.png',
-      '[(k)]': 'ee_32.png',
-      '[(F)]': 'ee_33.png',
-      '[(W)]': 'ee_34.png',
-      '[(D)]': 'ee_35.png',
-      '[del]': 'btn_del.png'
-    },
     faces: [
       {
         map1: [
@@ -79,24 +40,24 @@ Page({
           { key: '[:-o]', value: 'e4' },
         ],
         map2: [
-          { key: '[:s]', value: 'ee_8.png' },
-          { key: '[:$]', value: 'ee_9.png' },
-          { key: '[:(]', value: 'ee_10.png' },
-          { key: '[:\'(]', value: 'ee_11.png' },
+          { key: '[:s]', value: 'e5' },
+          { key: '[:$]', value: 'e6' },
+          { key: '[:(]', value: 'e7' },
+          { key: '[:\'(]', value: 'e8' },
         ],
       },
       {
         map3: [
-          { key: '[:-*]', value: 'ee_21.png' },
-          { key: '[^o)]', value: 'ee_22.png' },
-          { key: '[8-)]', value: 'ee_23.png' },
-          { key: '[(|)]', value: 'ee_24.png' },
+          { key: '[:-*]', value: 'e9' },
+          { key: '[^o)]', value: 'e10' },
+          { key: '[8-)]', value: 'e11' },
+          { key: '[(|)]', value: 'e12' },
         ],
         map4: [
-          { key: '[(#)]', value: 'ee_28.png' },
-          { key: '[(R)]', value: 'ee_29.png' },
-          { key: '[({)]', value: 'ee_30.png' },
-          { key: '[(})]', value: 'ee_31.png' },
+          { key: '[(#)]', value: 'e13' },
+          { key: '[(R)]', value: 'e14' },
+          { key: '[({)]', value: 'e14' },
+          { key: '[(})]', value: 'e14' },
         ],
       }
     ]
@@ -105,8 +66,8 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
 
+  onLoad: function (options) {
     let that = this;
 
     let globalData = getApp().globalData

@@ -1,5 +1,6 @@
 // pages/msgList/msgList.js
 
+import { deleteFile } from '../../untils/update.js'  
 Page({
 
   /**
@@ -26,9 +27,9 @@ Page({
 
     that.computeFileSize()
     
-    // setTimeout(function(){
-    //   console.log(that.data.chatRecords.length === 0)
-    // }, 1000)
+    setTimeout(function(){
+      console.log(that.data.chatRecords)
+    }, 1000)
   },
   closesocket(){
     wx.closeSocket()
@@ -65,7 +66,6 @@ Page({
       key: 'chatRecords',
       success: function (res) {
         let records = res.data
-        console.log(records)
         let recordList = []
         // 获取每条聊天记录的最后一条内容
         for (let i = 0; i < records.length; i++) {
@@ -304,8 +304,13 @@ Page({
         // }
       }
     })
-  }
+  },
 
+  delcos(){  
+
+  deleteFile('userAvatar', 'http://sh.file.myqcloud.com/files/v2/1253743657/yuanlinela/userAvatar/avatar-ba964cda-d4cc-355a-14fe-59439868c188-1499325633335.pngs')
+
+  }
 
 
 })

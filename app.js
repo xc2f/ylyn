@@ -338,6 +338,8 @@ App({
       avatar: msg.from_user_avatar,
       user_id: msg.from_user_id,
       nickname: msg.from_user_nickname,
+      age: msg.from_user_age,
+      gender: msg.from_user_gender
     }
     let storeInfo = {
       storeId: msg.store_id,
@@ -385,6 +387,8 @@ App({
     // } else {
     //   msgClean = false
     // }
+
+    // console.log(NewMessage)
 
     wx.getStorage({
       key: 'chatRecords',

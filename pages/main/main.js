@@ -353,7 +353,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.fetchShopInfo(this.data.shop.shop_id)
+    this.fetchShopInfo(this.data.store.store_id)
   },
 
   /**

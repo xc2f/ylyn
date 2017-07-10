@@ -80,12 +80,45 @@ Page({
 
   },
 
+  isInStore(coordinate){
+    let that = this
+    wx.request({
+      url: app.requestHost + '/Store/check_address/',
+      method: 'POST',
+      data: {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+        token: app.TOKEN,
+        store_id: that.data.qrcodeInfo.store_id,
+        table_id: that.data.qrcodeInfo.table_id
+      },
+      success: function(res){
+        if (res.data.code === 103 || res.data.code === 102) {
+          wx.showModal({
+            title: '提示',
+            content: res.data.code === 103 ? '您不在本店' : '商家已关闭服务',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                wx.redirectTo({
+                  url: '/pages/nearlist/nearlist',
+                })
+              }
+            }
+          })
+        }
+      }
+    })
+  },
+
   fetchShopInfo(gender, currentPage){
     let that = this
     // app.getLocation()
     let interval = setInterval(function () {
       if (app.globalData.coordinate !== null) {
         let coordinate = app.globalData.coordinate
+        // 是否在本店
+        that.isInStore(coordinate)
         // app.globalData.coordinate = null
         // 获取到坐标请求
         that.toFetch(coordinate, gender, currentPage)
@@ -106,8 +139,10 @@ Page({
       url: app.requestHost + 'Store/store_user/',
       method: 'POST',
       data: {
-        longitude: 108.8871237 || coordinate.longitude,
-        latitude: 34.1863376 || coordinate.latitude,
+        // longitude: 108.8871237 || coordinate.longitude,
+        // latitude: 34.1863376 || coordinate.latitude,
+        longitude: coordinate.longitude,
+        latitude: coordinate.latitude,
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
@@ -115,7 +150,7 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         that.setData({
           store: res.data.result
         })
@@ -260,42 +295,6 @@ Page({
     return animation.rotateY(0).step().export();
   },
 
-
-  pickAvatar() {
-    let that = this
-    wx.chooseImage({
-      count: 1, // 默认9
-      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-      success: function (res) {
-        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-
-        // 先删除保存的文件路径，保证同时间只保存一张头像
-        let path = res.tempFilePaths[0]
-        if (that.data.avatarPath !== null) {
-          wx.removeSavedFile({
-            filePath: that.data.avatarPath,
-          })
-        }
-        wx.saveFile({
-          tempFilePath: path,
-          success: function (res) {
-            console.log('Saved avatar success!')
-            // 更新
-            that.setData({
-              'meInfo.avatar': res.savedFilePath,
-              avatarPath: res.savedFilePath
-            })
-          }
-        })
-        wx.getSavedFileList({
-          success: function (res) {
-            console.log(res)
-          }
-        })
-      }
-    })
-  },
 
   shopTap(e){
     wx.navigateTo({

@@ -1,9 +1,7 @@
 /* pages/msgList/msgList.wxss */
 
 .container {
-  position: relative;
   background: #fff;
-  height: 100%;
 }
 
 .topBan {
@@ -40,6 +38,11 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.list {
+  margin: 10px;
+}
+
 .wrap {
   display: flex;
   flex-direction: row;
@@ -47,15 +50,7 @@
   position: relative;
   border-radius: 5px;
 }
-.wrap .msgClean {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: red;
-  position: absolute;
-  right:10px;
-  top:10px;
-}
+
 .left {
   flex: 1;
   display: flex;
@@ -71,7 +66,11 @@
 
 .right {
   flex: 1;
-  text-align: right;
+  display: flex;
+  background: rgba(158, 234, 106, .7);
+  color: #fff;
+  justify-content: center;
+  align-items: center;
 }
 
 .left image {
@@ -106,45 +105,10 @@
 .middle .userInfo .age {
   font-size: 12px;
 }
-.middle .newestMsg {
+.middle .introduction {
   color: #777;
   font-size: 14px;
   max-width: 200px;
-}
-
-.right .date {
-  margin-top: 25px;
-  font-size: 14px;
-  color: #777;
-  padding-right: 10px;
-}
-
-.right .shopName {
-  position: absolute;
-  bottom: 17px;
-  right: 10px;
-  font-size: 12px;
-  font-weight: bold;
-  display: block;
-  flex-direction: row;
-  align-items: center;
-  max-width: 150px;
-}
-.right image {
-  width: 15px;
-  height: 12px;
-  margin-right: 5px;
-}
-
-.fullStorage {
-  background: rgba(218, 105, 30, .3);
-  text-align: center;
-}
-.fullStorage text {
-  font-size: 14px;
-  color: #fff;
-  /*padding-left: 10px;*/
-  font-weight: bold;
 }
 
 
@@ -157,42 +121,10 @@
 .block .wrap {
   left: 0;
 }
-.block .remove {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: red;
-  top: 0;
-  right: -100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.block .remove text {
-  color: #fff;
-  font-weight: bold;
-}
 
 .empty {
-  margin-top: 100px;
-  width: 100%;
+  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-}
-.empty image {
-  width: 320px;
-  height: 172px;
-}
-.empty text {
-  margin-top: 10px;
-}
-
-.shieldIcon {
-  height: 50px;
-  background: rgba(200, 200, 200, .3);
-  text-align: center;
-  line-height: 50px;
-  color: #aaa;
 }

@@ -15,7 +15,7 @@
         <view class="line"></view>
       </view>
       <view class="bottomText">{{userInfo.introduction}}</view>
-      <view class="flipConner"  bindtap="switchToShop">
+      <view class="flipConner"  bindtap="switchToShop" wx:if="{{userId === userInfo.user_id}}">
         <image class="flipConnerImg" src="/images/flipConner.png"></image>
         <text class="flipConnerText">首页</text>
       </view>
@@ -78,7 +78,7 @@
 
 <view class="bottom">
   <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}">
-    <text>{{userId===userInfo.user_id ? '修改资料' : '开始聊天'}}</text>
+    <text>{{userId===userInfo.user_id ? '设置' : '开始聊天'}}</text>
   </view>
 </view>
 

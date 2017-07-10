@@ -1,5 +1,5 @@
 // pages/msgList/msgList.js
-
+let app = getApp()
 import { deleteFile } from '../../untils/update.js'  
 Page({
 
@@ -14,7 +14,8 @@ Page({
     removeAnimation: {},
     toLeft: true,
     checkMsgStatusInterval: null,
-    testSrc: null
+    testSrc: null,
+    showShield: false
   },
 
   /**
@@ -27,10 +28,33 @@ Page({
 
     that.computeFileSize()
     
-    setTimeout(function(){
-      console.log(that.data.chatRecords)
-    }, 1000)
+    // setTimeout(function(){
+    //   console.log(that.data.chatRecords)
+    // }, 1000)
   },
+
+  checkShield(){
+    let that = this
+    wx.request({
+      url: app.requestHost + 'Chat/get_shield_list/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN
+      },
+      success: function (res) {
+        if (res.data.result.length !== 0) {
+          that.setData({
+            showShield: true
+          })
+        } else {
+          that.setData({
+            showShield: false
+          })
+        }
+      }
+    })
+  },
+
   closesocket(){
     wx.closeSocket()
   },
@@ -119,7 +143,7 @@ Page({
         })
       },
       fail: function (res) {
-        console.log('no records')
+        // console.log('no records')
       }
     })
   },
@@ -238,6 +262,9 @@ Page({
     that.data.checkMsgStatusInterval = setInterval(function(){
       that.renderList()
     }, 3000)
+
+    // 检查是否有屏蔽用户
+    that.checkShield()
   },
 
   /**
@@ -246,6 +273,7 @@ Page({
   onHide: function () {
     let that = this
     clearInterval(that.data.checkMsgStatusInterval)
+    clearInterval(that.data.checkShieldInterval)
   },
 
   /**
@@ -254,14 +282,12 @@ Page({
   onUnload: function () {
     let that = this
     clearInterval(that.data.checkMsgStatusInterval)
+    clearInterval(that.data.checkShieldInterval)
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
-    return false;
-  },
 
   /**
    * 页面上拉触底事件的处理函数
@@ -273,9 +299,9 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
   
-  },
+  // },
 
   cstp(){
     let that = this

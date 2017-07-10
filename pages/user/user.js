@@ -55,6 +55,11 @@ Page({
     that.setData({
       userId: app.globalData.userId
     })
+
+    setTimeout(function(){
+      console.log(that.data.userInfo, that.data.userId)
+    }, 1000)
+    
   },
 
   switchToShop(){
@@ -100,6 +105,9 @@ Page({
 
   changeAvatar(){
     let that = this
+    if(that.data.userId !== that.data.userInfo.user_id){
+      return false
+    }
     wx.chooseImage({
       count: 1, // 默认9
       sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -107,7 +115,7 @@ Page({
       success: function(res) {
         let tempFilePath = res.tempFilePaths[0]
         let suffix = tempFilePath.slice(tempFilePath.lastIndexOf('.'))
-        let fileName = 'avatar-' + app.globalData.userId + '-' + new Date().getTime() + suffix
+        let fileName = app.globalData.userId + '-' + new Date().getTime() + suffix
         upload('userAvatar', tempFilePath, fileName, resUrl => {
           wx.request({
             url: app.requestHost + 'member/update_user_avatar/',
@@ -122,6 +130,12 @@ Page({
                 that.setData({
                   'userInfo.avatar': resUrl.data.access_url
                 })
+                setTimeout(function(){
+                  wx.setStorage({
+                    key: 'meInfo',
+                    data: that.data.userInfo,
+                  })
+                }, 1000)
               }
             },
             fail: function(res){
@@ -180,7 +194,7 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
   
-  }
+  // }
 })

@@ -1,4 +1,6 @@
 // pages/chat/chat.js
+import { upload } from '../../untils/update.js'
+
 var app = getApp()
 
 Page({
@@ -55,9 +57,9 @@ Page({
         ],
         map4: [
           { key: '[(#)]', value: 'e13' },
-          { key: '[(R)]', value: 'e14' },
-          { key: '[({)]', value: 'e14' },
-          { key: '[(})]', value: 'e14' },
+          { key: '[(R)]', value: 'e13' },
+          { key: '[({)]', value: 'e13' },
+          { key: '[(})]', value: 'e13' },
         ],
       }
     ]
@@ -75,7 +77,7 @@ Page({
     that.setData({
       deviceInfo: globalData.deviceInfo,
       // 屏幕高度减去chatBar的高度，为消息窗口高度
-      chatBodyHeight: globalData.deviceInfo.windowHeight - 50,
+      chatBodyHeight: globalData.deviceInfo.windowHeight - 90,
     })
 
     that.setData({
@@ -118,8 +120,9 @@ Page({
         that.setData({
           toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
         })
+        clearInterval(checkToView)
       }
-      if (new Date().getTime() - checkToViewTimeStamp > 3000) {
+      if (new Date().getTime() - checkToViewTimeStamp > 5000 && that.data.messages.length === 0) {
         clearInterval(checkToView)
       }
     }, 50)
@@ -127,21 +130,20 @@ Page({
     // 检查是否屏蔽
     wx.getStorage({
       key: 'chatStatusWith' + that.data.friendInfo.user_id,
-      success: function(res) {
+      success: function (res) {
         if (res.data.isShield === true) {
           that.setData({
             isShield: true
           })
         }
       },
-      fail: function(){}
+      fail: function () { }
     })
 
     // 本地是否有chatId,有则显示屏蔽，没有则不显示
     wx.getStorage({
       key: 'chatIdWith' + that.data.friendInfo.user_id,
-      success: function(res) {
-        console.log(res)
+      success: function (res) {
         that.setData({
           showShield: true,
           chatId: res.data.chat_id
@@ -176,7 +178,7 @@ Page({
 
   toShield() {
     let that = this
-    if (that.data.isShield){
+    if (that.data.isShield) {
       that.requestShield('cancleShield')
     } else {
       that.requestShield('toShield')
@@ -195,7 +197,26 @@ Page({
   //   })
   // },
 
-  requestShield(type){
+  refreshShield(setTrue, content, time) {
+    let that = this
+    that.setData({
+      isShield: setTrue ? true : false,
+    })
+    wx.setStorageSync('chatStatusWith' + that.data.friendInfo.user_id, {
+      isShield: setTrue ? true : false
+    })
+    let now = new Date().getTime()
+    return {
+      type: 'shield',
+      content: content,
+      msgId: now + '-' + app.globalData.userId,
+      user_id: app.globalData.userId,
+      status: 'sendOk',
+      time: time || now
+    }
+  },
+
+  requestShield(type) {
     let that = this
     wx.request({
       url: app.requestHost + (type === 'toShield' ? '/Chat/shield_user/' : '/Chat/cancel_shield/'),
@@ -205,28 +226,15 @@ Page({
         tuser_id: that.data.friendInfo.user_id,
         chat_id: that.data.chatId
       },
-      success: function(res){
+      success: function (res) {
         console.log(res)
 
-        if(res.data.code === 201 || res.data.code === 102){
-          that.setData({
-            isShield: type === 'toShield' ? true : false,
-          })
-          wx.setStorageSync('chatStatusWith' + that.data.friendInfo.user_id, {
-            isShield: type === 'toShield' ? true : false
-          })
+        if (res.data.code === 201 || res.data.code === 102) {
+
 
           let tempMessageList = that.data.messages;
 
-          let now = new Date().getTime()
-          let postData = {
-            type: 'shield',
-            content: type === 'toShield' ? '您已将对方消息屏蔽' : '您已取消屏蔽',
-            msgId: now + '-' + app.globalData.userId,
-            user_id: app.globalData.userId,
-            status: 'sendOk',
-            time: res.data.result.time * 1000 || now
-          }
+          let postData = that.refreshShield(type === 'toShield' ? true : false, type === 'toShield' ? '您已将对方消息屏蔽' : '您已取消屏蔽', res.data.result.time * 1000)
 
           tempMessageList.push(postData)
 
@@ -250,11 +258,13 @@ Page({
             friendInfo: that.data.friendInfo,
             storeInfo: app.globalData.storeInfo
           }, true)
-
         }
       }
     })
   },
+
+
+
 
   inputFocus() {
     if (this.data.inputValue !== '') {
@@ -268,7 +278,7 @@ Page({
     }
     this.setData({
       faceShow: false,
-      chatBodyHeight: this.data.deviceInfo.windowHeight - 50
+      chatBodyHeight: this.data.deviceInfo.windowHeight - 90
     })
   },
 
@@ -308,7 +318,7 @@ Page({
   },
 
 
-  handleMsg(type, value){
+  handleMsg(type, value) {
     let that = this
     let tempMessageList = that.data.messages;
 
@@ -363,6 +373,14 @@ Page({
             } else {
               messages[i].status = 'fail'
               // 失败消息的时间？
+              if (res.data.code === 103) {
+                // 对方已将您的消息屏蔽
+                messages.push(that.refreshShield(false, '对方已将您的消息屏蔽', null))
+              }
+              if (res.data.code === 102) {
+                // 您已将对方的消息屏蔽
+                messages.push(that.refreshShield(true, '您已将对方的消息屏蔽', null))
+              }
             }
             break
           }
@@ -415,61 +433,6 @@ Page({
     }, true)
   },
 
-
-
-  // 消息中文字与表情的处理
-  parseMsg(inputValue) {
-    let multiList = []
-
-    while (inputValue.length !== 0) {
-
-      // 如果找到表情开头的[
-      if (inputValue.indexOf('[') !== -1) {
-        let left = inputValue.indexOf('[')
-        let right = inputValue.indexOf(']')
-        // 提取第一个边界为[]的字符串
-        let faceChar = inputValue.substring(left, right + 1)
-        // 如果在faceMap中有映射，说明是表情
-        if (this.data.faceMap[faceChar] !== undefined) {
-          // 拿到表情对应的图片地址
-          let faceCharSrc = this.data.faceMap[faceChar]
-          // 文字和表情存到数组
-          if (left !== 0) {
-            multiList.push({
-              type: 'text',
-              content: inputValue.substring(0, left)
-            })
-          }
-          multiList.push({
-            type: 'face',
-            src: faceCharSrc
-          })
-          inputValue = inputValue.substring(right + 1, inputValue.length)
-          // 继续查找下一个
-        } else {
-          // 在faceMap中没有对应
-          // 存文字到数组
-          // 查找下一个
-          multiList.push({
-            type: 'text',
-            content: inputValue.substring(0, right + 1)
-          })
-          inputValue = inputValue.substring(right + 1, inputValue.length)
-        }
-      } else {
-        // 如果没有找到[
-        // 没有发送表情或者表情截取完毕的剩余部分
-        multiList.push({
-          type: 'text',
-          content: inputValue
-        })
-        inputValue = ''
-      }
-    }
-
-    return multiList
-  },
-
   sendPic() {
     let that = this
     wx.chooseImage({
@@ -477,39 +440,16 @@ Page({
       sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success: function (res) {
-        let tempFilePaths = res.tempFilePaths
-        let msgId = new Date().getTime() + '-' + app.globalData.userId
-        wx.saveFile({
-          tempFilePath: tempFilePaths[0],
-          success: function (res) {
-            let savedFilePath = res.savedFilePath
-            // 存储图片到消息
-            let tempMessageList = that.data.messages;
-            let postData = {
-              type: 'img',
-              content: savedFilePath,
-              msgId: msgId,
-              status: 'sending'
-            }
-            tempMessageList.push(postData)
-            that.setData({
-              messages: tempMessageList,
-            })
-            that.setData({
-              toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
-            })
-            wx.setStorage({
-              key: 'chatWith' + that.data.friendInfo.user_id,
-              data: that.data.messages,
-            })
-            // 将本次会话记录写入消息列表
-            app.refreshChatRecords({
-              newMessage: postData,
-              friendInfo: that.data.friendInfo,
-              storeInfo: app.globalData.storeInfo
-            }, true)
-          }
+        let tempFilePath = res.tempFilePaths[0]
+        let suffix = tempFilePath.slice(tempFilePath.lastIndexOf('.'))
+        let fileName = app.globalData.userId + '-' + new Date().getTime() + suffix
+        upload('chatSendedImg', tempFilePath, fileName, resUrl => {
+          // resUrl.data.access_url
+
+          that.handleMsg('img', resUrl.data.access_url)
+
         })
+
       },
     })
 
@@ -549,14 +489,14 @@ Page({
     // 避免表情弹起后遮挡聊天内容
     if (this.data.faceShow) {
       this.setData({
-        chatBodyHeight: this.data.deviceInfo.windowHeight - 184
+        chatBodyHeight: this.data.deviceInfo.windowHeight - 240 //184
       })
       this.setData({
         toView: 'm' + this.data.messages[this.data.messages.length - 1].msgId
       })
     } else {
       this.setData({
-        chatBodyHeight: this.data.deviceInfo.windowHeight - 50
+        chatBodyHeight: this.data.deviceInfo.windowHeight - 90
       })
     }
   },
@@ -571,39 +511,14 @@ Page({
   },
 
 
-  sendFace(e) {
-    // console.log(e.currentTarget.dataset.face)
-    let face = e.currentTarget.dataset.face
-    let inputValue = this.data.inputValue
-    if (face !== '[del]') {
-      this.setData({
-        inputValue: inputValue + e.currentTarget.dataset.face,
-        isFocus: true
-      })
-    } else {
-      // 如果字符串最后一位不是以]结尾，暂不考虑是不是表情
-      let restFace
-      if (inputValue[inputValue.length - 1] !== ']') {
-        restFace = inputValue.substring(0, inputValue.length - 1)
-      } else {
-        restFace = inputValue.substring(0, inputValue.lastIndexOf('['))
-      }
-      this.setData({
-        inputValue: restFace,
-        isFocus: true
-      })
-    }
-  },
-
   sendEmoji(e) {
     let value = e.currentTarget.dataset.face
     this.handleMsg('face', value)
   },
 
-  sendCard(){
-
+  sendCard() {
     let value = this.data.meInfo.wechat_num
-    if(value === ''){
+    if (value === '') {
       wx.showModal({
         title: '您未填写微信号',
         content: '前去设置？',
@@ -621,25 +536,6 @@ Page({
       this.handleMsg('card', '我的微信号：' + value)
     }
   },
-  // chatBarChangeHeight() {
-  //   let animation = wx.createAnimation({
-  //     duration: 500,
-  //     timingFunction: "ease",
-  //     delay: 0
-  //   }).height(150).step();
-
-  //   return animation.export();
-  // },
-
-  // divisionSlideToRight() {
-  //   let animation = wx.createAnimation({
-  //     duration: 100,
-  //     timingFunction: "ease",
-  //     delay: 500
-  //   }).width('100%').step();
-
-  //   return animation.export();
-  // },
 
 
   /**
@@ -652,7 +548,7 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {    
+  onShow: function () {
     let that = this
 
     // 获取本人信息，放这里是因为若是从设置页返回则更新数据
@@ -665,9 +561,12 @@ Page({
       },
     })
 
-    that.pageName = 'chatWith' + that.data.friendInfo.user_id,
+    that.pageName = 'chatWith' + that.data.friendInfo.user_id
 
-    // 监听消息
+    // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
+    setTimeout(function () {
+      let lastMsgId = that.data.messages[that.data.messages.length - 1].msgId
+      // 监听消息
       that.data.checkMsgStatusInterval = setInterval(function () {
         wx.getStorage({
           key: 'chatWith' + that.data.friendInfo.user_id,
@@ -675,9 +574,18 @@ Page({
             that.setData({
               messages: res.data
             })
+            let newMsgId = that.data.messages[that.data.messages.length - 1].msgId
+            if (lastMsgId !== newMsgId) {
+              // 消息发送后滚动到底部，在上一setData后
+              that.setData({
+                toView: 'm' + newMsgId
+              })
+              lastMsgId = newMsgId
+            }
           },
         })
       }, 2000)
+    }, 1000)
   },
 
   /**
@@ -713,7 +621,7 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
 
-  }
+  // }
 })

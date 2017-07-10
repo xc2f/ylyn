@@ -71,10 +71,8 @@
   </view>
 
 
-  <!--<view class="bottom">
-    <view class="btn" bindtap="postConfig">
-      <text>提交</text>
-    </view>
-  </view>-->
+  <view class="clean">
+    <button type="warn" bindtap="cleanAccount">退出账号</button>
+  </view>
 
 </view>

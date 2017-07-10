@@ -21,7 +21,7 @@
 
       <view class="me messageBlock" wx:if="{{item.user_id === meInfo.user_id}}" id="m{{item.msgId}}">
         <!--<image src="{{meInfo.avatar}}" class="avatar"></image>-->
-        <image src="{{meInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image>
+        <navigator url="/pages/user/user?user_id={{item.user_id}}"><image src="{{meInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image></navigator>
         <view class="message" wx:if="{{item.type === 'text' || item.type === 'card'}}">
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
             <text>{{item.content}}</text>
@@ -36,25 +36,29 @@
           <image src="/images/faces/{{item.content}}.png"></image>
         </view>
         <!--图片-->
-        <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg"></image>
+        <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg" mode="aspectFit"></image>
 
         <view class="msgSending" wx:if="{{item.status === 'sending'}}">发送中</view>
         <view class="msgSendOk" wx:if="{{item.status === 'sendOk'}}"></view>
         <view class="msgFail" wx:if="{{item.status === 'fail'}}">发送失败</view>
       </view>
-      <view class="friend messageBlock" wx:if="{{item.user_id === friendInfo.user_id}}">
-        <image src="{{friendInfo.avatar}}" class="avatar"></image>
-        <view class="message">
+      <view class="friend messageBlock" wx:if="{{item.user_id === friendInfo.user_id}}" id="m{{item.msgId}}">
+        <navigator url="/pages/user/user?user_id={{item.user_id}}"><image src="{{friendInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image></navigator>
+        <view class="message" wx:if="{{item.type === 'text' || item.type === 'card'}}">
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
-            <!--<block wx:for="{{item.content}}" wx:key="type">
-              <text wx:if="{{item.type ==='text'}}">{{item.content}}</text>
-              <image wx:if="{{item.type === 'face'}}" src="/images/faces/{{item.src}}" class="faceImg"></image>
-            </block>-->
             <text>{{item.content}}</text>
           </view>
-          <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg"></image>
+          <view wx:if="{{item.type === 'card'}}" class="cardMsg">
+            <text>{{item.content}}</text>
+          </view>
           <view class="angle"></view>
         </view>
+        <!--表情-->
+        <view wx:if="{{item.type === 'face'}}" class="faceMsg">
+          <image src="/images/faces/{{item.content}}.png"></image>
+        </view>
+        <!--图片-->
+        <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg" mode="aspectFit"></image>
       </view>
     </block>
   </scroll-view>

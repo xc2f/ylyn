@@ -258,6 +258,27 @@ introSubmit() {
   postConfig(){
     console.log(this.data.userInfo)
   },
+
+  cleanAccount(){
+    wx.showModal({
+      title: '警告',
+      content: '此操作将删除您本地所有账号信息，包括聊天记录。您可通过重新登录继续授权，但聊天记录不可恢复。',
+      success: function (res) {
+        if (res.confirm) {
+          // TODO 后期如果有保存文件到缓存
+          wx.clearStorage()
+          wx.closeSocket()
+          app.globalData.userId = null
+          wx.redirectTo({
+            url: '/pages/nearlist/nearlist?op=nologin',
+          })
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -311,7 +332,7 @@ introSubmit() {
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  // onShareAppMessage: function () {
   
-  }
+  // }
 })

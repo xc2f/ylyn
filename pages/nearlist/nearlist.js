@@ -19,14 +19,20 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    let op = options.op
     let that = this
 
-    let checkClientId = setInterval(function(){
-      if (app.globalData.client_id !== null){
-        app.login(that.fetchShopList, app.globalData.client_id)
-        clearInterval(checkClientId)
-      }
-    }, 50)
+    if(op === 'nologin'){
+      that.fetchShopList()
+    } else {
+      let checkClientId = setInterval(function () {
+        if (app.globalData.client_id !== null) {
+          app.login(that.fetchShopList, app.globalData.client_id)
+          clearInterval(checkClientId)
+        }
+      }, 50)
+    }
+
     
     // that.fetchShopList()
     // 如果本机存有用户个人信息，说明登录过，显示下面的个人信息和消息列表图标

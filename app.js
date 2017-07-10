@@ -120,7 +120,12 @@ App({
           wx.showModal({
             title: '登录失败',
             content: '请确认网络是否畅通',
-            showCancel: false
+            showCancel: false,
+            success(){
+              wx.redirectTo({
+                url: '/pages/nearlist/nearlist',
+              })
+            }
           })
         }
       })
@@ -153,7 +158,12 @@ App({
           wx.showModal({
             title: '登录失败',
             content: '请确认网络是否畅通',
-            showCancel: false
+            showCancel: false,
+            success: function(){
+              wx.redirectTo({
+                url: '/pages/nearlist/nearlist',
+              })
+            }
           })
           console.log('------wx login fail--------')
         }
@@ -205,6 +215,9 @@ App({
               wx.showToast({
                 icon: 'loading',
                 title: '登录失败',
+              })
+              wx.redirectTo({
+                url: '/pages/nearlist/nearlist',
               })
             }
           }

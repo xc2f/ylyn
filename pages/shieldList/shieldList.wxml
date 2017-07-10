@@ -1,0 +1,38 @@
+<!--pages/shieldList/shieldList.wxml-->
+<view class="container">
+    <view class="topBan">
+    <view class="line"></view>
+    <view class="dot"></view>
+    <image src="/images/zjlxr.png"></image>
+    <text>屏蔽列表</text>
+    <view class="dot"></view>
+    <view class="line"></view>
+  </view>
+
+  <view class="list">
+    <view class="empty" wx:if="{{listLength === 0}}">
+      您没有屏蔽任何人
+    </view>
+    <block wx:for="{{list}}" wx:key="user_id">
+
+    <view class="block" bindtouchmove="blockMove">
+      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item}}'>
+        <view class="left">
+          <image src="{{item.avatar}}"></image>
+        </view>
+        <view class="middle">
+          <view class="name"><text>{{item.nickname}}</text></view>
+          <view class="userInfo">
+            <view class="gender"><image src="{{item.friendInfo.gender==='1' ? '/images/boy.png' : '/images/girl.png'}}"></image></view>
+            <view class="age"><text>{{item.age}}岁</text></view>
+          </view>
+          <view class="introduction noWrap"><text>{{item.introduction}}</text></view>
+        </view>
+        <view class="right" bindtap="cancleShield" data-friendinfo='{{item}}'>
+          <view class="removeShield">取消屏蔽</view>
+        </view>
+      </view>
+    </view>
+    </block>
+  </view>
+</view>

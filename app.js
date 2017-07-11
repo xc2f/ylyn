@@ -13,6 +13,7 @@ App({
 
   TOKEN: null,
   requestHost: 'http://192.168.0.110:8080/index.php/yl/',
+  // requestHost: 'http://la.yuanline.cn/index.php/yl/',
 
   onLaunch: function () {
     // setInterval(function(){
@@ -141,6 +142,9 @@ App({
                     success: function (res) {
                       if (res.authSetting['scope.userInfo'] == true) {
                         that.getMeInfo(code, callback, client_id)
+                      } else {
+                        wx.hideLoading()
+                        console.log('用户再次拒绝微信授权')
                       }
                     }
                   })
@@ -224,6 +228,11 @@ App({
         })
       },
       fail: function (res) {
+        wx.hideLoading()
+        wx.showModal({
+          title: '提示',
+          content: '您已取消微信授权，可重新登录或通过右上角功能按钮重新授权',
+        })
         console.log('-----get wx userInfo fail--------')
         // console.log(res)
       }
@@ -247,8 +256,20 @@ App({
                     }
                     // callback() || null
                   },
+                  fail: function(){
+                    console.log('用户重新授权，但获取位置失败')
+                    // wx.showToast({
+                    //   title: '获取地理位置失败',
+                    // })
+                  }
                 })
+              } else {
+                wx.hideLoading()
+                console.log('用户再次拒绝授权地理位置')
               }
+            },
+            fail: function(){
+              console.log('open user setting fail')
             }
           })
         } else {
@@ -261,8 +282,18 @@ App({
               }
               // callback() || null
             },
+            fail: function(){
+              wx.hideLoading()
+              console.log('用户取消地理位置授权')
+              // wx.showToast({
+              //   title: '获取地理位置失败',
+              // })
+            }
           })
         }
+      },
+      fail: function(){
+        console.log('------get user setting fail-------')
       }
     })
   },

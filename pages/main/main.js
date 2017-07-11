@@ -93,7 +93,9 @@ Page({
         table_id: that.data.qrcodeInfo.table_id
       },
       success: function(res){
-        if (res.data.code === 103 || res.data.code === 102) {
+        if(res.data.code === 201){
+          that.toFetch(coordinate, gende, currentPage)
+        } else {
           wx.showModal({
             title: '提示',
             content: res.data.code === 103 ? '您不在本店' : '商家已关闭服务',
@@ -118,10 +120,9 @@ Page({
       if (app.globalData.coordinate !== null) {
         let coordinate = app.globalData.coordinate
         // 是否在本店
-        that.isInStore(coordinate)
+        that.isInStore(coordinate, gender, currentPage)
         // app.globalData.coordinate = null
         // 获取到坐标请求
-        that.toFetch(coordinate, gender, currentPage)
         clearInterval(interval)
       }
     }, 500)

@@ -55,10 +55,6 @@ Page({
     that.setData({
       userId: app.globalData.userId
     })
-
-    setTimeout(function(){
-      console.log(that.data.userInfo, that.data.userId)
-    }, 1000)
     
   },
 

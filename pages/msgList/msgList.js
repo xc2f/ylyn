@@ -143,7 +143,7 @@ Page({
         })
       },
       fail: function (res) {
-        // console.log('no records')
+        console.log('no records')
       }
     })
   },

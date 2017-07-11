@@ -116,7 +116,6 @@ Page({
   },
 
   toMe() {
-    console.log(app.globalData)
     wx.navigateTo({
       url: '/pages/user/user?user_id=' + app.globalData.userId,
     })

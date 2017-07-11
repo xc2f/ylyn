@@ -2,6 +2,7 @@
 
 .container {
   background: #fff;
+  height: 100%;
 }
 
 .topBan {

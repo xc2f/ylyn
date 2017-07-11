@@ -69,7 +69,7 @@
       <image src="/images/speaker.png" class="iconLeft"></image>
     </view>
     <view class="content">
-      <block wx:for="{{shop.activity}}">
+      <block wx:for="{{shop.activity}}" wx:key="">
         <text>{{item}}</text>
       </block>
     </view>

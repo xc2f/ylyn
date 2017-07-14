@@ -15,8 +15,8 @@
     </view>
     <block wx:for="{{list}}" wx:key="user_id">
 
-    <view class="block" bindtouchmove="blockMove">
-      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item}}'>
+    <view class="block">
+      <view class="wrap" data-friendinfo='{{item}}'>
         <view class="left">
           <image src="{{item.avatar}}"></image>
         </view>

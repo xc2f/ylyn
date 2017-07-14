@@ -30,7 +30,9 @@ Page({
     filterBoyMoveRightAnimation: {},
 
     getMsgStatusInterval: null,
-    hasNewMsg: false
+    hasNewMsg: false,
+
+    callWaiterTimeout: 0
   },
 
 
@@ -42,7 +44,7 @@ Page({
     that.setData({
       qrcodeInfo: {
         store_id: options.store_id || 1,
-        table_id: options.table_id || 1
+        table_id: options.table_id || 2
         // store_id: 1,
         // table_id: 1,
       }
@@ -83,7 +85,7 @@ Page({
   isInStore(coordinate){
     let that = this
     wx.request({
-      url: app.requestHost + '/Store/check_address/',
+      url: app.requestHost + 'Store/check_address/',
       method: 'POST',
       data: {
         latitude: coordinate.latitude,
@@ -93,8 +95,9 @@ Page({
         table_id: that.data.qrcodeInfo.table_id
       },
       success: function(res){
+        wx.hideLoading()
         if(res.data.code === 201){
-          that.toFetch(coordinate, gende, currentPage)
+          that.toFetch(coordinate)
         } else {
           wx.showModal({
             title: '提示',
@@ -151,7 +154,7 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
-        // console.log(res)
+        console.log(res)
         that.setData({
           store: res.data.result
         })
@@ -353,7 +356,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.fetchShopInfo(this.data.store.store_id)
+    this.fetchShopInfo()
   },
 
   /**
@@ -378,6 +381,46 @@ Page({
     wx.navigateTo({
       url: '/pages/msgList/msgList',
     })
+  },
+
+  callWaiter(){
+    let that = this
+    if (that.data.callWaiterTimeout > 0){
+      wx.showModal({
+        title: '提示',
+        showCancel: false,
+        content: '请' + (60 - that.data.callWaiterTimeout) + '秒后再试',
+      })
+    } else {
+      wx.request({
+        url: app.requestHost + 'User/call_waiter/',
+        method: 'POST',
+        data: {
+          token: app.TOKEN,
+          store_id: app.globalData.storeInfo.storeId,
+          table_id: app.globalData.storeInfo.tableId
+        },
+        success: function (res) {
+          if(res.data.code === 201){
+            wx.showToast({
+              title: '呼叫成功',
+            })
+            let callWaiterInterval = setInterval(function(){
+              // 不行啊，modal content不会变
+              // that.setData({
+              //   callWaiterTimeout: that.data.callWaiterTimeout + 1
+              // })
+              that.data.callWaiterTimeout++
+              console.log(that.data.callWaiterTimeout)
+              if (that.data.callWaiterTimeout >= 60){
+                that.data.callWaiterTimeout = 0
+                clearInterval(callWaiterInterval)
+              }
+            }, 1000)
+          }
+        }
+      })
+    }
   }
 
 })

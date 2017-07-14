@@ -110,6 +110,10 @@
   justify-content:flex-end;
   float: right;
 }
+.friend .faceMsg {
+  float: left;
+}
+
 .faceMsg image {
   width: 100px;
   height: 100px;
@@ -168,7 +172,7 @@
 
 .messageBlock.friend .message {
   float: left;
-  background: #eee;
+  background: #fff;
   margin-left: 20px;
 }
 

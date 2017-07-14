@@ -74,6 +74,7 @@ Page({
         album_id: that.data.pics[idx].album_id
       },
       success: function(res){
+        console.log(res)
         if(res.data.code === 201){
           let tempList = that.data.pics
           tempList.splice(idx, 1)

@@ -88,6 +88,7 @@ Page({
         latitude: coordinate.latitude
       },
       success: function (res) {
+        console.log(res)
         let result = res.data.result
         // console.log(result)
         // console.log(res)

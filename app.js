@@ -12,8 +12,8 @@ App({
   },
 
   TOKEN: null,
-  requestHost: 'http://192.168.0.110:8080/index.php/yl/',
-  // requestHost: 'http://la.yuanline.cn/index.php/yl/',
+  // requestHost: 'http://192.168.0.110:8080/index.php/yl/',
+  requestHost: 'https://www.yuanline.cn/index.php/yl/',
 
   onLaunch: function () {
     // setInterval(function(){
@@ -40,6 +40,10 @@ App({
 
     // 获取本地消息状态
     this.getMsgStatus()
+
+    setTimeout(function(){
+      console.log(this.TOKEN)
+    }.bind(this), 5000)
 
   },
 
@@ -312,7 +316,8 @@ App({
     let that = this
     // 连接websocket
     wx.connectSocket({
-      url: 'ws://192.168.0.110:8282'
+      // url: 'ws://192.168.0.110:8282'
+      url: 'ws://ws.yuanline.cn:8282'
     })
 
     wx.onSocketOpen(function (res) {
@@ -543,11 +548,13 @@ App({
           table_id: gd.storeInfo.tableId
         },
         success: function (res) {
-          
+          console.log(res)
           // 重新获取位置
           that.getLocation()
           if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain'){
-            if (res.data.code === 103 || res.data.code === 102) {
+            if (res.data.code === 201){
+              console.log(res.data.message)
+            } else if (res.data.code === 103 || res.data.code === 102) {
               wx.showModal({
                 title: '提示',
                 content: res.data.code === 103 ? '您已离开本店' : '商家已关闭服务',

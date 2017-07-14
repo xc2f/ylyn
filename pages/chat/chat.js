@@ -517,8 +517,9 @@ Page({
   },
 
   sendCard() {
+    console.log(this.data.meInfo.wechat_num)
     let value = this.data.meInfo.wechat_num
-    if (value === '') {
+    if (value.trim() === '') {
       wx.showModal({
         title: '您未填写微信号',
         content: '前去设置？',

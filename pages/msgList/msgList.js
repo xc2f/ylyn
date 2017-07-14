@@ -28,9 +28,9 @@ Page({
 
     that.computeFileSize()
     
-    // setTimeout(function(){
-    //   console.log(that.data.chatRecords)
-    // }, 1000)
+    setTimeout(function(){
+      console.log(that.data.chatRecords.friendInfo.age)
+    }, 1000)
   },
 
   checkShield(){
@@ -42,6 +42,7 @@ Page({
         token: app.TOKEN
       },
       success: function (res) {
+        console.log(res)
         if (res.data.result.length !== 0) {
           that.setData({
             showShield: true

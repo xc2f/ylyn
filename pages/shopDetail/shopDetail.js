@@ -68,9 +68,12 @@ Page({
         latitude: coordinate.latitude
       },
       success: function(res){
+        console.log(res)
         if(res.data.code === 201){
+          let result = res.data.result
+          result.activity.activity_content = result.activity.activity_content.replace(/\n/g, '<br>')
           that.setData({
-            shop: res.data.result
+            shop: result
           })
           wx.hideLoading()
         }

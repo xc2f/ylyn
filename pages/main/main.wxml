@@ -111,7 +111,7 @@
       </view>
     </view>
 
-    <view class="waiter">
+    <view class="waiter" bindtap="callWaiter">
       <image src="/images/waiter.png"></image>
       <text>呼叫维特</text>
     </view>

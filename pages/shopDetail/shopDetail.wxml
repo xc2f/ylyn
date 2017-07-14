@@ -1,13 +1,13 @@
 <view class="container">
 
-  <view class="banner">
-    <view wx:if="{{shop.in_sales}}" class="inSales">
+  <view class="banner" style="background: url({{shop.info_bgimg}}) no-repeat 100% center;">
+    <view wx:if="{{shop.activity.is_open === '1' ? true : false}}" class="inSales">
       <text class="inSaleText">活动</text>
     </view>
     <view class="wrap">
-      <view class="shopBanner" style="background: url({{logo_bgimg}}) no-repeat 100% 100%;">
+      <view class="shopBanner">
         <view class="shopAvatar">
-          <image src="{{logo}}"></image>
+          <image src="{{shop.logo}}"></image>
         </view>
         <view class="shopName">{{shop.store_name}}</view>
       </view>
@@ -51,10 +51,10 @@
       <view class="list">
         <scroll-view scroll-x="true" class="scrollH">
           <!-- TODO 接口为foot-->
-          <view class="item" wx:for="{{shop.foods}}" wx:key="title">
-            <image src="{{item.pic}}"></image>
+          <view class="item" wx:for="{{shop.food}}" wx:key="food_id">
+            <image src="{{item.food_img}}"></image>
             <view class="info">
-              <text class="name">{{item.title}}</text>
+              <text class="name">{{item.food_name}}</text>
               <text style="padding: 0 3px">|</text>
               <text class="price">¥{{item.price}}</text>
             </view>
@@ -69,14 +69,17 @@
       <image src="/images/speaker.png" class="iconLeft"></image>
     </view>
     <view class="content">
-      <block wx:for="{{shop.activity}}" wx:key="">
-        <text>{{item}}</text>
-      </block>
+      <!-- <block wx:for="{{shop.activity}}" wx:key=""> -->
+        <text></text> 
+        <rich-text nodes="{{shop.activity.activity_content}}" />
+      <!-- </block> -->
     </view>
   </view>
 
   <view class="customPic">
-    <image src="{{shop.image}}"></image>
+    <block wx:for="{{shop.image}}" wx:key=""> 
+      <image src="{{item.store_img}}"></image>
+    </block>
   </view>
 
   <!--左下角离开本店-->

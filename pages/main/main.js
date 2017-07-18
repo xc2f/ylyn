@@ -9,7 +9,8 @@ Page({
    */
   data: {
     deviceInfo: null,
-    store: {},
+    store: null,
+    userListLength: 0,
     qrcodeInfo: null,
 
     showMeSwitch: true,
@@ -40,11 +41,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+
+
     let that = this
     that.setData({
       qrcodeInfo: {
         store_id: options.store_id || 1,
-        table_id: options.table_id || 2
+        table_id: options.table_id || 3
         // store_id: 1,
         // table_id: 1,
       }
@@ -154,9 +157,10 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
-        console.log(res)
+        console.log(res.data.result.table_list.length)
         that.setData({
-          store: res.data.result
+          store: res.data.result,
+          userListLength: res.data.result.table_list.length
         })
         app.globalData.storeInfo= {
           storeId: that.data.qrcodeInfo.store_id,

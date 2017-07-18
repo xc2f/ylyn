@@ -1,4 +1,5 @@
 /* pages/shopDetail/shopDetail.wxss */
+
 .container {
   position: relative;
   background: #eee;
@@ -11,7 +12,6 @@
 }
 
 .banner .wrap {
-
 }
 
 .shopBanner {
@@ -42,6 +42,7 @@
 }
 
 /*活动标签*/
+
 .inSales {
   position: absolute;
   right: -25px;
@@ -53,10 +54,11 @@
   padding-bottom: 0;
   transform: rotate(45deg);
 }
+
 .inSales .inSaleText {
   position: absolute;
   bottom: 0;
-  left:12px;
+  left: 12px;
   color: #fff;
   font-size: 12px;
   font-weight: bold;
@@ -71,33 +73,33 @@
   height: 50px;
   background: #fff;
 }
-.userCount .total,
-.userCount .man,
-.userCount .female {
+
+.userCount .total, .userCount .man, .userCount .female {
   flex: 1;
   text-align: center;
   font-size: 12px;
   color: #ccc;
 }
-.userCount .total,
-.userCount .man {
+
+.userCount .total, .userCount .man {
   border-right: 1px solid #eee;
 }
+
 .userCount .num {
   font-size: 20px;
   display: block;
   color: #222;
   font-weight: bold;
 }
-.shopInfo,
-.inSalesInfo {
+
+.shopInfo, .inSalesInfo {
   margin-top: 10px;
   background: #fff;
 }
+
 .shopInfo .row {
   /*display: flex;
-  flex-direction: row;*/
-  /*width: 100%;*/
+  flex-direction: row;*//*width: 100%;*/
   height: 50px;
   line-height: 50px;
   border-bottom: 1px solid #eee;
@@ -105,50 +107,61 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
 .iconWrap {
   width: 10%;
   /*margin-right: 10px;*/
   float: left;
   text-align: left;
 }
+
 .shopInfo text {
   line-height: 50px;
 }
+
 .shopInfo .address {
   width: 80%;
   float: left;
-  white-space:nowrap;          /* 不换行 */
-  overflow:hidden;               /* 内容超出宽度时隐藏超出部分的内容 */
-  text-overflow:ellipsis;   
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
+  text-overflow: ellipsis;
 }
+
 .location .iconLeft {
   width: 16px;
   height: 17px;
 }
+
 .phone .iconLeft {
   width: 14px;
   height: 18px;
 }
+
 .shopInfo .row.foods {
-  margin-right: 0
+  margin-right: 0;
 }
+
 .foods .iconWrap {
   margin-top: 55px;
 }
+
 .foods .iconLeft {
   width: 20px;
   height: 11px;
 }
+
 .inSalesInfo .iconLeft {
   width: 17px;
   height: 15px;
 }
+
 .arrowWrap {
   width: 10%;
   float: right;
   text-align: center;
   height: 50px;
 }
+
 .iconRight {
   /*flex: 1;*/
   width: 10px;
@@ -160,6 +173,7 @@
   height: 150px;
   border-bottom: none;
 }
+
 .foods .list {
   /*flex: 11;*/
   height: 150px;
@@ -170,6 +184,7 @@
 .foods .list .scrollH {
   white-space: nowrap;
 }
+
 .foods .list .item {
   display: inline-block;
   width: 120px;
@@ -181,6 +196,7 @@
   height: 100px;
   width: 100%;
 }
+
 .foods .list .info {
   height: 30px;
   line-height: 30px;
@@ -190,6 +206,7 @@
   align-items: flex-end;
   font-weight: bold;
 }
+
 .foods .list .info .price {
   color: red;
 }
@@ -199,9 +216,11 @@
   line-height: 40px;
   width: 10%;
 }
+
 .inSalesInfo .iconWrap image {
   padding-left: 10px;
 }
+
 .inSalesInfo:after {
   display: block;
   content: ".";
@@ -209,19 +228,23 @@
   height: 0;
   clear: both;
 }
+
 .inSalesInfo .content {
   width: 90%;
   float: right;
   padding-bottom: 17px;
 }
+
 .inSalesInfo .content text {
   display: block;
   height: 40px;
   line-height: 40px;
 }
+
 .customPic {
   margin-top: 10px;
 }
+
 .customPic image {
   width: 100%;
 }
@@ -231,13 +254,14 @@
   left: 10px;
   bottom: 10px;
 }
+
 .toHere {
   position: fixed;
   right: 10px;
   bottom: 10px;
 }
-.quit image,
-.toHere image {
+
+.quit image, .toHere image {
   width: 50px;
   height: 50px;
 }

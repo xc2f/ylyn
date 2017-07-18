@@ -27,13 +27,16 @@ Page({
     // ty: 50,
     // tz: 0
     currentPic: 1,
-  
+    currentUserId: null,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      currentUserId: options.user_id
+    })
 
     let that = this
     wx.request({
@@ -80,7 +83,7 @@ Page({
   },
 
   next() {
-    if (this.data.currentPic < this.data.size - 2) {
+    if (this.data.currentPic < this.data.size - 1) {
       this.setData({
         tx0: this.data.tx0 - 50,
         tx1: this.data.tx1 - 50,
@@ -156,7 +159,25 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    
+    let that = this
+    if (this.data.currentUserId === this.data.userId){
+      wx.request({
+        url: app.requestHost + 'Store/get_tuser_info/',
+        method: 'POST',
+        data: {
+          tuser_id: this.data.userId,
+          token: app.TOKEN
+        },
+        success: function (res) {
+          console.log(res)
+          that.setData({
+            userInfo: res.data.result,
+            gallery: res.data.result.album,
+            size: res.data.result.album.length
+          })
+        }
+      })
+    }
   },
 
   /**

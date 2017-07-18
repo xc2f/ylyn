@@ -8,7 +8,8 @@
 .chatBody {
   /*margin-bottom: 50px;*/
   width: 100%;
-  padding-top: 20px;
+  /* padding-top: 20px; */
+  background: #eee;
 }
 
 .chatBody .item {
@@ -183,7 +184,7 @@
 }
 
 .messageBlock.friend .message .angle {
-  border: 7px solid #eee;
+  border: 7px solid #fff;
   border-top-color: transparent;
   border-left-color: transparent;
   border-bottom-color: transparent;
@@ -260,6 +261,7 @@
 .shield .inner {
   color: red;
   text-decoration: underline;
+  display: inline;
 }
 
 .shield image {

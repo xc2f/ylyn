@@ -19,7 +19,7 @@
     <block wx:for="{{shopList}}" wx:key="store_id">
       <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
         <view class="item">
-          <image src="{{item.logo}}"></image>
+          <image src="{{item.store_logo}}"></image>
           <view class="right">
             <view wx:if="{{item.in_sales}}" class="inSales">
               <text class="inSaleText">活动</text>

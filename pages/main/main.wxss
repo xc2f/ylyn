@@ -91,7 +91,6 @@
   position: relative;
   /*top: -10px;*/
   /*z-index: 99;*/
-  margin-bottom: 10px;
 }
 
 .shopBanner .shopAvatar image, .userBanner .shopAvatar image {
@@ -102,6 +101,7 @@
 
 .shopBanner .shopName, .userBanner .shopName {
   /*color: #fff;*/
+  margin-top: 10px;
 }
 
 .shopBanner .flipConner, .userBanner .flipConner {
@@ -135,7 +135,12 @@
   opacity: 1;
   background: #fff;
 }
-
+.body .empty {
+  text-align: center;
+  margin-top: 17px;
+  min-height: 100px;
+  line-height: 100px;
+}
 .allInOne {
   display: flex;
   justify-content: center;
@@ -308,4 +313,19 @@
   top: 0;
   margin-left: 12px;
   border-radius: 50%;
+}
+
+.loading {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.loading image {
+  width: 200px;
+  height: 250px;
+}
+
+.loading text {
+  /* align-self: flex-end; */
 }

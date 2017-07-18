@@ -100,7 +100,7 @@ Page({
         for(let i=0; i<tempFilePaths.length; i++){
           // TODO 上传照片
           let suffix = tempFilePaths[i].slice(tempFilePaths[i].lastIndexOf('.'))
-          let fileName = 'album-' + app.globalData.userId + '-' + new Date().getTime() + suffix
+          let fileName = app.globalData.userId + '-' + new Date().getTime() + suffix
           upload('userAlbum', tempFilePaths[i], fileName, resUrl => {
             // console.log(resUrl)
             wx.request({

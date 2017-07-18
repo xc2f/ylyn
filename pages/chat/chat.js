@@ -77,7 +77,7 @@ Page({
     that.setData({
       deviceInfo: globalData.deviceInfo,
       // 屏幕高度减去chatBar的高度，为消息窗口高度
-      chatBodyHeight: globalData.deviceInfo.windowHeight - 90,
+      chatBodyHeight: globalData.deviceInfo.windowHeight - 52,
     })
 
     that.setData({
@@ -278,7 +278,7 @@ Page({
     }
     this.setData({
       faceShow: false,
-      chatBodyHeight: this.data.deviceInfo.windowHeight - 90
+      chatBodyHeight: this.data.deviceInfo.windowHeight - 52
     })
   },
 
@@ -489,14 +489,14 @@ Page({
     // 避免表情弹起后遮挡聊天内容
     if (this.data.faceShow) {
       this.setData({
-        chatBodyHeight: this.data.deviceInfo.windowHeight - 240 //184
+        chatBodyHeight: this.data.deviceInfo.windowHeight - 202 //184
       })
       this.setData({
         toView: 'm' + this.data.messages[this.data.messages.length - 1].msgId
       })
     } else {
       this.setData({
-        chatBodyHeight: this.data.deviceInfo.windowHeight - 90
+        chatBodyHeight: this.data.deviceInfo.windowHeight - 52
       })
     }
   },

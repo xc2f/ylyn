@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/main/main",
     "pages/nearlist/nearlist",
+    "pages/main/main",
     "pages/shieldList/shieldList",
     "pages/config/config",
     "pages/user/user",

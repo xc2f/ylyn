@@ -190,9 +190,15 @@
 }
 
 .shieldIcon {
-  height: 50px;
-  background: rgba(200, 200, 200, .3);
+  width: 70px;
+  height: 27px;
+  background: rgba(232, 17, 35, 1);
   text-align: center;
-  line-height: 50px;
-  color: #aaa;
+  line-height: 30px;
+  font-size: 15px;
+  color: #eee;
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  border-radius: 7px;
 }

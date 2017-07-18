@@ -1,5 +1,5 @@
 <!--pages/main/main.wxml-->
-<view class="container" style="">
+<view class="container" style="" wx:if="{{store !== null}}">
 
   <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ deviceInfo.windowWidth }}px">
     <view class="wrap">
@@ -58,8 +58,9 @@
         <text class="small">在这里找到你心动的ta</text>
       </view>
     </view>
+    <view class="empty" wx:if="{{store.table_list === undefined}}">暂时为空</view>
     <import src="/pages/common/tableList/tableList" />
-    <template is="tableList" data="{{tables: store.table_list}}" />
+    <template is="tableList" data="{{tables: store.table_list, tableLength: userListLength}}" />
   </scroll-view>
 
 
@@ -119,3 +120,8 @@
 
 </view>
 <!--container end-->
+
+<view class="loading" wx:if="{{store === null}}">
+  <image src="/images/loading.gif"></image>
+  <text>店铺在赶来的路上</text>
+</view>

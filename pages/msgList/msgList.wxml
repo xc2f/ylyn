@@ -11,7 +11,7 @@
     <view class="line"></view>
   </view>
   <view class="empty" wx:if="{{!chatRecords}}">
-    <image src="/images/xj.png"></image>
+    <!-- <image src="/images/xj.png"></image> -->
     <text>这里为空哦，快找些小伙伴聊一聊！</text>
   </view>
 
@@ -28,7 +28,7 @@
           <image src="{{item.friendInfo.avatar}}"></image>
         </view>
         <view class="middle">
-          <view class="name"><text>{{item.friendInfo.nickname}}</text></view>
+          <view class="name"><text>{{item.friendInfo.nickname === "" ? '火星人' : item.friendInfo.nickname}}</text></view>
           <view class="userInfo">
             <view class="gender"><image src="{{item.friendInfo.gender==='1' ? '/images/boy.png' : '/images/girl.png'}}"></image></view>
             <view class="age" wx:if="{{item.friendInfo.age && item.friendInfo.age !== ''}}"><text>{{item.friendInfo.age}}岁</text></view>
@@ -46,6 +46,7 @@
     </view>
     </block>
   </view>
+  <!-- <button btn="clearStorage">清除缓存</button> -->
 <!--<button bindtap="closesocket">close socket</button>
 
 <button bindtap="cstp">test</button>

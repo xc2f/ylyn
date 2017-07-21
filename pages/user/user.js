@@ -77,6 +77,9 @@ Page({
         tx3: this.data.tx3 + 50,
         tx4: this.data.tx4 + 50,
         tx5: this.data.tx5 + 50,
+        tx6: this.data.tx6 + 50,
+        tx7: this.data.tx7 + 50,
+        tx8: this.data.tx8 + 50,
         currentPic: this.data.currentPic - 1,
       })
     }
@@ -91,12 +94,16 @@ Page({
         tx3: this.data.tx3 - 50,
         tx4: this.data.tx4 - 50,
         tx5: this.data.tx5 - 50,
+        tx6: this.data.tx6 - 50,
+        tx7: this.data.tx7 - 50,
+        tx8: this.data.tx8 - 50,
         currentPic: this.data.currentPic + 1
       })
     }
   },
 
   toChatOrConfig(e){
+    console.log(e.currentTarget.dataset.friendinfo)
     wx.navigateTo({
       url: this.data.userId === this.data.userInfo.user_id ? '/pages/config/config' : '/pages/chat/chat?friendinfo='+JSON.stringify(e.currentTarget.dataset.friendinfo),
     })

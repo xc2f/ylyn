@@ -3,6 +3,7 @@
 .container {
   background: #eee;
   position: relative;
+  height: 100%;
 }
 
 .head {
@@ -38,7 +39,9 @@
   margin-right: 17px;
   font-weight: bold;
 }
-
+.shopList {
+  background: #eee;
+}
 .shopList .item {
   background: #fff;
   display: flex;

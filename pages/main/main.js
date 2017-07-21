@@ -157,7 +157,7 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
-        console.log(res.data.result.table_list.length)
+        console.log(res.data.result)
         that.setData({
           store: res.data.result,
           userListLength: res.data.result.table_list.length
@@ -415,7 +415,6 @@ Page({
               //   callWaiterTimeout: that.data.callWaiterTimeout + 1
               // })
               that.data.callWaiterTimeout++
-              console.log(that.data.callWaiterTimeout)
               if (that.data.callWaiterTimeout >= 60){
                 that.data.callWaiterTimeout = 0
                 clearInterval(callWaiterInterval)

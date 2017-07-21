@@ -362,7 +362,6 @@ Page({
         store_id: that.data.storeId
       },
       success: function (res) {
-        console.log(res)
         let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {
@@ -566,6 +565,8 @@ Page({
 
     // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
     setTimeout(function () {
+
+      // 第一次发消息没有msgId
       let lastMsgId = that.data.messages[that.data.messages.length - 1].msgId
       // 监听消息
       that.data.checkMsgStatusInterval = setInterval(function () {

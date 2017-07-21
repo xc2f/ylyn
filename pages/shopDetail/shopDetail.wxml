@@ -1,9 +1,10 @@
 <view class="container">
 
-  <view class="banner" style="background: url({{shop.info_bgimg}}) no-repeat; background-size: 100% 100%; background-position: center center;">
+  <view class="banner" style="background: url() no-repeat; background-size: 100% 100%; background-position: center center;">
     <view wx:if="{{shop.activity.is_open === '1' ? true : false}}" class="inSales">
       <text class="inSaleText">活动</text>
     </view>
+    <image src="{{shop.info_bgimg}}" class="bannerBg"></image>
     <view class="wrap">
       <view class="shopBanner">
         <view class="shopAvatar">

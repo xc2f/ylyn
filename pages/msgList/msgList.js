@@ -28,9 +28,9 @@ Page({
 
     that.computeFileSize()
     
-    setTimeout(function(){
-      console.log(that.data.chatRecords.friendInfo.age)
-    }, 1000)
+    // setTimeout(function(){
+      // console.log(that.data.chatRecords.friendInfo.age)
+    // }, 1000)
   },
 
   checkShield(){
@@ -96,7 +96,9 @@ Page({
         for (let i = 0; i < records.length; i++) {
           // 防止异步
           let msg = wx.getStorageSync(records[i].chatName)
+          // console.log(msg)
           let newestMsg = msg[msg.length - 1]
+          // console.log(msg)
           if (newestMsg.type === 'text') {
             recordList.push({
               friendInfo: records[i].friendInfo,
@@ -303,6 +305,10 @@ Page({
   // onShareAppMessage: function () {
   
   // },
+
+  clearStorage(){
+    wx.clearStorage()
+  },
 
   cstp(){
     let that = this

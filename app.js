@@ -36,7 +36,7 @@ App({
     //   console.log('----------')
     //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
     // }, 10000)
-    this.refreshStorage()
+    // this.refreshStorage()
 
     // 获取本地消息状态
     this.getMsgStatus()
@@ -109,8 +109,9 @@ App({
           that.globalData.userId = res.data.result.user_id
           // 未读消息
           let unreadMsg = res.data.result.unread_msg
+          console.log('未读消息', unreadMsg)
           if (unreadMsg.length) {
-            for (let i = 2; i < unreadMsg.length; i++) {
+            for (let i = 0; i < unreadMsg.length; i++) {
               that.loadMsg(unreadMsg[i])
             }
           }
@@ -288,7 +289,7 @@ App({
             },
             fail: function(){
               wx.hideLoading()
-              console.log('用户取消地理位置授权')
+              console.log('获取位置失败')
               // wx.showToast({
               //   title: '获取地理位置失败',
               // })
@@ -317,7 +318,7 @@ App({
     // 连接websocket
     wx.connectSocket({
       // url: 'ws://192.168.0.110:8282'
-      url: 'ws://ws.yuanline.cn:8282'
+      url: 'wss://ws.yuanline.cn:8282'
     })
 
     wx.onSocketOpen(function (res) {
@@ -328,6 +329,7 @@ App({
         // console.log('--------------------')
         // console.log(res)
         let data = JSON.parse(res.data)
+        console.log(data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
         } else {
@@ -383,6 +385,9 @@ App({
     // friendInfo: that.data.friendInfo,
     // storeInfo: app.globalData.storeInfo
     let postData = JSON.parse(msg.content)
+    // 改变消息的状态，并添加来源消息发送时间
+    postData.status = "sendOk"
+    postData.time = msg.msg_time * 1000
     let friendInfo = {
       avatar: msg.from_user_avatar,
       user_id: msg.from_user_id,
@@ -405,6 +410,7 @@ App({
     //   let m = 'chatWith' + msg.from_user_id
     //   that.globalData.m = false
     // }, 3000)
+    console.log(messageList, msg)
     // 如果本地存有这个消息缓存
     if (messageList !== '') {
       messageList.push(postData)
@@ -428,6 +434,7 @@ App({
 
 
   refreshChatRecords(NewMessage, msgClean = false) {
+    console.log(NewMessage)
     // 在chat页面消息clean
     // TODO 只能在当前用户的chat页消息clean
     // let msgClean = false

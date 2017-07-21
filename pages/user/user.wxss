@@ -131,7 +131,7 @@
   height: 300px;
 }
 .gallery .wrap > view {
-  transition:transform 700ms ease 0ms; 
+  transition:transform 300ms ease 0ms; 
   position: absolute;
   width: 50%;
   height: 300px;

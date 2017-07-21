@@ -71,7 +71,7 @@ Page({
         console.log(res)
         if(res.data.code === 201){
           let result = res.data.result
-          result.activity.activity_content = result.activity.activity_content.replace(/\n/g, '<br>')
+          result.activity.activity_content = result.activity.length === 0 ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
           that.setData({
             shop: result
           })

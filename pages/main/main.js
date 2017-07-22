@@ -33,7 +33,9 @@ Page({
     getMsgStatusInterval: null,
     hasNewMsg: false,
 
-    callWaiterTimeout: 0
+    callWaiterTimeout: 0,
+
+    checkLocationInterval: null
   },
 
 
@@ -338,6 +340,10 @@ Page({
       })
     }, 5000)
 
+    that.data.checkLocationInterval = setInterval(function () {
+      that.checkLocation()
+    }, 1000 * 60 * 2)
+
   },
 
   /**
@@ -346,6 +352,7 @@ Page({
   onHide: function () {
     // console.log('main hide')
     clearInterval(this.data.getMsgStatusInterval)
+    clearInterval(this.data.checkLocationInterval)
   },
 
   /**
@@ -354,6 +361,7 @@ Page({
   onUnload: function () {
     // console.log('main unload')
     clearInterval(this.data.getMsgStatusInterval)
+    clearInterval(this.data.checkLocationInterval)
   },
 
   /**
@@ -424,6 +432,63 @@ Page({
         }
       })
     }
+  },
+
+  checkLocation() {
+    
+      let that = this
+      let gd = app.globalData
+
+      wx.request({
+        url: app.requestHost + '/Store/check_address/',
+        method: 'POST',
+        data: {
+          latitude: gd.coordinate.latitude,
+          longitude: gd.coordinate.longitude,
+          token: app.TOKEN,
+          store_id: gd.storeInfo.storeId,
+          table_id: gd.storeInfo.tableId
+        },
+        success: function (res) {
+          console.log(res)
+          // 重新获取位置
+          app.getLocation()
+          // if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain') {
+            if (res.data.code === 201) {
+              console.log(res.data.message)
+            } else if (res.data.code === 103 || res.data.code === 102) {
+              wx.showModal({
+                title: '提示',
+                content: res.data.code === 103 ? '您已离开本店' : '商家已关闭服务',
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                    wx.redirectTo({
+                      url: '/pages/nearlist/nearlist',
+                    })
+                  }
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '提示',
+                content: '与服务器通信错误',
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                    wx.redirectTo({
+                      url: '/pages/nearlist/nearlist',
+                    })
+                  }
+                }
+              })
+            }
+          // }
+        },
+        fail: function (err) {
+          console.log(err)
+        }
+      })
   }
 
 })

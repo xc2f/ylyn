@@ -16,6 +16,21 @@
   /*height: 100px;*/
 }
 
+.chatBody .time {
+  text-align: center;
+  font-size: 14px;
+  width: 50%;
+  margin: auto;
+  clear: both;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 3px;
+  padding:25px 0 10px;
+}
+.chatBody .time .inner {
+  background: rgb(221, 221, 221);
+}
+
 .chatBar {
   display: flex;
   flex: 1;
@@ -104,13 +119,15 @@
   align-items: center;
   position: relative;
 }
+
 .faceMsg {
   display: flex;
   align-items: center;
   position: relative;
-  justify-content:flex-end;
+  justify-content: flex-end;
   float: right;
 }
+
 .friend .faceMsg {
   float: left;
 }
@@ -120,6 +137,7 @@
   height: 100px;
   padding: 10px;
 }
+
 .msgSending {
   float: right;
   padding-right: 3px;

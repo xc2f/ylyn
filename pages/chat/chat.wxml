@@ -14,6 +14,13 @@
   <scroll-view class="chatBody" scroll-y="{{true}}" style="height: {{chatBodyHeight}}px;" bindtap="inputFocus" scroll-into-view="{{toView}}">
     <block wx:for="{{messages}}" wx:key="message_id">
 
+
+      <view class="time" wx:if="{{item.type==='time'}}">
+        <view class="inner">
+          {{item.content}}
+        </view>
+      </view>
+
       <!--新加-->
       <view class="shieldMsg" wx:if="{{item.type==='shield'}}">
         {{item.content}}
@@ -21,7 +28,9 @@
 
       <view class="me messageBlock" wx:if="{{item.user_id === meInfo.user_id}}" id="m{{item.msgId}}">
         <!--<image src="{{meInfo.avatar}}" class="avatar"></image>-->
-        <navigator url="/pages/user/user?user_id={{item.user_id}}"><image src="{{meInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image></navigator>
+        <navigator url="/pages/user/user?user_id={{item.user_id}}">
+          <image src="{{meInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image>
+        </navigator>
         <view class="message" wx:if="{{item.type === 'text' || item.type === 'card'}}">
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
             <text>{{item.content}}</text>
@@ -43,7 +52,9 @@
         <view class="msgFail" wx:if="{{item.status === 'fail'}}">发送失败</view>
       </view>
       <view class="friend messageBlock" wx:if="{{item.user_id === friendInfo.user_id}}" id="m{{item.msgId}}">
-        <navigator url="/pages/user/user?user_id={{item.user_id}}"><image src="{{friendInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image></navigator>
+        <navigator url="/pages/user/user?user_id={{item.user_id}}">
+          <image src="{{friendInfo.avatar}}" class="avatar" wx:if="{{item.type !== 'shield'}}"></image>
+        </navigator>
         <view class="message" wx:if="{{item.type === 'text' || item.type === 'card'}}">
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
             <text>{{item.content}}</text>

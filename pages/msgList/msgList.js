@@ -1,6 +1,9 @@
 // pages/msgList/msgList.js
 let app = getApp()
-import { deleteFile } from '../../untils/update.js'  
+import { deleteFile } from '../../untils/update.js'
+
+import fromNow from '../../untils/moment.js'
+
 Page({
 
   /**
@@ -104,7 +107,8 @@ Page({
               friendInfo: records[i].friendInfo,
               storeInfo: records[i].storeInfo,
               newestMsg: newestMsg.content,
-              date: that.parseDate(newestMsg.time),
+              // date: that.parseDate(newestMsg.time),
+              date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean
             })
           } else if (newestMsg.type === 'img') {
@@ -112,7 +116,8 @@ Page({
               friendInfo: records[i].friendInfo,
               storeInfo: records[i].storeInfo,
               newestMsg: '[图片]',
-              date: that.parseDate(newestMsg.time),
+              // date: that.parseDate(newestMsg.time),
+              date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean
             })
           } else if (newestMsg.type === 'face') {
@@ -120,7 +125,8 @@ Page({
               friendInfo: records[i].friendInfo,
               storeInfo: records[i].storeInfo,
               newestMsg: '[表情]',
-              date: that.parseDate(newestMsg.time),
+              // date: that.parseDate(newestMsg.time),
+              date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean
             })
           } else if (newestMsg.type === 'shield') {
@@ -128,7 +134,8 @@ Page({
               friendInfo: records[i].friendInfo,
               storeInfo: records[i].storeInfo,
               newestMsg: newestMsg.content,
-              date: that.parseDate(newestMsg.time),
+              // date: that.parseDate(newestMsg.time),
+              date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean
             })
           } else if (newestMsg.type === 'card') {
@@ -136,7 +143,8 @@ Page({
               friendInfo: records[i].friendInfo,
               storeInfo: records[i].storeInfo,
               newestMsg: newestMsg.content,
-              date: that.parseDate(newestMsg.time),
+              // date: that.parseDate(newestMsg.time),
+              date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean
             })
           }
@@ -151,17 +159,17 @@ Page({
     })
   },
 
-  parseDate(date){
-    let msgTime = new Date(date)
-    let today = new Date().getDate()
-    if(today === msgTime.getDate() ) {
-      return msgTime.getHours() + ':' + (msgTime.getMinutes() < 10 ? ('0' + msgTime.getMinutes()) : msgTime.getMinutes())
-    } else if (today === msgTime.getDate() + 1) {
-      return '昨天'
-    } else {
-      return (msgTime.getMonth()+1) + '月' + msgTime.getDate() + '日'
-    }
-  },
+  // parseDate(date){
+  //   let msgTime = new Date(date)
+  //   let today = new Date().getDate()
+  //   if(today === msgTime.getDate() ) {
+  //     return msgTime.getHours() + ':' + (msgTime.getMinutes() < 10 ? ('0' + msgTime.getMinutes()) : msgTime.getMinutes())
+  //   } else if (today === msgTime.getDate() + 1) {
+  //     return '昨天'
+  //   } else {
+  //     return (msgTime.getMonth()+1) + '月' + msgTime.getDate() + '日'
+  //   }
+  // },
 
   tapToChat(e){
     wx.navigateTo({

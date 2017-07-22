@@ -1,6 +1,12 @@
 // pages/chat/chat.js
 import { upload } from '../../untils/update.js'
 
+// const moment = require('../../untils/moment.js');
+// moment.lang('zh-cn');
+
+import { computeTime } from '../../untils/moment.js'
+
+
 var app = getApp()
 
 Page({
@@ -99,9 +105,12 @@ Page({
     wx.getStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       success: function (res) {
+
+        // that.beautifyMsg(res.data, 2000)
         that.setData({
-          messages: res.data,
+          messages: res.data
         })
+
       },
       fail: function (e) {
       }
@@ -167,6 +176,27 @@ Page({
       },
     })
 
+  },
+
+  // 主要是给消息添加时间
+  beautifyMsg(messages, during){
+    let that = this
+    let initTime = 0
+    // debugger
+    messages.map((item, idx) => {
+      if (item.time > (initTime + during)){
+        messages.splice(idx, 0, {
+          content: fromNow(item.time),
+          type: 'time'
+        })
+      }
+      // 在if外面更新initTime是超过一定时间没有消息则显示时间，否则是与第一次显示的时间做比较
+      initTime = item.time
+    })
+
+    that.setData({
+      messages: messages,
+    })
   },
 
 
@@ -318,18 +348,29 @@ Page({
   },
 
 
+  // 消息处理函数
   handleMsg(type, value) {
     let that = this
     let tempMessageList = that.data.messages;
 
+    let now = new Date().getTime()
+
+    if(tempMessageList[tempMessageList.length-1].time + (1000 * 60 * 5) < now ){
+      tempMessageList.push({
+        content: computeTime(now),
+        type: 'time'
+      })
+    }
+
     // 创建一个msgid用作后面的消息状态更新
-    let msgId = new Date().getTime() + '-' + app.globalData.userId
+    let msgId = now + '-' + app.globalData.userId
     let postData = {
       type: type,
       content: value,
       msgId: msgId,
       user_id: app.globalData.userId,
-      status: 'sending'
+      status: 'sending',
+      time: now
     }
 
     tempMessageList.push(postData)
@@ -453,24 +494,24 @@ Page({
     })
 
     // 获取本地缓存和文件大小
-    wx.getStorageInfo({
-      success: function (res) {
-        let limitSize = res.limitSize
-        let storageSize = res.currentSize
-        wx.getSavedFileList({
-          success: function (res) {
-            let fileSize = 0
-            for (let i = 0; i < res.fileList.length; i++) {
-              fileSize += res.fileList[i].size
-            }
-            let totalSize = storageSize + fileSize
-            if (totalSize < limitSize - 1024 * 2) {
+    // wx.getStorageInfo({
+    //   success: function (res) {
+    //     let limitSize = res.limitSize
+    //     let storageSize = res.currentSize
+    //     wx.getSavedFileList({
+    //       success: function (res) {
+    //         let fileSize = 0
+    //         for (let i = 0; i < res.fileList.length; i++) {
+    //           fileSize += res.fileList[i].size
+    //         }
+    //         let totalSize = storageSize + fileSize
+    //         if (totalSize < limitSize - 1024 * 2) {
 
-            }
-          }
-        })
-      },
-    })
+    //         }
+    //       }
+    //     })
+    //   },
+    // })
   },
   // 预览图片
   prevImg(e) {
@@ -480,7 +521,7 @@ Page({
       urls: [e.currentTarget.dataset.src]
     })
   },
-  // 发送表情
+  // 弹起表情框
   toggleFace() {
     this.setData({
       faceShow: !this.data.faceShow,
@@ -509,12 +550,14 @@ Page({
     return animation;
   },
 
-
+  // 发送表情
   sendEmoji(e) {
     let value = e.currentTarget.dataset.face
     this.handleMsg('face', value)
   },
 
+
+  // 发送微信号
   sendCard() {
     console.log(this.data.meInfo.wechat_num)
     let value = this.data.meInfo.wechat_num
@@ -564,30 +607,47 @@ Page({
     that.pageName = 'chatWith' + that.data.friendInfo.user_id
 
     // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
-    setTimeout(function () {
+    if(that.data.messages.length !== 0){
 
-      // 第一次发消息没有msgId
-      let lastMsgId = that.data.messages[that.data.messages.length - 1].msgId
-      // 监听消息
-      that.data.checkMsgStatusInterval = setInterval(function () {
-        wx.getStorage({
-          key: 'chatWith' + that.data.friendInfo.user_id,
-          success: function (res) {
-            that.setData({
-              messages: res.data
-            })
-            let newMsgId = that.data.messages[that.data.messages.length - 1].msgId
-            if (lastMsgId !== newMsgId) {
-              // 消息发送后滚动到底部，在上一setData后
-              that.setData({
-                toView: 'm' + newMsgId
+      setTimeout(function () {
+
+        // 第一次发消息没有msgId
+        let lastMsgId = that.data.messages[that.data.messages.length - 1].msgId
+        // 监听消息
+        that.data.checkMsgStatusInterval = setInterval(function () {
+          wx.getStorage({
+            key: 'chatWith' + that.data.friendInfo.user_id,
+            success: function (res) {
+              // 这里做消息加上时间处理，如果出现新消息不能滚动到底部，说明异步，不用公共函数
+              // that.beautifyMsg(res.data, 10000)
+
+              let now = new Date().getTime()
+              let tempMessageList = res.data
+
+              if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
+                tempMessageList.push({
+                  content: computeTime(now),
+                  type: 'time'
+                })
+              }
+              this.setData({
+                messages: tempMessageList
               })
-              lastMsgId = newMsgId
-            }
-          },
-        })
-      }, 2000)
-    }, 1000)
+
+
+              let newMsgId = that.data.messages[that.data.messages.length - 1].msgId
+              if (lastMsgId !== newMsgId) {
+                // 消息发送后滚动到底部，在上一setData后
+                that.setData({
+                  toView: 'm' + newMsgId
+                })
+                lastMsgId = newMsgId
+              }
+            },
+          })
+        }, 2000)
+      }, 1000)
+    }
   },
 
   /**

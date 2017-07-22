@@ -27,7 +27,8 @@ App({
     // this.login()
 
     // 检查位置
-    this.checkLocation()
+    // this.checkLocation()
+    this.getLocation()
 
     // 获取设备信息
     this.getDeviceInfo()
@@ -537,65 +538,65 @@ App({
 
   },
 
-  checkLocation(){
-    let that = this
+  // checkLocation(){
+  //   let that = this
     
-    that.getLocation()
+  //   that.getLocation()
 
-    let gd = that.globalData
-    this.globalData.checkLocationInterval = setInterval(()=>{
-      wx.request({
-        url: that.requestHost + '/Store/check_address/',
-        method: 'POST',
-        data: {
-          latitude: gd.coordinate.latitude,
-          longitude: gd.coordinate.longitude,
-          token: that.TOKEN,
-          store_id: gd.storeInfo.storeId,
-          table_id: gd.storeInfo.tableId
-        },
-        success: function (res) {
-          console.log(res)
-          // 重新获取位置
-          that.getLocation()
-          if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain'){
-            if (res.data.code === 201){
-              console.log(res.data.message)
-            } else if (res.data.code === 103 || res.data.code === 102) {
-              wx.showModal({
-                title: '提示',
-                content: res.data.code === 103 ? '您已离开本店' : '商家已关闭服务',
-                showCancel: false,
-                success: function (res) {
-                  if (res.confirm) {
-                    wx.redirectTo({
-                      url: '/pages/nearlist/nearlist',
-                    })
-                  }
-                }
-              })
-            } else {
-              wx.showModal({
-                title: '提示',
-                content: '与服务器通信错误',
-                showCancel: false,
-                success: function (res) {
-                  if (res.confirm) {
-                    wx.redirectTo({
-                      url: '/pages/nearlist/nearlist',
-                    })
-                  }
-                }
-              })
-            }
-          }
-        },
-        fail: function (err) {
-          console.log(err)
-        }
-      })
-    }, 1000 * 60 * 2)
-  },
+  //   let gd = that.globalData
+  //   this.globalData.checkLocationInterval = setInterval(()=>{
+  //     wx.request({
+  //       url: that.requestHost + '/Store/check_address/',
+  //       method: 'POST',
+  //       data: {
+  //         latitude: gd.coordinate.latitude,
+  //         longitude: gd.coordinate.longitude,
+  //         token: that.TOKEN,
+  //         store_id: gd.storeInfo.storeId,
+  //         table_id: gd.storeInfo.tableId
+  //       },
+  //       success: function (res) {
+  //         console.log(res)
+  //         // 重新获取位置
+  //         that.getLocation()
+  //         if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain'){
+  //           if (res.data.code === 201){
+  //             console.log(res.data.message)
+  //           } else if (res.data.code === 103 || res.data.code === 102) {
+  //             wx.showModal({
+  //               title: '提示',
+  //               content: res.data.code === 103 ? '您已离开本店' : '商家已关闭服务',
+  //               showCancel: false,
+  //               success: function (res) {
+  //                 if (res.confirm) {
+  //                   wx.redirectTo({
+  //                     url: '/pages/nearlist/nearlist',
+  //                   })
+  //                 }
+  //               }
+  //             })
+  //           } else {
+  //             wx.showModal({
+  //               title: '提示',
+  //               content: '与服务器通信错误',
+  //               showCancel: false,
+  //               success: function (res) {
+  //                 if (res.confirm) {
+  //                   wx.redirectTo({
+  //                     url: '/pages/nearlist/nearlist',
+  //                   })
+  //                 }
+  //               }
+  //             })
+  //           }
+  //         }
+  //       },
+  //       fail: function (err) {
+  //         console.log(err)
+  //       }
+  //     })
+  //   }, 1000 * 60 * 2)
+  // },
 
 
   onShow: function () {

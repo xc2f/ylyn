@@ -41,6 +41,7 @@
 }
 .shopList {
   background: #eee;
+  /* height: 100%; */
 }
 .shopList .item {
   background: #fff;

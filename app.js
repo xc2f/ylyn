@@ -291,6 +291,17 @@ App({
             fail: function(){
               wx.hideLoading()
               console.log('获取位置失败')
+              wx.showModal({
+                title: '提示',
+                content: '获取位置信息失败，请打开GPS后重试',
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                    // console.log('用户点击确定')
+                    that.getLocation()
+                  }
+                }
+              })
               // wx.showToast({
               //   title: '获取地理位置失败',
               // })

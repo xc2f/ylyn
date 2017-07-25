@@ -263,6 +263,14 @@ Page({
 
 
           let tempMessageList = that.data.messages;
+          let now = new Date().getTime()
+
+          if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
+            tempMessageList.push({
+              content: computeTime(now),
+              type: 'time'
+            })
+          }
 
           let postData = that.refreshShield(type === 'toShield' ? true : false, type === 'toShield' ? '您已将对方消息屏蔽' : '您已取消屏蔽', res.data.result.time * 1000)
 
@@ -292,8 +300,6 @@ Page({
       }
     })
   },
-
-
 
 
   inputFocus() {
@@ -621,19 +627,21 @@ Page({
               // 这里做消息加上时间处理，如果出现新消息不能滚动到底部，说明异步，不用公共函数
               // that.beautifyMsg(res.data, 10000)
 
-              let now = new Date().getTime()
-              let tempMessageList = res.data
+              // let now = new Date().getTime()
+              // let tempMessageList = res.data
 
-              if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
-                tempMessageList.push({
-                  content: computeTime(now),
-                  type: 'time'
-                })
-              }
+              // if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
+              //   tempMessageList.push({
+              //     content: computeTime(now),
+              //     type: 'time'
+              //   })
+              // }
+              // this.setData({
+              //   messages: tempMessageList
+              // })
               this.setData({
-                messages: tempMessageList
+                messages: res.data
               })
-
 
               let newMsgId = that.data.messages[that.data.messages.length - 1].msgId
               if (lastMsgId !== newMsgId) {

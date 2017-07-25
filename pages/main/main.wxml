@@ -4,7 +4,7 @@
   <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ deviceInfo.windowWidth }}px">
     <view class="wrap">
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
-        <image class="bannerImg" src="{{store.store_bgimg}}" animation="{{bannerSwitchAnimation}}"></image>
+        <image class="bannerImg" src="{{store.store_bgimg === '' ? '/images/banner.png' : store.store_bgimg}}" animation="{{bannerSwitchAnimation}}"></image>
         <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}">
           <view class="shopAvatar">
             <image src="{{store.store_logo}}"></image>
@@ -58,7 +58,7 @@
         <text class="small">在这里找到你心动的ta</text>
       </view>
     </view>
-    <view class="empty" wx:if="{{store.table_list === undefined}}">暂时为空</view>
+    <view class="empty" wx:if="{{userListLength === 0}}">暂时为空</view>
     <import src="/pages/common/tableList/tableList" />
     <template is="tableList" data="{{tables: store.table_list, tableLength: userListLength}}" />
   </scroll-view>

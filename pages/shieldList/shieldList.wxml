@@ -23,8 +23,8 @@
         <view class="middle">
           <view class="name"><text>{{item.nickname}}</text></view>
           <view class="userInfo">
-            <view class="gender"><image src="{{item.friendInfo.gender==='1' ? '/images/boy.png' : '/images/girl.png'}}"></image></view>
-            <view class="age"><text>{{item.age}}岁</text></view>
+            <view class="gender"><image src="{{item.gender==='1' ? '/images/boy.png' : item.gender==='2' ? '/images/girl.png' : ''}}"></image></view>
+            <view class="age" wx:if="{{item.age && item.age !== ''}}"><text>{{item.age}}岁</text></view>
           </view>
           <view class="introduction noWrap"><text>{{item.introduction}}</text></view>
         </view>

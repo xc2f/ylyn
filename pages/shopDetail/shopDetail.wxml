@@ -1,14 +1,14 @@
-<view class="container">
+<view class="container" wx:if="{{dataOk}}">
 
   <view class="banner" style="background: url() no-repeat; background-size: 100% 100%; background-position: center center;">
     <view wx:if="{{shop.activity.is_open === '1' ? true : false}}" class="inSales">
       <text class="inSaleText">活动</text>
     </view>
-    <image src="{{shop.info_bgimg}}" class="bannerBg"></image>
+    <image src="{{shop.info_bgimg === '' ? '/images/banner.png' : shop.info_bgimg}}" class="bannerBg"></image>
     <view class="wrap">
       <view class="shopBanner">
         <view class="shopAvatar">
-          <image src="{{shop.logo}}"></image>
+          <image src="{{shop.logo === '' ? '/images/defaultLogo.png' : shop.logo}}"></image>
         </view>
         <view class="shopName">{{shop.store_name}}</view>
       </view>
@@ -45,7 +45,7 @@
         <image src="/images/arrowRight.png" class="iconRight"></image>
       </view>
     </view>
-    <view class="foods row">
+    <view class="foods row" wx:if="{{shop.food !== 0}}">
       <view class="iconWrap">
         <image src="/images/foods.png" class="iconLeft"></image>
       </view>
@@ -65,13 +65,13 @@
     </view>
   </view>
 
-  <view class="inSalesInfo">
+  <view class="inSalesInfo" wx:if="{{shop.activity.is_open === '1'}}">
     <view class="iconWrap">
       <image src="/images/speaker.png" class="iconLeft"></image>
     </view>
     <view class="content">
       <!-- <block wx:for="{{shop.activity}}" wx:key=""> -->
-        <text></text> 
+        <!-- <text></text>  -->
         <rich-text nodes="{{shop.activity.activity_content}}" />
       <!-- </block> -->
     </view>
@@ -93,3 +93,5 @@
     <image src="/images/tohere.png"></image>
   </view>
 </view>
+
+<view class="empty" wx:if="{{!dataOk}}"></view>

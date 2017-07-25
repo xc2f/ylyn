@@ -68,6 +68,7 @@
   height: 50px;
   padding-bottom: 0;
   transform: rotate(45deg);
+  z-index: 999;
 }
 
 .inSales .inSaleText {
@@ -105,11 +106,13 @@
   display: block;
   color: #222;
   font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .shopInfo, .inSalesInfo {
   margin-top: 10px;
   background: #fff;
+  padding: 10px 0;
 }
 
 .shopInfo .row {
@@ -124,13 +127,14 @@
 }
 
 .iconWrap {
+  line-height: 50px;
   width: 10%;
   /*margin-right: 10px;*/
   float: left;
   text-align: left;
 }
-
 .shopInfo text {
+  font-size: 17px;
   line-height: 50px;
 }
 
@@ -141,7 +145,10 @@
   overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
   text-overflow: ellipsis;
 }
-
+.iconLeft {
+  position: relative;
+  top: 2px;
+}
 .location .iconLeft {
   width: 16px;
   height: 17px;
@@ -157,7 +164,7 @@
 }
 
 .foods .iconWrap {
-  margin-top: 55px;
+  /* margin-top: 55px; */
 }
 
 .foods .iconLeft {
@@ -247,7 +254,8 @@
 .inSalesInfo .content {
   width: 90%;
   float: right;
-  padding-bottom: 17px;
+  /* padding-bottom: 17px; */
+  line-height: 40px;
 }
 
 .inSalesInfo .content text {
@@ -266,14 +274,15 @@
 
 .quit {
   position: fixed;
-  left: 10px;
-  bottom: 10px;
+  left: 17px;
+  bottom: 17px;
 }
 
 .toHere {
   position: fixed;
-  right: 10px;
-  bottom: 10px;
+  right: 17px;
+  bottom: 17px;
+  z-index: 999
 }
 
 .quit image, .toHere image {
@@ -285,4 +294,5 @@
   position: absolute;
   top: 10px;
   left: 10px;
+  z-index: 999;
 }

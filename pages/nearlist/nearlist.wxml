@@ -12,16 +12,16 @@
     <view class="line"></view>
   </view>
 
-  <view class="shopList">
     <view class="empty" wx:if="{{shopListEmpty}}">
       <text>附近无可用商家</text>
     </view>
+  <view class="shopList" wx:if="{{!shopListEmpty}}">
     <block wx:for="{{shopList}}" wx:key="store_id">
       <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
         <view class="item">
-          <image src="{{item.store_logo}}"></image>
+          <image src="{{item.store_logo === null ? '/images/defaultLogo.png' : item.store_logo}}"></image>
           <view class="right">
-            <view wx:if="{{item.in_sales}}" class="inSales">
+            <view wx:if="{{item.is_activity}}" class="inSales">
               <text class="inSaleText">活动</text>
             </view>
             <text class="shopName noWrap">{{item.store_name}}</text>
@@ -46,12 +46,14 @@
   </view>
 
   <view class="toMe bottomIcon" bindtap="toMe" wx:if="{{showMeIcon}}">
-    <text class="fa fa-user-o"></text>
-    <text class="text">我的</text>
+    <!-- <text class="fa fa-user-o"></text> -->
+    <image src="/images/gr.png"></image>
+    <!-- <text class="text">我的</text> -->
   </view>
   <view class="toMsgList bottomIcon" bindtap="toMsgList" wx:if="{{showMeIcon}}">
-    <text class="fa fa-commenting-o"></text>
-    <text class="text">消息列表</text>
+    <!-- <text class="fa fa-commenting-o"></text> -->
+    <!-- <text class="text">消息列表</text> -->
+    <image src="/images/message-r.png"></image>
     <view class="msgNew" wx:if="{{hasNewMsg}}"></view>
   </view>
 

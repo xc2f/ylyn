@@ -43,8 +43,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
-
     let that = this
     that.setData({
       qrcodeInfo: {
@@ -67,11 +65,32 @@ Page({
     //   // 请求店铺信息
     //   that.fetchShopInfo()
     // }
+    let tick = 0
     let checkClientId = setInterval(function () {
       if (app.globalData.client_id !== null) {
         app.login(that.fetchShopInfo, app.globalData.client_id)
         clearInterval(checkClientId)
+      } else if (tick >= 200) {
+        clearInterval(checkClientId)
+        // wx.showModal({
+        //   title: '提示',
+        //   content: '登录失败，请重试',
+        //   success: function (res) {
+        //     if (res.confirm) {
+        //       // console.log('用户点击确定')
+        //       that.onLoad({
+        //         store_id: that.data.qrcodeInfo.store_id,
+        //         table_id: that.data.qrcodeInfo.table_id,
+        //       })
+        //     } else if (res.cancel) {
+        //       wx.redirectTo({
+        //         url: '/pages/nearlist/nearlist',
+        //       })
+        //     }
+        //   }
+        // })
       }
+      tick++
     }, 50)
     // 获取用户信息
 
@@ -100,6 +119,7 @@ Page({
         table_id: that.data.qrcodeInfo.table_id
       },
       success: function(res){
+        console.log(res)
         wx.hideLoading()
         if(res.data.code === 201){
           that.toFetch(coordinate)
@@ -139,9 +159,9 @@ Page({
 
   toFetch(coordinate, gender, currentPage){
     let that = this
-    wx.showLoading({
-      title: '数据获取中',
-    })
+    // wx.showLoading({
+    //   title: '数据获取中',
+    // })
     // let token = wx.getStorageSync('TOKEN')
     wx.request({
       // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',

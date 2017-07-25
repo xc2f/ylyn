@@ -72,6 +72,10 @@
 .right {
   flex: 1;
   text-align: right;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  justify-content: center;
 }
 
 .left image {
@@ -82,53 +86,65 @@
 .middle {
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
+  margin: 10px;
+  justify-content: center;
 }
 .middle .name {
   font-size: 20px;
   font-weight: bold;
+  flex: 1.5;
+  display: flex;
+  align-items: center;
 }
 .middle .userInfo {
   display: flex;
   flex-direction: row;
-  margin: 3px 0;
   align-items: center;
-  height: 20px;
+  flex: 1;
 }
 .middle .userInfo .gender {
   height: 20px;
+  line-height: 20px;
 }
 .middle .userInfo .gender image {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   margin-right: 10px;
 }
 .middle .userInfo .age {
-  font-size: 12px;
+  line-height: 20px;
+}
+.middle .age text {
+  line-height: 20px;
+  color: #777;
+  font-size: 16px;
 }
 .middle .newestMsg {
-  color: #777;
-  font-size: 14px;
+  font-size: 16px;
   max-width: 200px;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .right .date {
-  margin-top: 25px;
   font-size: 14px;
   color: #777;
-  padding-right: 10px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .right .shopName {
-  position: absolute;
-  bottom: 17px;
-  right: 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
-  display: block;
   flex-direction: row;
   align-items: center;
   max-width: 150px;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 .right image {
   width: 15px;
@@ -191,14 +207,14 @@
 
 .shieldIcon {
   width: 70px;
-  height: 27px;
+  height: 30px;
   background: rgba(232, 17, 35, 1);
   text-align: center;
   line-height: 30px;
   font-size: 15px;
-  color: #eee;
+  color: #fff;
   position: fixed;
-  left: 10px;
+  right: 10px;
   bottom: 10px;
-  border-radius: 7px;
+  border-radius: 2px; 
 }

@@ -25,11 +25,34 @@ Page({
     if(op === 'nologin'){
       that.fetchShopList()
     } else {
+      let tick = 0
+      wx.showLoading({
+        title: '登陆中',
+        mask: true
+      })
       let checkClientId = setInterval(function () {
         if (app.globalData.client_id !== null) {
           app.login(that.fetchShopList, app.globalData.client_id)
           clearInterval(checkClientId)
+        } else if (tick >= 100) {
+          wx.hideLoading()
+          clearInterval(checkClientId)
+          // wx.showModal({
+          //   title: '提示',
+          //   content: '登录失败，请重试',
+          //   success: function (res) {
+          //     if (res.confirm) {
+          //       // console.log('用户点击确定')
+          //       that.onLoad({
+          //         op: 'tologin'
+          //       })
+          //     } else if (res.cancel) {
+          //       that.fetchShopList()
+          //     }
+          //   }
+          // })
         }
+        tick++
       }, 50)
     }
 
@@ -64,6 +87,7 @@ Page({
     let that = this;
     wx.showLoading({
       title: '数据获取中，请稍后',
+      mask: true
     })
     // app.getLocation()
     let interval = setInterval(function () {
@@ -172,7 +196,6 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    console.log('11111')
   },
 
   /**
@@ -185,7 +208,7 @@ Page({
     }
     return {
       title: '你附近有这些商家',
-      path: '/pages/nearList',
+      path: '/pages/nearlist/nearlist',
       success: function (res) {
         // 转发成功
       },

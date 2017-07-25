@@ -28,6 +28,7 @@ Page({
     // tz: 0
     currentPic: 1,
     currentUserId: null,
+    dataOk: false
   },
 
   /**
@@ -39,6 +40,9 @@ Page({
     })
 
     let that = this
+    wx.showLoading({
+      title: '数据获取中，请稍后',
+    })
     wx.request({
       url: app.requestHost + 'Store/get_tuser_info/',
       method: 'POST',
@@ -48,11 +52,15 @@ Page({
       },
       success: function(res){
         console.log(res)
-        that.setData({
-          userInfo: res.data.result,
-          gallery: res.data.result.album,
-          size: res.data.result.album.length
-        })
+        if(res.data.code === 201){
+          that.setData({
+            userInfo: res.data.result,
+            gallery: res.data.result.album,
+            size: res.data.result.album.length,
+            dataOk: true
+          })
+          wx.hideLoading()
+        }
       }
     })
     that.setData({

@@ -30,14 +30,14 @@
         <view class="middle">
           <view class="name"><text>{{item.friendInfo.nickname === "" ? '火星人' : item.friendInfo.nickname}}</text></view>
           <view class="userInfo">
-            <view class="gender"><image src="{{item.friendInfo.gender==='1' ? '/images/boy.png' : '/images/girl.png'}}"></image></view>
+            <view class="gender"><image src="{{item.friendInfo.gender==='1' ? '/images/boy.png' : item.friendInfo.gender==='2' ? '/images/girl.png' : ''}}"></image></view>
             <view class="age" wx:if="{{item.friendInfo.age && item.friendInfo.age !== ''}}"><text>{{item.friendInfo.age}}岁</text></view>
           </view>
           <view class="newestMsg noWrap"><text>{{item.newestMsg}}</text></view>
         </view>
         <view class="right">
           <view class="date">{{item.date}}</view>
-          <view class="shopName noWrap"><image src="/images/zjlxr-dp.png"></image><text>{{item.storeInfo.storeName}}</text></view>
+          <view class="shopName noWrap"><image wx:if="{{item.storeInfo}}" src="/images/zjlxr-dp.png"></image><text>{{item.storeInfo.storeName}}</text></view>
         </view>
       </view>
 

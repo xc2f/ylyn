@@ -1,6 +1,6 @@
 <!--pages/user/user.wxml-->
 
-<view class="container">
+<view class="container" wx:if="{{dataOk}}">
   <view class="banner">
     <view class="userBanner">
       <image class="bannerImg" src="{{userInfo.avatar}}"></image>
@@ -83,3 +83,5 @@
 </view>
 
 </view>
+
+<view class="empty" wx:if="{{!dataOk}}"></view>

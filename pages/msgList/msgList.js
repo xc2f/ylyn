@@ -81,6 +81,10 @@ Page({
               that.setData({
                 isFullStorage: true
               })
+            } else {
+              that.setData({
+                isFullStorage: false
+              })
             }
           }
         })
@@ -93,6 +97,7 @@ Page({
     wx.getStorage({
       key: 'chatRecords',
       success: function (res) {
+        console.log(res)
         let records = res.data
         let recordList = []
         // 获取每条聊天记录的最后一条内容

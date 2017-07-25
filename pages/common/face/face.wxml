@@ -6,14 +6,14 @@
       <!--第一页-->
         <!--每一行-->
         <view class="row row1">
-          <block wx:for="{{faces[0].map1}}" wx:key="key">
+          <view wx:for="{{faces[0].map1}}" wx:key="key" class="item">
             <image src="/images/faces/{{item.value}}.png" data-face="{{item.value}}" bindtap="sendEmoji"></image>
-          </block>
+          </view>
         </view>
         <view class="row row2">
-          <block wx:for="{{faces[0].map2}}" wx:key="key">
+          <view wx:for="{{faces[0].map2}}" wx:key="key" class="item">
             <image src="/images/faces/{{item.value}}.png" data-face="{{item.value}}" bindtap="sendEmoji"></image>
-          </block>
+          </view>
         </view>
         <!--<view class="row row3">
           <block wx:for="{{faces[0].map3}}" wx:key="key">
@@ -25,14 +25,14 @@
       <!--第一页-->
         <!--每一行-->
         <view class="row row1">
-          <block wx:for="{{faces[1].map3}}" wx:key="key">
+          <view wx:for="{{faces[1].map3}}" wx:key="key" class="item">
             <image src="/images/faces/{{item.value}}.png" data-face="{{item.value}}" bindtap="sendEmoji"></image>
-          </block>
+          </view>
         </view>
         <view class="row row2">
-          <block wx:for="{{faces[1].map4}}" wx:key="key">
+          <view wx:for="{{faces[1].map4}}" wx:key="key" class="item">
             <image src="/images/faces/{{item.value}}.png" data-face="{{item.value}}" bindtap="sendEmoji"></image>
-          </block>
+          </view>
         </view>
         <!--<view class="row row3">
           <block wx:for="{{faces[1].map6}}" wx:key="key">

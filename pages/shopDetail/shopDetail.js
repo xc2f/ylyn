@@ -9,7 +9,10 @@ Page({
    */
   data: {
     shop: null,
-    showQuit: true
+    showQuit: true,
+    foodEmpty: false,
+    dataOk: false
+    // checkShopValue: null
   },
 
   /**
@@ -33,6 +36,7 @@ Page({
     //     })        
     //   }
     // })
+
     if(app.globalData.storeInfo === null){
       that.setData({
         showQuit: false
@@ -72,8 +76,10 @@ Page({
         if(res.data.code === 201){
           let result = res.data.result
           result.activity.activity_content = result.activity.length === 0 ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
+          result.food = result.food.length === 0 ? 0 : result.food
           that.setData({
-            shop: result
+            shop: result,
+            dataOk: true
           })
           wx.hideLoading()
         }
@@ -84,13 +90,15 @@ Page({
   mapNavigation(){
     let shop = this.data.shop
     console.log(shop)
-    wx.openLocation({
-      latitude: shop.store_latitude,
-      longitude: shop.store_longitude,
-      scale: 20,
-      name: shop.store_name,
-      address: shop.address
-    })
+    // this.data.checkShopValue = setInterval(() => {
+      wx.openLocation({
+        latitude: shop.store_latitude,
+        longitude: shop.store_longitude,
+        scale: 20,
+        name: shop.store_name,
+        address: shop.address
+      })
+    // }, 200)
   },
   callPhone(){
     wx.makePhoneCall({
@@ -100,20 +108,22 @@ Page({
 
   quit(){
     let storeInfo = app.globalData.storeInfo
+    // console.log(storeInfo, app.TOKEN)
     wx.request({
       url: app.requestHost + 'Store/logout_store/',
       data: {
         token: app.TOKEN,
         store_id: storeInfo.storeId,
-        table_id: storeInfo.table_id
+        table_id: storeInfo.tableId
       },
       success: function(res){
-        console.log(res)
-        // if(res.data.code === 201){
+        // console.log(res)
+        if(res.data.code === 201){
+          app.globalData.storeInfo = null
           wx.redirectTo({
             url: '/pages/nearlist/nearlist',
           })
-        // }
+        }
       }
     })
   },
@@ -165,7 +175,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: this.data.shop.store_name,
-      path: '/pages/shopDetail/shopDetail',
+      path: '/pages/shopDetail/shopDetail?store_id='+this.data.shop.store_id,
       success: function (res) {
         // 转发成功
       },

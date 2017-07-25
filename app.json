@@ -2,10 +2,10 @@
   "pages": [
     "pages/nearlist/nearlist",
     "pages/main/main",
+    "pages/msgList/msgList",
     "pages/shieldList/shieldList",
     "pages/config/config",
     "pages/user/user",
-    "pages/msgList/msgList",
     "pages/shopDetail/shopDetail",
     "pages/chat/chat",
     "pages/changePic/changePic",

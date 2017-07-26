@@ -305,12 +305,17 @@
 .message {
   position: relative;
 }
+.message .msgwrap {
+  height: 25px;
+  position: relative;
+}
 .msgStatus {
   width: 7px;
   height: 7px;
   position: absolute;
   background: red;
   top: 0;
+  right: -5px;
   margin-left: 12px;
   border-radius: 50%;
 }

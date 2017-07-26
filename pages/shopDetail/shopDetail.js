@@ -74,6 +74,10 @@ Page({
       success: function(res){
         console.log(res)
         if(res.data.code === 201){
+          // 设置导航条
+          wx.setNavigationBarTitle({
+            title: res.data.result.store_name
+          })
           let result = res.data.result
           result.activity.activity_content = result.activity.length === 0 ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
           result.food = result.food.length === 0 ? 0 : result.food

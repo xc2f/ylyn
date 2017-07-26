@@ -14,6 +14,7 @@ Page({
     userInfo: null,
     gallery: [],
     size: 0,
+    imgHeight: 0,
 
     tx0: 0,
     tx1: 50,
@@ -36,7 +37,8 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      currentUserId: options.user_id
+      currentUserId: options.user_id,
+      imgHeight: app.globalData.deviceInfo.screenHeight / 2
     })
 
     let that = this

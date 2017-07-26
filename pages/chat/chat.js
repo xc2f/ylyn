@@ -63,9 +63,9 @@ Page({
         ],
         map4: [
           { key: '[(#)]', value: 'e13' },
-          { key: '[(R)]', value: 'e13' },
-          { key: '[({)]', value: 'e13' },
-          { key: '[(})]', value: 'e13' },
+          { key: '[(R)]', value: 'e14' },
+          { key: '[({)]', value: 'e15' },
+          { key: '[(})]', value: 'e16' },
         ],
       }
     ]
@@ -319,9 +319,15 @@ Page({
   },
 
   inputBlur() {
-    this.setData({
-      isFocus: false
-    })
+    if (this.data.inputValue !== '') {
+      this.setData({
+        isFocus: true,
+      })
+    } else {
+      this.setData({
+        isFocus: false,
+      })
+    }
   },
 
   inputHandle(e) {
@@ -349,6 +355,9 @@ Page({
     }
     that.handleMsg('text', value)
 
+    that.setData({
+      inputValue: ''
+    })
     // let multiList = that.parseMsg(inputValue)
 
   },
@@ -361,7 +370,12 @@ Page({
 
     let now = new Date().getTime()
 
-    if(tempMessageList[tempMessageList.length-1].time + (1000 * 60 * 5) < now ){
+    if(tempMessageList.length === 0){
+      tempMessageList.push({
+        content: computeTime(now),
+        type: 'time'
+      })
+    } else if (tempMessageList[tempMessageList.length-1].time + (1000 * 60 * 5) < now ){
       tempMessageList.push({
         content: computeTime(now),
         type: 'time'
@@ -612,18 +626,31 @@ Page({
 
     that.pageName = 'chatWith' + that.data.friendInfo.user_id
 
+    console.log('on show')
+
+    console.log(that.data.messages.length)
+
+
+
+    setTimeout(function () {
     // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
     if(that.data.messages.length !== 0){
 
-      setTimeout(function () {
+      console.log('in')
+
+        console.log('in timeout')
 
         // 第一次发消息没有msgId
         let lastMsgId = that.data.messages[that.data.messages.length - 1].msgId
         // 监听消息
         that.data.checkMsgStatusInterval = setInterval(function () {
+
+          console.log('in interval')
+
           wx.getStorage({
             key: 'chatWith' + that.data.friendInfo.user_id,
             success: function (res) {
+              console.log(res)
               // 这里做消息加上时间处理，如果出现新消息不能滚动到底部，说明异步，不用公共函数
               // that.beautifyMsg(res.data, 10000)
 
@@ -639,7 +666,7 @@ Page({
               // this.setData({
               //   messages: tempMessageList
               // })
-              this.setData({
+              that.setData({
                 messages: res.data
               })
 
@@ -654,8 +681,8 @@ Page({
             },
           })
         }, 2000)
-      }, 1000)
     }
+    }, 1000)
   },
 
   /**

@@ -106,7 +106,7 @@
   display: block;
   color: #222;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .shopInfo, .inSalesInfo {

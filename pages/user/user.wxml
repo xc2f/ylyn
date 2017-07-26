@@ -3,7 +3,7 @@
 <view class="container" wx:if="{{dataOk}}">
   <view class="banner">
     <view class="userBanner">
-      <image class="bannerImg" src="{{userInfo.avatar}}"></image>
+      <image class="bannerImg" src="{{userInfo.avatar}}" mode="aspectFill"></image>
       <view class="userAvatar" bindtap="changeAvatar">
         <image src="{{userInfo.avatar}}"></image>
       </view>
@@ -31,11 +31,11 @@
     <text>空空如也</text>
   </view>
   <view class="wrap s1" wx:if="{{size === 1}}">
-    <image src="{{gallery[0].album}}"></image>
+    <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px"></image>
   </view>
   <view class="wrap s2" wx:if="{{size === 2}}">
-    <image src="{{gallery[0].album}}"></image>
-    <image src="{{gallery[1].album}}"></image>
+    <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px"></image>
+    <image src="{{gallery[1].album}}" style="height: {{imgHeight}}px"></image>
   </view>
   <view class="wrap" wx:if="{{size > 2}}">
     <!--<block wx:for="{{gallery}}">
@@ -43,31 +43,31 @@
         <image src="{{item}}"></image>
       </view>
     </block>-->
-    <view class="g0" wx:if="{{size > 0}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}})">
+    <view class="g0" wx:if="{{size > 0}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[0].album}}"></image>
     </view>
-    <view class="g1" wx:if="{{size > 1}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}})">
+    <view class="g1" wx:if="{{size > 1}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[1].album}}"></image>
     </view>
-    <view class="g2" wx:if="{{size > 2}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}})">
+    <view class="g2" wx:if="{{size > 2}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[2].album}}"></image>
     </view>
-    <view class="g3" wx:if="{{size > 3}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}})">
+    <view class="g3" wx:if="{{size > 3}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[3].album}}"></image>
     </view>
-    <view class="g4" wx:if="{{size > 4}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}})">
+    <view class="g4" wx:if="{{size > 4}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[4].album}}"></image>
     </view>
-    <view class="g5" wx:if="{{size > 5}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}})">
+    <view class="g5" wx:if="{{size > 5}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[5].album}}"></image>
     </view>
-    <view class="g6" wx:if="{{size > 6}}" style="transform: translateX({{tx6}}%) translateZ({{currentPic===6 ? '100px' : currentPic===5 ? '1px': '0px'}})">
+    <view class="g6" wx:if="{{size > 6}}" style="transform: translateX({{tx6}}%) translateZ({{currentPic===6 ? '100px' : currentPic===5 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[6].album}}"></image>
     </view>
-    <view class="g7" wx:if="{{size > 7}}" style="transform: translateX({{tx7}}%) translateZ({{currentPic===7 ? '100px' : currentPic===6 ? '1px': '0px'}})">
+    <view class="g7" wx:if="{{size > 7}}" style="transform: translateX({{tx7}}%) translateZ({{currentPic===7 ? '100px' : currentPic===6 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[7].album}}"></image>
     </view>
-    <view class="g8" wx:if="{{size > 8}}" style="transform: translateX({{tx8}}%) translateZ({{currentPic===8 ? '100px' : currentPic===7 ? '1px': '0px'}})">
+    <view class="g8" wx:if="{{size > 8}}" style="transform: translateX({{tx8}}%) translateZ({{currentPic===8 ? '100px' : currentPic===7 ? '1px': '0px'}}); height: {{imgHeight}}px">
       <image src="{{gallery[8].album}}"></image>
     </view>
     

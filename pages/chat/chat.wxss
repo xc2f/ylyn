@@ -91,7 +91,7 @@
   width: 90%;
   height: 30px;
   line-height: 50px;
-  background: green;
+  background: rgb(255, 185, 0);
   border-radius: 3px;
   color: #fff;
   display: flex;
@@ -161,7 +161,8 @@
 
 .messageBlock.me .message {
   float: right;
-  background: rgb(69, 155, 253);
+  color: #fff;
+  background: #FFB90F;
   margin-right: 15px;
 }
 
@@ -172,7 +173,7 @@
 }
 
 .messageBlock.me .message .angle {
-  border: 7px solid rgb(69, 155, 253);
+  border: 7px solid #FFB90F;
   border-top-color: transparent;
   border-right-color: transparent;
   border-bottom-color: transparent;
@@ -284,12 +285,13 @@
 
 .shield .outer {
   font-size: 16px;
+  height: 20px;
 }
 
 .shield .inner {
   color: red;
   text-decoration: underline;
-  display: inline;
+  float: left;
 }
 
 .shield image {

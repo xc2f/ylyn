@@ -25,53 +25,37 @@ Page({
     if(op === 'nologin'){
       that.fetchShopList()
     } else {
+      // wx.showLoading({
+      //   title: '登陆中',
+      //   // mask: true
+      // })
       let tick = 0
-      wx.showLoading({
-        title: '登陆中',
-        mask: true
-      })
       let checkClientId = setInterval(function () {
-        if (app.globalData.client_id !== null) {
-          app.login(that.fetchShopList, app.globalData.client_id)
+        if (app.globalData.userId !== null) {
+          that.fetchShopList()
           clearInterval(checkClientId)
-        } else if (tick >= 100) {
-          wx.hideLoading()
-          clearInterval(checkClientId)
-          // wx.showModal({
-          //   title: '提示',
-          //   content: '登录失败，请重试',
-          //   success: function (res) {
-          //     if (res.confirm) {
-          //       // console.log('用户点击确定')
-          //       that.onLoad({
-          //         op: 'tologin'
-          //       })
-          //     } else if (res.cancel) {
-          //       that.fetchShopList()
-          //     }
-          //   }
-          // })
-        }
-        tick++
+        } 
+        // else if (tick >= 200) {
+        //   wx.hideLoading()
+        //   clearInterval(checkClientId)
+        //   wx.showModal({
+        //     title: '提示',
+        //     content: '登录失败，请重试',
+        //     success: function (res) {
+        //       if (res.confirm) {
+        //         app.login()
+        //         that.onLoad({
+        //           op: 'tologin'
+        //         })
+        //       } else if (res.cancel) {
+        //         that.fetchShopList()
+        //       }
+        //     }
+        //   })
+        // }
+        // tick++
       }, 50)
     }
-
-    
-    // that.fetchShopList()
-    // 如果本机存有用户个人信息，说明登录过，显示下面的个人信息和消息列表图标
-    // wx.getStorage({
-    //   key: 'meInfo',
-    //   success: function (res) {
-    //     that.setData({
-    //       showMeIcon: true
-    //     })
-    //   },
-    //   fail: function (e) {
-    //     that.setData({
-    //       showMeIcon: false
-    //     })
-    //   }
-    // })
 
     let checkLogin = setInterval(function(){
       if(app.globalData.userId !== null){
@@ -85,19 +69,39 @@ Page({
 
   fetchShopList() {
     let that = this;
-    wx.showLoading({
-      title: '数据获取中，请稍后',
-      mask: true
-    })
-    // app.getLocation()
+    // wx.showLoading({
+    //   title: '数据获取中，请稍后',
+    //   // mask: true
+    // })
+    app.getLocation()
+    let tick = 0
     let interval = setInterval(function () {
       if (app.globalData.coordinate !== null) {
         let coordinate = app.globalData.coordinate
-        // app.globalData.coordinate = null
         // 获取到坐标请求
         that.toFetch(coordinate)
         clearInterval(interval)
-      }
+      } 
+      
+      // else if (tick >= 20) {
+      //   wx.hideLoading()
+      //   clearInterval(interval)
+      //   wx.showModal({
+      //     title: '提示',
+      //     content: '获取位置失败，请重试',
+      //     success: function (res) {
+      //       if (res.confirm) {
+      //         app.getLocation()
+      //         that.onLoad({
+      //           op: 'tologin'
+      //         })
+      //       } else if (res.cancel) {
+      //        wx.hideLoading() 
+      //       }
+      //     }
+      //   })
+      // }
+      // tick++
     }, 500)
   },
 
@@ -105,7 +109,6 @@ Page({
     let that = this
     wx.request({
       url: app.requestHost + 'Store/store_list/',
-      // url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/nearlist',
       method: 'POST',
       data: {
         longitude: coordinate.longitude,

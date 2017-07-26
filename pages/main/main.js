@@ -66,36 +66,34 @@ Page({
     //   that.fetchShopInfo()
     // }
     let tick = 0
-    let checkClientId = setInterval(function () {
-      if (app.globalData.client_id !== null) {
-        app.login(that.fetchShopInfo, app.globalData.client_id)
-        clearInterval(checkClientId)
-      } else if (tick >= 200) {
-        clearInterval(checkClientId)
-        // wx.showModal({
-        //   title: '提示',
-        //   content: '登录失败，请重试',
-        //   success: function (res) {
-        //     if (res.confirm) {
-        //       // console.log('用户点击确定')
-        //       that.onLoad({
-        //         store_id: that.data.qrcodeInfo.store_id,
-        //         table_id: that.data.qrcodeInfo.table_id,
-        //       })
-        //     } else if (res.cancel) {
-        //       wx.redirectTo({
-        //         url: '/pages/nearlist/nearlist',
-        //       })
-        //     }
-        //   }
-        // })
+    let checkLoginStatus = setInterval(function () {
+      if (app.globalData.userId !== null) {
+        that.fetchShopInfo()
+        clearInterval(checkLoginStatus)
       }
-      tick++
+      // else if (tick >= 600) {
+      //   clearInterval(checkClientId)
+      //   wx.showModal({
+      //     title: '提示',
+      //     content: '登录失败，请重试',
+      //     success: function (res) {
+      //       if (res.confirm) {
+      //         // console.log('用户点击确定')
+      //         app.login()
+      //         that.onLoad({
+      //           store_id: that.data.qrcodeInfo.store_id,
+      //           table_id: that.data.qrcodeInfo.table_id,
+      //         })
+      //       } else if (res.cancel) {
+      //         wx.redirectTo({
+      //           url: '/pages/nearlist/nearlist?op=nologin',
+      //         })
+      //       }
+      //     }
+      //   })
+      // }
+      // tick++
     }, 50)
-    // 获取用户信息
-
-    // setInterval(()=>{console.log(this.data.store)}, 3000)
-    // end onload
   },
 
 
@@ -142,10 +140,14 @@ Page({
   },
 
   fetchShopInfo(gender, currentPage){
+    console.log('to fetch shop info')
     let that = this
-    // app.getLocation()
+    app.getLocation()
+    let tick = 0
     let interval = setInterval(function () {
+      // console.log('in interval')
       if (app.globalData.coordinate !== null) {
+        console.log('get location success')
         let coordinate = app.globalData.coordinate
         // 是否在本店
         that.isInStore(coordinate, gender, currentPage)
@@ -153,6 +155,28 @@ Page({
         // 获取到坐标请求
         clearInterval(interval)
       }
+      //  else if (tick >= 60) {
+      //   clearInterval(interval)
+      //   wx.showModal({
+      //     title: '提示',
+      //     content: '获取位置失败，请重试',
+      //     success: function (res) {
+      //       if (res.confirm) {
+      //         // console.log('用户点击确定')
+      //         app.getLocation()
+      //         that.onLoad({
+      //           store_id: that.data.qrcodeInfo.store_id,
+      //           table_id: that.data.qrcodeInfo.table_id,
+      //         })
+      //       } else if (res.cancel) {
+      //         wx.redirectTo({
+      //           url: '/pages/nearlist/nearlist?op=nologin',
+      //         })
+      //       }
+      //     }
+      //   })
+      // }
+      // tick++
     }, 500)
 
   },
@@ -179,6 +203,10 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
+        // 设置导航条
+        wx.setNavigationBarTitle({
+          title: res.data.result.store_name
+        })
         console.log(res.data.result)
         that.setData({
           store: res.data.result,

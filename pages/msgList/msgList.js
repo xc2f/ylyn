@@ -277,7 +277,7 @@ Page({
     let that = this
     that.data.checkMsgStatusInterval = setInterval(function(){
       that.renderList()
-    }, 3000)
+    }, 2000)
 
     // 检查是否有屏蔽用户
     that.checkShield()

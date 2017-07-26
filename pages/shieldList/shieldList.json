@@ -1,1 +1,5 @@
-{}
+{
+  "enablePullDownRefresh": false,
+  "backgroundColor": "#fff",
+  "navigationBarTitleText": "屏蔽列表"
+}

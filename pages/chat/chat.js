@@ -579,6 +579,7 @@ Page({
 
   // 发送微信号
   sendCard() {
+    let that = this
     console.log(this.data.meInfo.wechat_num)
     let value = this.data.meInfo.wechat_num
     if (value.trim() === '') {
@@ -596,7 +597,17 @@ Page({
         }
       })
     } else {
-      this.handleMsg('card', '我的微信号：' + value)
+      wx.showModal({
+        title: '提示',
+        content: '发送微信号？',
+        success: function(res){
+          if (res.confirm) {
+            that.handleMsg('card', '我的微信号：' + value)
+          } else {
+            console.log('用户点击取消')
+          }
+        }
+      })
     }
   },
 

@@ -55,6 +55,10 @@ Page({
       success: function(res){
         console.log(res)
         if(res.data.code === 201){
+          // 设置导航条
+          wx.setNavigationBarTitle({
+            title: res.data.result.nickname
+          })
           that.setData({
             userInfo: res.data.result,
             gallery: res.data.result.album,

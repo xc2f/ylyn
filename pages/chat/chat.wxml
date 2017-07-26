@@ -2,11 +2,11 @@
 <view class="container">
   <view class="shield" wx:if="{{showShield}}">
     <view class="outer" wx:if="{{!isShield}}">
-      <view style="float: left;">如果你不想接受对方消息可以选择</view>
+      <view style="float: left;">如果你不想接受对方消息可以</view>
       <view class="inner" bindtap="toShield">屏蔽ta</view>
     </view>
     <view class="outer" wx:if="{{isShield}}">
-      <view style="float: left;">你已将对方屏蔽可以选择</view>
+      <view style="float: left;">你已将对方屏蔽可以</view>
       <view class="inner" bindtap="toShield">拉回ta</view>
     </view>
     <image src="/images/close2.png" bindtap="closeShield"></image>

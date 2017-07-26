@@ -1,6 +1,5 @@
 {
-  "window": {
-    "enablePullDownRefresh": false,
-    "backgroundColor": "#fff"
-  }
+  "enablePullDownRefresh": false,
+  "backgroundColor": "#fff",
+  "navigationBarTitleText": "消息列表"
 }

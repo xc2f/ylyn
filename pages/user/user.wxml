@@ -14,7 +14,11 @@
         <view class="dot"></view>
         <view class="line"></view>
       </view>
-      <view class="bottomText">{{userInfo.introduction}}</view>
+      <view class="userDetail">
+        <text wx:if="{{userInfo.gender}}">{{userInfo.gender === '1' ? '男' : '女'}}</text>
+        <text wx:if="{{userInfo.age}}">{{userInfo.age}}岁</text>
+      </view>
+      <view class="bottomText noWrap">{{userInfo.introduction}}</view>
       <view class="flipConner"  bindtap="switchToShop" wx:if="{{userId === userInfo.user_id}}">
         <image class="flipConnerImg" src="/images/flipConner.png"></image>
         <text class="flipConnerText">首页</text>
@@ -27,6 +31,10 @@
     <text>个人展示</text>
   </view>
 <view class="gallery">
+  <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
+    <image src="/images/tall.png"></image>
+    <text>{{userInfo.height}}</text>
+  </view>
   <view class="wrap s0" wx:if="{{size === 0}}">
     <text>空空如也</text>
   </view>

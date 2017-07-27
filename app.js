@@ -7,6 +7,7 @@ App({
     deviceInfo: null,
     checkLocationInterval: null,
     webSocketError: false,
+    connectTimes: 0,
     coordinate: null,
     userId: null,
     storeInfo: null,
@@ -115,7 +116,46 @@ App({
         console.log(data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
-          that.login()
+          if(that.globalData.storeInfo === null){
+            if (that.globalData.connectTimes === 0){
+              that.login()
+              that.globalData.connectTimes++
+            } else {
+              wx.request({
+                url: that.requestHost + 'Store/ws_reconnection/',
+                method: 'POST',
+                data: {
+                  token: that.TOKEN,
+                  client_id: that.globalData.client_id,
+                  type: 2
+                },
+                success: function (res) {
+                  console.log(res)
+                  if (res.data.code === 201) {
+                    console.log('重连成功！')
+                  }
+                }
+              })
+            }
+          } else {
+            wx.request({
+              url: that.requestHost + 'Store/ws_reconnection/',
+              method: 'POST',
+              data: {
+                token: that.TOKEN,
+                store_id: that.globalData.storeInfo.storeId,
+                table_id: that.globalData.storeInfo.tableId,
+                client_id: that.globalData.client_id,
+                type: 1
+              },
+              success: function(res){
+                console.log(res)
+                if(res.data.code === 201){
+                  console.log('重连成功！')
+                }
+              }
+            })
+          }
         } else {
           that.loadMsg(data)
         }

@@ -11,7 +11,7 @@
   top: 0;
   left: 0;
   right: 0; */
-  height: 130px;
+  height: 135px;
   /* z-index: 99; */
 }
 .banner .wrap {
@@ -32,6 +32,7 @@
 
 .userBanner {
   width: 100%;
+  height: 100%;
   background: transparent;
   position: relative;
   display: flex;
@@ -40,7 +41,6 @@
   align-items: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  height: 130px;
   overflow: hidden;
 }
 
@@ -68,12 +68,19 @@
   font-weight: bold;
   font-size: 20px;
 }
-.bottomText {
+.userDetail {
+  margin: 5px 0;
+}
+.userDetail text {
+  margin: 0 5px;
+}
+.userDetail, .bottomText {
   font-size: 14px;
   color: #777;
-  margin-top: 10px;
 }
-
+.bottomText {
+  max-width: 200px;
+}
 .userBanner .userAvatar {
   width: 50px;
   height: 50px;
@@ -234,4 +241,26 @@
 }
 .s2 image {
   margin: 3px;
+}
+
+.showTall {
+  position: absolute;
+  width: 80px;
+  height: 25px;
+  left:70%; 
+  top:50%;
+  z-index:999;
+  /* box-shadow: 2px 2px 2px rgba(0, 0, 0, .3); */
+}
+.showTall image {
+  width: 100%;
+  height: 100%;
+}
+.showTall text {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  height: 25px;
+  line-height: 25px;
+  font-size: 14px;
 }

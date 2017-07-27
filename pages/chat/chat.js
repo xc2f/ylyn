@@ -124,11 +124,13 @@ Page({
 
     // 滚动到页面底部
     let checkToViewTimeStamp = new Date().getTime()
+    console.time()
     let checkToView = setInterval(function () {
-      if (that.data.messages.length !== 0) {
+      if (that.data.messages.length !== 0 && new Date().getTime() - checkToViewTimeStamp > 1000) {
         that.setData({
           toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
         })
+        console.timeEnd()
         clearInterval(checkToView)
       }
       if (new Date().getTime() - checkToViewTimeStamp > 5000 && that.data.messages.length === 0) {

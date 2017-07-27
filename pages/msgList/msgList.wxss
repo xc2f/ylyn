@@ -92,7 +92,7 @@
 .middle .name {
   font-size: 20px;
   font-weight: bold;
-  flex: 1.5;
+  flex: 1.2;
   display: flex;
   align-items: center;
 }
@@ -105,11 +105,13 @@
 .middle .userInfo .gender {
   height: 20px;
   line-height: 20px;
+  display:flex;
+  align-items:center;
 }
 .middle .userInfo .gender image {
   width: 16px;
   height: 16px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 .middle .userInfo .age {
   line-height: 20px;
@@ -117,14 +119,15 @@
 .middle .age text {
   line-height: 20px;
   color: #777;
-  font-size: 16px;
+  font-size: 14px;
 }
 .middle .newestMsg {
   font-size: 16px;
-  max-width: 200px;
+  max-width: 150px;
   flex: 1;
-  display: flex;
-  align-items: center;
+  /* display: flex;
+  align-items: center; 
+  flex-wrap: wrap;  */
 }
 
 .right .date {

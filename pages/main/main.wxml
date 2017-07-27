@@ -7,7 +7,7 @@
         <image class="bannerImg" src="{{store.store_bgimg === '' ? '/images/banner.png' : store.store_bgimg}}" animation="{{bannerSwitchAnimation}}"></image>
         <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}">
           <view class="shopAvatar">
-            <image src="{{store.store_logo}}"></image>
+            <image src="{{store.store_logo==='' ? '/images/defaultLogo.png' : store.store_logo}}"></image>
           </view>
         </navigator>
         <view class="shopName">
@@ -125,5 +125,5 @@
 
 <view class="loading" wx:if="{{store === null}}">
   <image src="/images/loading.gif"></image>
-  <text>店铺在赶来的路上</text>
+  <text>店铺正马不停蹄地向你赶来</text>
 </view>

@@ -118,6 +118,8 @@
   max-width: 60%;
   align-items: center;
   position: relative;
+  word-break: break-word;
+  line-height: 1.5
 }
 
 .faceMsg {
@@ -161,7 +163,7 @@
 
 .messageBlock.me .message {
   float: right;
-  color: #fff;
+  color: #000;
   background: #FFB90F;
   margin-right: 15px;
 }

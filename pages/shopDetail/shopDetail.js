@@ -9,7 +9,7 @@ Page({
    */
   data: {
     shop: null,
-    showQuit: true,
+    showQuit: false,
     foodEmpty: false,
     dataOk: false
     // checkShopValue: null
@@ -37,11 +37,6 @@ Page({
     //   }
     // })
 
-    if(app.globalData.storeInfo === null){
-      that.setData({
-        showQuit: false
-      })
-    }
   },
 
   fetchShop(options){
@@ -79,6 +74,12 @@ Page({
             title: res.data.result.store_name
           })
           let result = res.data.result
+          let gStoreInfo = app.globalData.storeInfo
+          if (gStoreInfo !== null && gStoreInfo.storeId === result.store_id) {
+            that.setData({
+              showQuit: true
+            })
+          }
           result.activity.activity_content = result.activity.length === 0 ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
           result.food = result.food.length === 0 ? 0 : result.food
           that.setData({
@@ -112,7 +113,7 @@ Page({
 
   quit(){
     let storeInfo = app.globalData.storeInfo
-    // console.log(storeInfo, app.TOKEN)
+    console.log(storeInfo)
     wx.request({
       url: app.requestHost + 'Store/logout_store/',
       data: {
@@ -121,8 +122,8 @@ Page({
         table_id: storeInfo.tableId
       },
       success: function(res){
-        // console.log(res)
-        if(res.data.code === 201){
+        console.log(res)
+        if(res.data.code === 201 || res.data.code === 102){
           app.globalData.storeInfo = null
           wx.redirectTo({
             url: '/pages/nearlist/nearlist',

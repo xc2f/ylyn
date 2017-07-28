@@ -97,7 +97,7 @@ Page({
     wx.getStorage({
       key: 'chatRecords',
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         let records = res.data
         let recordList = []
         // 获取每条聊天记录的最后一条内容
@@ -322,41 +322,6 @@ Page({
   clearStorage(){
     wx.clearStorage()
   },
-
-  cstp(){
-    let that = this
-    wx.chooseImage({
-      count: 1, // 默认9
-      sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
-      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-      success: function (res) {
-        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-        var tempFilePaths = res.tempFilePaths
-        var reader = new FileReader();
-        reader.readAsDataURL(new Blob(tempFilePaths))
-        reader.onload = function(e){
-          var arrayBuffer = reader.result;
-          console.log(arrayBuffer)
-          // var base64 = wx.arrayBufferToBase64(arrayBuffer)
-          that.setData({
-            testSrc: arrayBuffer
-          })
-        }
-        // var reader = new FileReader();
-        // reader.onload = function (e) {
-        //   var arrayBuffer = reader.result;
-        //   var base64 = wx.arrayBufferToBase64(arrayBuffer)
-        //   console.log("base64===:" + base64);
-        // }
-      }
-    })
-  },
-
-  delcos(){  
-
-  deleteFile('userAvatar', 'http://sh.file.myqcloud.com/files/v2/1253743657/yuanlinela/userAvatar/avatar-ba964cda-d4cc-355a-14fe-59439868c188-1499325633335.pngs')
-
-  }
 
 
 })

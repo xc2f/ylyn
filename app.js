@@ -1,5 +1,4 @@
 import { requestHost, socketUrl } from './untils/config.js'
-import { computeTime } from './untils/moment.js'
 
 App({
 
@@ -439,7 +438,7 @@ App({
                   console.log(getCurrentPages())
                   wx.hideLoading()
                   console.log('获取位置失败')
-                  wx.showModal({
+                  let xx = wx.showModal({
                     title: '提示',
                     content: '获取位置信息失败，请打开GPS后重试',
                     success: function (res) {
@@ -501,7 +500,7 @@ App({
       if (messageList[messageList.length - 1].time + (1000 * 60 * 5) < now) {
         console.log('in')
         messageList.push({
-          content: computeTime(now),
+          content: now,
           type: 'time'
         })
       }
@@ -515,7 +514,7 @@ App({
     } else {
       let messageList = []
       messageList.push({
-        content: computeTime(now),
+        content: now,
         type: 'time'
       })
       messageList.push(postData)

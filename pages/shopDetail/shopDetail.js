@@ -97,11 +97,17 @@ Page({
     console.log(shop)
     // this.data.checkShopValue = setInterval(() => {
       wx.openLocation({
-        latitude: shop.store_latitude,
-        longitude: shop.store_longitude,
+        latitude: parseFloat(shop.store_latitude),
+        longitude: parseFloat(shop.store_longitude),
         scale: 20,
         name: shop.store_name,
-        address: shop.address
+        address: shop.address,
+        success: function(res){
+          console.log(res)
+        },
+        fail: function(err) {
+          console.log(err)
+        }
       })
     // }, 200)
   },

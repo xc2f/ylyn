@@ -12,7 +12,7 @@
     <image src="/images/close2.png" bindtap="closeShield"></image>
   </view>
   <scroll-view class="chatBody" scroll-y="{{true}}" style="height: {{chatBodyHeight}}px;" bindtap="inputFocus" scroll-into-view="{{toView}}">
-    <block wx:for="{{messages}}" wx:key="message_id">
+    <block wx:for="{{messages}}" wx:key="">
 
 
       <view class="time" wx:if="{{item.type==='time'}}">
@@ -81,7 +81,7 @@
         <image src="/images/card.png"></image>
       </view>
       <view class="inputWrap">
-        <input class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{value}}" bindinput="inputHandle" cursor-spacing='10' maxlength="-1" />
+        <input class="textarea" bindfocus="inputFocus" bindblur="inputBlur" value="{{value}}" bindinput="inputHandle" cursor-spacing='10' maxlength="-1" confirm-type='send' bindconfirm='submit' confirm-hold />
       </view>
       <view class="face" bindtap="toggleFace">
         <image src="/images/face.png"></image>

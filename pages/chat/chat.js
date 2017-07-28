@@ -6,6 +6,7 @@ import { upload } from '../../untils/update.js'
 
 import { computeTime } from '../../untils/moment.js'
 
+import objDeepCopy from '../../untils/objDeepCopy.js'
 
 var app = getApp()
 
@@ -105,10 +106,16 @@ Page({
     wx.getStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       success: function (res) {
+        let messages = objDeepCopy(res.data)
+        messages.map(item => {
+          if (item.type === 'time') {
+            item.content = computeTime(item.content)
+          }
+        })
 
         // that.beautifyMsg(res.data, 2000)
         that.setData({
-          messages: res.data
+          messages: messages
         })
 
       },
@@ -124,13 +131,13 @@ Page({
 
     // 滚动到页面底部
     let checkToViewTimeStamp = new Date().getTime()
-    console.time()
+    // console.time()
     let checkToView = setInterval(function () {
       if (that.data.messages.length !== 0 && new Date().getTime() - checkToViewTimeStamp > 1000) {
         that.setData({
           toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
         })
-        console.timeEnd()
+        // console.timeEnd()
         clearInterval(checkToView)
       }
       if (new Date().getTime() - checkToViewTimeStamp > 5000 && that.data.messages.length === 0) {
@@ -178,27 +185,6 @@ Page({
       },
     })
 
-  },
-
-  // 主要是给消息添加时间
-  beautifyMsg(messages, during){
-    let that = this
-    let initTime = 0
-    // debugger
-    messages.map((item, idx) => {
-      if (item.time > (initTime + during)){
-        messages.splice(idx, 0, {
-          content: fromNow(item.time),
-          type: 'time'
-        })
-      }
-      // 在if外面更新initTime是超过一定时间没有消息则显示时间，否则是与第一次显示的时间做比较
-      initTime = item.time
-    })
-
-    that.setData({
-      messages: messages,
-    })
   },
 
 
@@ -264,32 +250,41 @@ Page({
         if (res.data.code === 201 || res.data.code === 102) {
 
 
-          let tempMessageList = that.data.messages;
+          let tempMessageList = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id);
           let now = new Date().getTime()
 
           if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
             tempMessageList.push({
-              content: computeTime(now),
+              content: now,
               type: 'time'
             })
           }
+
 
           let postData = that.refreshShield(type === 'toShield' ? true : false, type === 'toShield' ? '您已将对方消息屏蔽' : '您已取消屏蔽', res.data.result.time * 1000)
 
           tempMessageList.push(postData)
 
+          let showList = objDeepCopy(tempMessageList)
+
+          showList.map(item => {
+            if (item.type === 'time') {
+              item.content = computeTime(item.content)
+            }
+          })
+
           that.setData({
-            messages: tempMessageList,
+            messages: showList,
           })
 
           // 消息发送后滚动到底部，在上一setData后
           that.setData({
-            toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
+            toView: 'm' + tempMessageList[tempMessageList.length - 1].msgId
           })
 
           wx.setStorage({
             key: 'chatWith' + that.data.friendInfo.user_id,
-            data: that.data.messages,
+            data: tempMessageList,
           })
 
           // 将本次会话记录写入消息列表
@@ -358,7 +353,7 @@ Page({
     that.handleMsg('text', value)
 
     that.setData({
-      inputValue: ''
+      inputValue: '',
     })
     // let multiList = that.parseMsg(inputValue)
 
@@ -368,18 +363,18 @@ Page({
   // 消息处理函数
   handleMsg(type, value) {
     let that = this
-    let tempMessageList = that.data.messages;
-
+    let tempMessageList = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id);
+    // debugger
     let now = new Date().getTime()
 
-    if(tempMessageList.length === 0){
+    if (tempMessageList.length === 0) {
       tempMessageList.push({
-        content: computeTime(now),
+        content: now,
         type: 'time'
       })
-    } else if (tempMessageList[tempMessageList.length-1].time + (1000 * 60 * 5) < now ){
+    } else if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
       tempMessageList.push({
-        content: computeTime(now),
+        content: now,
         type: 'time'
       })
     }
@@ -397,22 +392,39 @@ Page({
 
     tempMessageList.push(postData)
 
+    // console.log(tempMessageList)
+
+    // 深拷贝
+    let showList = objDeepCopy(tempMessageList)
+
+    // console.log(tempMessageList)
+
+    showList.map(item => {
+      if (item.type === 'time') {
+        console.log(item)
+        item.content = computeTime(item.content)
+      }
+    })
+    // debugger
+
+    // console.log(showList)
+
     that.setData({
-      messages: tempMessageList,
+      messages: showList,
       value: '',
       isFocus: false,
     })
 
     // 消息发送后滚动到底部，在上一setData后
     that.setData({
-      toView: 'm' + that.data.messages[that.data.messages.length - 1].msgId
+      toView: 'm' + tempMessageList[tempMessageList.length - 1].msgId
     })
-
 
     wx.setStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
-      data: that.data.messages,
+      data: tempMessageList,
     })
+
 
     // console.log(that.data.friendInfo.user_id, postData, that.data.storeId)
     wx.request({
@@ -447,8 +459,18 @@ Page({
             break
           }
         }
+
+        // 深拷贝
+        let showList = objDeepCopy(messages)
+
+        showList.map(item => {
+          if (item.type === 'time') {
+            item.content = computeTime(item.content)
+          }
+        })
+
         that.setData({
-          messages: messages
+          messages: showList
         })
         wx.setStorage({
           key: 'chatWith' + that.data.friendInfo.user_id,
@@ -477,8 +499,17 @@ Page({
             break
           }
         }
+        // 深拷贝
+        let showList = objDeepCopy(messages)
+
+        showList.map(item => {
+          if (item.type === 'time') {
+            item.content = computeTime(item.content)
+          }
+        })
+
         that.setData({
-          messages: messages
+          messages: showList
         })
         wx.setStorage({
           key: 'chatWith' + that.data.friendInfo.user_id,
@@ -602,7 +633,7 @@ Page({
       wx.showModal({
         title: '提示',
         content: '发送微信号？',
-        success: function(res){
+        success: function (res) {
           if (res.confirm) {
             that.handleMsg('card', '我的微信号：' + value)
           } else {
@@ -646,10 +677,10 @@ Page({
 
 
     setTimeout(function () {
-    // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
-    if(that.data.messages.length !== 0){
+      // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
+      if (that.data.messages.length !== 0) {
 
-      console.log('in')
+        console.log('in')
 
         console.log('in timeout')
 
@@ -663,7 +694,7 @@ Page({
           wx.getStorage({
             key: 'chatWith' + that.data.friendInfo.user_id,
             success: function (res) {
-              console.log(res)
+              // console.log(res)
               // 这里做消息加上时间处理，如果出现新消息不能滚动到底部，说明异步，不用公共函数
               // that.beautifyMsg(res.data, 10000)
 
@@ -679,11 +710,18 @@ Page({
               // this.setData({
               //   messages: tempMessageList
               // })
-              that.setData({
-                messages: res.data
+              let messages = objDeepCopy(res.data)
+              messages.map(item => {
+                if (item.type === 'time') {
+                  item.content = computeTime(item.content)
+                }
               })
 
-              let newMsgId = that.data.messages[that.data.messages.length - 1].msgId
+              that.setData({
+                messages: messages
+              })
+
+              let newMsgId = messages[messages.length - 1].msgId
               if (lastMsgId !== newMsgId) {
                 // 消息发送后滚动到底部，在上一setData后
                 that.setData({
@@ -694,7 +732,7 @@ Page({
             },
           })
         }, 2000)
-    }
+      }
     }, 1000)
   },
 

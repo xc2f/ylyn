@@ -49,6 +49,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-top: 2px;
 }
 .userName .line {
   width: 30px;
@@ -69,7 +70,7 @@
   font-size: 20px;
 }
 .userDetail {
-  margin: 5px 0;
+  margin: 3px 0 0;
 }
 .userDetail text {
   margin: 0 5px;
@@ -79,7 +80,8 @@
   color: #777;
 }
 .bottomText {
-  max-width: 200px;
+  margin-top: 2px;
+  max-width: 80%;
 }
 .userBanner .userAvatar {
   width: 50px;
@@ -88,7 +90,7 @@
   position: relative;
   /*top: -10px;*/
   /*z-index: 99;*/
-  margin-bottom: 10px;
+   margin-top: 5px; 
 }
 
 .userBanner .userAvatar image {
@@ -205,7 +207,7 @@
   background: #fff;
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   /* position: fixed; */
   width: 100%;
 }
@@ -258,7 +260,7 @@
 }
 .showTall text {
   position: absolute;
-  right: 10px;
+  right: 7px;
   top: 0;
   height: 25px;
   line-height: 25px;

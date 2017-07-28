@@ -40,4 +40,5 @@ export const computeTime = function(date){
       return (new Date(date).getMonth() + 1) + '月' + new Date(date).getDate() + '日 ' + time
     }
   }
+  // return (new Date(date).getMonth() + 1) + '月' + new Date(date).getDate() + '日 ' + time
 }

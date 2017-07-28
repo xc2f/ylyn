@@ -172,6 +172,7 @@ Page({
         hasNewMsg: !app.globalData.msgClean
       })
     }, 500)
+
   },
 
   /**

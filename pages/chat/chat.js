@@ -343,11 +343,13 @@ Page({
   // 消息处理函数
   handleMsg(type, value) {
     let that = this
-    let tempMessageList = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id);
+    var tempMessageList = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id);
+    // console.log(tempMessageList)
     // debugger
     let now = new Date().getTime()
 
-    if (tempMessageList.length === 0) {
+    if (!tempMessageList) {
+      tempMessageList = []
       tempMessageList.push({
         content: now,
         type: 'time'
@@ -424,6 +426,18 @@ Page({
             if (res.data.code === 201) {
               messages[i].status = 'sendOk'
               messages[i].time = res.data.result.time * 1000
+              if (that.data.isShield){
+                that.setData({
+                  isShield: false
+                })
+
+                wx.setStorage({
+                  key: 'chatStatusWith' + that.data.friendInfo.user_id,
+                  data: {
+                    isShield: false
+                  }
+                })
+              }
             } else {
               messages[i].status = 'fail'
               // 失败消息的时间？
@@ -434,6 +448,18 @@ Page({
               if (res.data.code === 102) {
                 // 您已将对方的消息屏蔽
                 messages.push(that.refreshShield(true, '消息可能送往火星了', null))
+                if (!that.data.isShield) {
+                  that.setData({
+                    isShield: true
+                  })
+
+                  wx.setStorage({
+                    key: 'chatStatusWith' + that.data.friendInfo.user_id,
+                    data: {
+                      isShield: true
+                    }
+                  })
+                }
               }
             }
             break
@@ -586,7 +612,7 @@ Page({
               url: '/pages/config/config',
             })
           } else if (res.cancel) {
-            console.log('用户点击取消')
+            // console.log('用户点击取消')
           }
         }
       })
@@ -598,7 +624,7 @@ Page({
           if (res.confirm) {
             that.handleMsg('card', '我的微信号：' + value)
           } else {
-            console.log('用户点击取消')
+            // console.log('用户点击取消')
           }
         }
       })
@@ -630,12 +656,6 @@ Page({
     })
 
     that.pageName = 'chatWith' + that.data.friendInfo.user_id
-
-    console.log('on show')
-
-    console.log(that.data.messages.length)
-
-
 
     setTimeout(function () {
       // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部

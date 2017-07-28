@@ -73,7 +73,7 @@ Page({
               fileSize += res.fileList[i].size / 1000
             }
             let totalSize = storageSize + fileSize
-            console.log('totalSize: ' + totalSize)
+            // console.log('totalSize: ' + totalSize)
             if (totalSize > limitSize - 1024 * 2) {
               that.setData({
                 isFullStorage: true
@@ -100,7 +100,7 @@ Page({
     wx.getStorage({
       key: 'chatRecords',
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         let records = res.data
         let recordList = []
         // 获取每条聊天记录的最后一条内容
@@ -162,7 +162,7 @@ Page({
         })
       },
       fail: function (res) {
-        console.log('no records')
+        // console.log('no records')
       }
     })
   },
@@ -196,7 +196,7 @@ Page({
     wx.removeStorage({
       key: 'chatWith'+userId,
       success: function(res) {
-        console.log('chatWith' + userId + '已删除!')
+        // console.log('chatWith' + userId + '已删除!')
       },
     })
     // 从chatRecords中移除该key

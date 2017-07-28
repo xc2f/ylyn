@@ -54,7 +54,7 @@ export const upload = function (dirName, filePath, fileName, callback) {
         callback(JSON.parse(res.data))
       },
       fail: function(err){
-        console.log(err)
+        // console.log(err)
       }
     })
   })
@@ -72,7 +72,7 @@ export const deleteFile = function (dirName, fileName, callback){
         op: 'delete'
       },
       success: function(res){
-        console.log(res)
+        // console.log(res)
       }
     })
   })
@@ -90,7 +90,7 @@ export const getFileInfo = function (dirName, fileName, callback) {
       //   'op': 'delete'
       // },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
       }
     })
   })

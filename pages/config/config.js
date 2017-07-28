@@ -43,7 +43,7 @@ Page({
 
 
   changePic(){
-    wx.navigateTo({
+    wx.redirectTo({
       url: '/pages/changePic/changePic',
     })
   },
@@ -72,7 +72,7 @@ Page({
         nickname: this.data.userInfo.nickname
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
       }
     })
     wx.setStorage({
@@ -105,7 +105,7 @@ Page({
         wechat_num: this.data.userInfo.wechat_num
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
       }
     })
     wx.setStorage({
@@ -127,7 +127,7 @@ Page({
         gender: this.data.userInfo.gender
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
       }
     })
     wx.setStorage({
@@ -160,7 +160,7 @@ Page({
         age: this.data.userInfo.age
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
       }
     })
     wx.setStorage({
@@ -214,7 +214,7 @@ tallSubmit(){
       height: this.data.userInfo.height
     },
     success: function (res) {
-      console.log(res)
+      // console.log(res)
     }
   })
   wx.setStorage({
@@ -247,7 +247,7 @@ introSubmit() {
       introduction: this.data.userInfo.introduction
     },
     success: function (res) {
-      console.log(res)
+      // console.log(res)
     }
   })
   wx.setStorage({
@@ -256,7 +256,7 @@ introSubmit() {
   })
 },
   postConfig(){
-    console.log(this.data.userInfo)
+    // console.log(this.data.userInfo)
   },
 
   cleanAccount(){
@@ -273,7 +273,7 @@ introSubmit() {
             url: '/pages/nearlist/nearlist?op=nologin',
           })
         } else if (res.cancel) {
-          console.log('用户点击取消')
+          // console.log('用户点击取消')
         }
       }
     })

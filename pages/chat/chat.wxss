@@ -115,7 +115,7 @@
   padding: 10px;
   border-radius: 7px;
   display: flex;
-  max-width: 60%;
+  max-width: 50%;
   align-items: center;
   position: relative;
   word-break: break-word;
@@ -151,7 +151,7 @@
   float: right;
   padding-right: 3px;
   color: red;
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .messageBlock.me image.avatar {

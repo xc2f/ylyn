@@ -99,7 +99,7 @@
 .middle .userInfo {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
 }
 .middle .userInfo .gender {
@@ -122,7 +122,7 @@
   font-size: 14px;
 }
 .middle .newestMsg {
-  font-size: 16px;
+  font-size: 14px;
   max-width: 150px;
   flex: 1;
   /* display: flex;
@@ -131,7 +131,7 @@
 }
 
 .right .date {
-  font-size: 14px;
+  font-size: 12px;
   color: #777;
   flex: 1;
   display: flex;

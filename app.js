@@ -84,7 +84,7 @@ App({
     })
 
     wx.onSocketOpen(function (res) {
-      console.log('WebSocket连接已打开！')
+      // console.log('WebSocket连接已打开！')
 
       // 监听消息
       wx.onSocketMessage(function (res) {
@@ -110,7 +110,7 @@ App({
                 success: function (res) {
                   // console.log(res)
                   if (res.data.code === 201) {
-                    console.log('重连成功！')
+                    // console.log('重连成功！')
                   }
                 }
               })
@@ -129,7 +129,7 @@ App({
               success: function(res){
                 // console.log(res)
                 if(res.data.code === 201){
-                  console.log('重连成功！')
+                  // console.log('重连成功！')
                 }
               }
             })
@@ -141,13 +141,13 @@ App({
     })
 
     wx.onSocketError(function (res) {
-      console.log(res)
+      // console.log(res)
     })
 
     wx.onSocketClose(function (res) {
       that.globalData.client_id = null
       wx.closeSocket()
-      console.log('WebSocket 已关闭！')
+      // console.log('WebSocket 已关闭！')
       wx.connectSocket({
         url: socketUrl
       })
@@ -160,11 +160,11 @@ App({
     //   title: '登陆中',
     //   mask: true
     // })
-    console.log('login --------------')
+    // console.log('login --------------')
     let that = this
     let token = wx.getStorageSync('TOKEN')
     if (token) {
-      console.log('login with token')
+      // console.log('login with token')
       that.TOKEN = token
       wx.request({
         url: that.requestHost + 'User/token_login/',
@@ -208,7 +208,7 @@ App({
         }
       })
     } else {
-      console.log('login without token')
+      // console.log('login without token')
       wx.login({
         success: function (res) {
           if (res.code) {
@@ -233,7 +233,7 @@ App({
                                   that.getLocation()
                                 } else {
                                   wx.hideLoading()
-                                  console.log('用户再次拒绝微信授权')
+                                  // console.log('用户再次拒绝微信授权')
                                   wx.redirectTo({
                                     url: '/pages/nearlist/nearlist?op=nologin',
                                   })
@@ -242,7 +242,7 @@ App({
                             })
                           } else if (res.cancel) {
                             wx.hideLoading()
-                            console.log('用户点击取消')
+                            // console.log('用户点击取消')
                             wx.redirectTo({
                               url: '/pages/nearlist/nearlist?op=nologin',
                             })
@@ -262,7 +262,7 @@ App({
               content: '登录失败',
               showCancel: false
             })
-            console.log('无code！' + res.errMsg)
+            // console.log('无code！' + res.errMsg)
           }
         },
         fail: function (res) {
@@ -272,7 +272,7 @@ App({
             content: '请确认网络是否畅通',
             showCancel: false
           })
-          console.log('------wx login fail--------')
+          // console.log('------wx login fail--------')
         }
       });
     }
@@ -354,7 +354,7 @@ App({
   },
 
   getLocation(callback) {
-    console.log('get location')
+    // console.log('get location')
     let that = this
     // get setting bug
     if(wx.getSetting){
@@ -381,7 +381,7 @@ App({
                               // callback() || null
                             },
                             fail: function () {
-                              console.log('用户重新授权，但获取位置失败')
+                              // console.log('用户重新授权，但获取位置失败')
                               wx.showToast({
                                 icon: 'loading',
                                 title: '获取地理位置失败',
@@ -392,13 +392,13 @@ App({
                           that.login()
                         } else {
                           wx.hideLoading()
-                          console.log('用户再次拒绝授权地理位置')
+                          // console.log('用户再次拒绝授权地理位置')
                         }
                       }
                     })
                   } else if (res.cancel) {
                     wx.hideLoading()
-                    console.log('用户点击取消')
+                    // console.log('用户点击取消')
                   }
                 }
               })
@@ -416,7 +416,7 @@ App({
                 fail: function () {
                   // console.log(getCurrentPages())
                   wx.hideLoading()
-                  console.log('获取位置失败')
+                  // console.log('获取位置失败')
                   let xx = wx.showModal({
                     title: '提示',
                     content: '获取位置信息失败，请打开GPS后重试',
@@ -591,7 +591,7 @@ App({
         }
       },
       fail: function (res) {
-        console.log(res)
+        // console.log(res)
       }
     })
 
@@ -606,7 +606,7 @@ App({
   onUnlaunch: function () {
     wx.closeSocket()
     wx.onSocketClose(function (res) {
-      console.log('WebSocket 已关闭！')
+      // console.log('WebSocket 已关闭！')
     })
 
 

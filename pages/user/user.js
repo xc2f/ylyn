@@ -68,6 +68,15 @@ Page({
             dataOk: true
           })
           wx.hideLoading()
+          if (!res.data.result.height || res.data.result.album.length === 0) {
+            that.setData({
+              showTall: false
+            })
+          } else {
+            that.setData({
+              showTall: true
+            })
+          }
         }
       }
     })
@@ -158,7 +167,7 @@ Page({
               }
             },
             fail: function(res){
-              console.log(res)
+              // console.log(res)
             }
           })
         })
@@ -186,6 +195,7 @@ Page({
           token: app.TOKEN
         },
         success: function (res) {
+          // console.log(res)
           if(res.data.code === 201){
             that.setData({
               userInfo: res.data.result,
@@ -196,6 +206,10 @@ Page({
             if (!res.data.result.height || res.data.result.album.length === 0) {
               that.setData({
                 showTall: false
+              })
+            } else {
+              that.setData({
+                showTall: true
               })
             }
           }

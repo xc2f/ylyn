@@ -1,4 +1,5 @@
 /* pages/user/user.wxss */
+
 .container {
   position: relative;
   height: 100%;
@@ -14,17 +15,18 @@
   height: 135px;
   /* z-index: 99; */
 }
+
 .banner .wrap {
   width: 100%;
   height: 100%;
 }
 
 .banner .bannerImg {
-  position: absolute; 
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0; 
+  bottom: 0;
   opacity: 0.3;
   width: 100%;
   height: 100%;
@@ -51,11 +53,13 @@
   align-items: center;
   margin-top: 2px;
 }
+
 .userName .line {
   width: 30px;
   height: 2px;
   background: #333;
 }
+
 .userName .dot {
   width: 5px;
   height: 5px;
@@ -63,34 +67,39 @@
   background: #333;
   margin: 0 3px 0 3px;
 }
+
 .userName text {
   margin-left: 17px;
   margin-right: 17px;
   font-weight: bold;
   font-size: 20px;
 }
+
 .userDetail {
   margin: 3px 0 0;
 }
+
 .userDetail text {
   margin: 0 5px;
 }
+
 .userDetail, .bottomText {
   font-size: 14px;
   color: #777;
 }
+
 .bottomText {
   margin-top: 2px;
   max-width: 80%;
 }
+
 .userBanner .userAvatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   position: relative;
-  /*top: -10px;*/
-  /*z-index: 99;*/
-   margin-top: 5px; 
+  /*top: -10px;*//*z-index: 99;*/
+  margin-top: 5px;
 }
 
 .userBanner .userAvatar image {
@@ -105,8 +114,7 @@
   bottom: -1px;
   width: 50px;
   height: 50px;
-  /*z-index: 999;*/
-  /*display: none;*/
+  /*z-index: 999;*//*display: none;*/
 }
 
 .userBanner .flipConnerImg {
@@ -124,8 +132,6 @@
   padding-bottom: 7px;
 }
 
-
-
 .gallery {
   height: 350px;
   margin-left: 10px;
@@ -133,24 +139,27 @@
   overflow: hidden;
   padding: 50px 0;
 }
+
 .gallery .wrap {
   position: relative;
   perspective: 700px;
   transform-style: preserve-3d;
   height: 300px;
 }
+
 .gallery .wrap > view {
-  transition:transform 300ms ease 0ms; 
+  transition: transform 300ms ease 0ms;
   position: absolute;
   width: 50%;
   height: 300px;
   border-radius: 7px;
 }
+
 .gallery .wrap image {
   width: 100%;
   height: 100%;
   border-radius: 7px;
-  box-shadow: 3px 7px 10px rgba(0, 0, 0, .3)
+  box-shadow: 3px 7px 10px rgba(0, 0, 0, 0.3);
 }
 
 #prev {
@@ -160,6 +169,7 @@
   transform: translateZ(10px);
   /* transition: background 13000ms ease 0ms!important; */
 }
+
 #next {
   right: 0;
   top: 0;
@@ -167,10 +177,12 @@
   transform: translateZ(10px);
   /* transition: background 1000ms ease 0ms!important; */
 }
+
 .galleryHD {
   margin-top: 17px;
   margin-left: 10px;
 }
+
 .galleryHD image {
   width: 20px;
   height: 15px;
@@ -194,6 +206,7 @@
   border-radius: 50px;
   background: rgb(51, 51, 51);
 }
+
 .bottom .btn {
   display: flex;
   align-items: center;
@@ -211,12 +224,15 @@
   display: flex;
   justify-content: center;
 }
+
 .s1 image {
-  width: 50%!important;
+  width: 50% !important;
 }
+
 .s2 {
   display: flex;
 }
+
 .s2 image {
   margin: 3px;
 }
@@ -225,18 +241,23 @@
   position: absolute;
   width: 80px;
   height: 25px;
-  left:70%; 
-  top:50%;
-  z-index:999;
+  left: 70%;
+  top: 50%;
+  z-index: 999;
   /* box-shadow: 2px 2px 2px rgba(0, 0, 0, .3); */
 }
+
 .showTall image {
   width: 100%;
   height: 100%;
 }
+
 .showTall text {
+  width: 60%;
+  text-align: center;
+  left: 40%;
   position: absolute;
-  right: 7px;
+  /* right: 7px; */
   top: 0;
   height: 25px;
   line-height: 25px;

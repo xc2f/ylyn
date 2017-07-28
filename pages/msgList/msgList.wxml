@@ -1,6 +1,6 @@
 <!--pages/msgList/msgList.wxml-->
 
-<view class="container" bindtap="tapBody">
+<view class="container">
 
   <view class="topBan">
     <view class="line"></view>

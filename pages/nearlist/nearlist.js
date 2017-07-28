@@ -50,10 +50,10 @@ Page({
 
   fetchShopList() {
     let that = this;
-    // wx.showLoading({
-    //   title: '数据获取中，请稍后',
-    //   // mask: true
-    // })
+    wx.showLoading({
+      title: '数据获取中，请稍后',
+      // mask: true
+    })
     app.getLocation()
     let tick = 0
     let interval = setInterval(function () {

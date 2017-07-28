@@ -35,25 +35,6 @@ Page({
           that.fetchShopList()
           clearInterval(checkClientId)
         } 
-        // else if (tick >= 200) {
-        //   wx.hideLoading()
-        //   clearInterval(checkClientId)
-        //   wx.showModal({
-        //     title: '提示',
-        //     content: '登录失败，请重试',
-        //     success: function (res) {
-        //       if (res.confirm) {
-        //         app.login()
-        //         that.onLoad({
-        //           op: 'tologin'
-        //         })
-        //       } else if (res.cancel) {
-        //         that.fetchShopList()
-        //       }
-        //     }
-        //   })
-        // }
-        // tick++
       }, 50)
     }
 
@@ -83,25 +64,6 @@ Page({
         clearInterval(interval)
       } 
       
-      // else if (tick >= 20) {
-      //   wx.hideLoading()
-      //   clearInterval(interval)
-      //   wx.showModal({
-      //     title: '提示',
-      //     content: '获取位置失败，请重试',
-      //     success: function (res) {
-      //       if (res.confirm) {
-      //         app.getLocation()
-      //         that.onLoad({
-      //           op: 'tologin'
-      //         })
-      //       } else if (res.cancel) {
-      //        wx.hideLoading() 
-      //       }
-      //     }
-      //   })
-      // }
-      // tick++
     }, 500)
   },
 
@@ -115,7 +77,7 @@ Page({
         latitude: coordinate.latitude
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         let result = res.data.result
         // console.log(result)
         // console.log(res)
@@ -171,7 +133,7 @@ Page({
       that.setData({
         hasNewMsg: !app.globalData.msgClean
       })
-    }, 500)
+    }, 2000)
 
   },
 
@@ -208,7 +170,7 @@ Page({
   onShareAppMessage: function (res) {
     if (res.from === 'button') {
       // 来自页面内转发按钮
-      console.log(res.target)
+      // console.log(res.target)
     }
     return {
       title: '你附近有这些商家',

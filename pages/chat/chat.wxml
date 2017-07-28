@@ -17,7 +17,7 @@
 
       <view class="time" wx:if="{{item.type==='time'}}">
         <view class="inner">
-          {{item.content}}
+           {{item.content}} 
         </view>
       </view>
 

@@ -58,41 +58,12 @@ Page({
       deviceInfo: app.globalData.deviceInfo
     })
 
-    // let token = wx.getStorageSync('TOKEN')
-    // if(token === ''){
-    //   app.login(that.fetchShopInfo, app.globalData.client_id)
-    // } else {
-    //   // 请求店铺信息
-    //   that.fetchShopInfo()
-    // }
     let tick = 0
     let checkLoginStatus = setInterval(function () {
       if (app.globalData.userId !== null) {
         that.fetchShopInfo()
         clearInterval(checkLoginStatus)
       }
-      // else if (tick >= 600) {
-      //   clearInterval(checkClientId)
-      //   wx.showModal({
-      //     title: '提示',
-      //     content: '登录失败，请重试',
-      //     success: function (res) {
-      //       if (res.confirm) {
-      //         // console.log('用户点击确定')
-      //         app.login()
-      //         that.onLoad({
-      //           store_id: that.data.qrcodeInfo.store_id,
-      //           table_id: that.data.qrcodeInfo.table_id,
-      //         })
-      //       } else if (res.cancel) {
-      //         wx.redirectTo({
-      //           url: '/pages/nearlist/nearlist?op=nologin',
-      //         })
-      //       }
-      //     }
-      //   })
-      // }
-      // tick++
     }, 50)
   },
 
@@ -117,7 +88,7 @@ Page({
         table_id: that.data.qrcodeInfo.table_id
       },
       success: function(res){
-        console.log(res)
+        // console.log(res)
         wx.hideLoading()
         if(res.data.code === 201){
           that.toFetch(coordinate)
@@ -140,14 +111,14 @@ Page({
   },
 
   fetchShopInfo(gender, currentPage){
-    console.log('to fetch shop info')
+    // console.log('to fetch shop info')
     let that = this
     app.getLocation()
     let tick = 0
     let interval = setInterval(function () {
       // console.log('in interval')
       if (app.globalData.coordinate !== null) {
-        console.log('get location success')
+        // console.log('get location success')
         let coordinate = app.globalData.coordinate
         // 是否在本店
         that.isInStore(coordinate, gender, currentPage)
@@ -155,38 +126,13 @@ Page({
         // 获取到坐标请求
         clearInterval(interval)
       }
-      //  else if (tick >= 60) {
-      //   clearInterval(interval)
-      //   wx.showModal({
-      //     title: '提示',
-      //     content: '获取位置失败，请重试',
-      //     success: function (res) {
-      //       if (res.confirm) {
-      //         // console.log('用户点击确定')
-      //         app.getLocation()
-      //         that.onLoad({
-      //           store_id: that.data.qrcodeInfo.store_id,
-      //           table_id: that.data.qrcodeInfo.table_id,
-      //         })
-      //       } else if (res.cancel) {
-      //         wx.redirectTo({
-      //           url: '/pages/nearlist/nearlist?op=nologin',
-      //         })
-      //       }
-      //     }
-      //   })
-      // }
-      // tick++
+
     }, 500)
 
   },
 
   toFetch(coordinate, gender, currentPage){
     let that = this
-    // wx.showLoading({
-    //   title: '数据获取中',
-    // })
-    // let token = wx.getStorageSync('TOKEN')
     wx.request({
       // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
       url: app.requestHost + 'Store/store_user/',
@@ -207,7 +153,7 @@ Page({
         wx.setNavigationBarTitle({
           title: res.data.result.store_name
         })
-        console.log(res.data.result)
+        // console.log(res.data.result)
         that.setData({
           store: res.data.result,
           userListLength: res.data.result.table_list.length
@@ -287,7 +233,7 @@ Page({
         for (let i = 0; i < that.data.gallery.length; i++) {
           imgList.push(that.data.gallery[i].src)
         }
-        console.log(e.currentTarget.dataset.src)
+        // console.log(e.currentTarget.dataset.src)
         return imgList
       }()),
     })
@@ -298,18 +244,6 @@ Page({
     wx.navigateTo({
       url: '/pages/user/user?user_id=' + app.globalData.userId,
     })
-
-    // let that = this;
-
-    // that.setData({
-    //   showMeSwitch: false,
-    //   bannerSwitchAnimation: that.bannerSwitchToMe(),
-    //   showShopSwitch: true,
-    //   shopShow: false,
-    //   userShow: true,
-    //   tablesOpacityAnimation: that.basicAnimation(500, 0).opacity(0).step().export(),
-    //   userOpacityAnimation: that.basicAnimation(500, 0).opacity(1).step().export(),
-    // })
 
 
   },
@@ -386,7 +320,7 @@ Page({
       that.setData({
         hasNewMsg: !app.globalData.msgClean
       })
-    }, 5000)
+    }, 2000)
 
     that.data.checkLocationInterval = setInterval(function () {
       that.checkLocation()
@@ -498,12 +432,12 @@ Page({
           table_id: gd.storeInfo.tableId
         },
         success: function (res) {
-          console.log(res)
+          // console.log(res)
           // 重新获取位置
           app.getLocation()
           // if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain') {
             if (res.data.code === 201) {
-              console.log(res.data.message)
+              // console.log(res.data.message)
             } else if (res.data.code === 103 || res.data.code === 102) {
               wx.showModal({
                 title: '提示',

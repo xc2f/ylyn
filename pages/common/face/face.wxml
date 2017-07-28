@@ -15,11 +15,6 @@
             <image src="/images/faces/{{item.value}}.png" data-face="{{item.value}}" bindtap="sendEmoji"></image>
           </view>
         </view>
-        <!--<view class="row row3">
-          <block wx:for="{{faces[0].map3}}" wx:key="key">
-            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
-          </block>
-        </view>-->
     </swiper-item>
     <swiper-item class="page2">
       <!--第一页-->
@@ -34,11 +29,6 @@
             <image src="/images/faces/{{item.value}}.png" data-face="{{item.value}}" bindtap="sendEmoji"></image>
           </view>
         </view>
-        <!--<view class="row row3">
-          <block wx:for="{{faces[1].map6}}" wx:key="key">
-            <image src="/images/faces/{{item.value}}" bindtap="sendFace" data-face="{{item.key}}"></image>
-          </block>
-        </view>-->
     </swiper-item>
   </swiper>
 </template>

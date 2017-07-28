@@ -37,7 +37,12 @@
         </view>
         <view class="right">
           <view class="date">{{item.date}}</view>
-          <view class="shopName noWrap"><image wx:if="{{item.storeInfo}}" src="/images/zjlxr-dp.png"></image><text>{{item.storeInfo.storeName}}</text></view>
+          <view class="shopName noWrap" catchtap="toShop" data-shopid="{{item.storeInfo.storeId}}">
+            <!-- <navigator url="/pages/shopDetail/shopDetail?store_id={{item.storeInfo.storeId}}"> -->
+              <image wx:if="{{item.storeInfo}}" src="/images/zjlxr-dp.png"></image>
+              <text>{{item.storeInfo.storeName}}</text>
+            <!-- </navigator> -->
+          </view>
         </view>
       </view>
 
@@ -46,10 +51,6 @@
     </view>
     </block>
   </view>
-  <!-- <button btn="clearStorage">清除缓存</button> -->
-<!--<button bindtap="closesocket">close socket</button>
-
-<image src="{{testSrc}}"></image>-->
 
   <navigator url="/pages/shieldList/shieldList" wx:if="{{showShield}}">
   <view class="shieldIcon">屏蔽列表</view>

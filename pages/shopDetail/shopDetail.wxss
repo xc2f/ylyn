@@ -74,7 +74,7 @@
 .inSales .inSaleText {
   position: absolute;
   bottom: 0;
-  left: 12px;
+  left: 14px;
   color: #fff;
   font-size: 12px;
   font-weight: bold;
@@ -222,17 +222,20 @@
 .foods .list .info {
   height: 30px;
   line-height: 30px;
-  font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
-
+.foods .list .info > text {
+  font-size: 14px;
+}
 .foods .list .info .price {
   color: red;
 }
-
+.foods .list .info .name {
+  max-width: 100px;
+}
 .inSalesInfo .iconWrap {
   /*padding-top: 10px;*/
   line-height: 40px;

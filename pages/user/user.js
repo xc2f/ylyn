@@ -55,7 +55,7 @@ Page({
         token: app.TOKEN
       },
       success: function(res){
-        console.log(res)
+        // console.log(res)
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
@@ -78,9 +78,6 @@ Page({
   },
 
   switchToShop(){
-    // wx.navigateTo({
-    //   url: '/pages/main/main',
-    // })
     wx.navigateBack()
   },
 
@@ -119,7 +116,7 @@ Page({
   },
 
   toChatOrConfig(e){
-    console.log(e.currentTarget.dataset.friendinfo)
+    // console.log(e.currentTarget.dataset.friendinfo)
     wx.navigateTo({
       url: this.data.userId === this.data.userInfo.user_id ? '/pages/config/config' : '/pages/chat/chat?friendinfo='+JSON.stringify(e.currentTarget.dataset.friendinfo),
     })
@@ -165,9 +162,6 @@ Page({
             }
           })
         })
-        // upload('userAvatar', 2, tempFilePath, fileName)
-        // update('userAvatar', 1, )
-        // deleteFile('userAvatar', 'avatar-ba964cda-d4cc-355a-14fe-59439868c188-1499325633335.png')
       },
     })
   },

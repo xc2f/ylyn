@@ -55,7 +55,7 @@
           <view class="item" wx:for="{{shop.food}}" wx:key="food_id">
             <image src="{{item.food_img}}"></image>
             <view class="info">
-              <text class="name">{{item.food_name}}</text>
+              <text class="name noWrap">{{item.food_name}}</text>
               <text style="padding: 0 3px">|</text>
               <text class="price">¥{{item.price}}</text>
             </view>

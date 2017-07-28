@@ -22,7 +22,7 @@ Page({
         token: app.TOKEN
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if (res.data.result.length !== 0) {
           that.setData({
             list: res.data.result,
@@ -67,7 +67,7 @@ Page({
           wx.getStorage({
             key: 'chatWith' + friendInfo.user_id,
             success: function(res) {
-              console.log(res)
+              // console.log(res)
               let messages = res.data
               messages.push(postData)
               wx.setStorage({

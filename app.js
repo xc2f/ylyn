@@ -18,35 +18,14 @@ App({
   requestHost: requestHost,
 
   onLaunch: function () {
-    // setInterval(function(){
-    //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
-    // }, 2000)
-    
-    // let that = this
 
     this.connectWebsocket()
-
-    // this.login()
-
-    // 检查位置
-    // this.checkLocation()
-    // this.getLocation()
 
     // 获取设备信息
     this.getDeviceInfo()
 
-    // setTimeout(function(){
-    //   console.log('----------')
-    //   console.log(getCurrentPages()[getCurrentPages().length-1].pageName)
-    // }, 10000)
-    // this.refreshStorage()
-
     // 获取本地消息状态
     this.getMsgStatus()
-
-    // setTimeout(function(){
-    //   console.log(this.TOKEN)
-    // }.bind(this), 5000)
 
   },
 
@@ -97,7 +76,7 @@ App({
 
   // 连接websocket
   connectWebsocket() {
-    console.log('in socket')
+    // console.log('in socket')
     let that = this
     // 连接websocket
     wx.connectSocket({
@@ -112,7 +91,7 @@ App({
         // console.log('--------------------')
         // console.log(res)
         let data = JSON.parse(res.data)
-        console.log(data)
+        // console.log(data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
           if(that.globalData.storeInfo === null){
@@ -129,7 +108,7 @@ App({
                   type: 2
                 },
                 success: function (res) {
-                  console.log(res)
+                  // console.log(res)
                   if (res.data.code === 201) {
                     console.log('重连成功！')
                   }
@@ -148,7 +127,7 @@ App({
                 type: 1
               },
               success: function(res){
-                console.log(res)
+                // console.log(res)
                 if(res.data.code === 201){
                   console.log('重连成功！')
                 }
@@ -207,7 +186,7 @@ App({
           // callback() || null
           // 未读消息
           let unreadMsg = res.data.result.unread_msg
-          console.log('未读消息', unreadMsg)
+          // console.log('未读消息', unreadMsg)
           if (unreadMsg.length) {
             for (let i = 0; i < unreadMsg.length; i++) {
               that.loadMsg(unreadMsg[i])
@@ -383,7 +362,7 @@ App({
         wx.getSetting({
           success: function (res) {
             if (res.authSetting['scope.userLocation'] === false) {
-              console.log(getCurrentPages())
+              // console.log(getCurrentPages())
               wx.showModal({
                 title: '提示',
                 content: '您未授权位置信息，确认授权？',
@@ -435,7 +414,7 @@ App({
                   // callback() || null
                 },
                 fail: function () {
-                  console.log(getCurrentPages())
+                  // console.log(getCurrentPages())
                   wx.hideLoading()
                   console.log('获取位置失败')
                   let xx = wx.showModal({
@@ -484,21 +463,12 @@ App({
     }
     // 如果在当前消息来的聊天页，消息clean
     let msgclean = getCurrentPages()[getCurrentPages().length - 1].pageName === 'chatWith' + msg.from_user_id ? true : false
-    // 如果clean，说明在该聊天页
-    // if(msgclean){
-    //   let m = 'chatWith' + msg.from_user_id
-    //   that.globalData.m = true
-    // }
-    // setTimeout(function(){
-    //   let m = 'chatWith' + msg.from_user_id
-    //   that.globalData.m = false
-    // }, 3000)
+
     let now = new Date().getTime()
     // 如果本地存有这个消息缓存
     if (messageList !== '') {
-      console.log(messageList)
+      // console.log(messageList)
       if (messageList[messageList.length - 1].time + (1000 * 60 * 5) < now) {
-        console.log('in')
         messageList.push({
           content: now,
           type: 'time'
@@ -529,15 +499,6 @@ App({
 
 
   refreshChatRecords(NewMessage, msgClean = false) {
-    console.log(NewMessage)
-    // 在chat页面消息clean
-    // TODO 只能在当前用户的chat页消息clean
-    // let msgClean = false
-    // if (getCurrentPages()[getCurrentPages().length - 1].pageName === 'chat'){
-    //   msgClean = true
-    // } else {
-    //   msgClean = false
-    // }
 
     // console.log(NewMessage)
 
@@ -636,65 +597,6 @@ App({
 
   },
 
-  // checkLocation(){
-  //   let that = this
-    
-  //   that.getLocation()
-
-  //   let gd = that.globalData
-  //   this.globalData.checkLocationInterval = setInterval(()=>{
-  //     wx.request({
-  //       url: that.requestHost + '/Store/check_address/',
-  //       method: 'POST',
-  //       data: {
-  //         latitude: gd.coordinate.latitude,
-  //         longitude: gd.coordinate.longitude,
-  //         token: that.TOKEN,
-  //         store_id: gd.storeInfo.storeId,
-  //         table_id: gd.storeInfo.tableId
-  //       },
-  //       success: function (res) {
-  //         console.log(res)
-  //         // 重新获取位置
-  //         that.getLocation()
-  //         if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain'){
-  //           if (res.data.code === 201){
-  //             console.log(res.data.message)
-  //           } else if (res.data.code === 103 || res.data.code === 102) {
-  //             wx.showModal({
-  //               title: '提示',
-  //               content: res.data.code === 103 ? '您已离开本店' : '商家已关闭服务',
-  //               showCancel: false,
-  //               success: function (res) {
-  //                 if (res.confirm) {
-  //                   wx.redirectTo({
-  //                     url: '/pages/nearlist/nearlist',
-  //                   })
-  //                 }
-  //               }
-  //             })
-  //           } else {
-  //             wx.showModal({
-  //               title: '提示',
-  //               content: '与服务器通信错误',
-  //               showCancel: false,
-  //               success: function (res) {
-  //                 if (res.confirm) {
-  //                   wx.redirectTo({
-  //                     url: '/pages/nearlist/nearlist',
-  //                   })
-  //                 }
-  //               }
-  //             })
-  //           }
-  //         }
-  //       },
-  //       fail: function (err) {
-  //         console.log(err)
-  //       }
-  //     })
-  //   }, 1000 * 60 * 2)
-  // },
 
 
   onShow: function () {

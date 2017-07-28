@@ -24,25 +24,6 @@
         </view>
       </view>
 
-      <!--<view class="userBanner" style="width: {{ deviceInfo.windowWidth }}px; left: {{ deviceInfo.windowWidth }}px">
-        <image class="bannerImg" src="{{shop.shop_banner}}" animation="{{bannerSwitchAnimation}}"></image>
-        <view class="shopAvatar">
-          <image src="/images/girl.png"></image>
-        </view>
-        <view class="shopName">
-          <view class="line"></view>
-          <view class="dot"></view>
-          <text>{{shop.shop_name}}</text>
-          <view class="dot"></view>
-          <view class="line"></view>
-        </view>
-        <view class="bottomText">本店正有{{shop.man_in + shop.female_in}}位小伙伴使用</view>
-        <view class="flipConner" wx:if="{{showShopSwitch}}" bindtap="switchToShop" style="left: {{ deviceInfo.windowWidth-49 }}px">
-          <image class="flipConnerImg" src="/images/flipConner.png"></image>
-          <text class="flipConnerText">首页</text>
-        </view>
-      </view>-->
-
     </view>
 
   </view>
@@ -51,11 +32,11 @@
     <view class="allInOne">
       <view class="up">
         <view class="line"></view>
-        <text class="big">同店的人</text>
+        <text class="big">此刻店里的人</text>
         <view class="line"></view>
       </view>
       <view class="down">
-        <text class="small">在这里找到你心动的ta</text>
+        <!-- <text class="small">在这里找到你心动的ta</text> -->
       </view>
     </view>
     <view class="empty" wx:if="{{userListLength === 0}}">暂时为空</view>
@@ -63,28 +44,6 @@
     <template is="tableList" data="{{tables: store.table_list, tableLength: userListLength}}" />
   </scroll-view>
 
-
-
-  <!--<view class="userShow" animation="{{userOpacityAnimation}}">
-    <view class="title">
-      <text class="fa fa-picture-o">个人展示</text>
-    </view>
-
-    <view class="gallery">
-    </view>
-
-    <view class="swiper">
-      <swiper current="1" bindchange="galleryImgChange">
-        <block wx:for="{{gallery}}">
-          <swiper-item>
-            <image src="{{item.src}}" bindtap="galleryImgPrev" data-src="{{item.src}}"></image>
-          </swiper-item>
-        </block>
-      </swiper>
-
-    </view>
-
-  </view>-->
 
 
   <view class="toolBar" wx:if="{{shopShow}}">

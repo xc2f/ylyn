@@ -33,7 +33,7 @@ Page({
         token: app.TOKEN
       },
       success: function(res){
-        console.log(res)
+        // console.log(res)
         that.setData({
           userInfo: res.data.result
         })
@@ -290,15 +290,6 @@ introSubmit() {
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    // let that = this
-    // wx.getStorage({
-    //   key: 'meInfo',
-    //   success: function(res) {
-    //     that.setData({
-    //       meInfo: res.data
-    //     })
-    //   },
-    // })
   },
 
   /**

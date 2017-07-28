@@ -19,7 +19,7 @@
 .chatBody .time {
   text-align: center;
   font-size: 14px;
-  width: 50%;
+  width: 30%;
   margin: auto;
   clear: both;
   height: 20px;

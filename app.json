@@ -22,5 +22,5 @@
     "backgroundColor": "#eee",
     "enablePullDownRefresh": false
   },
-  "debug": true
+  "debug": false
 }

@@ -22,20 +22,6 @@ Page({
     let that = this
 
     that.fetchShop(options)
-    // wx.request({
-    //   url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop_detail',
-    //   method: 'POST',
-    //   data: {
-    //     shop_id: options.shop_id
-    //   },
-    //   success: function (res) {
-    //     let data = res.data
-    //     data.total = data.man_in + data.female_in
-    //     that.setData({
-    //       shop: data
-    //     })        
-    //   }
-    // })
 
   },
 
@@ -67,7 +53,7 @@ Page({
         latitude: coordinate.latitude
       },
       success: function(res){
-        console.log(res)
+        // console.log(res)
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
@@ -87,6 +73,19 @@ Page({
             dataOk: true
           })
           wx.hideLoading()
+        } else if (res.data.code === 101){
+          wx.showModal({
+            title: '提示',
+            content: '商家已关闭服务',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                wx.redirectTo({
+                  url: '/pages/nearlist/nearlist',
+                })
+              }
+            }
+          })
         }
       }
     })
@@ -94,7 +93,7 @@ Page({
 
   mapNavigation(){
     let shop = this.data.shop
-    console.log(shop)
+    // console.log(shop)
     // this.data.checkShopValue = setInterval(() => {
       wx.openLocation({
         latitude: parseFloat(shop.store_latitude),
@@ -103,10 +102,10 @@ Page({
         name: shop.store_name,
         address: shop.address,
         success: function(res){
-          console.log(res)
+          // console.log(res)
         },
         fail: function(err) {
-          console.log(err)
+          // console.log(err)
         }
       })
     // }, 200)
@@ -119,7 +118,7 @@ Page({
 
   quit(){
     let storeInfo = app.globalData.storeInfo
-    console.log(storeInfo)
+    // console.log(storeInfo)
     wx.request({
       url: app.requestHost + 'Store/logout_store/',
       data: {
@@ -128,7 +127,7 @@ Page({
         table_id: storeInfo.tableId
       },
       success: function(res){
-        console.log(res)
+        // console.log(res)
         if(res.data.code === 201 || res.data.code === 102){
           app.globalData.storeInfo = null
           wx.redirectTo({

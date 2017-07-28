@@ -31,9 +31,6 @@ Page({
 
     that.computeFileSize()
     
-    // setTimeout(function(){
-      // console.log(that.data.chatRecords.friendInfo.age)
-    // }, 1000)
   },
 
   checkShield(){
@@ -45,7 +42,7 @@ Page({
         token: app.TOKEN
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if (res.data.result.length !== 0) {
           that.setData({
             showShield: true
@@ -92,12 +89,18 @@ Page({
     })
   },
 
+  toShop(e){
+    wx.navigateTo({
+      url: '/pages/shopDetail/shopDetail?store_id=' + e.currentTarget.dataset.shopid,
+    })
+  },
+
   renderList(){
     let that = this
     wx.getStorage({
       key: 'chatRecords',
       success: function (res) {
-        // console.log(res)
+        console.log(res)
         let records = res.data
         let recordList = []
         // 获取每条聊天记录的最后一条内容
@@ -164,17 +167,6 @@ Page({
     })
   },
 
-  // parseDate(date){
-  //   let msgTime = new Date(date)
-  //   let today = new Date().getDate()
-  //   if(today === msgTime.getDate() ) {
-  //     return msgTime.getHours() + ':' + (msgTime.getMinutes() < 10 ? ('0' + msgTime.getMinutes()) : msgTime.getMinutes())
-  //   } else if (today === msgTime.getDate() + 1) {
-  //     return '昨天'
-  //   } else {
-  //     return (msgTime.getMonth()+1) + '月' + msgTime.getDate() + '日'
-  //   }
-  // },
 
   tapToChat(e){
     wx.navigateTo({

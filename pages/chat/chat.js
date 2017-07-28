@@ -92,15 +92,6 @@ Page({
       storeId: app.globalData.storeInfo ? app.globalData.storeInfo.storeId : null
     })
 
-    // 获取本人信息
-    // wx.getStorage({
-    //   key: 'meInfo',
-    //   success: function (res) {
-    //     that.setData({
-    //       meInfo: res.data
-    //     })
-    //   },
-    // })
 
     // 获取聊天信息
     wx.getStorage({
@@ -203,17 +194,6 @@ Page({
     }
   },
 
-  // cancleShield(){
-  //   let that = this
-  //   wx.request({
-  //     url: app.requestHost + '/Chat/cancel_shield/',
-  //     method: 'POST',
-  //     data: {
-  //       token: app.TOKEN,
-
-  //     }
-  //   })
-  // },
 
   refreshShield(setTrue, content, time) {
     let that = this
@@ -245,7 +225,7 @@ Page({
         chat_id: that.data.chatId
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
 
         if (res.data.code === 201 || res.data.code === 102) {
 
@@ -401,7 +381,7 @@ Page({
 
     showList.map(item => {
       if (item.type === 'time') {
-        console.log(item)
+        // console.log(item)
         item.content = computeTime(item.content)
       }
     })
@@ -449,11 +429,11 @@ Page({
               // 失败消息的时间？
               if (res.data.code === 103) {
                 // 对方已将您的消息屏蔽
-                messages.push(that.refreshShield(false, '对方已将您的消息屏蔽', null))
+                messages.push(that.refreshShield(false, '消息可能送往火星了', null))
               }
               if (res.data.code === 102) {
                 // 您已将对方的消息屏蔽
-                messages.push(that.refreshShield(true, '您已将对方的消息屏蔽', null))
+                messages.push(that.refreshShield(true, '消息可能送往火星了', null))
               }
             }
             break
@@ -546,25 +526,6 @@ Page({
       },
     })
 
-    // 获取本地缓存和文件大小
-    // wx.getStorageInfo({
-    //   success: function (res) {
-    //     let limitSize = res.limitSize
-    //     let storageSize = res.currentSize
-    //     wx.getSavedFileList({
-    //       success: function (res) {
-    //         let fileSize = 0
-    //         for (let i = 0; i < res.fileList.length; i++) {
-    //           fileSize += res.fileList[i].size
-    //         }
-    //         let totalSize = storageSize + fileSize
-    //         if (totalSize < limitSize - 1024 * 2) {
-
-    //         }
-    //       }
-    //     })
-    //   },
-    // })
   },
   // 预览图片
   prevImg(e) {
@@ -613,7 +574,7 @@ Page({
   // 发送微信号
   sendCard() {
     let that = this
-    console.log(this.data.meInfo.wechat_num)
+    // console.log(this.data.meInfo.wechat_num)
     let value = this.data.meInfo.wechat_num
     if (value.trim() === '') {
       wx.showModal({
@@ -680,36 +641,20 @@ Page({
       // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
       if (that.data.messages.length !== 0) {
 
-        console.log('in')
+        // console.log('in')
 
-        console.log('in timeout')
+        // console.log('in timeout')
 
         // 第一次发消息没有msgId
         let lastMsgId = that.data.messages[that.data.messages.length - 1].msgId
         // 监听消息
         that.data.checkMsgStatusInterval = setInterval(function () {
 
-          console.log('in interval')
+          // console.log('in interval')
 
           wx.getStorage({
             key: 'chatWith' + that.data.friendInfo.user_id,
             success: function (res) {
-              // console.log(res)
-              // 这里做消息加上时间处理，如果出现新消息不能滚动到底部，说明异步，不用公共函数
-              // that.beautifyMsg(res.data, 10000)
-
-              // let now = new Date().getTime()
-              // let tempMessageList = res.data
-
-              // if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
-              //   tempMessageList.push({
-              //     content: computeTime(now),
-              //     type: 'time'
-              //   })
-              // }
-              // this.setData({
-              //   messages: tempMessageList
-              // })
               let messages = objDeepCopy(res.data)
               messages.map(item => {
                 if (item.type === 'time') {

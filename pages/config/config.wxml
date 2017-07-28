@@ -70,9 +70,4 @@
     </view>
   </view>
 
-
-  <!-- <view class="clean">
-    <button type="warn" bindtap="cleanAccount">退出账号</button>
-  </view> -->
-
 </view>

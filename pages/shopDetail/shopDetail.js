@@ -27,19 +27,36 @@ Page({
 
   fetchShop(options){
     let that = this;
-    wx.showLoading({
-      title: '数据获取中，请稍后',
-    })
-    // app.getLocation()
-    let interval = setInterval(function () {
-      if (app.globalData.coordinate !== null) {
-        let coordinate = app.globalData.coordinate
-        // app.globalData.coordinate = null
-        // 获取到坐标请求
-        that.toFetch(coordinate, options)
-        clearInterval(interval)
-      }
-    }, 500)
+    let coordinate = app.globalData.coordinate
+    if (coordinate){
+      wx.showLoading({
+        title: '数据获取中，请稍后',
+      })
+      // 是否在本店
+      that.toFetch(coordinate, options)
+    }else {
+      app.getLocation(res => {
+        if (res === '获取成功') {
+          wx.showLoading({
+            title: '数据获取中，请稍后',
+          })
+          // 是否在本店
+          that.toFetch(coordinate, options)
+        } else if (res === '取消授权') {
+          that.setData({
+            showTip: '您未授权，请重新授权后重试'
+          })
+        } else if (res === '获取中') {
+          // that.setData({
+          //   showTip: '店铺正马不停蹄地向你赶来'
+          // })
+        } else {
+          that.setData({
+            showTip: '位置获取失败，请重试'
+          })
+        }
+      })
+    }
   },
 
   toFetch(coordinate, options){

@@ -6,7 +6,8 @@ export default function fromNow(date){
   let oneHour = oneMinute * 60
   let oneDay = oneHour * 24
   if(interval < oneMinute){
-    return interval<1000 ? 0 + '秒前' : Math.floor(interval / 1000) + '秒前'
+    // return interval<1000 ? 0 + '秒前' : Math.floor(interval / 1000) + '秒前'
+    return '刚刚'
   } else if (interval < oneHour){
     return Math.floor(interval / oneMinute) + '分钟前'
   } else if (interval < oneDay) {

@@ -12,9 +12,9 @@
     <view class="line"></view>
   </view>
 
-    <view class="empty" wx:if="{{shopListEmpty}}">
-      <text>附近无可用商家</text>
-    </view>
+  <view class="empty" wx:if="{{shopListEmpty}}">
+    <text>{{showTip}}</text>
+  </view>
   <view class="shopList" wx:if="{{!shopListEmpty}}">
     <block wx:for="{{shopList}}" wx:key="store_id">
       <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
@@ -57,4 +57,6 @@
     <view class="msgNew" wx:if="{{hasNewMsg}}"></view>
   </view>
 
+    <button class="needLogin" wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录</button>
+    
 </view>

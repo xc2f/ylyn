@@ -1,5 +1,5 @@
 <!--pages/main/main.wxml-->
-<view class="container" style="" wx:if="{{store !== null}}">
+<view class="container" style="" wx:if="{{store === null}}">
 
   <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ deviceInfo.windowWidth }}px">
     <view class="wrap">
@@ -40,6 +40,11 @@
       </view>
     </view>
     <view class="empty" wx:if="{{userListLength === 0}}">暂时为空</view>
+
+    <button class="needLogin" wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">{{showLoginStatus}}</button>
+
+    <view class="classname">{{showTip}}</view>
+
     <import src="/pages/common/tableList/tableList" />
     <template is="tableList" data="{{tables: store.table_list, tableLength: userListLength}}" />
   </scroll-view>
@@ -82,7 +87,9 @@
 </view>
 <!--container end-->
 
-<view class="loading" wx:if="{{store === null}}">
+<view class="classname" wx:if="{{store !== null}}">成功</view>
+
+<!-- <view class="loading" wx:if="{{store === null}}">
   <image src="/images/loading.gif"></image>
-  <text>店铺正马不停蹄地向你赶来</text>
-</view>
+  <text>{{showTip}}</text>
+</view> -->

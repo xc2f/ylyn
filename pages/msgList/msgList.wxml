@@ -18,13 +18,14 @@
   <view class="fullStorage" wx:if="{{isFullStorage}}">
     <text>存储空间将满，请删除部分聊天会话！</text>
   </view>
-  <view class="recordList" wx:if="{{chatRecords}}">
-    <block wx:for="{{chatRecords}}" wx:key="chatId">
+  <view class="recordList" wx:if="{{chatRecords}}" bindtouchstart='ontouchstart' catchtouchmove='ontouchmove' bindtouchend='ontouchend'>
+    <block wx:for="{{chatRecords}}" wx:key="id">
 
-    <view class="block">
+     <view class="block"> 
 
-      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE">
-        <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
+      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}' id='{{item.id}}' animation='{{item.animation}}'>
+
+         <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
         <view class="left">
           <image src="{{item.friendInfo.avatar}}"></image>
         </view>
@@ -39,17 +40,18 @@
         <view class="right">
           <view class="date">{{item.date}}</view>
           <view class="shopName noWrap" catchtap="toShop" data-shopid="{{item.storeInfo.storeId}}">
-            <!-- <navigator url="/pages/shopDetail/shopDetail?store_id={{item.storeInfo.storeId}}"> -->
               <image wx:if="{{item.storeInfo}}" src="/images/zjlxr-dp.png"></image>
               <text>{{item.storeInfo.storeName}}</text>
-            <!-- </navigator> -->
           </view>
-        </view>
+        </view> 
+
       </view>
 
-      <view class="remove" bindtap="removeChat" data-userid='{{item.friendInfo.user_id}}'><text>删除</text></view>
+      <view class="remove" bindtap="removeChat" data-userid='{{item.friendInfo.user_id}}'>
+        <view class="remove-text" id='{{item.id}}'>删除</view>
+      </view>
     
-    </view>
+     </view> 
     </block>
   </view>
 

@@ -13,11 +13,13 @@
   align-items: center;
   height: 45px;
 }
+
 .topBan .line {
   width: 30px;
   height: 2px;
   background: #333;
 }
+
 .topBan .dot {
   width: 5px;
   height: 5px;
@@ -25,12 +27,14 @@
   background: #333;
   margin: 0 3px 0 3px;
 }
+
 .topBan image {
   width: 15px;
   height: 15px;
   margin-left: 15px;
   margin-right: 5px;
 }
+
 .topBan text {
   font-size: 16px;
   margin-right: 15px;
@@ -40,33 +44,37 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
 .wrap {
   display: flex;
   flex-direction: row;
   height: 100px;
-  position: relative;
   border-radius: 5px;
 }
+
 .wrap .msgClean {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: red;
   position: absolute;
-  right:10px;
-  top:10px;
+  right: 10px;
+  top: 10px;
 }
+
 .left {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  /* position: absolute */
 }
 
 .middle {
   flex: 2;
   display: flex;
   justify-content: center;
+  /* position: absolute */
 }
 
 .right {
@@ -76,6 +84,7 @@
   flex-direction: column;
   margin: 10px;
   justify-content: center;
+  /* position: absolute */
 }
 
 .left image {
@@ -89,6 +98,7 @@
   margin: 10px;
   justify-content: center;
 }
+
 .middle .name {
   font-size: 20px;
   font-weight: bold;
@@ -96,31 +106,37 @@
   display: flex;
   align-items: center;
 }
+
 .middle .userInfo {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   flex: 1;
 }
+
 .middle .userInfo .gender {
   height: 20px;
   line-height: 20px;
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
 }
+
 .middle .userInfo .gender image {
   width: 16px;
   height: 16px;
   margin-right: 5px;
 }
+
 .middle .userInfo .age {
   line-height: 20px;
 }
+
 .middle .age text {
   line-height: 20px;
   color: #777;
   font-size: 14px;
 }
+
 .middle .newestMsg {
   font-size: 14px;
   max-width: 150px;
@@ -149,6 +165,7 @@
   display: flex;
   justify-content: flex-end;
 }
+
 .right image {
   width: 15px;
   height: 12px;
@@ -156,9 +173,10 @@
 }
 
 .fullStorage {
-  background: rgba(218, 105, 30, .3);
+  background: rgba(218, 105, 30, 0.3);
   text-align: center;
 }
+
 .fullStorage text {
   font-size: 14px;
   color: #fff;
@@ -166,30 +184,46 @@
   font-weight: bold;
 }
 
-
 .block {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 7px rgba(225, 225, 225, .7);
+  box-shadow: 0 0 7px rgba(225, 225, 225, 0.7);
   margin: 5px 0;
+  left: 0;
+  top: 0;
+  height: 100px;
+  width: 100%;
 }
+
 .block .wrap {
   left: 0;
+  position: absolute;
+  top: 0;
+  z-index: 999;
+  background: #fff;
+  width: 100%;
+  height: 100px;
 }
+
 .block .remove {
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.block .remove-text {
   position: absolute;
   width: 100px;
   height: 100px;
-  background: red;
   top: 0;
-  right: -100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.block .remove text {
+  right: 0;
+  background-color: rgb(255, 58, 50);
   color: #fff;
-  font-weight: bold;
+  text-align: center;
+  line-height: 100px;
 }
 
 .empty {
@@ -200,10 +234,12 @@
   align-items: center;
   flex-direction: column;
 }
+
 .empty image {
   width: 320px;
   height: 172px;
 }
+
 .empty text {
   margin-top: 10px;
 }
@@ -219,5 +255,5 @@
   position: fixed;
   right: 10px;
   bottom: 10px;
-  border-radius: 2px; 
+  border-radius: 2px;
 }

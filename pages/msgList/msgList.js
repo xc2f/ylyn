@@ -4,6 +4,49 @@ import { deleteFile } from '../../untils/update.js'
 
 import fromNow from '../../untils/moment.js'
 
+import wxviewType from '../../untils/wxview.js'
+
+var touchData = {
+  init: function () {
+    this.firstTouchX = 0;
+    this.firstTouchY = 0;
+    this.lastTouchX = 0;
+    this.lastTouchY = 0;
+    this.lastTouchTime = 0;
+    this.swipeDirection = 0;
+    this.deltaX = 0;
+    this.deltaY = 0;
+    this.totalDelateX = 0;
+    this.speedY = 0;
+  },
+  touchstart: function (e) {
+    this.init();
+    this.firstTouchX = this.lastTouchX = e.touches[0].clientX;
+    this.firstTouchY = this.lastTouchY = e.touches[0].clientY;
+    this.lastTouchTime = e.timeStamp;
+  },
+  touchmove: function (e) {
+    this.deltaX = e.touches[0].clientX - this.lastTouchX;
+    this.deltaY = e.touches[0].clientY - this.lastTouchY;
+    this.totalDelateX += this.deltaX;
+    this.lastTouchX = e.touches[0].clientX;
+    this.lastTouchY = e.touches[0].clientY;
+    this.lastTouchTime = e.timeStamp;
+    if (this.swipeDirection === 0) {
+      if (Math.abs(this.deltaX) > Math.abs(this.deltaY)) {
+        this.swipeDirection = 1;
+      }
+      else {
+        this.swipeDirection = 2;
+      }
+    }
+  },
+  touchend: function (e) {
+    var deltaTime = e.timeStamp - this.lastTouchTime;
+    this.speedY = this.deltaY / deltaTime;
+  }
+}
+
 Page({
 
   /**
@@ -18,7 +61,18 @@ Page({
     toLeft: true,
     checkMsgStatusInterval: null,
     testSrc: null,
-    showShield: false
+    showShield: false,
+
+    // 删除动画
+    swipeCheckX: 35, //激活检测滑动的阈值
+    swipeCheckState: 0, //0未激活 1激活
+    maxMoveLeft: 185, //消息列表项最大左滑距离
+    correctMoveLeft: 175, //显示菜单时的左滑距离
+    thresholdMoveLeft: 75,//左滑阈值，超过则显示菜单
+    lastShowMsgId: '', //记录上次显示菜单的消息id
+    moveX: 0,  //记录平移距离
+    showState: 0, //0 未显示菜单 1显示菜单
+    touchStartState: 0, // 开始触摸时的状态 0 未显示菜单 1 显示菜单
   },
 
   /**
@@ -30,6 +84,10 @@ Page({
     that.renderList()
 
     that.computeFileSize()
+
+    this.msgListView = wxviewType.createWXView();
+    // this.msgListView.setAnimationParam('msgListAnimation');
+    this.msgListView.page = this;
     
   },
 
@@ -117,7 +175,8 @@ Page({
               newestMsg: newestMsg.content,
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
-              msgClean: records[i].msgClean
+              msgClean: records[i].msgClean,
+              id: 'id-'+i
             })
           } else if (newestMsg.type === 'img') {
             recordList.push({
@@ -126,7 +185,8 @@ Page({
               newestMsg: '[图片]',
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
-              msgClean: records[i].msgClean
+              msgClean: records[i].msgClean,
+              id: 'id-' + i
             })
           } else if (newestMsg.type === 'face') {
             recordList.push({
@@ -135,7 +195,8 @@ Page({
               newestMsg: '[表情]',
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
-              msgClean: records[i].msgClean
+              msgClean: records[i].msgClean,
+              id: 'id-' + i
             })
           } else if (newestMsg.type === 'shield') {
             recordList.push({
@@ -144,7 +205,8 @@ Page({
               newestMsg: newestMsg.content,
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
-              msgClean: records[i].msgClean
+              msgClean: records[i].msgClean,
+              id: 'id-' + i
             })
           } else if (newestMsg.type === 'card') {
             recordList.push({
@@ -153,7 +215,8 @@ Page({
               newestMsg: newestMsg.content,
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
-              msgClean: records[i].msgClean
+              msgClean: records[i].msgClean,
+              id: 'id-' + i
             })
           }
         }
@@ -222,63 +285,6 @@ Page({
     that.computeFileSize()
   },
 
-  touchS: function (e) {
-    if (e.touches.length == 1) {
-      this.setData({
-        //设置触摸起始点水平方向位置  
-        startX: e.touches[0].clientX
-      });
-    }
-  },
-  touchM: function (e) {
-    var that = this
-    initdata(that)
-    if (e.touches.length == 1) {
-      //手指移动时水平方向位置  
-      var moveX = e.touches[0].clientX;
-      //手指起始点位置与移动期间的差值  
-      var disX = this.data.startX - moveX;
-      var delBtnWidth = this.data.delBtnWidth;
-      var txtStyle = "";
-      if (disX == 0 || disX < 0) {//如果移动距离小于等于0，文本层位置不变  
-        txtStyle = "left:0px";
-      } else if (disX > 0) {//移动距离大于0，文本层left值等于手指移动距离  
-        txtStyle = "left:-" + disX + "px";
-        if (disX >= delBtnWidth) {
-          //控制手指移动距离最大值为删除按钮的宽度  
-          txtStyle = "left:-" + delBtnWidth + "px";
-        }
-      }
-      //获取手指触摸的是哪一项  
-      var index = e.target.dataset.index;
-      var list = this.data.list;
-      list[index].txtStyle = txtStyle;
-      //更新列表的状态  
-      this.setData({
-        list: list
-      });
-    }
-  },
-
-  touchE: function (e) {
-    if (e.changedTouches.length == 1) {
-      //手指移动结束后水平位置  
-      var endX = e.changedTouches[0].clientX;
-      //触摸开始与结束，手指移动的距离  
-      var disX = this.data.startX - endX;
-      var delBtnWidth = this.data.delBtnWidth;
-      //如果距离小于删除按钮的1/2，不显示删除按钮  
-      var txtStyle = disX > delBtnWidth / 2 ? "left:-" + delBtnWidth + "px" : "left:0px";
-      //获取手指触摸的是哪一项  
-      var index = e.target.dataset.index;
-      var list = this.data.list;
-      list[index].txtStyle = txtStyle;
-      //更新列表的状态  
-      this.setData({
-        list: list
-      });
-    }
-  },  
 
   basicAnimation(duration, delay) {
     let animation = wx.createAnimation({
@@ -374,6 +380,117 @@ Page({
   clearStorage(){
     wx.clearStorage()
   },
+
+
+  ontouchstart: function (e) {
+    this.msgListView.ontouchstart(e);
+    touchData.touchstart(e);
+    if (this.showState === 1) {
+      this.touchStartState = 1;
+      this.showState = 0;
+      this.moveX = 0;
+      this.translateXMsgItem(this.lastShowMsgId, 0, 200);
+      this.lastShowMsgId = "";
+      return;
+    }
+    if (touchData.firstTouchX > this.swipeCheckX) {
+      this.swipeCheckState = 1;
+    }
+  },
+
+  ontouchmove: function (e) {
+    touchData.touchmove(e);
+    if (this.swipeCheckState === 0) {
+      return;
+    }
+    //当开始触摸时有菜单显示时，不处理滑动操作
+    if (this.touchStartState === 1) {
+      return;
+    }
+    // //滑动container，只处理垂直方向
+    // if (e.target.id === 'id-container') {
+    //   this.msgListView.ontouchmove(e, touchData.deltaY);
+    //   return;
+    // }
+    // //已触发垂直滑动
+    // if (touchData.swipeDirection === 2) {
+    //   this.msgListView.ontouchmove(e, touchData.deltaY);
+    //   return;
+    // }
+    var moveX = touchData.totalDelateX;
+    //处理边界情况
+    if (moveX > 0) {
+      moveX = 0;
+    }
+    //检测最大左滑距离
+    if (moveX < -this.maxMoveLeft) {
+      moveX = -this.maxMoveLeft;
+    }
+    this.moveX = moveX;
+    this.translateXMsgItem(e.target.id, moveX, 0);
+  },
+  ontouchend: function (e) {
+    console.log(e)
+    touchData.touchend(e);
+    this.swipeCheckState = 0;
+    if (this.touchStartState === 1) {
+      this.touchStartState = 0;
+      return;
+    }
+    // //滑动container，只处理垂直方向
+    // if (e.target.id === 'id-container') {
+    //   this.msgListView.ontouchend(e, touchData.speedY);
+    //   return;
+    // }
+    // //垂直滚动
+    // if (touchData.swipeDirection === 2) {
+    //   this.msgListView.ontouchend(e, touchData.speedY);
+    //   return;
+    // }
+    if (this.moveX === 0) {
+      this.showState = 0;
+      return;
+    }
+    if (this.moveX === this.correctMoveLeft) {
+      this.showState = 1;
+      this.lastShowMsgId = e.target.id;
+      return;
+    }
+    if (this.moveX < -this.thresholdMoveLeft) {
+      this.moveX = -this.correctMoveLeft;
+      this.showState = 1;
+      this.lastShowMsgId = e.target.id;
+    }
+    else {
+      this.moveX = 0;
+      this.showState = 0;
+    }
+    this.translateXMsgItem(e.target.id, this.moveX, 200);
+  },
+  getItemIndex: function (id) {
+    var msgList = this.data.chatRecords;
+    for (var i = 0; i < msgList.length; i++) {
+      if (msgList[i].id === id) {
+        return i;
+      }
+    }
+    return -1;
+  },
+  translateXMsgItem: function (id, x, duration) {
+    console.log('-------------------')
+    console.log(id)
+    var animation = wx.createAnimation({ duration: duration });
+    animation.translateX(x).step();
+    this.animationMsgItem(id, animation);
+  },
+  animationMsgItem: function (id, animation) {
+    var index = this.getItemIndex(id);
+    var param = {};
+    var indexString = 'chatRecords[' + index + '].animation';
+    param[indexString] = animation.export();
+    this.setData(param);
+  },
+
 
 
 })

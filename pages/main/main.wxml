@@ -1,5 +1,5 @@
 <!--pages/main/main.wxml-->
-<view class="container" style="" wx:if="{{store === null}}">
+<view class="container" style="" wx:if="{{store !== null}}">
 
   <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ deviceInfo.windowWidth }}px">
     <view class="wrap">
@@ -18,7 +18,7 @@
           <view class="line"></view>
         </view>
         <view class="bottomText">本店正有{{store.total_number}}位小伙伴使用</view>
-        <view class="flipConner" wx:if="{{showMeSwitch}}" bindtap="switchToMe" style="left: {{ deviceInfo.windowWidth-49 }}px">
+        <view class="flipConner" wx:if="{{login}}" bindtap="switchToMe" style="left: {{ deviceInfo.windowWidth-49 }}px">
           <image class="flipConnerImg" src="/images/flipConner.png"></image>
           <text class="flipConnerText">我的</text>
         </view>
@@ -39,11 +39,16 @@
         <!-- <text class="small">在这里找到你心动的ta</text> -->
       </view>
     </view>
-    <view class="empty" wx:if="{{userListLength === 0}}">暂时为空</view>
+    <view class="empty" wx:if="{{!showLogin && !showLoading && userListLength === 0}}">暂时为空</view>
 
-    <button class="needLogin" wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">{{showLoginStatus}}</button>
-
-    <view class="classname">{{showTip}}</view>
+    <view class="login" wx:if="{{!login || showLoading || showLogin}}">
+      <view class="cssload-container" wx:if="{{showLoading}}">
+        <view class="cssload-speeding-wheel"></view>
+      </view>      
+    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">{{login ? "获取地理位置失败" : "登录后查看同店的人"}}</button>
+    <view class="loadingStatus" wx:if="{{showLogin || showLoading}}">{{loadingStatus}}</view>
+    </view>
+    <!-- <view class="classname">{{showTip}}</view> -->
 
     <import src="/pages/common/tableList/tableList" />
     <template is="tableList" data="{{tables: store.table_list, tableLength: userListLength}}" />
@@ -51,7 +56,7 @@
 
 
 
-  <view class="toolBar" wx:if="{{shopShow}}">
+  <view class="toolBar" wx:if="{{login}}">
     <view class="message" bindtap="toChatRecords">
       <view class="msgwrap">
         <image src="/images/message.png"></image>
@@ -87,9 +92,9 @@
 </view>
 <!--container end-->
 
-<view class="classname" wx:if="{{store !== null}}">成功</view>
+<!-- <view class="classname" wx:if="{{store !== null}}">成功</view> -->
 
-<!-- <view class="loading" wx:if="{{store === null}}">
+<view class="loading" wx:if="{{store === null}}">
   <image src="/images/loading.gif"></image>
   <text>{{showTip}}</text>
-</view> -->
+</view>

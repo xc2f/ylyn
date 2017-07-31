@@ -38,7 +38,9 @@ Page({
     checkLocationInterval: null,
     showTip: '店铺正马不停蹄地向你赶来',
     showLogin: true,
-    showLoginStatus: '登录后查看同店的人'
+    showLoading: false,
+    loadingStatus: '',
+    login: false
   },
 
 
@@ -64,24 +66,34 @@ Page({
     let token = wx.getStorageSync('TOKEN')
     if (token) {
       app.TOKEN = token
-      app.connectWebsocket('auto', null, login => {
-        if(login){
-          that.setData({
-            showLoginStatus: '登陆成功，数据获取中'
-          })
-          that.fetchShopInfo()
-        } else {
-          that.setData({
-            showLoginStatus: '登陆失败，请重新授权'
-          })
-          that.setData({
-            showLogin: true
-          })
-        }
-      })
+      if(app.globalData.client_id){
+        app.login( success => {
+          if(success){
+            that.setData({
+              login: true
+            })
+            that.fetchShopInfo()
+          }
+        })
+      } else {
+        app.connectWebsocket('auto', null, login => {
+          console.log(login)
+          if (login) {
+            that.setData({
+              login: true
+            })
+            that.fetchShopInfo()
+          } else {
+            // that.setData({
+            //   loadingStatus: '登录失败，请重试'
+            // })
+          }
+        })
+      }
     }else{
       // 新接口
-      that.fetchShopInfo()
+      console.log('here')
+      that.fetchShopInfoWithoutLogin()
     }
 
   },
@@ -91,15 +103,30 @@ Page({
     let detail = res.detail
     // console.log(detail)
     if (detail.rawData){
+      that.setData({
+        showLogin: false,
+        showLoading: true,
+        loadingStatus: '登录中',
+      })
       app.manualLogin(detail.encryptedData, detail.iv, res =>{
         if(res){
           that.setData({
-            showLoginStatus: '登陆成功，数据获取中'
+            login: true,
+            loadingStatus: '登录成功，数据获取中'
           })
           that.fetchShopInfo()
+        } else {
+          that.setData({
+            showLogin: true,
+            showLoading: false,
+            loadingStatus: '登录失败，请重试',
+          })
         }
       })
     } else {
+      that.setData({
+        showLoading: false
+      })
     }
   },
 
@@ -111,38 +138,73 @@ Page({
 
   },
 
-
-  fetchShopInfo(){
+  fetchShopInfoWithoutLogin(){
     let that = this
-    app.getLocation(res => {
-      if (res === '获取成功') {
-        let coordinate = app.globalData.coordinate
-        // 是否在本店
-        that.isInStore(coordinate)
-      } else if (res === '取消授权') {
-        that.setData({
-          showTip: '您未授权，请重新授权后重试',
-          // showLoginStatus: '您未授权，请重新授权后重试',
-        })
-      } else if (res === '获取中') {
-        that.setData({
-          showTip: '店铺正马不停蹄地向你赶来',
-          // showLoginStatus: ''
-        })
-      } else {
-        that.setData({
-          showTip: '位置获取失败，请重试',
-          // showLoginStatus: '位置获取失败，请重试'
-        })
+    wx.request({
+      url: app.requestHost + 'Store/logout_store_info/',
+      method: 'POST',
+      data: {
+        store_id: that.data.qrcodeInfo.store_id,
+        // longitude: coordinate.longitude,
+        // latitude: coordinate.latitude
+      },
+      success: function (res) {
+        wx.stopPullDownRefresh()
+        console.log(res)
+        if (res.data.code === 201) {
+          that.setData({
+            store: res.data.result
+          })
+        } else {
+
+        }
       }
     })
   },
 
+
+  fetchShopInfo(){
+    console.log('in3')
+    let that = this
+    let coordinate = app.globalData.coordinate
+    if (coordinate){
+      that.isInStore(coordinate)
+    } else {
+      app.getLocation(res => {
+        console.log(res)
+        if (res === '获取成功') {
+          // 是否在本店
+          that.isInStore(app.globalData.coordinate)
+        } else if (res === '取消授权') {
+          that.setData({
+            showLogin: true,
+            showLoading: false,
+            loadingStatus: '您未授权，请授权后重试',
+            showTip: '您未授权，请授权后重试',
+          })
+        } else if (res === '获取中') {
+          that.setData({
+            showLogin: false,
+            showLoading: true,
+            loadingStatus: '店铺正马不停蹄地向你赶来',
+            showTip: '店铺正马不停蹄地向你赶来',
+          })
+        } else {
+          that.setData({
+            showLogin: true,
+            showLoading: false,
+            loadingStatus: '位置获取失败，请重试',
+            showTip: '位置获取失败，请重试',
+          })
+        }
+      })
+    }
+  },
+
   isInStore(coordinate) {
-    console.log(coordinate)
     let that = this
     wx.request({
-      url: app.requestHost + 'Store/check_address/',
+      url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
         latitude: coordinate.latitude,
@@ -174,7 +236,8 @@ Page({
       fail: function(){
         that.setData({
           showLogin: true,
-          showLoginStatus: '未知错误'
+          showLoading: false,
+          loadingStatus: '未知错误，请重试'
         })
       }
     })
@@ -198,12 +261,15 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
+        console.log(res)
+        that.setData({
+          showLogin: false,
+          showLoading: false,
+          loadingStatus: '获取成功，数据加载中'
+        })
         // 隐藏加载动画和下拉刷新动作
         wx.hideLoading()
         wx.stopPullDownRefresh()
-        that.setData({
-          showLogin: false
-        })
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
@@ -232,17 +298,13 @@ Page({
               }
             }
           })
-        } else {
-          that.setData({
-            showLogin: true,
-            showLoginStatus: '数据获取失败，请下拉刷新重试'
-          })
         }
       },
       fail: function(){
         that.setData({
           showLogin: true,
-          showLoginStatus: '数据获取失败，请下拉刷新重试'
+          showLoading: false,
+          loadingStatus: '数据获取失败，请重试'
         })
       }
     })
@@ -390,7 +452,7 @@ Page({
 
     setTimeout(function(){
       that.setData({
-        showTip: '请下拉刷新重新获取'
+        showTip: '获取位置失败，请下拉刷新重新获取'
       })
     }, 20000)
   },
@@ -417,10 +479,14 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.fetchShopInfo()
+    if(this.data.login){
+      this.fetchShopInfo()
+    } else {
+      this.fetchShopInfoWithoutLogin()
+    }
+    
     this.setData({
       showTip: '店铺正马不停蹄地向你赶来',
-      // showLoginStatus: '数据获取中'
     })
   },
 

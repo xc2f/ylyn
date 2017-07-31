@@ -14,13 +14,12 @@ Page({
     hasNewMsg: false,
     getMsgStatusInterval: null,
 
-    showLogin: true,
-    showTip: '附近无可用商家'
+    showLogin: false,
+    showTip: '附近无可用商家',
+    showLoading: false,
+    login: false
   },
 
-  userInfoHandler(res) {
-    console.log(res)
-  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -31,25 +30,43 @@ Page({
     // if (op === 'nologin') {
     //   that.fetchShopList()
     // } else {
-    let token = wx.getStorageSync('TOKEN')
-    if (token) {
-      app.TOKEN = token
-      app.connectWebsocket('auto', null, login => {
-        // console.log(login)
-        if (login) {
-          that.setData({
-            showMeIcon: true,
-            showLogin: false
-          })
-          that.fetchShopList()
-        } else {
-          wx.showToast({
-            title: '登录失败',
-          })
-        }
+    if(app.globalData.userId){
+      that.setData({
+        showMeIcon: true,
+        showLogin: false,
+        login: true
       })
-    } else {
       that.fetchShopList()
+    }else{
+      let token = wx.getStorageSync('TOKEN')
+      if (token) {
+        wx.showLoading({
+          title: '登录中',
+        })
+        app.TOKEN = token
+        app.connectWebsocket('auto', null, login => {
+          // console.log(login)
+          if (login) {
+            wx.hideLoading()
+            that.setData({
+              showMeIcon: true,
+              showLogin: false,
+              login: true
+            })
+            that.fetchShopList()
+          } else {
+            wx.hideLoading()
+            wx.showToast({
+              title: '登录失败',
+            })
+          }
+        })
+      } else {
+        that.setData({
+          showLogin: true
+        })
+        that.fetchShopList()
+      }
     }
     // }
   },
@@ -60,13 +77,28 @@ Page({
     let detail = res.detail
     // console.log(detail)
     if (detail.rawData) {
+      that.setData({
+        showLogin: false,
+        showLoading: true,
+        showTip: '登陆中',
+      })
       app.manualLogin(detail.encryptedData, detail.iv, res => {
         if (res) {
           that.setData({
             showMeIcon: true,
-            showLogin: false
+            showLogin: false,
+            login: true,
+            showLoading: false,
+            showTip: '登录成功，数据获取中'
           })
           // that.fetchShopList()
+        } else {
+          that.setData({
+            showMeIcon: false,
+            showLogin: true,
+            showLoading: false,
+            showTip: '登录失败，请重试'
+          })
         }
       })
     } else {
@@ -74,21 +106,29 @@ Page({
   },
 
   fetchShopList() {
+    wx.showLoading({
+      title: '数据获取中',
+    })
     let that = this;
+    let coordinate = app.globalData.coordinate
     app.getLocation(res => {
       if (res === '获取成功') {
         let coordinate = app.globalData.coordinate
         // 是否在本店
         that.toFetch(coordinate)
       } else if (res === '取消授权') {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
         that.setData({
-          showTip: '您未授权，请重新授权后重试'
+          showTip: '获取不到您的位置，请刷新重试',
         })
       } else if (res === '获取中') {
         // that.setData({
         //   showTip: '店铺正马不停蹄地向你赶来'
         // })
       } else {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
         that.setData({
           showTip: '位置获取失败，请重试'
         })
@@ -97,10 +137,6 @@ Page({
   },
 
   toFetch(coordinate) {
-    wx.showLoading({
-      title: '数据获取中，请稍后',
-      // mask: true
-    })
     let that = this
     wx.request({
       url: app.requestHost + 'Store/store_list/',
@@ -121,11 +157,12 @@ Page({
         if (result !== false) {
           that.setData({
             shopList: result.store_list,
-            shopListEmpty: false
+            shopListEmpty: false,
           })
         } else {
           that.setData({
-            shopListEmpty: true
+            shopListEmpty: true,
+            showTip: '附近无可用店铺'
           })
         }
         wx.stopPullDownRefresh()

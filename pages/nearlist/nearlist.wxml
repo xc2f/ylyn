@@ -57,6 +57,11 @@
     <view class="msgNew" wx:if="{{hasNewMsg}}"></view>
   </view>
 
-    <button class="needLogin" wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录</button>
-    
+  <view class="login" wx:if="{{!login}}">
+      <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录</button>  
+    <view class="cssload-container" wx:if="{{showLoading}}">
+      <view class="cssload-speeding-wheel"></view>
+    </view>
+  </view>
+
 </view>

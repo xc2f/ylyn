@@ -35,11 +35,12 @@ Page({
       // 是否在本店
       that.toFetch(coordinate, options)
     }else {
+      wx.showLoading({
+        title: '数据获取中，请稍后',
+      })
       app.getLocation(res => {
         if (res === '获取成功') {
-          wx.showLoading({
-            title: '数据获取中，请稍后',
-          })
+          let coordinate = app.globalData.coordinate
           // 是否在本店
           that.toFetch(coordinate, options)
         } else if (res === '取消授权') {
@@ -70,7 +71,7 @@ Page({
         latitude: coordinate.latitude
       },
       success: function(res){
-        // console.log(res)
+        console.log(res)
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
@@ -78,12 +79,12 @@ Page({
           })
           let result = res.data.result
           let gStoreInfo = app.globalData.storeInfo
-          if (gStoreInfo !== null && gStoreInfo.storeId === result.store_id) {
+          if (gStoreInfo !== null && gStoreInfo.storeId == result.store_id) {
             that.setData({
               showQuit: true
             })
           }
-          result.activity.activity_content = result.activity.length === 0 ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
+          result.activity.activity_content = (!result.activity || result.activity.length === 0) ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
           result.food = result.food.length === 0 ? 0 : result.food
           that.setData({
             shop: result,
@@ -147,7 +148,7 @@ Page({
         // console.log(res)
         if(res.data.code === 201 || res.data.code === 102){
           app.globalData.storeInfo = null
-          wx.redirectTo({
+          wx.reLaunch({
             url: '/pages/nearlist/nearlist',
           })
         }

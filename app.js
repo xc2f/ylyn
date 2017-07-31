@@ -7,6 +7,7 @@ App({
     checkLocationInterval: null,
     webSocketError: false,
     connectTimes: 0,
+    socketBroken: false,
     coordinate: null,
     userId: null,
     storeInfo: null,
@@ -82,7 +83,8 @@ App({
    * @params autoLoginStatus - 自动登录callback
    */
   connectWebsocket(connectType, manualLoginStatus, autoLoginStatus) {
-    // console.log('in socket')
+    // wx.closeSocket()
+    console.log('in socket')
     let that = this
     // 连接websocket
     wx.connectSocket({
@@ -90,12 +92,12 @@ App({
     })
 
     wx.onSocketOpen(function (res) {
-      // console.log('WebSocket连接已打开！')
+      console.log('WebSocket连接已打开！')
 
       // 监听消息
       wx.onSocketMessage(function (res) {
         // console.log('--------------------')
-        // console.log(res)
+        console.log(res)
         let data = JSON.parse(res.data)
         console.log(data)
         if (data.type === 'init') {
@@ -103,11 +105,9 @@ App({
           if (connectType === 'manual') {
             manualLoginStatus(data.client_id)
           } else {
-            if (that.globalData.storeInfo === null) {
-              if (that.globalData.connectTimes === 0) {
-                that.login(autoLoginStatus)
-                that.globalData.connectTimes++
-              } else {
+            if (that.globalData.socketBroken) {
+              that.globalData.socketBroken = false
+              if (that.globalData.storeInfo === null) {
                 wx.request({
                   url: that.requestHost + 'Store/ws_reconnection/',
                   method: 'POST',
@@ -123,25 +123,29 @@ App({
                     }
                   }
                 })
+              } else {
+                wx.request({
+                  url: that.requestHost + 'Store/ws_reconnection/',
+                  method: 'POST',
+                  data: {
+                    token: that.TOKEN,
+                    store_id: that.globalData.storeInfo.storeId,
+                    table_id: that.globalData.storeInfo.tableId,
+                    client_id: that.globalData.client_id,
+                    type: 1
+                  },
+                  success: function (res) {
+                    // console.log(res)
+                    if (res.data.code === 201) {
+                      // console.log('重连成功！')
+                    }
+                  }
+                })
               }
             } else {
-              wx.request({
-                url: that.requestHost + 'Store/ws_reconnection/',
-                method: 'POST',
-                data: {
-                  token: that.TOKEN,
-                  store_id: that.globalData.storeInfo.storeId,
-                  table_id: that.globalData.storeInfo.tableId,
-                  client_id: that.globalData.client_id,
-                  type: 1
-                },
-                success: function (res) {
-                  // console.log(res)
-                  if (res.data.code === 201) {
-                    // console.log('重连成功！')
-                  }
-                }
-              })
+              console.log('to login')
+              console.log(autoLoginStatus)
+              that.login(autoLoginStatus)
             }
           }
         } else {
@@ -154,13 +158,12 @@ App({
       // console.log(res)
     })
 
-    wx.onSocketClose(function (res) {
+    wx.onSocketClose( res => {
       that.globalData.client_id = null
-      wx.closeSocket()
+      that.globalData.socketBroken = true
+      // wx.closeSocket()
       // console.log('WebSocket 已关闭！')
-      wx.connectSocket({
-        url: socketUrl
-      })
+      that.connectWebsocket('auto', null, null)
     })
   },
 
@@ -193,6 +196,7 @@ App({
         that.globalData.userId = res.data.result.user_id
 
         console.log('in')
+        // console.log(callback)
         // 执行回调
         callback(true)
         // 未读消息
@@ -271,7 +275,7 @@ App({
                   callback(false)
                   wx.showToast({
                     icon: 'loading',
-                    title: '登录失败',
+                    title: '登录失败，请重试',
                   })
                 }
               },

@@ -222,6 +222,64 @@ Page({
     that.computeFileSize()
   },
 
+  touchS: function (e) {
+    if (e.touches.length == 1) {
+      this.setData({
+        //设置触摸起始点水平方向位置  
+        startX: e.touches[0].clientX
+      });
+    }
+  },
+  touchM: function (e) {
+    var that = this
+    initdata(that)
+    if (e.touches.length == 1) {
+      //手指移动时水平方向位置  
+      var moveX = e.touches[0].clientX;
+      //手指起始点位置与移动期间的差值  
+      var disX = this.data.startX - moveX;
+      var delBtnWidth = this.data.delBtnWidth;
+      var txtStyle = "";
+      if (disX == 0 || disX < 0) {//如果移动距离小于等于0，文本层位置不变  
+        txtStyle = "left:0px";
+      } else if (disX > 0) {//移动距离大于0，文本层left值等于手指移动距离  
+        txtStyle = "left:-" + disX + "px";
+        if (disX >= delBtnWidth) {
+          //控制手指移动距离最大值为删除按钮的宽度  
+          txtStyle = "left:-" + delBtnWidth + "px";
+        }
+      }
+      //获取手指触摸的是哪一项  
+      var index = e.target.dataset.index;
+      var list = this.data.list;
+      list[index].txtStyle = txtStyle;
+      //更新列表的状态  
+      this.setData({
+        list: list
+      });
+    }
+  },
+
+  touchE: function (e) {
+    if (e.changedTouches.length == 1) {
+      //手指移动结束后水平位置  
+      var endX = e.changedTouches[0].clientX;
+      //触摸开始与结束，手指移动的距离  
+      var disX = this.data.startX - endX;
+      var delBtnWidth = this.data.delBtnWidth;
+      //如果距离小于删除按钮的1/2，不显示删除按钮  
+      var txtStyle = disX > delBtnWidth / 2 ? "left:-" + delBtnWidth + "px" : "left:0px";
+      //获取手指触摸的是哪一项  
+      var index = e.target.dataset.index;
+      var list = this.data.list;
+      list[index].txtStyle = txtStyle;
+      //更新列表的状态  
+      this.setData({
+        list: list
+      });
+    }
+  },  
+
   basicAnimation(duration, delay) {
     let animation = wx.createAnimation({
       duration: duration || 500,
@@ -231,30 +289,32 @@ Page({
     return animation;
   },
 
-  blockMove(e){
-    let mx = e.changedTouches[0].pageX
-    let moveXStamp = this.data.moveXStamp
-    if (moveXStamp === 0) {
-      this.setData({
-        moveXStamp: mx
-      })
-    }
-    if (mx < moveXStamp && this.data.toLeft) {
-      // 只调用一次
-      this.setData({
-        wrapAnimation: this.basicAnimation(300, 0).left(-100).step().export(),
-        removeAnimation: this.basicAnimation(300, 0).right(0).step().export(),
-        toLeft: false
-      })
-    } else {
-      this.setData({
-        wrapAnimation: this.basicAnimation(300, 0).left(0).step().export(),
-        removeAnimation: this.basicAnimation(300, 0).right(-100).step().export(),
-        toLeft: true
-      })
-    }
-    // console.log('mx: '+mx, 'moveXStamp: '+moveXStamp)
-  },
+  // blockMove(e){
+  //   let mx = e.changedTouches[0].pageX
+    
+  //   let moveXStamp = this.data.moveXStamp
+  //   if (moveXStamp === 0) {
+  //     this.setData({
+  //       moveXStamp: mx
+  //     })
+  //   }
+  //   console.log(mx, moveXStamp)
+  //   if (mx < moveXStamp && this.data.toLeft) {
+  //     // 只调用一次
+  //     this.setData({
+  //       wrapAnimation: this.basicAnimation(300, 0).left(-100).step().export(),
+  //       removeAnimation: this.basicAnimation(300, 0).right(0).step().export(),
+  //       toLeft: false
+  //     })
+  //   } else {
+  //     this.setData({
+  //       wrapAnimation: this.basicAnimation(300, 0).left(0).step().export(),
+  //       removeAnimation: this.basicAnimation(300, 0).right(-100).step().export(),
+  //       toLeft: true
+  //     })
+  //   }
+  //   // console.log('mx: '+mx, 'moveXStamp: '+moveXStamp)
+  // },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

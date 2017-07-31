@@ -21,8 +21,9 @@
   <view class="recordList" wx:if="{{chatRecords}}">
     <block wx:for="{{chatRecords}}" wx:key="chatId">
 
-    <view class="block" bindtouchmove="blockMove">
-      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}' animation="{{wrapAnimation}}">
+    <view class="block">
+
+      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE">
         <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
         <view class="left">
           <image src="{{item.friendInfo.avatar}}"></image>
@@ -46,7 +47,7 @@
         </view>
       </view>
 
-      <view class="remove" animation="{{removeAnimation}}" bindtap="removeChat" data-userid='{{item.friendInfo.user_id}}'><text>删除</text></view>
+      <view class="remove" bindtap="removeChat" data-userid='{{item.friendInfo.user_id}}'><text>删除</text></view>
     
     </view>
     </block>

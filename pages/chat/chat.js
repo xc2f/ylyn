@@ -26,7 +26,7 @@ Page({
     inputValue: '',
     meInfo: null,
     friendInfo: null,
-    storeId: null,
+    storeInfo: null,
     messages: [],
 
     checkMsgStatusInterval: null,
@@ -89,7 +89,6 @@ Page({
 
     that.setData({
       friendInfo: JSON.parse(options.friendinfo),
-      storeId: app.globalData.storeInfo ? app.globalData.storeInfo.storeId : null
     })
 
 
@@ -97,6 +96,7 @@ Page({
     wx.getStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       success: function (res) {
+        console.log(res)
         let messages = objDeepCopy(res.data)
         messages.map(item => {
           if (item.type === 'time') {
@@ -140,6 +140,7 @@ Page({
     wx.getStorage({
       key: 'chatStatusWith' + that.data.friendInfo.user_id,
       success: function (res) {
+        console.log(res)
         if (res.data.isShield === true) {
           that.setData({
             isShield: true
@@ -160,6 +161,28 @@ Page({
       },
     })
 
+    // store_info
+    wx.getStorage({
+      key: 'chatRecords',
+      success: function(res) {
+        // console.log(res)
+        let data = res.data
+        data.forEach(item => {
+          // 如果有这份聊天记录才会更新storeInfo
+          if (item.chatName === 'chatWith' + that.data.friendInfo.user_id){
+            item.storeInfo = (item.storeInfo.storeId === (app.globalData.storeInfo ? app.globalData.storeInfo.storeId : '' )) ? app.globalData.storeInfo : item.storeInfo
+            that.setData({
+              storeInfo: item.storeInfo
+            })
+          }
+        })
+        wx.setStorage({
+          key: 'chatRecords',
+          data: data,
+        })
+      },
+    })
+
 
     // 重置消息状态
     wx.getStorage({
@@ -172,6 +195,7 @@ Page({
             break
           }
         }
+        console.log(data)
         wx.setStorageSync('chatRecords', data)
       },
     })
@@ -271,7 +295,7 @@ Page({
           getApp().refreshChatRecords({
             newMessage: postData,
             friendInfo: that.data.friendInfo,
-            storeInfo: app.globalData.storeInfo
+            storeInfo: that.data.storeInfo ? that.data.storeInfo : app.globalData.storeInfo
           }, true)
         }
       }
@@ -416,9 +440,10 @@ Page({
         tuser_id: that.data.friendInfo.user_id,
         token: app.TOKEN,
         content: JSON.stringify(postData),
-        store_id: that.data.storeId
+        store_id: that.data.storeInfo ? that.data.storeInfo.storeId : app.globalData.storeInfo.storeId
       },
       success: function (res) {
+        console.log(res)
         let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {
@@ -449,6 +474,7 @@ Page({
                 // 您已将对方的消息屏蔽
                 messages.push(that.refreshShield(true, '消息可能送往火星了', null))
                 if (!that.data.isShield) {
+
                   that.setData({
                     isShield: true
                   })
@@ -484,6 +510,7 @@ Page({
         })
 
         let chat_id = res.data.result.chat_id
+        
         wx.getStorage({
           key: 'chatIdWith' + that.data.friendInfo.user_id,
           success: function (res) { },
@@ -528,7 +555,7 @@ Page({
     getApp().refreshChatRecords({
       newMessage: postData,
       friendInfo: that.data.friendInfo,
-      storeInfo: app.globalData.storeInfo
+      storeInfo: that.data.storeInfo ? that.data.storeInfo : app.globalData.storeInfo
     }, true)
   },
 
@@ -645,6 +672,11 @@ Page({
   onShow: function () {
     let that = this
 
+  setTimeout(function(){
+    console.log(that.data)
+  }, 200)
+    
+
     // 获取本人信息，放这里是因为若是从设置页返回则更新数据
     wx.getStorage({
       key: 'meInfo',
@@ -696,6 +728,19 @@ Page({
               }
             },
           })
+
+          if (!that.data.showShield && messages[messages.length - 1].user_id === that.data.friendInfo.user_id){
+              wx.getStorage({
+                key: 'chatIdWith' + that.data.friendInfo.user_id,
+                success: function (res) {
+                  that.setData({
+                    showShield: true,
+                    chatId: res.data.chat_id
+                  })
+                },
+              })
+          }
+
         }, 2000)
       }
     }, 1000)

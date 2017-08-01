@@ -153,6 +153,10 @@
   color: red;
   font-size: 12px;
 }
+.msgFail image {
+  width: 16px;
+  height: 16px;
+}
 
 .messageBlock.me image.avatar {
   width: 50px;
@@ -314,4 +318,29 @@
   height: 20px;
   line-height: 20px;
   border-radius: 3px;
+}
+
+
+/* .cssload-container {
+  float: right;
+	width: 100%;
+	height: 49px;
+	text-align: center;
+} */
+
+.cssload-zenith {
+  float: right;
+	width: 13px;
+	height: 13px;
+	margin: 0 auto;
+	border-radius: 50%;
+	border-top-color: transparent;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	box-shadow: 1px 1px 1px rgba(0,0,0, .7);
+	animation: cssload-spin 600ms infinite linear;
+}
+
+@keyframes cssload-spin {
+	100%{ transform: rotate(360deg); transform: rotate(360deg); }
 }

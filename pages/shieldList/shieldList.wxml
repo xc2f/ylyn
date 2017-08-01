@@ -3,7 +3,7 @@
     <view class="topBan">
     <view class="line"></view>
     <view class="dot"></view>
-    <image src="/images/zjlxr.png"></image>
+    <image src="/images/nomsg.png"></image>
     <text>屏蔽列表</text>
     <view class="dot"></view>
     <view class="line"></view>
@@ -21,12 +21,12 @@
           <image src="{{item.avatar}}"></image>
         </view>
         <view class="middle">
-          <view class="name"><text>{{item.nickname}}</text></view>
+          <view class="name"><text class="noWrap">{{item.nickname}}</text></view>
           <view class="userInfo">
             <view class="gender"><image src="{{item.gender==='1' ? '/images/boy.png' : item.gender==='2' ? '/images/girl.png' : ''}}"></image></view>
             <view class="age" wx:if="{{item.age && item.age !== ''}}"><text>{{item.age}}岁</text></view>
           </view>
-          <view class="introduction noWrap"><text>{{item.introduction}}</text></view>
+          <view class="introduction"><text class="noWrap">{{item.introduction}}</text></view>
         </view>
         <view class="right" bindtap="cancleShield" data-friendinfo='{{item}}'>
           <view class="removeShield">取消屏蔽</view>

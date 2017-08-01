@@ -40,7 +40,7 @@ Page({
   onLoad: function (options) {
     this.setData({
       currentUserId: options.user_id,
-      imgHeight: app.globalData.deviceInfo.screenHeight / 2
+      imgHeight: app.globalData.deviceInfo.screenHeight / 2 * 0.9
     })
 
     let that = this

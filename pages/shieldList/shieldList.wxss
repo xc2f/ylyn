@@ -12,11 +12,13 @@
   align-items: center;
   height: 45px;
 }
+
 .topBan .line {
   width: 30px;
   height: 2px;
   background: #333;
 }
+
 .topBan .dot {
   width: 5px;
   height: 5px;
@@ -24,12 +26,14 @@
   background: #333;
   margin: 0 3px 0 3px;
 }
+
 .topBan image {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 18px;
   margin-left: 15px;
   margin-right: 5px;
 }
+
 .topBan text {
   font-size: 16px;
   margin-right: 15px;
@@ -53,83 +57,103 @@
 }
 
 .left {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.middle {
-  flex: 2;
-  display: flex;
-  justify-content: center;
+  /* flex: 1; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  width: calc(25% - 10px);
+  float: left;
+  height: 100px;
+  margin: 10px 0 10px 10px;
 }
 
 .right {
-  flex: 1;
+  /* flex: 1; */
+  width: 25%;
+  height: 100px;
   display: flex;
-  background: rgba(158, 234, 106, .7);
+  background: rgba(158, 234, 106, 0.7);
   color: #fff;
   justify-content: center;
   align-items: center;
 }
 
+.right .removeShield {
+  font-size: 18px;
+}
+
 .left image {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
 }
 
 .middle {
+  width: calc(50% - 20px);
+  /* flex: 2; */
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  margin: 10px 0 10px 20px;
   justify-content: center;
 }
+
 .middle .name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  flex: 1.5;
-  display: flex;
-  align-items: center;
-}
-.middle .userInfo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex: 1;
-}
-.middle .userInfo .gender {
-  height: 20px;
-  line-height: 20px;
-}
-.middle .userInfo .gender image {
-  width: 16px;
-  height: 16px;
-  margin-right: 10px;
-}
-.middle .userInfo .age {
-  line-height: 20px;
-}
-.middle .age text {
-  line-height: 20px;
-  color: #777;
-  font-size: 16px;
-}
-.middle .introduction {
-  font-size: 16px;
-  max-width: 200px;
-  flex: 1;
+  flex: 1.2;
   display: flex;
   align-items: center;
 }
 
+.middle .name .noWrap {
+  width: 100%;
+}
+
+.middle .userInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.middle .userInfo .gender {
+  height: 20px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.middle .userInfo .gender image {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.middle .userInfo .age {
+  line-height: 20px;
+}
+
+.middle .age text {
+  line-height: 20px;
+  color: #777;
+  font-size: 14px;
+}
+
+.middle .introduction {
+  font-size: 14px;
+  width: 100%;
+  /* max-width: 140px; */
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
 
 .block {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 7px rgba(225, 225, 225, .7);
+  box-shadow: 0 0 7px rgba(225, 225, 225, 0.7);
   margin: 5px 0;
 }
+
 .block .wrap {
   left: 0;
 }

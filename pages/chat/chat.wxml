@@ -47,9 +47,13 @@
         <!--图片-->
         <image wx:if="{{item.type === 'img'}}" src="{{item.content}}" bindtap="prevImg" data-src='{{item.content}}' class="imgMsg" mode="aspectFit"></image>
 
-        <view class="msgSending" wx:if="{{item.status === 'sending'}}">发送中</view>
+        <view class="msgSending" wx:if="{{item.status === 'sending'}}">
+	        <div class="cssload-zenith"></div>
+        </view>
         <view class="msgSendOk" wx:if="{{item.status === 'sendOk'}}"></view>
-        <view class="msgFail" wx:if="{{item.status === 'fail'}}">发送失败</view>
+        <view class="msgFail" wx:if="{{item.status === 'fail'}}">
+           <image src="/images/msgfail.png"></image> 
+        </view>
       </view>
       <view class="friend messageBlock" wx:if="{{item.user_id === friendInfo.user_id}}" id="m{{item.msgId}}">
         <navigator url="/pages/user/user?user_id={{item.user_id}}">

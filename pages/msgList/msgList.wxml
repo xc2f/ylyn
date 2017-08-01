@@ -1,7 +1,6 @@
 <!--pages/msgList/msgList.wxml-->
 
 <view class="container">
-
   <view class="topBan">
     <view class="line"></view>
     <view class="dot"></view>
@@ -10,6 +9,7 @@
     <view class="dot"></view>
     <view class="line"></view>
   </view>
+  
   <view class="empty" wx:if="{{!chatRecords}}">
     <!-- <image src="/images/xj.png"></image> -->
     <text>这里为空哦，快找些小伙伴聊一聊！</text>
@@ -18,42 +18,43 @@
   <view class="fullStorage" wx:if="{{isFullStorage}}">
     <text>存储空间将满，请删除部分聊天会话！</text>
   </view>
-  <view class="recordList" wx:if="{{chatRecords}}" bindtouchstart='ontouchstart' catchtouchmove='ontouchmove' bindtouchend='ontouchend'>
-    <block wx:for="{{chatRecords}}" wx:key="id">
 
-     <view class="block"> 
+   <view class="recordList" wx:if="{{chatRecords}}">
+    <block wx:for="{{chatRecords}}" wx:key="">
 
-      <view class="wrap" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}' id='{{item.id}}' animation='{{item.animation}}'>
+     <view class="block touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove"> 
 
-         <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
+      <view class="wrap content" bindtap="tapToChat" data-friendinfo='{{item.friendInfo}}'>
+
+        <view class="msgClean" wx:if="{{!item.msgClean}}"></view>
         <view class="left">
           <image src="{{item.friendInfo.avatar}}"></image>
         </view>
         <view class="middle">
-          <view class="name"><text>{{item.friendInfo.nickname === "" ? '火星人' : item.friendInfo.nickname}}</text></view>
+          <view class="name"><text class="noWrap">{{item.friendInfo.nickname === "" ? '火星人' : item.friendInfo.nickname}}</text></view>
           <view class="userInfo">
             <view class="gender"><image src="{{item.friendInfo.gender==='1' ? '/images/boy.png' : item.friendInfo.gender==='2' ? '/images/girl.png' : ''}}"></image></view>
             <view class="age" wx:if="{{item.friendInfo.age && item.friendInfo.age !== ''}}"><text>{{item.friendInfo.age}}岁</text></view>
           </view>
-          <view class="newestMsg noWrap"><text>{{item.newestMsg}}</text></view>
+          <view class="newestMsg"><text class="noWrap">{{item.newestMsg}}</text></view>
         </view>
         <view class="right">
           <view class="date">{{item.date}}</view>
-          <view class="shopName noWrap" catchtap="toShop" data-shopid="{{item.storeInfo.storeId}}">
+          <view class="shopName" catchtap="toShop" data-shopid="{{item.storeInfo.storeId}}">
               <image wx:if="{{item.storeInfo}}" src="/images/zjlxr-dp.png"></image>
-              <text>{{item.storeInfo.storeName}}</text>
+              <text class="noWrap">{{item.storeInfo.storeName}}</text>
           </view>
         </view> 
 
       </view>
 
-      <view class="remove" bindtap="removeChat" data-userid='{{item.friendInfo.user_id}}'>
-        <view class="remove-text" id='{{item.id}}'>删除</view>
+      <view class="remove del" bindtap="removeChat" data-userid='{{item.friendInfo.user_id}}'>
+        <view class="del-text">删除</view>
       </view>
     
      </view> 
     </block>
-  </view>
+  </view> 
 
   <navigator url="/pages/shieldList/shieldList" wx:if="{{showShield}}">
   <view class="shieldIcon">屏蔽列表</view>

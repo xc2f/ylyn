@@ -26,10 +26,10 @@
     </view>
   </view>
 
-  <view class="galleryHD">
+  <!-- <view class="galleryHD">
     <image src="/images/xc.png"></image>
     <text>个人展示</text>
-  </view>
+  </view> -->
 <view class="gallery">
   <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
     <image src="/images/tall.png"></image>

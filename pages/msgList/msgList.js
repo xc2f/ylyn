@@ -4,48 +4,7 @@ import { deleteFile } from '../../untils/update.js'
 
 import fromNow from '../../untils/moment.js'
 
-import wxviewType from '../../untils/wxview.js'
-
-var touchData = {
-  init: function () {
-    this.firstTouchX = 0;
-    this.firstTouchY = 0;
-    this.lastTouchX = 0;
-    this.lastTouchY = 0;
-    this.lastTouchTime = 0;
-    this.swipeDirection = 0;
-    this.deltaX = 0;
-    this.deltaY = 0;
-    this.totalDelateX = 0;
-    this.speedY = 0;
-  },
-  touchstart: function (e) {
-    this.init();
-    this.firstTouchX = this.lastTouchX = e.touches[0].clientX;
-    this.firstTouchY = this.lastTouchY = e.touches[0].clientY;
-    this.lastTouchTime = e.timeStamp;
-  },
-  touchmove: function (e) {
-    this.deltaX = e.touches[0].clientX - this.lastTouchX;
-    this.deltaY = e.touches[0].clientY - this.lastTouchY;
-    this.totalDelateX += this.deltaX;
-    this.lastTouchX = e.touches[0].clientX;
-    this.lastTouchY = e.touches[0].clientY;
-    this.lastTouchTime = e.timeStamp;
-    if (this.swipeDirection === 0) {
-      if (Math.abs(this.deltaX) > Math.abs(this.deltaY)) {
-        this.swipeDirection = 1;
-      }
-      else {
-        this.swipeDirection = 2;
-      }
-    }
-  },
-  touchend: function (e) {
-    var deltaTime = e.timeStamp - this.lastTouchTime;
-    this.speedY = this.deltaY / deltaTime;
-  }
-}
+// import wxviewType from '../../untils/wxview.js'
 
 Page({
 
@@ -63,16 +22,8 @@ Page({
     testSrc: null,
     showShield: false,
 
-    // 删除动画
-    swipeCheckX: 35, //激活检测滑动的阈值
-    swipeCheckState: 0, //0未激活 1激活
-    maxMoveLeft: 185, //消息列表项最大左滑距离
-    correctMoveLeft: 175, //显示菜单时的左滑距离
-    thresholdMoveLeft: 75,//左滑阈值，超过则显示菜单
-    lastShowMsgId: '', //记录上次显示菜单的消息id
-    moveX: 0,  //记录平移距离
-    showState: 0, //0 未显示菜单 1显示菜单
-    touchStartState: 0, // 开始触摸时的状态 0 未显示菜单 1 显示菜单
+    startX: 0, //开始坐标
+    startY: 0
   },
 
   /**
@@ -85,13 +36,9 @@ Page({
 
     that.computeFileSize()
 
-    this.msgListView = wxviewType.createWXView();
-    // this.msgListView.setAnimationParam('msgListAnimation');
-    this.msgListView.page = this;
-    
   },
 
-  checkShield(){
+  checkShield() {
     let that = this
     wx.request({
       url: app.requestHost + 'Chat/get_shield_list/',
@@ -114,10 +61,10 @@ Page({
     })
   },
 
-  closesocket(){
+  closesocket() {
     wx.closeSocket()
   },
-  computeFileSize(){
+  computeFileSize() {
     let that = this
     // 获取本地缓存和文件大小
     wx.getStorageInfo({
@@ -147,13 +94,15 @@ Page({
     })
   },
 
-  toShop(e){
-    wx.navigateTo({
-      url: '/pages/shopDetail/shopDetail?store_id=' + e.currentTarget.dataset.shopid,
-    })
+  toShop(e) {
+    if (e.currentTarget.dataset.shopid){
+      wx.navigateTo({
+        url: '/pages/shopDetail/shopDetail?store_id=' + e.currentTarget.dataset.shopid,
+      })
+    }
   },
 
-  renderList(){
+  renderList() {
     let that = this
     wx.getStorage({
       key: 'chatRecords',
@@ -163,6 +112,7 @@ Page({
         let recordList = []
         // 获取每条聊天记录的最后一条内容
         for (let i = 0; i < records.length; i++) {
+          // console.log(records[i])
           // 防止异步
           let msg = wx.getStorageSync(records[i].chatName)
           // console.log(msg)
@@ -176,7 +126,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              id: 'id-'+i
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'img') {
             recordList.push({
@@ -186,7 +136,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              id: 'id-' + i
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'face') {
             recordList.push({
@@ -196,7 +146,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              id: 'id-' + i
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'shield') {
             recordList.push({
@@ -206,7 +156,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              id: 'id-' + i
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'card') {
             recordList.push({
@@ -216,12 +166,12 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              id: 'id-' + i
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           }
         }
         that.setData({
-          chatRecords: recordList.length === 0 ? null : recordList
+          chatRecords: recordList.length === 0 ? null : recordList,
         })
       },
       fail: function (res) {
@@ -231,54 +181,39 @@ Page({
   },
 
 
-  tapToChat(e){
+  tapToChat(e) {
     wx.navigateTo({
-      url: '/pages/chat/chat?friendinfo='+JSON.stringify(e.currentTarget.dataset.friendinfo)
+      url: '/pages/chat/chat?friendinfo=' + JSON.stringify(e.currentTarget.dataset.friendinfo)
     })
   },
 
   removeChat(e) {
     let userId = e.currentTarget.dataset.userid
-    wx.getStorage({
-      key: 'chatWith'+userId,
-      success: function(res) {
-        for(let i=0; i<res.data.length; i++){
-          if(res.data[i].type === 'img'){
-            wx.removeSavedFile({
-              filePath: res.data[i].content,
-              complete: function (res) {
-              }
-            })
-          }
-        }
-        // TODO删除对话缓存中的链接的图片
-      },
-    })
 
     // 删除具体缓存
     wx.removeStorage({
-      key: 'chatWith'+userId,
-      success: function(res) {
+      key: 'chatWith' + userId,
+      success: function (res) {
         // console.log('chatWith' + userId + '已删除!')
       },
     })
     // 从chatRecords中移除该key
     wx.getStorage({
       key: 'chatRecords',
-      success: function(res) {
+      success: function (res) {
         let data = res.data
-        for(let i=0; i<data.length; i++){
-          if(data[i].chatName === 'chatWith'+userId){
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].chatName === 'chatWith' + userId) {
             data.splice(i, 1)
-            wx.setStorageSync('chatRecords', data)
             break
           }
         }
+        wx.setStorageSync('chatRecords', data)
       },
     })
 
     let that = this
-    setTimeout(function(){
+    setTimeout(function () {
       that.renderList()
     }, 500)
 
@@ -295,37 +230,11 @@ Page({
     return animation;
   },
 
-  // blockMove(e){
-  //   let mx = e.changedTouches[0].pageX
-    
-  //   let moveXStamp = this.data.moveXStamp
-  //   if (moveXStamp === 0) {
-  //     this.setData({
-  //       moveXStamp: mx
-  //     })
-  //   }
-  //   console.log(mx, moveXStamp)
-  //   if (mx < moveXStamp && this.data.toLeft) {
-  //     // 只调用一次
-  //     this.setData({
-  //       wrapAnimation: this.basicAnimation(300, 0).left(-100).step().export(),
-  //       removeAnimation: this.basicAnimation(300, 0).right(0).step().export(),
-  //       toLeft: false
-  //     })
-  //   } else {
-  //     this.setData({
-  //       wrapAnimation: this.basicAnimation(300, 0).left(0).step().export(),
-  //       removeAnimation: this.basicAnimation(300, 0).right(-100).step().export(),
-  //       toLeft: true
-  //     })
-  //   }
-  //   // console.log('mx: '+mx, 'moveXStamp: '+moveXStamp)
-  // },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
   },
 
   /**
@@ -333,7 +242,8 @@ Page({
    */
   onShow: function () {
     let that = this
-    that.data.checkMsgStatusInterval = setInterval(function(){
+    that.renderList()
+    that.data.checkMsgStatusInterval = setInterval(function () {
       that.renderList()
     }, 2000)
 
@@ -367,130 +277,69 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+
   },
 
   /**
    * 用户点击右上角分享
    */
   // onShareAppMessage: function () {
-  
+
   // },
 
-  clearStorage(){
+  clearStorage() {
     wx.clearStorage()
   },
 
-
-  ontouchstart: function (e) {
-    this.msgListView.ontouchstart(e);
-    touchData.touchstart(e);
-    if (this.showState === 1) {
-      this.touchStartState = 1;
-      this.showState = 0;
-      this.moveX = 0;
-      this.translateXMsgItem(this.lastShowMsgId, 0, 200);
-      this.lastShowMsgId = "";
-      return;
-    }
-    if (touchData.firstTouchX > this.swipeCheckX) {
-      this.swipeCheckState = 1;
-    }
+  //手指触摸动作开始 记录起点X坐标
+  touchstart: function (e) {
+    //开始触摸时 重置所有删除
+    this.data.chatRecords.forEach(function (v, i) {
+      if (v.isTouchMove)//只操作为true的
+        v.isTouchMove = false;
+    })
+    this.setData({
+      startX: e.changedTouches[0].clientX,
+      startY: e.changedTouches[0].clientY,
+      chatRecords: this.data.chatRecords
+    })
   },
-
-  ontouchmove: function (e) {
-    touchData.touchmove(e);
-    if (this.swipeCheckState === 0) {
-      return;
-    }
-    //当开始触摸时有菜单显示时，不处理滑动操作
-    if (this.touchStartState === 1) {
-      return;
-    }
-    // //滑动container，只处理垂直方向
-    // if (e.target.id === 'id-container') {
-    //   this.msgListView.ontouchmove(e, touchData.deltaY);
-    //   return;
-    // }
-    // //已触发垂直滑动
-    // if (touchData.swipeDirection === 2) {
-    //   this.msgListView.ontouchmove(e, touchData.deltaY);
-    //   return;
-    // }
-    var moveX = touchData.totalDelateX;
-    //处理边界情况
-    if (moveX > 0) {
-      moveX = 0;
-    }
-    //检测最大左滑距离
-    if (moveX < -this.maxMoveLeft) {
-      moveX = -this.maxMoveLeft;
-    }
-    this.moveX = moveX;
-    this.translateXMsgItem(e.target.id, moveX, 0);
-  },
-  ontouchend: function (e) {
-    console.log(e)
-    touchData.touchend(e);
-    this.swipeCheckState = 0;
-    if (this.touchStartState === 1) {
-      this.touchStartState = 0;
-      return;
-    }
-    // //滑动container，只处理垂直方向
-    // if (e.target.id === 'id-container') {
-    //   this.msgListView.ontouchend(e, touchData.speedY);
-    //   return;
-    // }
-    // //垂直滚动
-    // if (touchData.swipeDirection === 2) {
-    //   this.msgListView.ontouchend(e, touchData.speedY);
-    //   return;
-    // }
-    if (this.moveX === 0) {
-      this.showState = 0;
-      return;
-    }
-    if (this.moveX === this.correctMoveLeft) {
-      this.showState = 1;
-      this.lastShowMsgId = e.target.id;
-      return;
-    }
-    if (this.moveX < -this.thresholdMoveLeft) {
-      this.moveX = -this.correctMoveLeft;
-      this.showState = 1;
-      this.lastShowMsgId = e.target.id;
-    }
-    else {
-      this.moveX = 0;
-      this.showState = 0;
-    }
-    this.translateXMsgItem(e.target.id, this.moveX, 200);
-  },
-  getItemIndex: function (id) {
-    var msgList = this.data.chatRecords;
-    for (var i = 0; i < msgList.length; i++) {
-      if (msgList[i].id === id) {
-        return i;
+  //滑动事件处理
+  touchmove: function (e) {
+    var that = this,
+      index = e.currentTarget.dataset.index,//当前索引
+      startX = that.data.startX,//开始X坐标
+      startY = that.data.startY,//开始Y坐标
+      touchMoveX = e.changedTouches[0].clientX,//滑动变化坐标
+      touchMoveY = e.changedTouches[0].clientY,//滑动变化坐标
+      //获取滑动角度
+      angle = that.angle({ X: startX, Y: startY }, { X: touchMoveX, Y: touchMoveY });
+    that.data.chatRecords.forEach(function (v, i) {
+      v.isTouchMove = false
+      //滑动超过30度角 return
+      if (Math.abs(angle) > 30) return;
+      if (i == index) {
+        if (touchMoveX > startX) //右滑
+          v.isTouchMove = false
+        else //左滑
+          v.isTouchMove = true
       }
-    }
-    return -1;
+    })
+    //更新数据
+    that.setData({
+      chatRecords: that.data.chatRecords
+    })
   },
-  translateXMsgItem: function (id, x, duration) {
-    console.log('-------------------')
-    console.log(id)
-    var animation = wx.createAnimation({ duration: duration });
-    animation.translateX(x).step();
-    this.animationMsgItem(id, animation);
+  /**
+   * 计算滑动角度
+   * @param {Object} start 起点坐标
+   * @param {Object} end 终点坐标
+   */
+  angle: function (start, end) {
+    var _X = end.X - start.X,
+      _Y = end.Y - start.Y
+    //返回角度 /Math.atan()返回数字的反正切值
+    return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
   },
-  animationMsgItem: function (id, animation) {
-    var index = this.getItemIndex(id);
-    var param = {};
-    var indexString = 'chatRecords[' + index + '].animation';
-    param[indexString] = animation.export();
-    this.setData(param);
-  },
-
-
 
 })

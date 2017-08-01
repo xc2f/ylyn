@@ -76,12 +76,28 @@ Page({
               })
             },
           })
-          getApp().refreshChatRecords({
-            newMessage: postData,
-            friendInfo: friendInfo,
-            // 不传storeInfo是否可行
-            // storeInfo: app.globalData.storeInfo
-          }, true)
+          wx.getStorage({
+            key: 'chatRecords',
+            success: function(res) {
+              // console.log(res)
+              let data = res.data
+              data.forEach(item => {
+                // 如果有这份聊天记录才会更新storeInfo
+                if (item.chatName === 'chatWith' + friendInfo.user_id){
+                  item.storeInfo = item.storeInfo.storeId === app.globalData.storeInfo.storeId ? app.globalData.storeInfo : item.storeInfo
+                }
+                getApp().refreshChatRecords({
+                  newMessage: postData,
+                  friendInfo: friendInfo,
+                  storeInfo: item.storeInfo
+                }, true)
+              })
+              wx.setStorage({
+                key: 'chatRecords',
+                data: data,
+              })
+            },
+          })
 
           wx.setStorageSync('chatStatusWith' + friendInfo.user_id, {
             isShield: false

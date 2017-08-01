@@ -1,45 +1,45 @@
 export default function fromNow(date){
-  let time = (new Date(date).getHours()) + ':' + ((new Date(date).getMinutes() < 10) ? ('0' + new Date(date).getMinutes()) : new Date(date).getMinutes())
-  let now = new Date().getTime()
-  let interval = now - date
+  date = new Date(date)
+  let time = (date.getHours()) + ':' + ((date.getMinutes() < 10) ? ('0' + date.getMinutes()) : (date.getMinutes()))
+  let now = new Date()
+  let interval = now.getTime() - date
   let oneMinute = 1000 * 60
   let oneHour = oneMinute * 60
   let oneDay = oneHour * 24
-  if(interval < oneMinute){
-    // return interval<1000 ? 0 + '秒前' : Math.floor(interval / 1000) + '秒前'
-    return '刚刚'
-  } else if (interval < oneHour){
-    return Math.floor(interval / oneMinute) + '分钟前'
-  } else if (interval < oneDay) {
-    return Math.floor(interval / oneHour) + '小时前'
-  } else {
-    if (interval < oneDay * 2){
-      return '昨天 ' + time
-    } else if(interval < oneDay * 3){
-      return '前天' + time
+  if (now.getDate() === date.getDate()){
+    if (interval < oneMinute) {
+      // return interval<1000 ? 0 + '秒前' : Math.floor(interval / 1000) + '秒前'
+      return '刚刚'
+    } else if (interval < oneHour) {
+      return Math.floor(interval / oneMinute) + '分钟前'
     } else {
-      return (new Date(date).getMonth() + 1) + '月' + new Date(date).getDate() + '日 ' + time
+      return Math.floor(interval / oneHour) + '小时前'
     }
+  } else if (now.getDate() === date.getDate()+1){
+    return '昨天 ' + time
+  } else if (now.getDate() === date.getDate()+2){
+    return '前天' + time
+  } else {
+    return (date.getMonth() + 1) + '月' + date.getDate() + '日 ' + time
   }
 }
 
 export const computeTime = function(date){
-  let time = (new Date(date).getHours()) + ':' + ((new Date(date).getMinutes() < 10) ? ('0' + new Date(date).getMinutes()) : new Date(date).getMinutes())
-  let now = new Date().getTime()
-  let interval = now - date
+  date = new Date(date)
+  let time = (date.getHours()) + ':' + ((date.getMinutes() < 10) ? ('0' + date.getMinutes()) : (date.getMinutes()))
+  let now = new Date()
+  let interval = now.getTime() - date
   let oneMinute = 1000 * 60
   let oneHour = oneMinute * 60
   let oneDay = oneHour * 24
-  if (interval < oneDay) {
+  if (now.getDate() === date.getDate()) {
     return time
+  } else if (now.getDate() === date.getDate() + 1) {
+    return '昨天 ' + time
+  } else if (now.getDate() === date.getDate() + 2) {
+    return '前天' + time
   } else {
-    if (interval < oneDay * 2) {
-      return '昨天 ' + time
-    } else if (interval < oneDay * 3) {
-      return '前天' + time
-    } else {
-      return (new Date(date).getMonth() + 1) + '月' + new Date(date).getDate() + '日 ' + time
-    }
+    return (date.getMonth() + 1) + '月' + date.getDate() + '日 ' + time
   }
   // return (new Date(date).getMonth() + 1) + '月' + new Date(date).getDate() + '日 ' + time
 }

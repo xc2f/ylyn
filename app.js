@@ -416,8 +416,21 @@ App({
 
 
   loadMsg(msg) {
+    console.log(msg)
     let that = this
     let messageList = wx.getStorageSync('chatWith' + msg.from_user_id)
+    wx.getStorage({
+      key: 'chatIdWith' + msg.from_user_id,
+      success: function(res) {},
+      fail: function(){
+        wx.setStorage({
+          key: 'chatIdWith' + msg.from_user_id,
+          data: {
+            chat_id: msg.chat_id,
+          }
+        })
+      }
+    })
     // friendInfo: that.data.friendInfo,
     // storeInfo: app.globalData.storeInfo
     let postData = JSON.parse(msg.content)
@@ -473,6 +486,8 @@ App({
 
 
   refreshChatRecords(NewMessage, msgClean = false) {
+
+    console.log(NewMessage)
 
     // console.log(NewMessage)
 

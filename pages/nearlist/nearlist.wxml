@@ -24,20 +24,26 @@
             <view wx:if="{{item.is_activity}}" class="inSales">
               <text class="inSaleText">活动</text>
             </view>
-            <text class="shopName noWrap">{{item.store_name}}</text>
-            <view class="persons">
-              <view class="boy">
-                <image src="/images/show_boy.png"></image>
-                <text>{{item.man_count}}</text>
+            <view class="wrap">
+              <view class="shopName">
+                <text class="noWrap">{{item.store_name}}</text>
               </view>
-              <view class="girl">
-                <image src="/images/show_girl.png"></image>
-                <text>{{item.woman_count}}</text>
+              <view class="wrapBottom">
+                <view class="persons">
+                  <view class="boy">
+                    <image src="/images/show_boy.png"></image>
+                    <text>{{item.man_count}}</text>
+                  </view>
+                  <view class="girl">
+                    <image src="/images/show_girl.png"></image>
+                    <text>{{item.woman_count}}</text>
+                  </view>
+                </view>
+                <view class="distance">
+                  <image src="/images/run.png"></image>
+                  <text>{{item.distance}}</text>
+                </view>
               </view>
-            </view>
-            <view class="distance">
-              <image src="/images/run.png"></image>
-              <text>{{item.distance}}</text>
             </view>
           </view>
         </view>
@@ -58,7 +64,7 @@
   </view>
 
   <view class="login" wx:if="{{!login}}">
-      <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录</button>  
+    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录</button>
     <view class="cssload-container" wx:if="{{showLoading}}">
       <view class="cssload-speeding-wheel"></view>
     </view>

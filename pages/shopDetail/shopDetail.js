@@ -22,7 +22,6 @@ Page({
     let that = this
 
     that.fetchShop(options)
-
   },
 
   fetchShop(options){
@@ -71,7 +70,6 @@ Page({
         latitude: coordinate.latitude
       },
       success: function(res){
-        console.log(res)
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
@@ -84,6 +82,7 @@ Page({
               showQuit: true
             })
           }
+          result.activity = result.activity ? result.activity : {}
           result.activity.activity_content = (!result.activity || result.activity.length === 0) ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
           result.food = result.food.length === 0 ? 0 : result.food
           that.setData({
@@ -105,7 +104,7 @@ Page({
             }
           })
         }
-      }
+      },
     })
   },
 
@@ -201,6 +200,7 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
+   
     return {
       title: this.data.shop.store_name,
       path: '/pages/shopDetail/shopDetail?store_id='+this.data.shop.store_id,

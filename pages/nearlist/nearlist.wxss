@@ -45,8 +45,10 @@
 }
 
 /*活动标签*/
-
-.shopList .item .right .inSales {
+.shopList .item {
+  position: relative;
+}
+.shopList .item .inSales {
   position: absolute;
   right: -25px;
   top: -25px;
@@ -58,7 +60,7 @@
   transform: rotate(45deg);
 }
 
-.shopList .item .right .inSaleText {
+.shopList .item .inSaleText {
   position: absolute;
   bottom: 0;
   left: 13px;

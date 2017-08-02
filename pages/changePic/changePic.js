@@ -130,7 +130,7 @@ Page({
                 }
               },
               fail: function (res) {
-                console.log(res)
+                // console.log(res)
               }
             })
           })

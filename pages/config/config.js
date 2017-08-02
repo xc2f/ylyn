@@ -1,5 +1,15 @@
 // pages/config/config.js
 var app = getApp()
+
+function checkCnText(str) {
+  var reg = /[\u4e00-\u9fa5]/g
+  if (reg.test(str)) {
+    return true
+  } else {
+    return false
+  }
+}
+
 Page({
 
   /**
@@ -32,7 +42,7 @@ Page({
       data: {
         token: app.TOKEN
       },
-      success: function(res){
+      success: function (res) {
         // console.log(res)
         that.setData({
           userInfo: res.data.result
@@ -42,18 +52,18 @@ Page({
   },
 
 
-  changePic(){
+  changePic() {
     wx.redirectTo({
       url: '/pages/changePic/changePic',
     })
   },
 
-  nameFocus(){
+  nameFocus() {
     this.setData({
       nameBtnShow: true
     })
   },
-  nameBlur(){
+  nameBlur() {
     this.setData({
       nameBtnShow: false
     })
@@ -64,17 +74,34 @@ Page({
     })
   },
   nameSubmit() {
-    wx.request({
-      url: app.requestHost + 'member/update_userinfo/',
-      method: 'POST',
-      data: {
-        token: app.TOKEN,
-        nickname: this.data.userInfo.nickname
-      },
-      success: function (res) {
-        // console.log(res)
+    let nameValue = this.data.userInfo.nickname.trim()
+    let len = 0
+    nameValue.split('').forEach(item => {
+      if (checkCnText(item)){
+        len += 2
+      } else {
+        len += 1
       }
     })
+    if(len > 12){
+      wx.showModal({
+        title: '您的更改未提交',
+        showCancel: false,
+        content: '昵称在12个字符以内，1汉字 === 2字符',
+      })
+      return 
+    }
+      wx.request({
+        url: app.requestHost + 'member/update_userinfo/',
+        method: 'POST',
+        data: {
+          token: app.TOKEN,
+          nickname: nameValue
+        },
+        success: function (res) {
+          // console.log(res)
+        }
+      })
     wx.setStorage({
       key: 'meInfo',
       data: this.data.userInfo,
@@ -91,7 +118,7 @@ Page({
       wxIdBtnShow: false
     })
   },
-  wxIdChange(e){
+  wxIdChange(e) {
     this.setData({
       'userInfo.wechat_num': e.detail.value
     })
@@ -102,7 +129,7 @@ Page({
       method: 'POST',
       data: {
         token: app.TOKEN,
-        wechat_num: this.data.userInfo.wechat_num
+        wechat_num: this.data.userInfo.wechat_num.trim()
       },
       success: function (res) {
         // console.log(res)
@@ -115,7 +142,7 @@ Page({
   },
 
 
-  genderChange(e){
+  genderChange(e) {
     this.setData({
       'userInfo.gender': e.detail.value
     })
@@ -151,7 +178,7 @@ Page({
       'userInfo.age': e.detail.value
     })
   },
-  ageSubmit(){
+  ageSubmit() {
     wx.request({
       url: app.requestHost + 'member/update_userinfo/',
       method: 'POST',
@@ -169,7 +196,7 @@ Page({
     })
   },
 
-  infoChange(e){
+  infoChange(e) {
     this.setData({
       'userInfo.info': e.detail.value
     })
@@ -185,14 +212,14 @@ Page({
       tallBtnShow: false
     })
   },
-  tallChange(e){
+  tallChange(e) {
     let tall = e.detail.value
     let nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    if (tall.length === 3){
+    if (tall.length === 3) {
       let tall0 = Math.floor(tall / 100)
       let tall1 = Math.floor(tall % 100 / 10)
       let tall2 = tall % 100 % 10
-      if (nums.indexOf(tall0) !== -1 && nums.indexOf(tall1) !== -1 && nums.indexOf(tall2) !== -1){
+      if (nums.indexOf(tall0) !== -1 && nums.indexOf(tall1) !== -1 && nums.indexOf(tall2) !== -1) {
         this.setData({
           'userInfo.height': e.detail.value + 'cm',
           'tallUnit': ''
@@ -205,61 +232,78 @@ Page({
       })
     }
   },
-tallSubmit(){
-  wx.request({
-    url: app.requestHost + 'member/update_userinfo/',
-    method: 'POST',
-    data: {
-      token: app.TOKEN,
-      height: this.data.userInfo.height
-    },
-    success: function (res) {
-      // console.log(res)
-    }
-  })
-  wx.setStorage({
-    key: 'meInfo',
-    data: this.data.userInfo,
-  })
-},
+  tallSubmit() {
+    wx.request({
+      url: app.requestHost + 'member/update_userinfo/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        height: this.data.userInfo.height
+      },
+      success: function (res) {
+        // console.log(res)
+      }
+    })
+    wx.setStorage({
+      key: 'meInfo',
+      data: this.data.userInfo,
+    })
+  },
 
-introFocus() {
-  this.setData({
-    introBtnShow: true
-  })
-},
-introBlur() {
-  this.setData({
-    introBtnShow: false
-  })
-},
-introChange(e) {
-  this.setData({
-    'userInfo.introduction': e.detail.value
-  })
-},
-introSubmit() {
-  wx.request({
-    url: app.requestHost + 'member/update_userinfo/',
-    method: 'POST',
-    data: {
-      token: app.TOKEN,
-      introduction: this.data.userInfo.introduction
-    },
-    success: function (res) {
-      // console.log(res)
+  introFocus() {
+    this.setData({
+      introBtnShow: true
+    })
+  },
+  introBlur() {
+    this.setData({
+      introBtnShow: false
+    })
+  },
+  introChange(e) {
+    this.setData({
+      'userInfo.introduction': e.detail.value
+    })
+  },
+  introSubmit() {
+    let introduction = this.data.userInfo.introduction.trim()
+    let len = 0
+    introduction.split('').forEach(item => {
+      if (checkCnText(item)) {
+        len += 2
+      } else {
+        len += 1
+      }
+    })
+    if (len > 60) {
+      wx.showModal({
+        title: '您的更改未提交',
+        showCancel: false,
+        content: '简介在60个字符以内，1汉字 === 2字符',
+      })
+      return
     }
-  })
-  wx.setStorage({
-    key: 'meInfo',
-    data: this.data.userInfo,
-  })
-},
-  postConfig(){
+    wx.request({
+      url: app.requestHost + 'member/update_userinfo/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        introduction: introduction
+      },
+      success: function (res) {
+        // console.log(res)
+      }
+    })
+    wx.setStorage({
+      key: 'meInfo',
+      data: this.data.userInfo,
+    })
+  },
+  postConfig() {
     // console.log(this.data.userInfo)
   },
 
-  cleanAccount(){
+  cleanAccount() {
     wx.showModal({
       title: '警告',
       content: '此操作将删除您本地所有账号信息，包括聊天记录。您可通过重新登录继续授权，但聊天记录不可恢复。',
@@ -283,7 +327,7 @@ introSubmit() {
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
   },
 
   /**
@@ -296,34 +340,34 @@ introSubmit() {
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+
   },
 
   /**
    * 用户点击右上角分享
    */
   // onShareAppMessage: function () {
-  
+
   // }
 })

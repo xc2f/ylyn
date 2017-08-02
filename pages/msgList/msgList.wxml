@@ -41,7 +41,7 @@
         <view class="right">
           <view class="date">{{item.date}}</view>
           <view class="shopName" catchtap="toShop" data-shopid="{{item.storeInfo.storeId}}">
-              <image wx:if="{{item.storeInfo}}" src="/images/zjlxr-dp.png"></image>
+              <!-- <image wx:if="{{item.storeInfo}}" src="/images/zjlxr-dp.png"></image> -->
               <text class="noWrap">{{item.storeInfo.storeName}}</text>
           </view>
         </view> 

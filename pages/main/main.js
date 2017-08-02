@@ -67,7 +67,9 @@ Page({
     if (token) {
       app.TOKEN = token
       if(app.globalData.client_id){
+        // console.log('has client_id')
         app.login( success => {
+          // console.log(success)
           if(success){
             that.setData({
               login: true
@@ -77,7 +79,7 @@ Page({
         })
       } else {
         app.connectWebsocket('auto', null, login => {
-          console.log(login)
+          // console.log(login)
           if (login) {
             that.setData({
               login: true
@@ -92,7 +94,7 @@ Page({
       }
     }else{
       // 新接口
-      console.log('here')
+      // console.log('here')
       that.fetchShopInfoWithoutLogin()
     }
 
@@ -150,7 +152,7 @@ Page({
       },
       success: function (res) {
         wx.stopPullDownRefresh()
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           that.setData({
             store: res.data.result
@@ -164,14 +166,14 @@ Page({
 
 
   fetchShopInfo(){
-    console.log('in3')
+    // console.log('in3')
     let that = this
     let coordinate = app.globalData.coordinate
     if (coordinate){
       that.isInStore(coordinate)
     } else {
       app.getLocation(res => {
-        console.log(res)
+        // console.log(res)
         if (res === '获取成功') {
           // 是否在本店
           that.isInStore(app.globalData.coordinate)
@@ -214,7 +216,7 @@ Page({
         table_id: that.data.qrcodeInfo.table_id
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         wx.hideLoading()
         if (res.data.code === 201) {
           that.toFetch(coordinate)
@@ -261,7 +263,7 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         that.setData({
           showLogin: false,
           showLoading: false,

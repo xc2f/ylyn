@@ -44,23 +44,36 @@ Page({
           title: '登录中',
         })
         app.TOKEN = token
-        app.connectWebsocket('auto', null, login => {
-          // console.log(login)
-          if (login) {
-            wx.hideLoading()
-            that.setData({
-              showMeIcon: true,
-              showLogin: false,
-              login: true
-            })
-            that.fetchShopList()
-          } else {
-            wx.hideLoading()
-            wx.showToast({
-              title: '登录失败',
-            })
-          }
-        })
+        if (app.globalData.client_id) {
+          app.login(success => {
+            if (success) {
+              that.setData({
+                showMeIcon: true,
+                showLogin: false,
+                login: true
+              })
+              that.fetchShopList()
+            }
+          })
+        } else {
+          app.connectWebsocket('auto', null, login => {
+            // console.log(login)
+            if (login) {
+              wx.hideLoading()
+              that.setData({
+                showMeIcon: true,
+                showLogin: false,
+                login: true
+              })
+              that.fetchShopList()
+            } else {
+              wx.hideLoading()
+              wx.showToast({
+                title: '登录失败',
+              })
+            }
+          })
+        }
       } else {
         that.setData({
           showLogin: true

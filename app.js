@@ -84,7 +84,7 @@ App({
    */
   connectWebsocket(connectType, manualLoginStatus, autoLoginStatus) {
     // wx.closeSocket()
-    console.log('in socket')
+    // console.log('in socket')
     let that = this
     // 连接websocket
     wx.connectSocket({
@@ -92,14 +92,14 @@ App({
     })
 
     wx.onSocketOpen(function (res) {
-      console.log('WebSocket连接已打开！')
+      // console.log('WebSocket连接已打开！')
 
       // 监听消息
       wx.onSocketMessage(function (res) {
         // console.log('--------------------')
-        console.log(res)
+        // console.log(res)
         let data = JSON.parse(res.data)
-        console.log(data)
+        // console.log(data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
           if (connectType === 'manual') {
@@ -143,8 +143,8 @@ App({
                 })
               }
             } else {
-              console.log('to login')
-              console.log(autoLoginStatus)
+              // console.log('to login')
+              // console.log(autoLoginStatus)
               that.login(autoLoginStatus)
             }
           }
@@ -175,7 +175,7 @@ App({
     // })
     // console.log('login --------------')
     let that = this
-    console.log('login with token')
+    // console.log('login with token')
     wx.request({
       url: that.requestHost + 'User/token_login/',
       method: 'POST',
@@ -184,7 +184,7 @@ App({
         client_id: that.globalData.client_id
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         that.globalData.login = true
         // callback(true)
         // TOKEN过期
@@ -195,7 +195,7 @@ App({
         // 存储userid
         that.globalData.userId = res.data.result.user_id
 
-        console.log('in')
+        // console.log('in')
         // console.log(callback)
         // 执行回调
         callback(true)
@@ -246,7 +246,7 @@ App({
                 client_id: client_id
               },
               success: function (res) {
-                console.log(res)
+                // console.log(res)
                 if (res.data.code === 201) {
                   // 存储TOKEN
                   that.TOKEN = res.data.result.token
@@ -338,11 +338,11 @@ App({
                                 latitude: res.latitude,
                                 longitude: res.longitude
                               }
-                              console.log(1)
+                              // console.log(1)
                               callback('获取成功')
                             },
                             fail: function () {
-                              console.log(2)
+                              // console.log(2)
                               callback('获取失败')
                               // console.log('用户重新授权，但获取位置失败')
                               wx.showToast({
@@ -352,7 +352,7 @@ App({
                             }
                           })
                         } else {
-                          console.log(3)
+                          // console.log(3)
                           callback('取消授权')
                           wx.hideLoading()
                           // console.log('用户再次拒绝授权地理位置')
@@ -377,10 +377,10 @@ App({
                     longitude: res.longitude
                   }
                   callback('获取成功')
-                  console.log(4)
+                  // console.log(4)
                 },
                 fail: function () {
-                  console.log(5)
+                  // console.log(5)
                   callback('取消授权')
                   // console.log(getCurrentPages())
                   wx.hideLoading()
@@ -416,9 +416,10 @@ App({
 
 
   loadMsg(msg) {
-    console.log(msg)
+    // console.log(msg)
     let that = this
     let messageList = wx.getStorageSync('chatWith' + msg.from_user_id)
+    // 获取chatid
     wx.getStorage({
       key: 'chatIdWith' + msg.from_user_id,
       success: function(res) {},
@@ -451,13 +452,13 @@ App({
     // 如果在当前消息来的聊天页，消息clean
     let msgclean = getCurrentPages()[getCurrentPages().length - 1].pageName === 'chatWith' + msg.from_user_id ? true : false
 
-    let now = new Date().getTime()
+    // let time = new Date().getTime()
     // 如果本地存有这个消息缓存
     if (messageList !== '') {
       // console.log(messageList)
-      if (messageList[messageList.length - 1].time + (1000 * 60 * 5) < now) {
+      if (messageList[messageList.length - 1].time + (1000 * 60 * 5) < postData.time) {
         messageList.push({
-          content: now,
+          content: postData.time,
           type: 'time'
         })
       }
@@ -471,7 +472,7 @@ App({
     } else {
       let messageList = []
       messageList.push({
-        content: now,
+        content: postData.time,
         type: 'time'
       })
       messageList.push(postData)
@@ -487,7 +488,7 @@ App({
 
   refreshChatRecords(NewMessage, msgClean = false) {
 
-    console.log(NewMessage)
+    // console.log(NewMessage)
 
     // console.log(NewMessage)
 

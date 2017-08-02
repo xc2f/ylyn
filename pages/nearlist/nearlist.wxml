@@ -19,11 +19,11 @@
     <block wx:for="{{shopList}}" wx:key="store_id">
       <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
         <view class="item">
+          <view wx:if="{{item.is_activity}}" class="inSales">
+            <text class="inSaleText">活动</text>
+          </view>
           <image src="{{item.store_logo === null ? '/images/defaultLogo.png' : item.store_logo}}"></image>
           <view class="right">
-            <view wx:if="{{item.is_activity}}" class="inSales">
-              <text class="inSaleText">活动</text>
-            </view>
             <view class="wrap">
               <view class="shopName">
                 <text class="noWrap">{{item.store_name}}</text>
@@ -59,7 +59,7 @@
   <view class="toMsgList bottomIcon" bindtap="toMsgList" wx:if="{{showMeIcon}}">
     <!-- <text class="fa fa-commenting-o"></text> -->
     <!-- <text class="text">消息列表</text> -->
-    <image src="/images/message-r.png"></image>
+    <image src="/images/message-l.png"></image>
     <view class="msgNew" wx:if="{{hasNewMsg}}"></view>
   </view>
 

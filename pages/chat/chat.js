@@ -96,7 +96,7 @@ Page({
     wx.getStorage({
       key: 'chatWith' + that.data.friendInfo.user_id,
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         let messages = objDeepCopy(res.data)
         messages.map(item => {
           if (item.type === 'time') {
@@ -140,7 +140,7 @@ Page({
     wx.getStorage({
       key: 'chatStatusWith' + that.data.friendInfo.user_id,
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if (res.data.isShield === true) {
           that.setData({
             isShield: true
@@ -195,8 +195,11 @@ Page({
             break
           }
         }
-        console.log(data)
-        wx.setStorageSync('chatRecords', data)
+        // console.log(data)
+        wx.setStorage({
+          key: 'chatRecords',
+          data: data,
+        })
       },
     })
 
@@ -443,7 +446,7 @@ Page({
         store_id: that.data.storeInfo ? that.data.storeInfo.storeId : app.globalData.storeInfo.storeId
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {
@@ -629,7 +632,7 @@ Page({
     let that = this
     // console.log(this.data.meInfo.wechat_num)
     let value = this.data.meInfo.wechat_num
-    if (value.trim() === '') {
+    if (!value || value.trim() === '') {
       wx.showModal({
         title: '您未填写微信号',
         content: '前去设置？',
@@ -672,9 +675,6 @@ Page({
   onShow: function () {
     let that = this
 
-  setTimeout(function(){
-    console.log(that.data)
-  }, 200)
     
 
     // 获取本人信息，放这里是因为若是从设置页返回则更新数据

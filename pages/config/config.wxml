@@ -6,7 +6,7 @@
       <text>昵称</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.nickname}}" bindinput="nameChange" bindfocus="nameFocus" bindblur="nameBlur"/>
+      <input value="{{userInfo.nickname}}" bindinput="nameChange" bindfocus="nameFocus" bindblur="nameBlur" />
     </view>
     <view class="s" style="visibility:{{nameBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="nameSubmit">确认</button></view>
   </view>
@@ -55,7 +55,7 @@
       <text>简介</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.introduction}}" bindinput="introChange" bindfocus="introFocus" bindblur="introBlur" />
+      <input value="{{userInfo.introduction}}" bindinput="introChange" bindfocus="introFocus" bindblur="introBlur" cursor-spacing='10' />
       <!--<textarea value="{{userInfo.info}}" bindinput="infoChange" />-->
     </view>
     <view class="s"  style="visibility:{{introBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="introSubmit">确认</button></view>

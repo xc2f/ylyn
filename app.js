@@ -13,7 +13,8 @@ App({
     storeInfo: null,
     client_id: null,
     msgClean: true,
-    login: false
+    login: false,
+    noShowShare: true
   },
 
   TOKEN: null,

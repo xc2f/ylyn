@@ -11,8 +11,11 @@ Page({
     shop: null,
     showQuit: false,
     foodEmpty: false,
-    dataOk: false
+    dataOk: false,
+    showShare: false,
     // checkShopValue: null
+    shareAnimation: null,
+    windowWidth: 300
   },
 
   /**
@@ -20,6 +23,9 @@ Page({
    */
   onLoad: function (options) {
     let that = this
+    that.setData({
+      windowWidth: app.globalData.deviceInfo.windowWidth
+    })
 
     that.fetchShop(options)
   },
@@ -65,7 +71,7 @@ Page({
       url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
-        store_id: options.store_id,
+        store_id: options.store_id || 1,
         longitude: coordinate.longitude,
         latitude: coordinate.latitude
       },
@@ -189,18 +195,43 @@ Page({
     
   },
 
+  closeShare(e){
+    if(e.target.id !== 'share'){
+      this.setData({
+        showShare: false
+      })
+    }
+  },
+
+  basicAnimation(duration, delay) {
+    let animation = wx.createAnimation({
+      duration: duration || 500,
+      timingFunction: "ease",
+      delay: delay || 0
+    });
+    return animation;
+  },
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+    if (app.globalData.noShowShare){
+      app.globalData.noShowShare = false
+        this.setData({
+          showShare: true,
+        })
+        setTimeout(() => {
+          this.setData({
+            shareAnimation: this.basicAnimation(500, 0).scale(1).step().export()
+          })
+        }, 50)
+    }
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-   
     return {
       title: this.data.shop.store_name,
       path: '/pages/shopDetail/shopDetail?store_id='+this.data.shop.store_id,

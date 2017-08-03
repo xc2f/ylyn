@@ -51,8 +51,8 @@ Page({
     let that = this
     that.setData({
       qrcodeInfo: {
-        store_id: options.store_id || 1,
-        table_id: options.table_id || 3
+        store_id: options.store_id,
+        table_id: options.table_id
         // store_id: 1,
         // table_id: 1,
       }
@@ -525,30 +525,41 @@ Page({
         content: '请' + (60 - that.data.callWaiterTimeout) + '秒后再试',
       })
     } else {
-      wx.request({
-        url: app.requestHost + 'User/call_waiter/',
-        method: 'POST',
-        data: {
-          token: app.TOKEN,
-          store_id: app.globalData.storeInfo.storeId,
-          table_id: app.globalData.storeInfo.tableId
-        },
+      wx.showModal({
+        title: '提示',
+        content: '呼叫Waiter?',
         success: function (res) {
-          if(res.data.code === 201){
-            wx.showToast({
-              title: '呼叫成功',
-            })
-            let callWaiterInterval = setInterval(function(){
-              // 不行啊，modal content不会变
-              // that.setData({
-              //   callWaiterTimeout: that.data.callWaiterTimeout + 1
-              // })
-              that.data.callWaiterTimeout++
-              if (that.data.callWaiterTimeout >= 60){
-                that.data.callWaiterTimeout = 0
-                clearInterval(callWaiterInterval)
+          if (res.confirm) {
+            wx.request({
+              url: app.requestHost + 'User/call_waiter/',
+              method: 'POST',
+              data: {
+                token: app.TOKEN,
+                store_id: app.globalData.storeInfo.storeId,
+                table_id: app.globalData.storeInfo.tableId
+              },
+              success: function (res) {
+                if (res.data.code === 201) {
+                  wx.showToast({
+                    title: '呼叫成功',
+                  })
+                  let callWaiterInterval = setInterval(function () {
+                    // 不行啊，modal content不会变
+                    // that.setData({
+                    //   callWaiterTimeout: that.data.callWaiterTimeout + 1
+                    // })
+                    that.data.callWaiterTimeout++
+                    if (that.data.callWaiterTimeout >= 60) {
+                      that.data.callWaiterTimeout = 0
+                      clearInterval(callWaiterInterval)
+                    }
+                  }, 1000)
+                }
               }
-            }, 1000)
+            })
+          } else if (res.cancel) {
+            return
+            // console.log('用户点击取消')
           }
         }
       })

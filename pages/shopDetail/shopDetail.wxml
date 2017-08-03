@@ -4,7 +4,7 @@
     <view wx:if="{{shop.activity.is_open === '1' ? true : false}}" class="inSales">
       <text class="inSaleText">活动</text>
     </view>
-    <image src="{{shop.info_bgimg === '' ? '/images/banner.png' : shop.info_bgimg}}" class="bannerBg"></image>
+    <image src="{{shop.info_bgimg === '' ? '/images/banner.jpg' : shop.info_bgimg}}" class="bannerBg"></image>
     <view class="wrap">
       <view class="shopBanner">
         <view class="shopAvatar">
@@ -13,7 +13,7 @@
         <view class="shopName">{{shop.store_name}}</view>
       </view>
       <view class="share">
-        <button open-type="share" type="primary" size="mini">分享</button>
+        <!-- <button open-type="share" type="primary" size="mini">分享</button> -->
       </view>
     </view>
   </view>
@@ -32,7 +32,7 @@
         <image src="/images/location.png" class="iconLeft"></image>
       </view>
       <text class="address">距离你{{shop.distance}} | {{shop.address}}</text>
-        <view class="arrowWrap">
+      <view class="arrowWrap">
         <image src="/images/arrowRight.png" class="iconRight"></image>
       </view>
     </view>
@@ -71,14 +71,14 @@
     </view>
     <view class="content">
       <!-- <block wx:for="{{shop.activity}}" wx:key=""> -->
-        <!-- <text></text>  -->
-        <rich-text nodes="{{shop.activity.activity_content}}" />
+      <!-- <text></text>  -->
+      <rich-text nodes="{{shop.activity.activity_content}}" />
       <!-- </block> -->
     </view>
   </view>
 
   <view class="customPic">
-    <block wx:for="{{shop.image}}" wx:key=""> 
+    <block wx:for="{{shop.image}}" wx:key="">
       <image src="{{item.store_img}}"></image>
     </block>
   </view>
@@ -95,3 +95,19 @@
 </view>
 
 <view class="empty" wx:if="{{!dataOk}}"></view>
+
+<view class="shareWrap" wx:if="{{showShare}}" bindtap="closeShare">
+  <view class="block" animation='{{shareAnimation}}' style="width: {{windowWidth}}px; height: {{windowWidth / 1.1}}px">
+    <image src="/images/shareBg.png" class="bg"></image>
+    <image src="/images/closeShare.png" class="close"></image> 
+    <view class="content">
+      <view class="line1">这家店不错？</view>
+      <view class="line2">分享给更多小伙伴知道！</view>
+      <!-- <view class="lineTip">您可随时通过右上角功能按钮转发分享</view> -->
+    </view>
+    <view class="btn" style="left: {{(windowWidth - 100) / 2}}px">
+      <!-- <bu class="qr">确认</view> -->
+      <button type="primary" plain class="qr" open-type="share" id="share">确认   </button>
+    </view>
+  </view>
+</view>

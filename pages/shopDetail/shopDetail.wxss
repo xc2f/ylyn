@@ -359,7 +359,8 @@
   width: 100px;
   height: 40px;
   line-height: 40px;
-  color: #fff;
+  color: #000;
+  background: #fff;
   border: 2px solid #fff;
   border-radius: 2px;
 }

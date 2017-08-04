@@ -227,6 +227,7 @@
 
 .s1 image {
   width: 50% !important;
+  transform:translateZ(100px);
 }
 
 .s2 {

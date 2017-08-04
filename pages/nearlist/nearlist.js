@@ -212,6 +212,9 @@ Page({
    */
   onShow: function () {
     let that = this
+    that.setData({
+      hasNewMsg: !app.globalData.msgClean
+    })
     that.data.getMsgStatusInterval = setInterval(function () {
       that.setData({
         hasNewMsg: !app.globalData.msgClean

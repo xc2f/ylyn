@@ -216,7 +216,7 @@ Page({
         table_id: that.data.qrcodeInfo.table_id
       },
       success: function (res) {
-        // console.log(res)
+        console.log(res)
         wx.hideLoading()
         if (res.data.code === 201) {
           that.toFetch(coordinate)
@@ -263,7 +263,14 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
-        // console.log(res)
+        // console.log(coordinate, app.TOKEN, that.data.qrcodeInfo, res)
+        if(res.data.code >= 500){
+          wx.showModal({
+            title: '错误',
+            content: '服务端错误，正在努力修复中',
+            showCancel: false
+          })
+        }
         that.setData({
           showLogin: false,
           showLoading: false,

@@ -36,8 +36,8 @@
 }
 .head text {
   margin-left: 0;
-  margin-right: 17px;
-  font-weight: bold;
+  margin-right: 16px;
+  /* font-weight: bold; */
 }
 .shopList {
   background: #eee;

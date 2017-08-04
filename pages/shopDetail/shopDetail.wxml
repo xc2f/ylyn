@@ -36,7 +36,7 @@
         <image src="/images/arrowRight.png" class="iconRight"></image>
       </view>
     </view>
-    <view class="phone row noWrap" bindtap="callPhone">
+    <view class="phone row noWrap" bindtap="callPhone" wx:if="{{shop.phone}}">
       <view class="iconWrap">
         <image src="/images/phone.png" class="iconLeft"></image>
       </view>

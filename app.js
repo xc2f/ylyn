@@ -4,7 +4,7 @@ App({
 
   globalData: {
     deviceInfo: null,
-    checkLocationInterval: null,
+    // checkLocationInterval: null,
     webSocketError: false,
     connectTimes: 0,
     socketBroken: false,
@@ -14,7 +14,8 @@ App({
     client_id: null,
     msgClean: true,
     login: false,
-    noShowShare: true
+    noShowShare: true,
+    sendSocketMsgInterval: null
   },
 
   TOKEN: null,
@@ -65,7 +66,7 @@ App({
           }
         },
       })
-    }, 5000)
+    }, 2000)
   },
 
   getDeviceInfo: function () {
@@ -94,11 +95,17 @@ App({
 
     wx.onSocketOpen(function (res) {
       // console.log('WebSocket连接已打开！')
+      that.globalData.sendSocketMsgInterval = setInterval(function(){
+        // console.log('send socket msg')
+        wx.sendSocketMessage({
+          data: 'ping'
+        })
+      }, 30000)
 
       // 监听消息
       wx.onSocketMessage(function (res) {
         // console.log('--------------------')
-        // console.log(res)
+        console.log(res)
         let data = JSON.parse(res.data)
         // console.log(data)
         if (data.type === 'init') {
@@ -149,6 +156,9 @@ App({
               that.login(autoLoginStatus)
             }
           }
+        } else if( data.type === 'ping'){
+          // console.log(data)
+          return 
         } else {
           that.loadMsg(data)
         }
@@ -162,6 +172,7 @@ App({
     wx.onSocketClose( res => {
       that.globalData.client_id = null
       that.globalData.socketBroken = true
+      clearInterval(that.globalData.sendSocketMsgInterval)
       // wx.closeSocket()
       // console.log('WebSocket 已关闭！')
       that.connectWebsocket('auto', null, null)
@@ -417,7 +428,7 @@ App({
 
 
   loadMsg(msg) {
-    // console.log(msg)
+    console.log(msg)
     let that = this
     let messageList = wx.getStorageSync('chatWith' + msg.from_user_id)
     // 获取chatid
@@ -601,7 +612,7 @@ App({
     })
 
 
-    clearInterval(this.globalData.checkLocationInterval)
+    // clearInterval(this.globalData.checkLocationInterval)
   }
 
 })

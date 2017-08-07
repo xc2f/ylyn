@@ -75,7 +75,7 @@
 }
 
 .right {
-  width: calc(25% - 10px);
+  width: calc(27% - 10px);
   float: left;
   height: 80px;
   /* flex: 1; */
@@ -94,7 +94,7 @@
 }
 
 .middle {
-  width: calc(50% - 20px);
+  width: calc(48% - 20px);
   height: 80px;
   float: left;
   /* flex: 2; */
@@ -181,10 +181,10 @@
 
 .right image {
   width: 15px;
-  height: 12px;
+  height: 13px;
   min-width: 15px;
-  min-height: 15px;
-  margin-right: 5px;
+  min-height: 13px;
+  margin-right: 3px;
 }
 
 .fullStorage {

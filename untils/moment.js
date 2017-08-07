@@ -18,7 +18,7 @@ export default function fromNow(date){
   } else if (now.getDate() === date.getDate()+1){
     return '昨天 ' + time
   } else if (now.getDate() === date.getDate()+2){
-    return '前天' + time
+    return '前天 ' + time
   } else {
     return (date.getMonth() + 1) + '月' + date.getDate() + '日 ' + time
   }
@@ -37,7 +37,7 @@ export const computeTime = function(date){
   } else if (now.getDate() === date.getDate() + 1) {
     return '昨天 ' + time
   } else if (now.getDate() === date.getDate() + 2) {
-    return '前天' + time
+    return '前天 ' + time
   } else {
     return (date.getMonth() + 1) + '月' + date.getDate() + '日 ' + time
   }

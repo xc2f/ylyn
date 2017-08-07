@@ -105,7 +105,7 @@ App({
       // 监听消息
       wx.onSocketMessage(function (res) {
         // console.log('--------------------')
-        console.log(res)
+        // console.log(res)
         let data = JSON.parse(res.data)
         // console.log(data)
         if (data.type === 'init') {

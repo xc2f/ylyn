@@ -70,4 +70,9 @@
     </view>
   </view>
 
+  <view class="empty"></view>
+
 </view>
+
+
+  <view class="connectUs" bindtap="connectUs">联系我们：029-81117328</view>

@@ -71,7 +71,7 @@ Page({
       url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
-        store_id: options.store_id || 1,
+        store_id: options.store_id,
         longitude: coordinate.longitude,
         latitude: coordinate.latitude
       },

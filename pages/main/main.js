@@ -172,14 +172,14 @@ Page({
         } else {
           // TODO
           that.setData({
-            loadingTip: '数据获取失败'
+            loadingTip: '获取数据失败'
           })
         }
       },
       fail: function(res) {
         // TODO
         that.setData({
-          loadingTip: '数据获取失败'
+          loadingTip: '获取数据失败'
         })
       }
     })
@@ -197,15 +197,15 @@ Page({
         if (res) {
           that.setData({
             showLoginStatus: true,
-            loginStatus: '位置获取成功，获取数据中',
+            loginStatus: '获取位置成功，获取数据中',
             getLocationFail: false
           })
           that.isInStore(app.globalData.coordinate)
         } else {
           that.setData({
             showLoginStatus: false,
-            loginStatus: '位置获取失败, 请下拉刷新重试',
-            loadingTip: '位置获取失败',
+            loginStatus: '获取位置失败，请下拉刷新重试',
+            loadingTip: '获取位置失败，请点击页面重试',
             getLocationFail: true
           })
         }
@@ -318,8 +318,8 @@ Page({
         } else {
           that.setData({
             showLoginStatus: false,
-            loginStatus: '数据获取失败，请下拉刷新重试',
-            loadingTip: '数据获取失败, 点击页面重试',
+            loginStatus: '获取数据失败，请下拉刷新重试',
+            loadingTip: '获取数据失败, 请点击页面重试',
             fetchDataFail: true
           })
         }
@@ -327,8 +327,8 @@ Page({
       fail: function(){
         that.setData({
           showLoginStatus: false,
-          loginStatus: '数据获取失败，请下拉刷新重试',
-          loadingTip: '数据获取失败, 点击页面重试',
+          loginStatus: '获取数据失败，请下拉刷新重试',
+          loadingTip: '获取数据失败, 请点击页面重试',
           fetchDataFail: true
         })
       }
@@ -337,7 +337,11 @@ Page({
 
   occurFail(){
     if (this.data.getLocationFail){
-
+      this.setData({
+        loadingTip: '店铺正马不停蹄地向你赶来',
+        getLocationFail: false
+      })
+      this.getCurrentLocation()
     } else {
       this.setData({
         loadingTip: '店铺正马不停蹄地向你赶来',

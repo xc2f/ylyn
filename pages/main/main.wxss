@@ -386,3 +386,17 @@ button.needLogin[type="primary"][plain] {
   width: 100px;
   height: 100px;
 }
+
+.getLocationTip {
+  margin-top: 20px;
+  font-size: 14px;
+  /* background: #eee; */
+  padding: 20px;
+}
+.getLocationTip > view {
+  line-height: 1.8;
+}
+.getLocationTip .title {
+  font-weight: bold;
+  margin-bottom: 7px;
+}

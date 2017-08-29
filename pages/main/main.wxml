@@ -95,8 +95,15 @@
 
 <view class="loading" wx:if="{{store === null}}" bindtap="occurFail">
     <image wx:if="{{!getLocationFail && !fetchDataFail}}" src="/images/loading.gif"></image> 
-   <div class="occurFail" wx:if="{{getLocationFail || fetchDataFail}}">
-      <image src="/images/needToRefresh.png" wx:if="{{fetchDataFail}}"></image> 
-   </div>
+   <view class="occurFail" wx:if="{{getLocationFail || fetchDataFail}}">
+      <image src="/images/needToRefresh.png" wx:if="{{fetchDataFail}}"></image>  
+      <image src="/images/getLocationFail.png" wx:if="{{getLocationFail}}"></image>
+   </view>
   <text>{{loadingTip}}</text>
+  <view class="getLocationTip" wx:if="{{getLocationFail}}">
+    <view class="title">以下方法有助于更快获取您的位置</view>
+    <view>请检查手机是否连接网络</view>
+    <view>打开GPS</view>
+    <view>打开Wi-Fi</view>
+  </view>
 </view>

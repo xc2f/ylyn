@@ -76,6 +76,7 @@ Page({
         latitude: coordinate.latitude
       },
       success: function(res){
+        console.log(res)
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({

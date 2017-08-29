@@ -1,10 +1,10 @@
 <!--pages/main/main.wxml-->
 <view class="container" style="" wx:if="{{store !== null}}">
 
-  <view class="banner" animation="{{bannerSwitchAnimation}}" style="width: {{ deviceInfo.windowWidth }}px">
+  <view class="banner" style="width: {{ deviceInfo.windowWidth }}px">
     <view class="wrap">
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
-        <image class="bannerImg" src="{{store.store_bgimg === '' ? '/images/banner.jpg' : store.store_bgimg}}" animation="{{bannerSwitchAnimation}}"></image>
+        <image class="bannerImg" src="{{store.store_bgimg === '' ? '/images/banner.jpg' : store.store_bgimg}}"></image>
         <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}">
           <view class="shopAvatar">
             <image src="{{store.store_logo==='' ? '/images/defaultLogo.png' : store.store_logo}}"></image>
@@ -28,7 +28,7 @@
 
   </view>
 
-  <scroll-view scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;" animation="{{tablesOpacityAnimation}}">
+  <scroll-view scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;">
     <view class="allInOne">
       <view class="up">
         <view class="line"></view>
@@ -39,16 +39,15 @@
         <!-- <text class="small">在这里找到你心动的ta</text> -->
       </view>
     </view>
-    <view class="empty" wx:if="{{!showLogin && !showLoading && userListLength === 0}}">暂时为空</view>
+    <view class="empty" wx:if="{{dataOk && userListLength === 0}}">暂时为空</view>
 
-    <view class="login" wx:if="{{!login || showLoading || showLogin}}">
-      <view class="cssload-container" wx:if="{{showLoading}}">
+    <view class="login" wx:if="{{!dataOk}}">
+      <view class="cssload-container" wx:if="{{showLoginStatus}}">
         <view class="cssload-speeding-wheel"></view>
       </view>      
-    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">{{login ? "获取地理位置失败" : "登录后查看同店的人"}}</button>
-    <view class="loadingStatus" wx:if="{{showLogin || showLoading}}">{{loadingStatus}}</view>
+    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录后查看同店的人</button>
+    <view class="loginStatus">{{loginStatus}}</view>
     </view>
-    <!-- <view class="classname">{{showTip}}</view> -->
 
     <import src="/pages/common/tableList/tableList" />
     <template is="tableList" data="{{tables: store.table_list, tableLength: userListLength}}" />
@@ -94,7 +93,10 @@
 
 <!-- <view class="classname" wx:if="{{store !== null}}">成功</view> -->
 
-<view class="loading" wx:if="{{store === null}}">
-  <image src="/images/loading.gif"></image>
-  <text>{{showTip}}</text>
+<view class="loading" wx:if="{{store === null}}" bindtap="occurFail">
+    <image wx:if="{{!getLocationFail && !fetchDataFail}}" src="/images/loading.gif"></image> 
+   <div class="occurFail" wx:if="{{getLocationFail || fetchDataFail}}">
+      <image src="/images/needToRefresh.png" wx:if="{{fetchDataFail}}"></image> 
+   </div>
+  <text>{{loadingTip}}</text>
 </view>

@@ -8,39 +8,48 @@ Page({
    * 页面的初始数据
    */
   data: {
+    // 设备信息
     deviceInfo: null,
+    // store数据主体
     store: null,
+    // 用户列表长度
     userListLength: 0,
+    // 扫码的二维码信息
     qrcodeInfo: null,
 
-    showMeSwitch: true,
-    showShopSwitch: false,
-    bannerSwitchAnimation: {},
-    bannerSwitchTranslate: {},
-
-    // 选择主页为店铺还是用户
-    shopShow: true,
-    userShow: false,
-
-    tablesOpacityAnimation: {},
-    userOpacityAnimation: {},
-
+    // 只看男女切换
     filterShow: false,
     filterShowAnimation: {},
-    filterGirlMoveLeftAnimation: {},
-    filterBoyMoveRightAnimation: {},
 
+    // 获取未读消息状态
     getMsgStatusInterval: null,
     hasNewMsg: false,
 
+    // 呼叫维特延时
     callWaiterTimeout: 0,
 
+    // 地理位置检测
     checkLocationInterval: null,
-    showTip: '店铺正马不停蹄地向你赶来',
+
+    // 一直在跳的那个定位标记
+    loadingTip: '店铺正马不停蹄地向你赶来',
+    // 定位失败
+    getLocationFail: false,
+    // 数据获取失败
+    fetchDataFail: false,
+
+    // 登录按钮
     showLogin: true,
-    showLoading: false,
-    loadingStatus: '',
-    login: false
+    // // 登录按钮上的登录状态
+    showLoginStatus: false,
+    // 登录按钮下边的提示文字
+    loginStatus: '',
+
+    // 登录状态
+    login: false,
+
+    // 登录以及数据拉取成功
+    dataOk: false
   },
 
 
@@ -49,12 +58,11 @@ Page({
    */
   onLoad: function (options) {
     let that = this
+    // 扫码
     that.setData({
       qrcodeInfo: {
-        store_id: options.store_id,
-        table_id: options.table_id
-        // store_id: 1,
-        // table_id: 1,
+        store_id: options.store_id || '14b00ff3-f9f7-7337-a713-599d8f8d9c62',
+        table_id: options.table_id || 2
       }
     })
 
@@ -65,36 +73,40 @@ Page({
 
     let token = wx.getStorageSync('TOKEN')
     if (token) {
+      // 登陆过
       app.TOKEN = token
       if(app.globalData.client_id){
-        // console.log('has client_id')
-        app.login( success => {
-          // console.log(success)
-          if(success){
+        app.login( login => {
+          if (login){
             that.setData({
-              login: true
+              login: true,
+              showLogin: false,
             })
-            that.fetchShopInfo()
+            that.getCurrentLocation()
+          } else {
+            that.setData({
+              loadingTip: '登录失败'
+            })
+            // 登录失败回调
           }
         })
       } else {
         app.connectWebsocket('auto', null, login => {
-          // console.log(login)
           if (login) {
             that.setData({
-              login: true
+              login: true,
+              showLogin: false,
             })
-            that.fetchShopInfo()
+            that.getCurrentLocation()
           } else {
-            // that.setData({
-            //   loadingStatus: '登录失败，请重试'
-            // })
+            that.setData({
+              loadingTip: '登录失败'
+            })
           }
         })
       }
     }else{
-      // 新接口
-      // console.log('here')
+      // 未登录
       that.fetchShopInfoWithoutLogin()
     }
 
@@ -103,31 +115,37 @@ Page({
   getUserInfo(res){
     let that = this
     let detail = res.detail
-    // console.log(detail)
     if (detail.rawData){
       that.setData({
+        login: false,
         showLogin: false,
-        showLoading: true,
-        loadingStatus: '登录中',
+        showLoginStatus: true,
+        loginStatus: '登录中',
       })
       app.manualLogin(detail.encryptedData, detail.iv, res =>{
         if(res){
           that.setData({
             login: true,
-            loadingStatus: '登录成功，数据获取中'
+            showLogin: false,
+            showLoginStatus: true,
+            loginStatus: '登录成功，获取位置中'
           })
-          that.fetchShopInfo()
+          that.getCurrentLocation()
         } else {
           that.setData({
+            login: false,
             showLogin: true,
-            showLoading: false,
-            loadingStatus: '登录失败，请重试',
+            showLoginStatus: false,
+            loginStatus: '登录失败，请重试',
           })
         }
       })
     } else {
       that.setData({
-        showLoading: false
+        login: false,
+        showLogin: true,
+        showLoginStatus: false,
+        loginStatus: '用户信息获取失败',
       })
     }
   },
@@ -136,9 +154,6 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
-
-  },
 
   fetchShopInfoWithoutLogin(){
     let that = this
@@ -147,75 +162,76 @@ Page({
       method: 'POST',
       data: {
         store_id: that.data.qrcodeInfo.store_id,
-        // longitude: coordinate.longitude,
-        // latitude: coordinate.latitude
       },
       success: function (res) {
         wx.stopPullDownRefresh()
-        // console.log(res)
         if (res.data.code === 201) {
           that.setData({
             store: res.data.result
           })
         } else {
-
+          // TODO
+          that.setData({
+            loadingTip: '数据获取失败'
+          })
         }
+      },
+      fail: function(res) {
+        // TODO
+        that.setData({
+          loadingTip: '数据获取失败'
+        })
       }
     })
   },
 
 
-  fetchShopInfo(){
-    // console.log('in3')
+  getCurrentLocation(){
     let that = this
     let coordinate = app.globalData.coordinate
     if (coordinate){
+      // TODO
       that.isInStore(coordinate)
     } else {
       app.getLocation(res => {
-        // console.log(res)
-        if (res === '获取成功') {
-          // 是否在本店
+        if (res) {
+          that.setData({
+            showLoginStatus: true,
+            loginStatus: '位置获取成功，获取数据中',
+            getLocationFail: false
+          })
           that.isInStore(app.globalData.coordinate)
-        } else if (res === '取消授权') {
-          that.setData({
-            showLogin: true,
-            showLoading: false,
-            loadingStatus: '您未授权，请授权后重试',
-            showTip: '您未授权，请授权后重试',
-          })
-        } else if (res === '获取中') {
-          that.setData({
-            showLogin: false,
-            showLoading: true,
-            loadingStatus: '店铺正马不停蹄地向你赶来',
-            showTip: '店铺正马不停蹄地向你赶来',
-          })
         } else {
           that.setData({
-            showLogin: true,
-            showLoading: false,
-            loadingStatus: '位置获取失败，请重试',
-            showTip: '位置获取失败，请重试',
+            showLoginStatus: false,
+            loginStatus: '位置获取失败, 请下拉刷新重试',
+            loadingTip: '位置获取失败',
+            getLocationFail: true
           })
         }
       })
     }
   },
 
+
+  // TODO 删除接口
   isInStore(coordinate) {
     let that = this
+    // 为什么请求这个接口
     wx.request({
       url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
-        latitude: coordinate.latitude,
-        longitude: coordinate.longitude,
+        // latitude: coordinate.latitude,
+        // longitude: coordinate.longitude,
+        latitude: 34.2048991715,
+        longitude: 108.9146214724,
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id
       },
       success: function (res) {
+        console.log('in store_info res')
         console.log(res)
         wx.hideLoading()
         if (res.data.code === 201) {
@@ -238,14 +254,14 @@ Page({
       fail: function(){
         that.setData({
           showLogin: true,
-          showLoading: false,
-          loadingStatus: '未知错误，请重试'
+          showLoginStatus: false,
+          loginStatus: '未知错误，请重试'
         })
       }
     })
   },
 
-  toFetch(coordinate, gender, currentPage){
+  toFetch(gender, currentPage){
     let that = this
     wx.request({
       // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
@@ -254,8 +270,10 @@ Page({
       data: {
         // longitude: 108.8871237 || coordinate.longitude,
         // latitude: 34.1863376 || coordinate.latitude,
-        longitude: coordinate.longitude,
-        latitude: coordinate.latitude,
+        // longitude: coordinate.longitude,
+        // latitude: coordinate.latitude,
+        latitude: 34.2048991715,
+        longitude: 108.9146214724,
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
@@ -263,29 +281,19 @@ Page({
         page: currentPage || 1
       },
       success: function (res) {
-        // console.log(coordinate, app.TOKEN, that.data.qrcodeInfo, res)
-        if(res.data.code >= 500){
-          wx.showModal({
-            title: '错误',
-            content: '服务端错误，正在努力修复中',
-            showCancel: false
-          })
-        }
-        that.setData({
-          showLogin: false,
-          showLoading: false,
-          loadingStatus: '获取成功，数据加载中'
-        })
         // 隐藏加载动画和下拉刷新动作
         wx.hideLoading()
         wx.stopPullDownRefresh()
+
+        // TODO
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
             title: res.data.result.store_name
           })
-          // console.log(res.data.result)
           that.setData({
+            dataOk: true,
+            fetchDataFail: false,
             store: res.data.result,
             userListLength: res.data.result.table_list.length
           })
@@ -307,16 +315,36 @@ Page({
               }
             }
           })
+        } else {
+          that.setData({
+            showLoginStatus: false,
+            loginStatus: '数据获取失败，请下拉刷新重试',
+            loadingTip: '数据获取失败, 点击页面重试',
+            fetchDataFail: true
+          })
         }
       },
       fail: function(){
         that.setData({
-          showLogin: true,
-          showLoading: false,
-          loadingStatus: '数据获取失败，请重试'
+          showLoginStatus: false,
+          loginStatus: '数据获取失败，请下拉刷新重试',
+          loadingTip: '数据获取失败, 点击页面重试',
+          fetchDataFail: true
         })
       }
     })
+  },
+
+  occurFail(){
+    if (this.data.getLocationFail){
+
+    } else {
+      this.setData({
+        loadingTip: '店铺正马不停蹄地向你赶来',
+        fetchDataFail: false
+      })
+      this.toFetch()
+    }
   },
 
   basicAnimation(duration, delay) {
@@ -337,9 +365,7 @@ Page({
       })
       setTimeout(function () {
         that.setData({
-          filterShowAnimation: that.basicAnimation(300, 0).width(45).step().export(),
-          // filterGirlMoveLeftAnimation: that.basicAnimation(3000, 1000).right(27).step().export(),
-          // filterBoyMoveRightAnimation: that.basicAnimation(3000, 1000).left(27).step().export()
+          filterShowAnimation: that.basicAnimation(300, 0).width(45).step().export()
         })
       }, 10)
     }else {
@@ -348,82 +374,18 @@ Page({
       })
       setTimeout(function () {
         that.setData({
-          filterShowAnimation: that.basicAnimation(300, 0).width(170).step().export(),
-          // filterGirlMoveLeftAnimation: that.basicAnimation(3000, 1000).right(27).step().export(),
-          // filterBoyMoveRightAnimation: that.basicAnimation(3000, 1000).left(27).step().export()
+          filterShowAnimation: that.basicAnimation(300, 0).width(170).step().export()
         })
       }, 10)
     }
 
   },
 
-  galleryImgPrev(e) {
-    let that = this;
-    wx.previewImage({
-      current: e.currentTarget.dataset.src,
-      urls: (function () {
-        let imgList = []
-        for (let i = 0; i < that.data.gallery.length; i++) {
-          imgList.push(that.data.gallery[i].src)
-        }
-        // console.log(e.currentTarget.dataset.src)
-        return imgList
-      }()),
-    })
-  },
 
-
+ // 我的
   switchToMe() {
     wx.navigateTo({
       url: '/pages/user/user?user_id=' + app.globalData.userId,
-    })
-
-
-  },
-
-  switchToShop() {
-    let that = this;
-
-    that.setData({
-      showShopSwitch: false,
-      bannerSwitchAnimation: that.bannerSwitchToShop(),
-      showMeSwitch: true,
-      shopShow: true,
-      userShow: false,
-      tablesOpacityAnimation: that.basicAnimation(500, 0).opacity(1).step().export(),
-      userOpacityAnimation: that.basicAnimation(500, 0).opacity(0).step().export(),
-    })
-
-  },
-
-
-  bannerSwitchToMe() {
-    //  let that = this;
-    var animation = wx.createAnimation({
-      duration: 700,
-      timingFunction: "ease",
-      delay: 0,
-      transformOrigin: this.data.deviceInfo.windowWidth / 2 + 'px'
-    })
-    return animation.scale(0.7).step({ duration: 300 }).rotateY(180).step({ duration: 700 }).scale(1).step({ duration: 300 }).export();
-    // return animation.rotateY(180).step().export();
-  },
-
-  bannerSwitchToShop() {
-    //  let that = this;
-    var animation = wx.createAnimation({
-      duration: 700,
-      timingFunction: "ease",
-      delay: 0,
-      transformOrigin: this.data.deviceInfo.windowWidth / 2 + 'px'
-    })
-    return animation.rotateY(0).step().export();
-  },
-
-
-  shopTap(e){
-    wx.navigateTo({
-      url: '/pages/shopDetail/shopDetail?shop_id='+e.currentTarget.dataset.shop_id,
     })
   },
 
@@ -439,6 +401,8 @@ Page({
   showAll(){
     this.toFetch(app.globalData.coordinate, 0)
   },
+
+
   /**
    * 生命周期函数--监听页面显示
    */
@@ -461,7 +425,7 @@ Page({
 
     setTimeout(function(){
       that.setData({
-        showTip: '获取位置失败，请下拉刷新重新获取'
+        showLoadingTip: '获取位置失败，请下拉刷新重新获取'
       })
     }, 20000)
   },
@@ -489,13 +453,13 @@ Page({
    */
   onPullDownRefresh: function () {
     if(this.data.login){
-      this.fetchShopInfo()
+      this.getCurrentLocation()
     } else {
       this.fetchShopInfoWithoutLogin()
     }
-    
     this.setData({
-      showTip: '店铺正马不停蹄地向你赶来',
+      loadingTip: '店铺正马不停蹄地向你赶来',
+      loginStatus: '数据获取中'
     })
   },
 

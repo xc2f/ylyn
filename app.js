@@ -3,18 +3,27 @@ import { requestHost, socketUrl } from './untils/config.js'
 App({
 
   globalData: {
+    // 设备信息
     deviceInfo: null,
-    // checkLocationInterval: null,
-    webSocketError: false,
+    // socket重连次数
     connectTimes: 0,
+    // socket连接中断
     socketBroken: false,
+    // 坐标缓存
     coordinate: null,
+    // 登录用户id
     userId: null,
+    // 扫码商家及桌号
     storeInfo: null,
+    // 登录凭据
     client_id: null,
+    // 是否有新消息或未读消息
     msgClean: true,
+    // 是否登录
     login: false,
+    // 是否要显示分享
     noShowShare: true,
+    // 定时发送socket ping包
     sendSocketMsgInterval: null
   },
 
@@ -22,17 +31,15 @@ App({
   requestHost: requestHost,
 
   onLaunch: function () {
-
-    // this.getLocation()
-
     // 获取设备信息
     this.getDeviceInfo()
-
     // 获取本地消息状态
     this.getMsgStatus()
-
   },
 
+  /**
+   * 获取是否有未读消息状态
+   **/
   getMsgStatus() {
     let that = this
     wx.getStorage({
@@ -82,9 +89,9 @@ App({
   /**
    * @params connectType - 连接方式手动还是自动
    * @params callback - 手动登录callback
-   * @params autoLoginStatus - 自动登录callback
+   * @params autoLoginCallback - 自动登录callback
    */
-  connectWebsocket(connectType, manualLoginStatus, autoLoginStatus) {
+  connectWebsocket(connectType, manualLoginCallback, autoLoginCallback) {
     // wx.closeSocket()
     // console.log('in socket')
     let that = this
@@ -94,9 +101,11 @@ App({
     })
 
     wx.onSocketOpen(function (res) {
+      // console.log('----- socket open -----')
+      // console.log(res)
       // console.log('WebSocket连接已打开！')
       that.globalData.sendSocketMsgInterval = setInterval(function(){
-        // console.log('send socket msg')
+        // console.log('----- ping -------')
         wx.sendSocketMessage({
           data: 'ping'
         })
@@ -104,17 +113,18 @@ App({
 
       // 监听消息
       wx.onSocketMessage(function (res) {
-        // console.log('--------------------')
+        // console.log('-------- socket msg ------------')
         // console.log(res)
         let data = JSON.parse(res.data)
         // console.log(data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
           if (connectType === 'manual') {
-            manualLoginStatus(data.client_id)
+            manualLoginCallback(data.client_id)
           } else {
             if (that.globalData.socketBroken) {
               that.globalData.socketBroken = false
+              // 店外重连和店内重连
               if (that.globalData.storeInfo === null) {
                 wx.request({
                   url: that.requestHost + 'Store/ws_reconnection/',
@@ -151,13 +161,10 @@ App({
                 })
               }
             } else {
-              // console.log('to login')
-              // console.log(autoLoginStatus)
-              that.login(autoLoginStatus)
+              that.login(autoLoginCallback)
             }
           }
         } else if( data.type === 'ping'){
-          // console.log(data)
           return 
         } else {
           that.loadMsg(data)
@@ -179,15 +186,11 @@ App({
     })
   },
 
+
+  // rebuild ok
   login(callback) {
-    // console.log(client_id)
-    // wx.showLoading({
-    //   title: '登陆中',
-    //   mask: true
-    // })
-    // console.log('login --------------')
     let that = this
-    // console.log('login with token')
+    console.log('login with token')
     wx.request({
       url: that.requestHost + 'User/token_login/',
       method: 'POST',
@@ -196,40 +199,43 @@ App({
         client_id: that.globalData.client_id
       },
       success: function (res) {
-        // console.log(res)
-        that.globalData.login = true
-        // callback(true)
-        // TOKEN过期
-        if (res.data.code === 202) {
-          that.TOKEN = res.data.result.token
-          wx.setStorageSync('TOKEN', res.data.result.token)
-        }
-        // 存储userid
-        that.globalData.userId = res.data.result.user_id
-
-        // console.log('in')
-        // console.log(callback)
-        // 执行回调
-        callback(true)
-        // 未读消息
-        let unreadMsg = res.data.result.unread_msg
-        // console.log('未读消息', unreadMsg)
-        if (unreadMsg.length) {
-          for (let i = 0; i < unreadMsg.length; i++) {
-            that.loadMsg(unreadMsg[i])
+        console.log(res)
+        if(res.data.code === 201 || res.data.code === 202){
+          if (res.data.code === 202) {
+            that.TOKEN = res.data.result.token
+            wx.setStorageSync('TOKEN', res.data.result.token)
           }
+          that.globalData.login = true
+          // 存储userid
+          that.globalData.userId = res.data.result.user_id
+          // 回调
+          callback(true)
+          // 未读消息
+          let unreadMsg = res.data.result.unread_msg
+          if (unreadMsg.length) {
+            for (let i = 0; i < unreadMsg.length; i++) {
+              that.loadMsg(unreadMsg[i])
+            }
+          }
+          // 覆盖用户信息
+          wx.setStorage({
+            key: 'meInfo',
+            data: res.data.result.user_info,
+          })
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '登录失败',
+            showCancel: false
+          })
+          that.globalData.login = false
+          callback(false)
         }
-        // 覆盖用户信息
-        wx.setStorage({
-          key: 'meInfo',
-          data: res.data.result.user_info,
-        })
       },
-      fail: function () {
-        wx.hideLoading()
+      fail: function (e) {
         wx.showModal({
-          title: '登录超时',
-          content: '请确认网络是否畅通',
+          title: '提示',
+          content: '登录失败',
           showCancel: false
         })
         that.globalData.login = false
@@ -240,14 +246,10 @@ App({
 
   manualLogin(encryptedData, iv, callback) {
     let that = this
-    // debugger
     that.connectWebsocket('manual', client_id => {
       wx.login({
         success: function (res) {
           if (res.code) {
-            // wx.getUserInfo({
-            // success: function (res) {
-            // 发起请求
             wx.request({
               url: that.requestHost + 'User/wxLogin/',
               method: 'POST',
@@ -258,83 +260,59 @@ App({
                 client_id: client_id
               },
               success: function (res) {
-                // console.log(res)
                 if (res.data.code === 201) {
                   // 存储TOKEN
                   that.TOKEN = res.data.result.token
                   wx.setStorageSync('TOKEN', res.data.result.token)
-
                   // 存储userid
                   that.globalData.userId = res.data.result.user_id
+
+                  // 执行回调
+                  callback(true)
 
                   // 未读消息
                   let unreadMsg = res.data.result.unread_msg
                   if (unreadMsg.length) {
-                    // TODO
                     for (let i = 0; i < unreadMsg.length; i++) {
                       that.loadMsg(unreadMsg[i])
                     }
                   }
-
                   // 覆盖用户信息
                   wx.setStorage({
                     key: 'meInfo',
                     data: res.data.result.user_info,
                   })
-                  // 执行回调
-                  callback(true)
                 } else {
                   callback(false)
-                  wx.showToast({
-                    icon: 'loading',
-                    title: '登录失败，请重试',
-                  })
                 }
               },
-              fail: function () {
+              fail: function (e) {
+                // request请求失败
                 callback(false)
-                wx.showModal({
-                  title: '登录超时',
-                  content: '请确认网络是否畅通',
-                  showCancel: false
-                })
               }
             })
-            // },
-            // fail: function (res) {
-            //   // 用户第一次取消个人信息授权
-            //   wx.hideLoading()
-            //   wx.showModal({
-            //     title: '提示',
-            //     content: '您已取消微信授权，可下拉刷新或通过右上角功能按钮重新授权',
-            //     showCancel: false,
-            //     success: function (res) {
-            //       if (res.confirm) {
-            //         wx.redirectTo({
-            //           url: '/pages/nearlist/nearlist?op=nologin',
-            //         })
-            //       }
-            //     }
-            //   })
-            //   // console.log(res)
-            // }
-            // })
+          } else {
+            // res.code 为 null
+            callback(false)
           }
+        },
+        fail: function(){
+          // wx.login接口调用失败
+          callback(false)
         }
       })
     }, null)
   },
 
+  // rebuild ok
   getLocation(callback) {
-    // console.log('get location')
     let that = this
-    // get setting bug
     if (wx.getSetting) {
       setTimeout(function () {
         wx.getSetting({
           success: function (res) {
             if (res.authSetting['scope.userLocation'] === false) {
-              // console.log(getCurrentPages())
+              // 用户拒绝位置授权时的提示
               wx.showModal({
                 title: '提示',
                 content: '您未授权位置信息，确认授权？',
@@ -350,37 +328,27 @@ App({
                                 latitude: res.latitude,
                                 longitude: res.longitude
                               }
-                              // console.log(1)
-                              callback('获取成功')
+                              callback(true)
                             },
                             fail: function () {
-                              // console.log(2)
-                              callback('获取失败')
-                              // console.log('用户重新授权，但获取位置失败')
-                              wx.showToast({
-                                icon: 'loading',
-                                title: '获取地理位置失败',
-                              })
+                              // 用户重新授权，但获取位置失败
+                              callback(false)
                             }
                           })
                         } else {
-                          // console.log(3)
-                          callback('取消授权')
-                          wx.hideLoading()
-                          // console.log('用户再次拒绝授权地理位置')
+                          // 用户在设置界面未授权
+                          callback(false)
                         }
                       }
                     })
                   } else if (res.cancel) {
-                    wx.hideLoading()
-                    wx.stopPullDownRefresh()
-                    // console.log('用户点击取消')
-                    callback('取消授权')
+                    // 用户再次拒绝授权
+                    callback(false)
                   }
                 }
               })
-
             } else {
+              // 第一次或用户允许位置授权时的请求位置
               wx.getLocation({
                 type: 'gcj02',
                 success: function (res) {
@@ -388,34 +356,11 @@ App({
                     latitude: res.latitude,
                     longitude: res.longitude
                   }
-                  callback('获取成功')
-                  // console.log(4)
+                  callback(true)
                 },
                 fail: function () {
-                  // console.log(5)
-                  callback('取消授权')
-                  // console.log(getCurrentPages())
-                  wx.hideLoading()
-                  // console.log('获取位置失败')
-                  // let xx = wx.showModal({
-                  //   title: '提示',
-                  //   content: '获取位置信息失败，请打开GPS后重试',
-                  //   success: function (res) {
-                  //     if (res.confirm) {
-                  //       callback('获取中')
-                  //       // console.log('用户点击确定')
-                  //       that.getLocation()
-                  //     } else {
-                  //       console.log(6)
-                  //       callback('获取失败')
-                  //       wx.hideLoading()
-                  //       wx.stopPullDownRefresh()
-                  //     }
-                  //   }
-                  // })
-                  // wx.showToast({
-                  //   title: '获取地理位置失败',
-                  // })
+                  // 获取位置失败
+                  callback(false)
                 }
               })
             }

@@ -373,3 +373,16 @@ button.needLogin[type="primary"][plain] {
   text-align: center;
   margin-top: 17px;
 }
+
+.occurFail {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.occurFail image {
+  width: 100px;
+  height: 100px;
+}

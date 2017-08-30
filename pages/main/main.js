@@ -3,6 +3,7 @@ var app = getApp()
 Page({
 
   pageName: 'shopMain',
+  getLocationErrorTimes: 0,
 
   /**
    * 页面的初始数据
@@ -57,6 +58,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // TODO 用户返回到微信，再从微信回来的情况
     let that = this
     // 扫码
     that.setData({
@@ -71,26 +73,17 @@ Page({
       deviceInfo: app.globalData.deviceInfo
     })
 
-    let token = wx.getStorageSync('TOKEN')
-    if (token) {
-      // 登陆过
-      app.TOKEN = token
-      if(app.globalData.client_id){
-        app.login( login => {
-          if (login){
-            that.setData({
-              login: true,
-              showLogin: false,
-            })
-            that.getCurrentLocation()
-          } else {
-            that.setData({
-              loadingTip: '登录失败'
-            })
-            // 登录失败回调
-          }
-        })
-      } else {
+    if (app.globalData.userId) {
+      that.setData({
+        login: true,
+        showLogin: false,
+      })
+      that.getCurrentLocation()
+    } else {
+      let token = wx.getStorageSync('TOKEN')
+      if (token) {
+        // 登陆过
+        app.TOKEN = token
         app.connectWebsocket('auto', null, login => {
           if (login) {
             that.setData({
@@ -104,26 +97,26 @@ Page({
             })
           }
         })
+      } else {
+        // 未登录
+        that.fetchShopInfoWithoutLogin()
       }
-    }else{
-      // 未登录
-      that.fetchShopInfoWithoutLogin()
     }
 
   },
 
-  getUserInfo(res){
+  getUserInfo(res) {
     let that = this
     let detail = res.detail
-    if (detail.rawData){
+    if (detail.rawData) {
       that.setData({
         login: false,
         showLogin: false,
         showLoginStatus: true,
         loginStatus: '登录中',
       })
-      app.manualLogin(detail.encryptedData, detail.iv, res =>{
-        if(res){
+      app.manualLogin(detail.encryptedData, detail.iv, res => {
+        if (res) {
           that.setData({
             login: true,
             showLogin: false,
@@ -155,7 +148,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
 
-  fetchShopInfoWithoutLogin(){
+  fetchShopInfoWithoutLogin() {
     let that = this
     wx.request({
       url: app.requestHost + 'Store/logout_store_info/',
@@ -164,6 +157,7 @@ Page({
         store_id: that.data.qrcodeInfo.store_id,
       },
       success: function (res) {
+        wx.hideLoading()
         wx.stopPullDownRefresh()
         if (res.data.code === 201) {
           that.setData({
@@ -172,40 +166,40 @@ Page({
         } else {
           // TODO
           that.setData({
-            loadingTip: '获取数据失败'
+            loadingTip: '数据获取失败'
           })
         }
       },
-      fail: function(res) {
+      fail: function (res) {
         // TODO
         that.setData({
-          loadingTip: '获取数据失败'
+          loadingTip: '数据获取失败'
         })
       }
     })
   },
 
 
-  getCurrentLocation(){
+  getCurrentLocation() {
     let that = this
     let coordinate = app.globalData.coordinate
-    if (coordinate){
+    if (coordinate) {
       // TODO
-      that.isInStore(coordinate)
+      that.toFetch()
     } else {
       app.getLocation(res => {
         if (res) {
           that.setData({
             showLoginStatus: true,
-            loginStatus: '获取位置成功，获取数据中',
+            loginStatus: '位置获取成功，获取数据中',
             getLocationFail: false
           })
-          that.isInStore(app.globalData.coordinate)
+          that.toFetch()
         } else {
           that.setData({
             showLoginStatus: false,
-            loginStatus: '获取位置失败，请下拉刷新重试',
-            loadingTip: '获取位置失败，请点击页面重试',
+            loginStatus: '位置获取失败，请下拉刷新重试',
+            loadingTip: '位置获取失败，请点击页面重试',
             getLocationFail: true
           })
         }
@@ -213,55 +207,7 @@ Page({
     }
   },
 
-
-  // TODO 删除接口
-  isInStore(coordinate) {
-    let that = this
-    // 为什么请求这个接口
-    wx.request({
-      url: app.requestHost + 'Store/store_info/',
-      method: 'POST',
-      data: {
-        // latitude: coordinate.latitude,
-        // longitude: coordinate.longitude,
-        latitude: 34.2048991715,
-        longitude: 108.9146214724,
-        token: app.TOKEN,
-        store_id: that.data.qrcodeInfo.store_id,
-        table_id: that.data.qrcodeInfo.table_id
-      },
-      success: function (res) {
-        console.log('in store_info res')
-        console.log(res)
-        wx.hideLoading()
-        if (res.data.code === 201) {
-          that.toFetch(coordinate)
-        } else {
-          wx.showModal({
-            title: '提示',
-            content: res.data.code === 103 ? '您不在本店' : '商家已关闭服务',
-            showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                wx.redirectTo({
-                  url: '/pages/nearlist/nearlist',
-                })
-              }
-            }
-          })
-        }
-      },
-      fail: function(){
-        that.setData({
-          showLogin: true,
-          showLoginStatus: false,
-          loginStatus: '未知错误，请重试'
-        })
-      }
-    })
-  },
-
-  toFetch(gender, currentPage){
+  toFetch(gender, page) {
     let that = this
     wx.request({
       // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
@@ -278,15 +224,15 @@ Page({
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
         gender_type: gender || 0,
-        page: currentPage || 1
+        page: page || 1
       },
       success: function (res) {
+        // TODO fetchDataFail = false
         // 隐藏加载动画和下拉刷新动作
         wx.hideLoading()
         wx.stopPullDownRefresh()
-
         // TODO
-        if(res.data.code === 201){
+        if (res.data.code === 201) {
           // 设置导航条
           wx.setNavigationBarTitle({
             title: res.data.result.store_name
@@ -302,10 +248,10 @@ Page({
             storeName: res.data.result.store_name,
             tableId: that.data.qrcodeInfo.table_id
           }
-        }else if(res.data.code === 101 || res.data.code === 102){
+        } else if (res.data.code === 102) {
           wx.showModal({
             title: '提示',
-            content: '不在店铺范围内',
+            content: res.data.message,
             showCancel: false,
             success: function (res) {
               if (res.confirm) {
@@ -317,26 +263,30 @@ Page({
           })
         } else {
           that.setData({
+            dataOk: false,
             showLoginStatus: false,
-            loginStatus: '获取数据失败，请下拉刷新重试',
-            loadingTip: '获取数据失败, 请点击页面重试',
+            loginStatus: '数据获取失败，请下拉刷新重试',
+            loadingTip: '数据获取失败, 请点击页面重试',
             fetchDataFail: true
           })
         }
       },
-      fail: function(){
+      fail: function () {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
         that.setData({
+          dataOk: false,
           showLoginStatus: false,
-          loginStatus: '获取数据失败，请下拉刷新重试',
-          loadingTip: '获取数据失败, 请点击页面重试',
+          loginStatus: '数据获取失败，请下拉刷新重试',
+          loadingTip: '数据获取失败, 请点击页面重试',
           fetchDataFail: true
         })
       }
     })
   },
 
-  occurFail(){
-    if (this.data.getLocationFail){
+  occurFail() {
+    if (this.data.getLocationFail) {
       this.setData({
         loadingTip: '店铺正马不停蹄地向你赶来',
         getLocationFail: false
@@ -360,9 +310,9 @@ Page({
     return animation;
   },
 
-  showFilter(){
+  showFilter() {
     let that = this
-    if (that.data.filterShow){
+    if (that.data.filterShow) {
       that.showAll()
       that.setData({
         filterShow: false,
@@ -372,7 +322,7 @@ Page({
           filterShowAnimation: that.basicAnimation(300, 0).width(45).step().export()
         })
       }, 10)
-    }else {
+    } else {
       that.setData({
         filterShow: true,
       })
@@ -386,24 +336,24 @@ Page({
   },
 
 
- // 我的
+  // 我的
   switchToMe() {
     wx.navigateTo({
       url: '/pages/user/user?user_id=' + app.globalData.userId,
     })
   },
 
-  showGirl(){
+  showGirl() {
     // console.log('girl')
-    this.toFetch(app.globalData.coordinate, 2)
+    this.toFetch(2)
   },
 
-  showBoy(){
-    this.toFetch(app.globalData.coordinate, 1)
+  showBoy() {
+    this.toFetch(1)
   },
 
-  showAll(){
-    this.toFetch(app.globalData.coordinate, 0)
+  showAll() {
+    this.toFetch(0)
   },
 
 
@@ -411,27 +361,22 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    // console.log(app.globalData.msgClean)
+    // 获取未读消息
     let that = this
     that.setData({
       hasNewMsg: !app.globalData.msgClean
     })
-    
-    that.data.getMsgStatusInterval = setInterval(function(){
+
+    that.data.getMsgStatusInterval = setInterval(function () {
       that.setData({
         hasNewMsg: !app.globalData.msgClean
       })
     }, 2000)
 
+    // 检测位置
     that.data.checkLocationInterval = setInterval(function () {
       that.checkLocation()
     }, 1000 * 60 * 2)
-
-    setTimeout(function(){
-      that.setData({
-        showLoadingTip: '获取位置失败，请下拉刷新重新获取'
-      })
-    }, 20000)
   },
 
   /**
@@ -456,7 +401,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    if(this.data.login){
+    if (this.data.login) {
       this.getCurrentLocation()
     } else {
       this.fetchShopInfoWithoutLogin()
@@ -481,19 +426,19 @@ Page({
 
   userTap(e) {
     wx.navigateTo({
-      url: '/pages/user/user?user_id='+e.currentTarget.dataset.userid,
+      url: '/pages/user/user?user_id=' + e.currentTarget.dataset.userid,
     })
   },
 
-  toChatRecords(){
+  toChatRecords() {
     wx.navigateTo({
       url: '/pages/msgList/msgList',
     })
   },
 
-  callWaiter(){
+  callWaiter() {
     let that = this
-    if (that.data.callWaiterTimeout > 0){
+    if (that.data.callWaiterTimeout > 0) {
       wx.showModal({
         title: '提示',
         showCancel: false,
@@ -542,32 +487,40 @@ Page({
   },
 
   checkLocation() {
-    
-      let that = this
-      let gd = app.globalData
-
-      if(gd.coordinate){
+    let that = this
+    app.getLocation(res => {
+      if (res) {
+        let globalData = app.globalData
         wx.request({
           url: app.requestHost + '/Store/check_address/',
           method: 'POST',
           data: {
-            latitude: gd.coordinate.latitude,
-            longitude: gd.coordinate.longitude,
+            latitude: globalData.coordinate.latitude,
+            longitude: globalData.coordinate.longitude,
             token: app.TOKEN,
-            store_id: gd.storeInfo.storeId,
-            table_id: gd.storeInfo.tableId
+            store_id: globalData.storeInfo.storeId,
+            table_id: globalData.storeInfo.tableId
           },
           success: function (res) {
-            // console.log(res)
-            // 重新获取位置
-            app.getLocation(res => {})
-            // if (getCurrentPages().length === 1 && getCurrentPages()[0].pageName === 'shopMain') {
             if (res.data.code === 201) {
-              // console.log(res.data.message)
-            } else if (res.data.code === 103 || res.data.code === 102) {
+              console.log('位置正常')
+            } else if (res.data.code === 102) {
               wx.showModal({
                 title: '提示',
-                content: res.data.code === 103 ? '您已离开本店' : '商家已关闭服务',
+                content: res.data.message,
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                    wx.redirectTo({
+                      url: '/pages/nearlist/nearlist',
+                    })
+                  }
+                }
+              })
+            } else if (res.data.code === 103) {
+              wx.showModal({
+                title: '提示',
+                content: res.data.message,
                 showCancel: false,
                 success: function (res) {
                   if (res.confirm) {
@@ -578,26 +531,31 @@ Page({
                 }
               })
             } else {
-              wx.showModal({
-                title: '提示',
-                content: '与服务器通信错误',
-                showCancel: false,
-                success: function (res) {
-                  if (res.confirm) {
-                    wx.redirectTo({
-                      url: '/pages/nearlist/nearlist',
-                    })
-                  }
-                }
-              })
+              // 不处理
             }
-            // }
           },
           fail: function (err) {
-            // console.log(err)
+            // 不处理
           }
         })
+      } else {
+        that.getLocationErrorTimes++
+        if (that.getLocationErrorTimes >= 3) {
+          wx.showModal({
+            title: '提示',
+            content: '无法获取到您的位置',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                wx.redirectTo({
+                  url: '/pages/nearlist/nearlist',
+                })
+              }
+            }
+          })
+        }
       }
+    })
   }
 
 })

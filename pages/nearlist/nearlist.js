@@ -7,78 +7,68 @@ Page({
    * 页面的初始数据
    */
   data: {
-    request_fail: false,
     shopList: [],
     shopListEmpty: true,
-    showMeIcon: false,
     hasNewMsg: false,
     getMsgStatusInterval: null,
 
     showLogin: false,
-    showTip: '附近无可用商家',
-    showLoading: false,
-    login: false
+    showLoginStatus: false,
+    loginText: '登录',
+    login: false,
+
+    dataOk: false,
+    errorTip: '',
+    getLocationFail: false,
+    fetchDataFail: false
   },
+
+  currentPage: 1,
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let op = options.op
     let that = this
-
-    // if (op === 'nologin') {
-    //   that.fetchShopList()
-    // } else {
-    if(app.globalData.userId){
+    that.getCurrentLocation()
+    if (app.globalData.userId) {
       that.setData({
-        showMeIcon: true,
-        showLogin: false,
         login: true
       })
-      that.fetchShopList()
-    }else{
+    } else {
       let token = wx.getStorageSync('TOKEN')
       if (token) {
+        app.TOKEN = token
         wx.showLoading({
           title: '登录中',
         })
-        app.TOKEN = token
-        if (app.globalData.client_id) {
-          app.login(success => {
-            if (success) {
-              that.setData({
-                showMeIcon: true,
-                showLogin: false,
-                login: true
-              })
-              that.fetchShopList()
-            }
-          })
-        } else {
-          app.connectWebsocket('auto', null, login => {
-            // console.log(login)
-            if (login) {
-              wx.hideLoading()
-              that.setData({
-                showMeIcon: true,
-                showLogin: false,
-                login: true
-              })
-              that.fetchShopList()
-            } else {
-              wx.hideLoading()
-              wx.showToast({
-                title: '登录失败',
-              })
-            }
-          })
-        }
+        app.connectWebsocket('auto', null, login => {
+          wx.hideLoading()
+          if (login) {
+            that.setData({
+              login: true
+            })
+          } else {
+            // TODO 登录失败
+            wx.showToast({
+              title: '登录失败',
+              image: '/images/loginError.png'
+            })
+            that.setData({
+              showLogin: true,
+              showLoginStatus: false,
+              loginText: '登录',
+              login: false
+            })
+          }
+        })
       } else {
         that.setData({
-          showLogin: true
+          showLogin: true,
+          showLoginStatus: false,
+          loginText: '登录',
+          login: false
         })
-        that.fetchShopList()
       }
     }
     // }
@@ -91,101 +81,137 @@ Page({
     // console.log(detail)
     if (detail.rawData) {
       that.setData({
-        showLogin: false,
-        showLoading: true,
-        showTip: '登陆中',
+        showLogin: true,
+        showLoginStatus: true,
+        loginText: '',
+        login: false
       })
       app.manualLogin(detail.encryptedData, detail.iv, res => {
         if (res) {
           that.setData({
-            showMeIcon: true,
-            showLogin: false,
             login: true,
-            showLoading: false,
-            showTip: '登录成功，数据获取中'
           })
-          // that.fetchShopList()
+          that.getCurrentLocation()
         } else {
           that.setData({
-            showMeIcon: false,
             showLogin: true,
-            showLoading: false,
-            showTip: '登录失败，请重试'
+            showLoginStatus: false,
+            loginText: '登录',
+            login: false
           })
         }
       })
     } else {
+      // 用户拒绝用户信息授权等等
+      that.setData({
+        showLogin: true,
+        showLoginStatus: false,
+        loginText: '登录',
+        login: false
+      })
     }
   },
 
-  fetchShopList() {
-    wx.showLoading({
-      title: '数据获取中',
-    })
+  getCurrentLocation() {
     let that = this;
     let coordinate = app.globalData.coordinate
-    app.getLocation(res => {
-      if (res === '获取成功') {
-        let coordinate = app.globalData.coordinate
-        // 是否在本店
-        that.toFetch(coordinate)
-      } else if (res === '取消授权') {
+    if(coordinate){
+      that.toFetch(1)
+    } else {
+      // 一般走到这一步是由于未授权和初次打开小程序和地理位置获取失败
+      wx.showLoading({
+        title: '获取位置中',
+      })
+      app.getLocation(res => {
         wx.hideLoading()
-        wx.stopPullDownRefresh()
-        that.setData({
-          showTip: '获取不到您的位置，请刷新重试',
-        })
-      } else if (res === '获取中') {
-        // that.setData({
-        //   showTip: '店铺正马不停蹄地向你赶来'
-        // })
-      } else {
-        wx.hideLoading()
-        wx.stopPullDownRefresh()
-        that.setData({
-          showTip: '位置获取失败，请重试'
-        })
-      }
-    })
+        if (res) {
+          that.toFetch(1)
+          that.setData({
+            // TODO
+            getLocationFail: false
+          })
+        } else {
+          that.setData({
+            // TODO
+            getLocationFail: true,
+            errorTip: '位置获取失败, 请点击页面重试'
+          })
+        }
+      })
+    }
   },
 
-  toFetch(coordinate) {
+  toFetch(page) {
     let that = this
+    let coordinate = app.globalData.coordinate
+    wx.showLoading({
+      title: '获取数据中',
+    })
     wx.request({
       url: app.requestHost + 'Store/store_list/',
       method: 'POST',
       data: {
         longitude: coordinate.longitude,
-        latitude: coordinate.latitude
+        latitude: coordinate.latitude,
+        page: page
       },
       success: function (res) {
-        // console.log(res)
-        let result = res.data.result
-        // console.log(result)
-        // console.log(res)
-        // if(res.data.code === 201){
-        //   wx.hideLoading()
-        // }
         wx.hideLoading()
-        if (result !== false) {
-          that.setData({
-            shopList: result.store_list,
-            shopListEmpty: false,
-          })
+        wx.stopPullDownRefresh()
+        if(res.data.code === 101){
+          // 无数据
+          if(page === 1) {
+            that.setData({
+              shopListEmpty: true,
+              dataOk: true,
+              fetchDataFail: false
+            })
+          } else {
+            that.currentPage = page - 1
+          }
+        } else if(res.data.code === 201){
+          let result = res.data.result
+          let shopList = that.data.shopList
+            that.setData({
+              shopList: page === 1 ? result.store_list : shopList.concat(result.store_list),
+              shopListEmpty: false,
+              dataOk: true,
+              fetchDataFail: false
+            })
         } else {
           that.setData({
-            shopListEmpty: true,
-            showTip: '附近无可用店铺'
+            dataOk: false,
+            fetchDataFail: true,
+            errorTip: '数据获取失败, 请点击页面重试'
           })
         }
-        wx.stopPullDownRefresh()
       },
       fail: function () {
+        wx.hideLoading()
+        wx.stopPullDownRefresh()
         that.setData({
-          request_fail: true
+          dataOk: false,
+          fetchDataFail: true,
+          errorTip: '数据获取失败, 请点击页面重试'
         })
       }
     })
+  },
+
+  occurFail(){
+    if (this.data.getLocationFail) {
+      this.setData({
+        getLocationFail: false,
+        errorTip: ''
+      })
+      this.getCurrentLocation()
+    } else {
+      this.setData({
+        fetchDataFail: false,
+        errorTip: ''
+      })
+      this.toFetch(1)
+    }
   },
 
   toMe() {
@@ -241,16 +267,15 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.setData({
-      showTip: '数据获取中'
-    })
-    this.fetchShopList()
+    this.getCurrentLocation()
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    this.currentPage += 1
+    this.toFetch(this.currentPage)
   },
 
   /**

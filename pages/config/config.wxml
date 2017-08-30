@@ -1,6 +1,6 @@
 <!--pages/config/config.wxml-->
 
-<view class="container">
+<view class="container" wx:if="{{dataOk}}">
   <view class="name">
     <view class="l">
       <text>昵称</text>
@@ -75,4 +75,10 @@
 </view>
 
 
-  <view class="connectUs" bindtap="connectUs">联系我们：029-81117328</view>
+  <view class="connectUs" bindtap="connectUs" wx:if="{{dataOk}}">联系我们：029-81117328</view>
+
+
+<view class="occurCommonFail" wx:if="{{fetchDataFail}}" bindtap="occurFail">
+  <import src="/pages/common/errorPage/errorPage" />
+  <template is="errorPage" />
+</view>

@@ -55,6 +55,11 @@
   margin-right: 17px;
   font-weight: bold;
   font-size: 20px;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 50%;
 }
 
 .bottomText {
@@ -357,7 +362,6 @@
   /* align-self: flex-end; */
 }
 
-
 .login {
   margin-top: 50px;
 }
@@ -372,31 +376,4 @@ button.needLogin[type="primary"][plain] {
 .loadingStatus {
   text-align: center;
   margin-top: 17px;
-}
-
-.occurFail {
-  width: 200px;
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.occurFail image {
-  width: 100px;
-  height: 100px;
-}
-
-.getLocationTip {
-  margin-top: 20px;
-  font-size: 14px;
-  /* background: #eee; */
-  padding: 20px;
-}
-.getLocationTip > view {
-  line-height: 1.8;
-}
-.getLocationTip .title {
-  font-weight: bold;
-  margin-bottom: 7px;
 }

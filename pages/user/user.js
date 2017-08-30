@@ -10,6 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    currentUserId: null,
     userId: null,
     userInfo: null,
     gallery: [],
@@ -28,10 +29,9 @@ Page({
     // ty: 50,
     // tz: 0
     currentPic: 1,
-    currentUserId: null,
     dataOk: false,
-
-    showTall: true
+    fetchDataFail: false,
+    showTall: false
   },
 
   /**
@@ -40,13 +40,16 @@ Page({
   onLoad: function (options) {
     this.setData({
       currentUserId: options.user_id,
-      imgHeight: app.globalData.deviceInfo.screenHeight / 2 * 0.9
+      userId: app.globalData.userId,
+      imgHeight: app.globalData.deviceInfo.screenHeight / 2 * 0.85
     })
 
     let that = this
+
     wx.showLoading({
-      title: '数据获取中，请稍后',
+      title: '数据获取中',
     })
+
     wx.request({
       url: app.requestHost + 'Store/get_tuser_info/',
       method: 'POST',
@@ -55,35 +58,59 @@ Page({
         token: app.TOKEN
       },
       success: function(res){
-        console.log(res)
+        wx.hideLoading()
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
             title: res.data.result.nickname
           })
+
           that.setData({
             userInfo: res.data.result,
             gallery: res.data.result.album,
             size: res.data.result.album.length,
-            dataOk: true
+            dataOk: true,
+            fetchDataFail: false,
           })
-          wx.hideLoading()
-          if (!res.data.result.height || res.data.result.album.length === 0) {
-            that.setData({
-              showTall: false
-            })
-          } else {
+          if (res.data.result.height && res.data.result.album.length !== 0) {
             that.setData({
               showTall: true
             })
           }
+        } else if(res.data.code === 102){
+          wx.showModal({
+            title: '提示',
+            content: res.data.message,
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                wx.navigateBack()
+              }
+            }
+          })
+        } else {
+          that.setData({
+            fetchDataFail: true
+          })
         }
+      },
+      fail: function(){
+        wx.hideLoading()
+        that.setData({
+          fetchDataFail: true
+        })
       }
     })
-    that.setData({
-      userId: app.globalData.userId
-    })
     
+  },
+
+  occurFail(){
+    this.setData({
+      fetchDataFail: false
+    })
+    this.onLoad({
+      user_id: this.data.currentUserId
+    })
   },
 
   switchToShop(){
@@ -133,7 +160,7 @@ Page({
 
   changeAvatar(){
     let that = this
-    if(that.data.userId !== that.data.userInfo.user_id){
+    if (that.data.userId !== that.data.currentUserId){
       return false
     }
     wx.chooseImage({
@@ -164,10 +191,20 @@ Page({
                     data: that.data.userInfo,
                   })
                 }, 1000)
+              } else {
+                wx.showModal({
+                  title: '提示',
+                  content: '修改失败',
+                  showCancel: false,
+                })
               }
             },
             fail: function(res){
-              // console.log(res)
+              wx.showModal({
+                title: '提示',
+                content: '修改失败',
+                showCancel: false,
+              })
             }
           })
         })
@@ -186,32 +223,58 @@ Page({
    */
   onShow: function () {
     let that = this
-    if (this.data.currentUserId === this.data.userId){
+    if (that.data.currentUserId === that.data.userId){
       wx.request({
         url: app.requestHost + 'Store/get_tuser_info/',
         method: 'POST',
         data: {
-          tuser_id: this.data.userId,
+          tuser_id: that.data.userId,
           token: app.TOKEN
         },
         success: function (res) {
-          // console.log(res)
           if(res.data.code === 201){
             that.setData({
               userInfo: res.data.result,
               gallery: res.data.result.album,
               size: res.data.result.album.length,
-              dataOk: true
+              dataOk: true,
+              fetchDataFail: false
             })
-            if (!res.data.result.height || res.data.result.album.length === 0) {
-              that.setData({
-                showTall: false
-              })
-            } else {
+            if (res.data.result.height && res.data.result.album.length !== 0) {
               that.setData({
                 showTall: true
               })
+            } else {
+              that.setData({
+                showTall: false
+              })
             }
+          } else {
+            wx.getStorage({
+              key: 'meInfo',
+              success: function(res) {
+                that.setData({
+                  userInfo: res.data,
+                  dataOk: true,
+                  fetchDataFail: false
+                })
+                if (res.data.height && that.data.gallery.length !== 0) {
+                  that.setData({
+                    showTall: true
+                  })
+                } else {
+                  that.setData({
+                    showTall: false
+                  })
+                }
+              },
+              fail: function(){
+                that.setData({
+                  dataOk: false,
+                  fetchDataFail: true
+                })
+              }
+            })
           }
         }
       })

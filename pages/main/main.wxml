@@ -44,9 +44,9 @@
     <view class="login" wx:if="{{!dataOk}}">
       <view class="cssload-container" wx:if="{{showLoginStatus}}">
         <view class="cssload-speeding-wheel"></view>
-      </view>      
-    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录后查看同店的人</button>
-    <view class="loginStatus">{{loginStatus}}</view>
+      </view>
+      <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录后查看同店的人</button>
+      <view class="loginStatus">{{loginStatus}}</view>
     </view>
 
     <import src="/pages/common/tableList/tableList" />
@@ -94,16 +94,23 @@
 <!-- <view class="classname" wx:if="{{store !== null}}">成功</view> -->
 
 <view class="loading" wx:if="{{store === null}}" bindtap="occurFail">
-    <image wx:if="{{!getLocationFail && !fetchDataFail}}" src="/images/loading.gif"></image> 
-   <view class="occurFail" wx:if="{{getLocationFail || fetchDataFail}}">
-      <image src="/images/needToRefresh.png" wx:if="{{fetchDataFail}}"></image>  
-      <image src="/images/getLocationFail.png" wx:if="{{getLocationFail}}"></image>
-   </view>
+  <image wx:if="{{!getLocationFail && !fetchDataFail}}" src="/images/loading.gif"></image>
+  <view class="occurFail" wx:if="{{getLocationFail || fetchDataFail}}">
+    <image src="/images/needToRefresh.png" wx:if="{{fetchDataFail}}"></image>
+    <image src="/images/getLocationFail.png" wx:if="{{getLocationFail}}"></image>
+  </view>
   <text>{{loadingTip}}</text>
-  <view class="getLocationTip" wx:if="{{getLocationFail}}">
-    <view class="title">以下方法有助于更快获取您的位置</view>
-    <view>请检查手机是否连接网络</view>
-    <view>打开GPS</view>
-    <view>打开Wi-Fi</view>
+  <view class="resolveTip" wx:if="{{fetchDataFail}}">
+    <view class="title">以下方法有助于解决您的问题</view>
+    <view>- 请检查手机是否连接网络</view>
+    <view>- 退出小程序后重新进入</view>
+    <view>- 删除小程序并重新添加（此操作会使您所有聊天记录不可恢复）</view>
+  </view>
+  <view class="resolveTip" wx:if="{{getLocationFail}}">
+    <view class="title">以下方法有助于更快获取到您的位置</view>
+    <view>- 请检查手机是否连接网络</view>
+    <view>- 允许地理位置授权</view>
+    <view>- 打开GPS</view>
+    <view>- 打开Wi-Fi</view>
   </view>
 </view>

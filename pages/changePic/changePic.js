@@ -12,7 +12,8 @@ Page({
     itemWidth: null,
 
     pics: null,
-    picLength: 0
+    picLength: 0,
+    fetchDataFail: false
   },
 
   /**
@@ -31,6 +32,14 @@ Page({
       title: '个人展示',
     })
 
+    that.toFetch()
+  },
+
+  toFetch(){
+    let that = this
+    wx.showLoading({
+      title: '数据获取中',
+    })
     wx.request({
       // url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/uploadPic',
       url: app.requestHost + 'member/get_user_album/',
@@ -38,15 +47,34 @@ Page({
       data: {
         token: app.TOKEN
       },
-      success:function(res){
-        // console.log(res)
+      success: function (res) {
+        wx.hideLoading()
+        if (res.data.code === 201) {
+          that.setData({
+            pics: res.data.result,
+            picLength: res.data.result.length,
+            fetchDataFail: false
+          })
+        } else {
+          that.setData({
+            fetchDataFail: true
+          })
+        }
+      },
+      fail: function () {
+        wx.hideLoading()
         that.setData({
-          pics: res.data.result,
-          picLength: res.data.result.length
+          fetchDataFail: true
         })
       }
     })
+  },
 
+  occurFail(){
+    this.setData({
+      fetchDataFail: false
+    })
+    this.toFetch()
   },
 
   prevImg(e) {

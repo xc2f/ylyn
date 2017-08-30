@@ -12,51 +12,76 @@
     <view class="line"></view>
   </view>
 
-  <view class="empty" wx:if="{{shopListEmpty}}">
-    <text>{{showTip}}</text>
-  </view>
-  <view class="shopList" wx:if="{{!shopListEmpty}}">
-    <block wx:for="{{shopList}}" wx:key="store_id">
-      <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
-        <view class="item">
-          <view wx:if="{{item.is_activity}}" class="inSales">
-            <text class="inSaleText">活动</text>
-          </view>
-          <image src="{{item.store_logo === null ? '/images/defaultLogo.png' : item.store_logo}}"></image>
-          <view class="right">
-            <view class="wrap">
-              <view class="shopName">
-                <text class="noWrap">{{item.store_name}}</text>
-              </view>
-              <view class="wrapBottom">
-                <view class="persons">
-                  <view class="boy">
-                    <image src="/images/show_boy.png"></image>
-                    <text>{{item.man_count}}</text>
-                  </view>
-                  <view class="girl">
-                    <image src="/images/show_girl.png"></image>
-                    <text>{{item.woman_count}}</text>
-                  </view>
+  <view class="body" wx:if="{{dataOk}}">
+    <view class="empty" wx:if="{{shopListEmpty}}">
+      <text>附近无可用商家</text>
+    </view>
+    <view class="shopList" wx:if="{{!shopListEmpty}}">
+      <block wx:for="{{shopList}}" wx:key="store_id">
+        <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
+          <view class="item">
+            <view wx:if="{{item.is_activity}}" class="inSales">
+              <text class="inSaleText">活动</text>
+            </view>
+            <image src="{{item.store_logo === null ? '/images/defaultLogo.png' : item.store_logo}}"></image>
+            <view class="right">
+              <view class="wrap">
+                <view class="shopName">
+                  <text class="noWrap">{{item.store_name}}</text>
                 </view>
-                <view class="distance">
-                  <image src="/images/run.png"></image>
-                  <text>{{item.distance}}</text>
+                <view class="wrapBottom">
+                  <view class="persons">
+                    <view class="boy">
+                      <image src="/images/show_boy.png"></image>
+                      <text>{{item.man_count}}</text>
+                    </view>
+                    <view class="girl">
+                      <image src="/images/show_girl.png"></image>
+                      <text>{{item.woman_count}}</text>
+                    </view>
+                  </view>
+                  <view class="distance">
+                    <image src="/images/run.png"></image>
+                    <text>{{item.distance}}</text>
+                  </view>
                 </view>
               </view>
             </view>
           </view>
-        </view>
-      </navigator>
-    </block>
+        </navigator>
+      </block>
+    </view>
   </view>
 
-  <view class="toMe bottomIcon" bindtap="toMe" wx:if="{{showMeIcon}}">
+  <view class="body" wx:if="{{!dataOk}}" bindtap="occurFail">
+    <view class="loadFail">
+      <view class="occurFail" wx:if="{{getLocationFail || fetchDataFail}}">
+        <image src="/images/needToRefresh.png" wx:if="{{fetchDataFail}}"></image>
+        <image src="/images/getLocationFail.png" wx:if="{{getLocationFail}}"></image>
+      </view>
+      <text>{{errorTip}}</text>
+      <view class="resolveTip" wx:if="{{fetchDataFail}}">
+        <view class="title">以下方法有助于解决您的问题</view>
+        <view>请检查手机是否连接网络</view>
+        <view>- 退出小程序后重新进入</view>
+        <view>- 删除小程序并重新添加（此操作会使您所有聊天记录不可恢复）</view>
+      </view>
+      <view class="resolveTip" wx:if="{{getLocationFail}}">
+        <view class="title">以下方法有助于更快获取到您的位置</view>
+        <view>请检查手机是否连接网络</view>
+        <view>允许地理位置授权</view>
+        <view>打开GPS</view>
+        <view>打开Wi-Fi</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="toMe bottomIcon" bindtap="toMe" wx:if="{{login}}">
     <!-- <text class="fa fa-user-o"></text> -->
     <image src="/images/gr.png"></image>
     <!-- <text class="text">我的</text> -->
   </view>
-  <view class="toMsgList bottomIcon" bindtap="toMsgList" wx:if="{{showMeIcon}}">
+  <view class="toMsgList bottomIcon" bindtap="toMsgList" wx:if="{{login}}">
     <!-- <text class="fa fa-commenting-o"></text> -->
     <!-- <text class="text">消息列表</text> -->
     <image src="/images/message-l.png"></image>
@@ -64,8 +89,8 @@
   </view>
 
   <view class="login" wx:if="{{!login}}">
-    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录</button>
-    <view class="cssload-container" wx:if="{{showLoading}}">
+    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">{{loginText}}</button>
+    <view class="cssload-container" wx:if="{{showLoginStatus}}">
       <view class="cssload-speeding-wheel"></view>
     </view>
   </view>

@@ -199,7 +199,6 @@ App({
         client_id: that.globalData.client_id
       },
       success: function (res) {
-        console.log(res)
         if(res.data.code === 201 || res.data.code === 202){
           if (res.data.code === 202) {
             that.TOKEN = res.data.result.token

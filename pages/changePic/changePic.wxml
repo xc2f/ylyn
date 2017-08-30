@@ -1,5 +1,5 @@
 <!--pages/changePic/changePic.wxml-->
-<view class="container">
+<view class="container" wx:if="{{!fetchDataFail}}">
   <!--<view class="hd">
     <text>个人展示</text>
   </view>-->
@@ -24,4 +24,9 @@
       <text>上传</text>
     </view>
   </view> -->
+</view>
+
+<view class="occurCommonFail" wx:if="{{fetchDataFail}}" bindtap="occurFail">
+  <import src="/pages/common/errorPage/errorPage" />
+  <template is="errorPage" />
 </view>

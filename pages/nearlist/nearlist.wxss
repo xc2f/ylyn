@@ -176,12 +176,16 @@
   bottom: 10px;
 }
 
-.empty {
+.body {
   height: calc(100% - 62px);
   background: #fff;
+}
+.body .empty,
+.body .occurFail {
   justify-content: center;
   align-items: center;
   display: flex;
+  height: 100%;
 }
 
 .msgNew {
@@ -222,5 +226,18 @@
 }
 
 .login .cssload-container {
-  margin-top: 15px;
+  /* margin-top: -85px; */
+  position: absolute;
+  top: 15px;
+}
+
+.loadFail {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.loadFail .occurFail {
+  width: 200px;
+  height: 200px;
 }

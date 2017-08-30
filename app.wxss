@@ -35,3 +35,46 @@ page {
     transform: rotate(360deg);
   }
 }
+
+/* main & nearlist 错误页面 */
+.occurFail {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.occurFail image {
+  width: 100px!important;
+  height: 100px!important;
+}
+
+.resolveTip {
+  margin-top: 20px;
+  font-size: 14px;
+  /* background: #eee; */
+  padding: 20px;
+  color:#777;
+  max-width: 70%;
+}
+.resolveTip > view {
+  line-height: 1.8;
+}
+.resolveTip .title {
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+/* 通用错误刷新页面 */
+.occurCommonFail {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+.occurCommonFail image {
+  width: 100px;
+  height: 100px;
+  margin: 50px 0 30px;
+}

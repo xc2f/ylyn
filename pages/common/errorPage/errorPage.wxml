@@ -1,0 +1,10 @@
+<template name="errorPage">
+    <image src="/images/needToRefresh.png"></image>
+    <text>数据获取失败，请点击页面重新获取</text>
+    <view class="resolveTip">
+      <view class="title">以下方法有助于解决您的问题</view>
+      <view>- 请检查手机是否连接网络</view>
+      <view>- 退出小程序后重新进入</view>
+      <view>- 删除小程序并重新添加（此操作会使您所有聊天记录不可恢复）</view>
+    </view> 
+</template>

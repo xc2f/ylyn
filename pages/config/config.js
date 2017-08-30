@@ -27,7 +27,10 @@ Page({
     wxIdBtnShow: false,
     ageBtnShow: false,
     tallBtnShow: false,
-    introBtnShow: false
+    introBtnShow: false,
+
+    dataOk: false,
+    fetchDataFail: false
   },
 
   /**
@@ -35,6 +38,9 @@ Page({
    */
   onLoad: function (options) {
     let that = this
+    wx.showLoading({
+      title: '数据获取中',
+    })
     wx.request({
       // url: 'http://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/config',
       url: app.requestHost + 'member/get_userinfo/',
@@ -43,14 +49,36 @@ Page({
         token: app.TOKEN
       },
       success: function (res) {
-        console.log(res)
+        wx.hideLoading()
+        if(res.data.code === 201){
+          that.setData({
+            userInfo: res.data.result,
+            dataOk: true,
+            fetchDataFail: false
+          })
+        } else {
+          that.setData({
+            dataOk: false,
+            fetchDataFail: true
+          })
+        }
+      },
+      fail: function(){
+        wx.hideLoading()
         that.setData({
-          userInfo: res.data.result
+          dataOk: false,
+          fetchDataFail: true
         })
       }
     })
   },
 
+  occurFail(){
+    this.setData({
+      fetchDataFail: false
+    })
+    this.onLoad()
+  },
 
   changePic() {
     wx.redirectTo({
@@ -74,6 +102,7 @@ Page({
     })
   },
   nameSubmit() {
+    let that = this
     let nameValue = this.data.userInfo.nickname.trim()
     let len = 0
     nameValue.split('').forEach(item => {
@@ -87,7 +116,7 @@ Page({
       wx.showModal({
         title: '您的更改未提交',
         showCancel: false,
-        content: '昵称在12个字符以内，1汉字 === 2字符',
+        content: '昵称在12个字符以内，1汉字等于2字符',
       })
       return 
     }
@@ -99,13 +128,29 @@ Page({
           nickname: nameValue
         },
         success: function (res) {
-          // console.log(res)
+          if(res.data.code === 201){
+            wx.setStorage({
+              key: 'meInfo',
+              data: that.data.userInfo,
+            })
+          } else if(res.data.code === 102){
+
+          } else {
+            wx.showModal({
+              title: '提示',
+              content: '修改失败',
+              showCancel: false,
+            })
+          }
+        },
+        fail: function(){
+          wx.showModal({
+            title: '提示',
+            content: '修改失败',
+            showCancel: false,
+          })
         }
       })
-    wx.setStorage({
-      key: 'meInfo',
-      data: this.data.userInfo,
-    })
   },
 
   wxIdFocus() {
@@ -124,6 +169,7 @@ Page({
     })
   },
   wxIdSubmit() {
+    let that = this
     wx.request({
       url: app.requestHost + 'member/update_userinfo/',
       method: 'POST',
@@ -132,12 +178,28 @@ Page({
         wechat_num: this.data.userInfo.wechat_num.trim()
       },
       success: function (res) {
-        // console.log(res)
+        if (res.data.code === 201) {
+          wx.setStorage({
+            key: 'meInfo',
+            data: that.data.userInfo,
+          })
+        } else if (res.data.code === 102) {
+
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '修改失败',
+            showCancel: false,
+          })
+        }
+      },
+      fail: function () {
+        wx.showModal({
+          title: '提示',
+          content: '修改失败',
+          showCancel: false,
+        })
       }
-    })
-    wx.setStorage({
-      key: 'meInfo',
-      data: this.data.userInfo,
     })
   },
 
@@ -146,6 +208,7 @@ Page({
     this.setData({
       'userInfo.gender': e.detail.value
     })
+    let that = this
     wx.request({
       url: app.requestHost + 'member/update_userinfo/',
       method: 'POST',
@@ -154,12 +217,28 @@ Page({
         gender: this.data.userInfo.gender
       },
       success: function (res) {
-        // console.log(res)
+        if (res.data.code === 201) {
+          wx.setStorage({
+            key: 'meInfo',
+            data: that.data.userInfo,
+          })
+        } else if (res.data.code === 102) {
+
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '修改失败',
+            showCancel: false,
+          })
+        }
+      },
+      fail: function () {
+        wx.showModal({
+          title: '提示',
+          content: '修改失败',
+          showCancel: false,
+        })
       }
-    })
-    wx.setStorage({
-      key: 'meInfo',
-      data: this.data.userInfo,
     })
   },
 
@@ -179,6 +258,7 @@ Page({
     })
   },
   ageSubmit() {
+    let that = this
     wx.request({
       url: app.requestHost + 'member/update_userinfo/',
       method: 'POST',
@@ -187,12 +267,28 @@ Page({
         age: this.data.userInfo.age
       },
       success: function (res) {
-        // console.log(res)
+        if (res.data.code === 201) {
+          wx.setStorage({
+            key: 'meInfo',
+            data: that.data.userInfo,
+          })
+        } else if (res.data.code === 102) {
+
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '修改失败',
+            showCancel: false,
+          })
+        }
+      },
+      fail: function () {
+        wx.showModal({
+          title: '提示',
+          content: '修改失败',
+          showCancel: false,
+        })
       }
-    })
-    wx.setStorage({
-      key: 'meInfo',
-      data: this.data.userInfo,
     })
   },
 
@@ -233,6 +329,7 @@ Page({
     }
   },
   tallSubmit() {
+    let that = this
     wx.request({
       url: app.requestHost + 'member/update_userinfo/',
       method: 'POST',
@@ -241,12 +338,28 @@ Page({
         height: this.data.userInfo.height
       },
       success: function (res) {
-        // console.log(res)
+        if (res.data.code === 201) {
+          wx.setStorage({
+            key: 'meInfo',
+            data: that.data.userInfo,
+          })
+        } else if (res.data.code === 102) {
+
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '修改失败',
+            showCancel: false,
+          })
+        }
+      },
+      fail: function () {
+        wx.showModal({
+          title: '提示',
+          content: '修改失败',
+          showCancel: false,
+        })
       }
-    })
-    wx.setStorage({
-      key: 'meInfo',
-      data: this.data.userInfo,
     })
   },
 
@@ -266,6 +379,7 @@ Page({
     })
   },
   introSubmit() {
+    let that = this
     let introduction = this.data.userInfo.introduction.trim()
     let len = 0
     introduction.split('').forEach(item => {
@@ -279,7 +393,7 @@ Page({
       wx.showModal({
         title: '您的更改未提交',
         showCancel: false,
-        content: '简介在60个字符以内，1汉字 === 2字符',
+        content: '简介在60个字符以内，1汉字等于2字符',
       })
       return
     }
@@ -291,37 +405,31 @@ Page({
         introduction: introduction
       },
       success: function (res) {
-        // console.log(res)
+        if (res.data.code === 201) {
+          wx.setStorage({
+            key: 'meInfo',
+            data: that.data.userInfo,
+          })
+        } else if (res.data.code === 102) {
+
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '修改失败',
+            showCancel: false,
+          })
+        }
+      },
+      fail: function () {
+        wx.showModal({
+          title: '提示',
+          content: '修改失败',
+          showCancel: false,
+        })
       }
     })
-    wx.setStorage({
-      key: 'meInfo',
-      data: this.data.userInfo,
-    })
-  },
-  postConfig() {
-    // console.log(this.data.userInfo)
   },
 
-  cleanAccount() {
-    wx.showModal({
-      title: '警告',
-      content: '此操作将删除您本地所有账号信息，包括聊天记录。您可通过重新登录继续授权，但聊天记录不可恢复。',
-      success: function (res) {
-        if (res.confirm) {
-          // TODO 后期如果有保存文件到缓存
-          wx.clearStorage()
-          wx.closeSocket()
-          app.globalData.userId = null
-          wx.redirectTo({
-            url: '/pages/nearlist/nearlist?op=nologin',
-          })
-        } else if (res.cancel) {
-          // console.log('用户点击取消')
-        }
-      }
-    })
-  },
 
   connectUs(){
     wx.makePhoneCall({

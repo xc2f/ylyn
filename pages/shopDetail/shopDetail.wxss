@@ -114,6 +114,9 @@
   background: #fff;
   padding: 10px 0;
 }
+.shopInfo {
+  padding-bottom: 0;
+}
 
 .shopInfo .row {
   /*display: flex;
@@ -159,18 +162,14 @@
   height: 18px;
 }
 
-.shopInfo .row.foods {
+/* .shopInfo .row.foods {
   margin-right: 0;
-}
-
-.foods .iconWrap {
-  /* margin-top: 55px; */
 }
 
 .foods .iconLeft {
   width: 20px;
   height: 11px;
-}
+} */
 
 .inSalesInfo .iconLeft {
   width: 17px;
@@ -191,13 +190,73 @@
   line-height: 50px;
 }
 
-.shopInfo .row.foods {
+.foods {
+  margin: 0 10px;
+}
+.foods .hd {
+  height: 50px;
+  line-height: 50px;
+}
+.foods .hd .iconLeft {
+  width: 20px;
+  height: 11px;
+  top: 0;
+}
+.foods .hd .arrowWrap .iconRight {
+  transform: rotate(90deg);
+}
+.foods .bd {
+  overflow: hidden;
+}
+.foods .bd:after {
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
+  clear: both;
+}
+.foods .item {
+  float: left;
+  margin-bottom: 10px;
+}
+.foods .item:nth-child(1),
+.foods .item:nth-child(2) {
+  margin-top: 2px;
+}
+.foods .itemLeft {
+  margin-right: 10px;
+}
+
+.foods .item image {
+  width: calc(100% - 10px);
+  padding: 5px;
+  /* border: 1px solid #ccc; */
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 2px 1px 3px rgba(0, 0, 0, .3)
+}
+
+.foods .item .info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.foods .item .info text {
+  font-size: 16px;
+}
+
+.foods .item .info .price {
+  color: #D13438;
+  padding-left: 5px;
+}
+
+/* .shopInfo .row.foods {
   height: 150px;
   border-bottom: none;
 }
 
 .foods .list {
-  /*flex: 11;*/
   height: 150px;
   width: 90%;
   float: right;
@@ -225,7 +284,6 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  /* font-weight: bold; */
 }
 .foods .list .info > text {
   font-size: 14px;
@@ -235,7 +293,9 @@
 }
 .foods .list .info .name {
   max-width: 100px;
-}
+} */
+
+
 .inSalesInfo .iconWrap {
   /*padding-top: 10px;*/
   line-height: 40px;
@@ -273,6 +333,10 @@
 
 .customPic image {
   width: 100%;
+}
+.customPic image:last-child {
+  /* 去掉最底下的白色间隙 */
+  margin-bottom: -5px;
 }
 
 .quit {

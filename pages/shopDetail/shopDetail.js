@@ -9,6 +9,9 @@ Page({
    */
   data: {
     shop: null,
+    foodWidth: 170,
+    inSale: false,
+    storeId: null,
     showQuit: false,
     foodEmpty: false,
     dataOk: false,
@@ -17,9 +20,17 @@ Page({
     shareAnimation: null,
     windowWidth: 375,
     
-    dataOk: true,
-    fetchDataFail: false
+    dataOk: false,
+    fetchDataFail: false,
+
+    showFoodsAnimation: null,
+    rotateArrowAnimation: null,
+
+    showTopInfo: true,
   },
+
+  showFoods: true,
+  toogleFoodsHeight: 0,
 
   /**
    * 生命周期函数--监听页面加载
@@ -28,7 +39,8 @@ Page({
     let that = this
     that.setData({
       windowWidth: app.globalData.deviceInfo.windowWidth,
-      storeId: options.store_id
+      storeId: options.store_id,
+      foodWidth: (app.globalData.deviceInfo.windowWidth - 20) / 2 - 5
     })
 
     that.getCurrentLocation(options)
@@ -36,15 +48,15 @@ Page({
 
   getCurrentLocation(options){
     let that = this;
+    // 先获取数据， 如果未定位（分享入口进），定位后再获取数据
+    that.toFetch()
     let coordinate = app.globalData.coordinate
     if (coordinate){
-      that.toFetch()
+
     } else {
       app.getLocation(res => {
-        if (res) {
+        if(res) {
           that.toFetch()
-        } else {
-          // TODO
         }
       })
     }
@@ -53,39 +65,83 @@ Page({
   toFetch(){
     let that = this
     let coordinate = app.globalData.coordinate
+    wx.showLoading({
+      title: '数据获取中',
+    })
     wx.request({
       url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
-        store_id: that.data.store_id,
-        longitude: coordinate.longitude,
-        latitude: coordinate.latitude
+        store_id: that.data.storeId,
+        longitude: coordinate ? coordinate.longitude : '',
+        latitude: coordinate ? coordinate.latitude : ''
       },
       success: function(res){
+        wx.hideLoading()
         if(res.data.code === 201){
+          let result = res.data.result
+          console.log(result)
           // 设置导航条
           wx.setNavigationBarTitle({
-            title: res.data.result.store_name
+            title: result.store_name
           })
-          let result = res.data.result
-          let gStoreInfo = app.globalData.storeInfo
-          if (gStoreInfo !== null && gStoreInfo.storeId == result.store_id) {
+
+          let globalData = app.globalData.storeInfo
+
+          // TODO showQuit， how to quit
+          if (globalData !== null && globalData.storeId == result.store_id) {
             that.setData({
               showQuit: true
             })
           }
-          result.activity = result.activity ? result.activity : {}
-          result.activity.activity_content = (!result.activity || result.activity.length === 0) ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
+
+          if (result.activity){
+            if (result.activity.is_open != 0){
+              // open   
+              result.activity.activity_content = result.activity.activity_content.replace(/\n/g, '<br>')
+              that.setData({
+                inSale: true
+              })
+            } else {
+              // not open
+              that.setData({
+                inSale: false
+              })
+            }
+          } else {
+            // not open
+            that.setData({
+              inSale: false
+            })
+          }
+
+          // TODO
+          // result.activity = result.activity ? result.activity : {}
+          // result.activity.activity_content = (!result.activity || result.activity.length === 0) ? '' : result.activity.activity_content.replace(/\n/g, '<br>')
+
           result.food = result.food.length === 0 ? 0 : result.food
+
           that.setData({
             shop: result,
-            dataOk: true
+            dataOk: true,
+            fetchDataFail: false
           })
-          wx.hideLoading()
+
+          if (result.food){
+            let foodLength = result.food.length
+            // 70 == 图片上下2*5个padding + 文字50的height + item 10 的margin-bottom
+            // 在图片box-shadow处有未知的3~5个高度，ios和开发工具尤甚
+            if (app.globalData.deviceInfo.platform === 'android'){
+              that.toogleFoodsHeight = Math.ceil(foodLength / 2) * (200 * that.data.foodWidth / 240 + 72)
+            } else {
+              that.toogleFoodsHeight = Math.ceil(foodLength / 2) * (200 * that.data.foodWidth / 240 + 75)
+            }
+          }
+
         } else if (res.data.code === 101){
           wx.showModal({
             title: '提示',
-            content: '商家已关闭服务',
+            content: res.data.message,
             showCancel: false,
             success: function (res) {
               if (res.confirm) {
@@ -96,13 +152,27 @@ Page({
             }
           })
         } else {
-
+          that.setData({
+            dataOk: false,
+            fetchDataFail: true
+          })
         }
       },
       fail: function(){
-
+        wx.hideLoading()
+        that.setData({
+          dataOk: false,
+          fetchDataFail: true
+        })
       }
     })
+  },
+
+  occurFail(){
+    this.setData({
+      fetchDataFail: false,
+    })
+    this.getCurrentLocation({storeId: this.data.storeId})
   },
 
 
@@ -125,6 +195,7 @@ Page({
       })
     // }, 200)
   },
+
   callPhone(){
     wx.makePhoneCall({
       phoneNumber: this.data.shop.phone,
@@ -203,6 +274,28 @@ Page({
     });
     return animation;
   },
+
+  toggleFoods(e){
+    let that = this
+    // if (foodLength % 2 === 1){
+    //   foodLength += 1
+    // }
+    if(that.showFoods){
+      that.showFoods = false
+      // showFoodsAnimation
+      that.setData({
+        showFoodsAnimation: that.basicAnimation(700, 0).height(0).step().export(),
+        rotateArrowAnimation: that.basicAnimation(300, 0).rotate(0).step().export()
+      })
+    } else {
+      that.showFoods = true
+      that.setData({
+        showFoodsAnimation: that.basicAnimation(500, 0).height(that.toogleFoodsHeight).step().export(),
+        rotateArrowAnimation: that.basicAnimation(300, 0).rotate(90).step().export()
+      })
+    }
+  },
+
   /**
    * 页面上拉触底事件的处理函数
    */

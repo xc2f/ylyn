@@ -8,7 +8,7 @@
       <view class="picWrap" style="width: {{itemWidth-20}}px; height: {{itemWidth-20}}px" bindtap="prevImg" data-src="{{item.album}}">
         <image src="{{item.album}}" class="pic" mode="widthFix"></image>
       </view>
-      <image src="/images/close.png" class="close" bindtap="removePic" data-idx="{{index}}"></image>
+       <image src="/images/close.png" class="close" bindtap="removePic" data-idx="{{index}}"></image> 
     </view>
 
 

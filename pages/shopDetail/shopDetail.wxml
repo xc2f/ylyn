@@ -1,7 +1,10 @@
-<view class="container">
-
+<view class="container" wx:if="{{dataOk}}">
+  <view class="topInfo">
+    <text></text>
+    <image src="/images/close2.png"></image>
+  </view>
   <view class="banner" style="background: url() no-repeat; background-size: 100% 100%; background-position: center center;">
-    <view wx:if="{{shop.activity.is_open === '1' ? true : false}}" class="inSales">
+    <view wx:if="{{inSale}}" class="inSales">
       <text class="inSaleText">活动</text>
     </view>
     <image src="{{shop.info_bgimg === '' ? '/images/banner.jpg' : shop.info_bgimg}}" class="bannerBg"></image>
@@ -31,7 +34,7 @@
       <view class="iconWrap">
         <image src="/images/location.png" class="iconLeft"></image>
       </view>
-      <text class="address">距离你{{shop.distance}} | {{shop.address}}</text>
+      <text class="address">{{shop.distance ? ('距离你'+shop.distance+' | ') : ''}}{{shop.address}}</text>
       <view class="arrowWrap">
         <image src="/images/arrowRight.png" class="iconRight"></image>
       </view>
@@ -45,13 +48,13 @@
         <image src="/images/arrowRight.png" class="iconRight"></image>
       </view>
     </view>
-    <view class="foods row" wx:if="{{shop.food !== 0}}">
-      <view class="iconWrap">
+
+    <!-- <view class="foods row" wx:if="{{shop.food !== 0}}">
+       <view class="iconWrap">
         <image src="/images/foods.png" class="iconLeft"></image>
-      </view>
+      </view> 
       <view class="list">
-        <scroll-view scroll-x="true" class="scrollH">
-          <!-- TODO 接口为foot-->
+         <scroll-view scroll-x="true" class="scrollH">
           <view class="item" wx:for="{{shop.food}}" wx:key="food_id">
             <image src="{{item.food_img}}"></image>
             <view class="info">
@@ -60,12 +63,38 @@
               <text class="price">¥{{item.price}}</text>
             </view>
           </view>
-        </scroll-view>
+        </scroll-view> 
+      </view>
+    </view> -->
+    <!-- food比例，240/200 -->
+    <view class="foods" wx:if="{{shop.food != 0}}">
+      <view class="hd" bindtap="toggleFoods" data-status="{{showFoods}}">
+      <view class="iconWrap">
+        <image src="/images/foods.png" class="iconLeft"></image>
+      </view> 
+      <text class="phoneNum">店品推荐</text>
+      <view class="arrowWrap">
+        <image src="/images/arrowRight.png" class="iconRight" animation='{{rotateArrowAnimation}}'></image>
+      </view>
+      </view>
+      <view class="bd" animation='{{showFoodsAnimation}}'>
+        <block wx:for="{{shop.food}}" wx:key="">
+          <view class="{{index%2===0 ? 'itemLeft item' : 'itemRight item'}}"
+            style="width: {{foodWidth}}px;"
+          >
+            <image src="{{item.food_img}}" lazy-load="{{true}}" style="height: {{200 * foodWidth / 240}}px;"></image>
+            <view class="info">
+              <text class="name noWrap">{{item.food_name}}</text>
+              <!-- <text style="padding: 0 3px">|</text> -->
+              <text class="price">¥{{item.price}}</text>
+            </view>
+          </view>
+        </block>
       </view>
     </view>
   </view>
 
-  <view class="inSalesInfo" wx:if="{{shop.activity.is_open === '1'}}">
+  <view class="inSalesInfo" wx:if="{{inSale}}">
     <view class="iconWrap">
       <image src="/images/speaker.png" class="iconLeft"></image>
     </view>
@@ -77,9 +106,10 @@
     </view>
   </view>
 
+  <!-- 底部多图, 比例为300/200 -->
   <view class="customPic">
     <block wx:for="{{shop.image}}" wx:key="">
-      <image src="{{item.store_img}}"></image>
+      <image src="{{item.store_img}}" lazy-load="{{true}}" style="height: {{200 * windowWidth / 300 }}px"></image>
     </block>
   </view>
 
@@ -94,9 +124,8 @@
   </view>
 </view>
 
-<view class="empty" wx:if="{{!dataOk}}"></view>
 
-<view class="shareWrap" wx:if="{{showShare}}" bindtap="closeShare">
+<view class="shareWrap" wx:if="{{showShare && dataOk}}" bindtap="closeShare">
   <view class="block" animation='{{shareAnimation}}' style="width: {{windowWidth}}px; height: {{windowWidth / 1.1}}px">
     <image src="/images/shareBg.png" class="bg"></image>
     <image src="/images/closeShare.png" class="close"></image> 
@@ -110,4 +139,11 @@
       <button type="primary" plain class="qr" open-type="share" id="share">确认   </button>
     </view>
   </view>
+
+</view>
+
+
+<view class="occurCommonFail" wx:if="{{fetchDataFail}}" bindtap="occurFail">
+  <import src="/pages/common/errorPage/errorPage" />
+  <template is="errorPage" />
 </view>

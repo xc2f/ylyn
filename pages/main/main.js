@@ -4,6 +4,8 @@ Page({
 
   pageName: 'shopMain',
   getLocationErrorTimes: 0,
+  currentPage: 1,
+  currentGender: 0,
 
   /**
    * 页面的初始数据
@@ -209,6 +211,8 @@ Page({
 
   toFetch(gender, page) {
     let that = this
+    gender = gender || 0
+    page = page || 1
     wx.request({
       // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
       url: app.requestHost + 'Store/store_user/',
@@ -223,32 +227,67 @@ Page({
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
-        gender_type: gender || 0,
-        page: page || 1
+        gender_type: gender,
+        page: page
       },
       success: function (res) {
-        // TODO fetchDataFail = false
         // 隐藏加载动画和下拉刷新动作
         wx.hideLoading()
         wx.stopPullDownRefresh()
         // TODO
         if (res.data.code === 201) {
+          let result = res.data.result
           // 设置导航条
           wx.setNavigationBarTitle({
-            title: res.data.result.store_name
-          })
-          that.setData({
-            dataOk: true,
-            fetchDataFail: false,
-            store: res.data.result,
-            userListLength: res.data.result.table_list.length
+            title: result.store_name
           })
           app.globalData.storeInfo = {
             storeId: that.data.qrcodeInfo.store_id,
-            storeName: res.data.result.store_name,
+            storeName: result.store_name,
             tableId: that.data.qrcodeInfo.table_id
           }
+          that.setData({
+            dataOk: true,
+            fetchDataFail: false,
+          })
+
+          if (page === 1){
+            that.setData({
+              store: result,
+              userListLength: result.table_list.length
+            })
+          } else {
+            // 翻页
+            if (result.table_list.length === 0){
+            // 翻页没有数据时tablelist为空
+              that.currentPage = page - 1
+            } else {
+
+              let oldTableList = that.data.store.table_list
+              let newTableList = oldTableList.concat(newTableList)
+              result.table_list = newTableList
+
+              that.setData({
+                store: result,
+                userListLength: result.table_list.length
+              })
+            }
+          }
+
         } else if (res.data.code === 102) {
+          wx.showModal({
+            title: '提示',
+            content: res.data.message,
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                wx.redirectTo({
+                  url: '/pages/nearlist/nearlist',
+                })
+              }
+            }
+          })
+        } else if (res.data.code === 103){
           wx.showModal({
             title: '提示',
             content: res.data.message,
@@ -343,16 +382,20 @@ Page({
     })
   },
 
+
+ // 性别筛选总是返回第一页数据
   showGirl() {
-    // console.log('girl')
+    this.currentGender = 2
     this.toFetch(2)
   },
 
   showBoy() {
+    this.currentGender = 1
     this.toFetch(1)
   },
 
   showAll() {
+    this.currentGender = 0
     this.toFetch(0)
   },
 
@@ -416,7 +459,8 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    this.currentPage += 1
+    this.toFetch(this.currentGender, this.currentPage)
   },
 
   /**

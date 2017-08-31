@@ -1,4 +1,4 @@
-<view class="container" wx:if="{{dataOk}}">
+<view class="container">
 
   <view class="banner" style="background: url() no-repeat; background-size: 100% 100%; background-position: center center;">
     <view wx:if="{{shop.activity.is_open === '1' ? true : false}}" class="inSales">

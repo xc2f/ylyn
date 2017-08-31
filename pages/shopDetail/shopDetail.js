@@ -15,7 +15,10 @@ Page({
     showShare: false,
     // checkShopValue: null
     shareAnimation: null,
-    windowWidth: 300
+    windowWidth: 375,
+    
+    dataOk: true,
+    fetchDataFail: false
   },
 
   /**
@@ -24,59 +27,41 @@ Page({
   onLoad: function (options) {
     let that = this
     that.setData({
-      windowWidth: app.globalData.deviceInfo.windowWidth
+      windowWidth: app.globalData.deviceInfo.windowWidth,
+      storeId: options.store_id
     })
 
-    that.fetchShop(options)
+    that.getCurrentLocation(options)
   },
 
-  fetchShop(options){
+  getCurrentLocation(options){
     let that = this;
     let coordinate = app.globalData.coordinate
     if (coordinate){
-      wx.showLoading({
-        title: '数据获取中，请稍后',
-      })
-      // 是否在本店
-      that.toFetch(coordinate, options)
-    }else {
-      wx.showLoading({
-        title: '数据获取中，请稍后',
-      })
+      that.toFetch()
+    } else {
       app.getLocation(res => {
-        if (res === '获取成功') {
-          let coordinate = app.globalData.coordinate
-          // 是否在本店
-          that.toFetch(coordinate, options)
-        } else if (res === '取消授权') {
-          that.setData({
-            showTip: '您未授权，请重新授权后重试'
-          })
-        } else if (res === '获取中') {
-          // that.setData({
-          //   showTip: '店铺正马不停蹄地向你赶来'
-          // })
+        if (res) {
+          that.toFetch()
         } else {
-          that.setData({
-            showTip: '位置获取失败，请重试'
-          })
+          // TODO
         }
       })
     }
   },
 
-  toFetch(coordinate, options){
+  toFetch(){
     let that = this
+    let coordinate = app.globalData.coordinate
     wx.request({
       url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
-        store_id: options.store_id,
+        store_id: that.data.store_id,
         longitude: coordinate.longitude,
         latitude: coordinate.latitude
       },
       success: function(res){
-        console.log(res)
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
@@ -110,10 +95,16 @@ Page({
               }
             }
           })
+        } else {
+
         }
       },
+      fail: function(){
+
+      }
     })
   },
+
 
   mapNavigation(){
     let shop = this.data.shop

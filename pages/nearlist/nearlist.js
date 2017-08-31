@@ -116,7 +116,7 @@ Page({
     let that = this;
     let coordinate = app.globalData.coordinate
     if(coordinate){
-      that.toFetch(1)
+      that.toFetch()
     } else {
       // 一般走到这一步是由于未授权和初次打开小程序和地理位置获取失败
       wx.showLoading({
@@ -125,7 +125,7 @@ Page({
       app.getLocation(res => {
         wx.hideLoading()
         if (res) {
-          that.toFetch(1)
+          that.toFetch()
           that.setData({
             // TODO
             getLocationFail: false
@@ -153,7 +153,7 @@ Page({
       data: {
         longitude: coordinate.longitude,
         latitude: coordinate.latitude,
-        page: page
+        page: page || 1
       },
       success: function (res) {
         wx.hideLoading()
@@ -210,7 +210,7 @@ Page({
         fetchDataFail: false,
         errorTip: ''
       })
-      this.toFetch(1)
+      this.toFetch()
     }
   },
 

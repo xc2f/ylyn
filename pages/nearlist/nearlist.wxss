@@ -48,6 +48,9 @@
 .shopList .item {
   position: relative;
 }
+.shopList > navigator:last-child .item {
+  margin-bottom: 0;
+}
 .shopList .item .inSales {
   position: absolute;
   right: -25px;

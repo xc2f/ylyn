@@ -11,7 +11,7 @@
   </view>
   
   <view class="empty" wx:if="{{!chatRecords}}">
-    <!-- <image src="/images/xj.png"></image> -->
+     <image src="/images/faces/e6.png"></image> 
     <text>这里为空哦，快找些小伙伴聊一聊！</text>
   </view>
 

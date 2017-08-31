@@ -224,7 +224,7 @@
   margin-top: 2px;
 }
 .foods .itemLeft {
-  margin-right: 10px;
+  margin-right: 7px;
 }
 
 .foods .item image {
@@ -436,52 +436,20 @@
   right: 50px;
 } 
 
-/* .shareWrap .block .content {
-  flex: 2;
+.topInfo {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  text-align: center;
-  margin: 50px 17px 0;
-  box-shadow: inset 0 0 2px 2px rgba(120, 120, 120, .2);
-  position: relative;
+  flex-direction: row;
+  align-items: center;
 }
-.shareWrap .block .content .line {
-  line-height: 2;
+.topInfo .textBox {
+  word-break: break-word;
+  margin: 5px 20px 5px 10px;
+  flex: 10;
 }
 
-.shareWrap .block .content .lineTip {
-  font-size: 14px;
-  color: #ccc;
-  text-align: right;
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-}
-.shareWrap .block .btn {
+.topInfo image {
   flex: 1;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  position: relative;
+  width: 15px;
+  height: 15px;
+  padding: 5px 10px 5px 5px;
 }
-.shareWrap .block .btn .qr {
-  width: 100%;
-  height: 50px;
-   background: #1aad19;
-  background: rgb(255, 185, 0); 
-  border-radius: 0;
-  color: #fff;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  line-height: 50px;
-}
-.shareWrap .block .btn .qr.button-hover {
-  background: rgb(248, 70, 68);
-  border: 1px solid rgb(248, 70, 68)
-} */

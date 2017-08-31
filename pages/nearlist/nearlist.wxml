@@ -23,7 +23,7 @@
             <view wx:if="{{item.is_activity}}" class="inSales">
               <text class="inSaleText">活动</text>
             </view>
-            <image src="{{item.store_logo === null ? '/images/defaultLogo.png' : item.store_logo}}"></image>
+            <image src="{{item.store_logo === null ? '/images/defaultLogo.png' : item.store_logo}}" lazy-load="{{true}}"></image>
             <view class="right">
               <view class="wrap">
                 <view class="shopName">

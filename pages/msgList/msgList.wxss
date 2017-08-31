@@ -252,12 +252,12 @@
 }
 
 .empty image {
-  width: 320px;
-  height: 172px;
+  width: 200px;
+  height: 200px;
 }
 
 .empty text {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .shieldIcon {

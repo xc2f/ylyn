@@ -1,7 +1,11 @@
 <view class="container" wx:if="{{dataOk}}">
-  <view class="topInfo">
-    <text></text>
-    <image src="/images/close2.png"></image>
+  <view class="topInfo" wx:if="{{showTopInfo}}">
+    <view class='textBox'>
+      <text>{{topInfoTip}}</text>
+    </view>
+    <view bindtap='closeTopInfo'>
+      <image src="/images/close2.png"></image>
+    </view>
   </view>
   <view class="banner" style="background: url() no-repeat; background-size: 100% 100%; background-position: center center;">
     <view wx:if="{{inSale}}" class="inSales">

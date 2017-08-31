@@ -27,6 +27,7 @@ Page({
     rotateArrowAnimation: null,
 
     showTopInfo: true,
+    topInfoTip: ''
   },
 
   showFoods: true,
@@ -44,6 +45,32 @@ Page({
     })
 
     that.getCurrentLocation(options)
+
+    // TODO
+    wx.request({
+      url: app.requestHost + 'Store/store_info_tip/',
+      method: 'POST',
+      data: {
+        store_id: options.store_id,
+      },
+      success: function(res){
+        if(res.data.code === 201){
+          let result = res.data.result
+          that.setData({
+            topInfoTip: result.tip
+          })
+        } else {
+          that.setData({
+            showTopInfo: false
+          })
+        }
+      },
+      fail: function(){
+        that.setData({
+          showTopInfo: false
+        })
+      }
+    })
   },
 
   getCurrentLocation(options){
@@ -258,6 +285,12 @@ Page({
     
   },
 
+  closeTopInfo(){
+    this.setData({
+      showTopInfo: false
+    })
+  },
+
   closeShare(e){
     if(e.target.id !== 'share'){
       this.setData({
@@ -317,11 +350,15 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
+    let that = this
     return {
       title: this.data.shop.store_name,
       path: '/pages/shopDetail/shopDetail?store_id='+this.data.shop.store_id,
       success: function (res) {
         // 转发成功
+        that.setData({
+          showShare: false,
+        })
       },
       fail: function (res) {
         // 转发失败

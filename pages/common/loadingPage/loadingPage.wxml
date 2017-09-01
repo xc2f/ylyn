@@ -1,0 +1,4 @@
+<template name="loadingPage">
+  <image src="/images/needToRefresh.png"></image>
+  <text>数据载入中，请稍后</text>
+</template>

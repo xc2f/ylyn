@@ -193,6 +193,7 @@ Page({
         // console.log('chatWith' + userId + '已删除!')
       },
     })
+
     // 从chatRecords中移除该key
     wx.getStorage({
       key: 'chatRecords',

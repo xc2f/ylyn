@@ -16,8 +16,38 @@
 .banner .wrap {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
+.banner .wrap .guideShadow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, .5);
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+.banner .wrap .guideShadow > view {
+  flex: 1
+}
+
+.banner .guideShadow .guideImageWrap {
+  position: relative;
+  z-index: 2;
+  /* left: 30px; */
+  /* top: 30px; */
+}
+.banner .guideShadow .guideImageWrap image {
+  width: 90%;
+  height: 100px;
+  margin-left: 30px;
+  margin-top: 30px;
+}
 .banner .bannerImg {
   position: absolute;
   top: 0;
@@ -30,6 +60,8 @@
 }
 .banner .shopBanner navigator {
   border-radius: 50%;
+  position: relative;
+  z-index: 999;
 }
 
 .shopName {
@@ -369,14 +401,16 @@
   margin-top: 50px;
 }
 
-button.needLogin[type="primary"][plain] {
+button.needLogin[type="primary"][plain],
+button.retryToGetLocation {
   color: #222;
   border: 1px solid #222;
   width: 70%;
   border-radius: 0;
 }
 
-.loadingStatus {
+.loadingStatus,
+.login .loginStatus {
   text-align: center;
   margin-top: 17px;
 }

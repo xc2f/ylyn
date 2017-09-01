@@ -1,3 +1,8 @@
+<!-- <view class="loadingData" wx:if="{{!dataOk}}">
+  <import src="/pages/common/loadingPage/loadingPage" />
+  <template is="loadingPage" />
+</view> -->
+
 <view class="container" wx:if="{{dataOk}}">
   <view class="topInfo" wx:if="{{showTopInfo}}">
     <view class='textBox'>

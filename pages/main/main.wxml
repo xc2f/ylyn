@@ -5,7 +5,7 @@
     <view class="wrap">
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
         <image class="bannerImg" src="{{store.store_bgimg === '' ? '/images/banner.jpg' : store.store_bgimg}}"></image>
-        <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}">
+        <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}" bindtap='toDetail'>
           <view class="shopAvatar">
             <image src="{{store.store_logo==='' ? '/images/defaultLogo.png' : store.store_logo}}"></image>
           </view>
@@ -23,12 +23,19 @@
           <text class="flipConnerText">我的</text>
         </view>
       </view>
-
+      <view class='guideShadow' wx:if="{{showGuide}}">
+        <view style="visibility: hidden;">
+          <text>placeholder</text>
+        </view>
+        <view class='guideImageWrap'>
+           <image src='/images/guideToDetail.png'></image> 
+        </view>
+      </view>
     </view>
 
   </view>
 
-  <scroll-view scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;">
+  <scroll-view  bindscrolltolower="scrollToEnd" scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;">
     <view class="allInOne">
       <view class="up">
         <view class="line"></view>
@@ -45,7 +52,8 @@
       <view class="cssload-container" wx:if="{{showLoginStatus}}">
         <view class="cssload-speeding-wheel"></view>
       </view>
-      <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">登录后查看同店的人</button>
+      <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" bindtap='getUserInfo' type="primary">登录后查看同店的人</button>
+      <!-- <button class='retryToGetLocation' plain wx:if="{{getLocationFail}}" bindtap='onPullDownRefresh'>重新获取位置</button> -->
       <view class="loginStatus">{{loginStatus}}</view>
     </view>
 

@@ -2,7 +2,14 @@
 <!--附近商家-->
 
 <view class="container">
-
+  <view class="topInfo" wx:if="{{showTopInfo}}">
+    <view class='textBox'>
+      <text>{{topInfoTip}} </text>
+    </view>
+    <view bindtap='closeTopInfo' class="closeTopInfo">
+      <image src="/images/close2.png"></image>
+    </view>
+  </view>
   <view class="head">
     <view class="line"></view>
     <view class="dot"></view>
@@ -18,10 +25,14 @@
     </view>
     <view class="shopList" wx:if="{{!shopListEmpty}}">
       <block wx:for="{{shopList}}" wx:key="store_id">
-        <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
+        <view bindtap='navigateToStore' data-storeid='{{item.store_id}}'>
+         <!-- class="{{theStoreId === item.store_id ? 'theStore' : ''}}" -->
           <view class='{{item.store_status==1 ? "item" : "item storeClose"}}'>
             <view wx:if="{{item.is_activity}}" class="inSales">
               <text class="inSaleText">活动</text>
+            </view>
+            <view wx:if="{{theStoreId === item.store_id ? true : false}}" class='theStore'>
+              <image src="/images/face2.png"></image>
             </view>
             <image src="{{item.store_logo === null ? '/images/defaultLogo.png' : item.store_logo}}" lazy-load="{{true}}"></image>
             <view class="right">
@@ -48,7 +59,7 @@
               </view>
             </view>
           </view>
-        </navigator>
+        </view>
       </block>
     </view>
   </view>
@@ -89,7 +100,7 @@
   </view>
 
   <view class="login" wx:if="{{!login}}">
-    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" type="primary">{{loginText}}</button>
+    <button class="needLogin" plain wx:if="{{showLogin}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" bindtap='getUserInfo' type="primary">{{loginText}}</button>
     <view class="cssload-container" wx:if="{{showLoginStatus}}">
       <view class="cssload-speeding-wheel"></view>
     </view>

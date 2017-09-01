@@ -20,7 +20,10 @@ Page({
     dataOk: false,
     errorTip: '',
     getLocationFail: false,
-    fetchDataFail: false
+    fetchDataFail: false,
+    showTopInfo: false,
+    topInfoTip: '',
+    theStoreId: null,
   },
 
   currentPage: 1,
@@ -29,6 +32,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // app.globalData.storeInfo = null
     let that = this
     that.getCurrentLocation()
     if (app.globalData.userId) {
@@ -72,11 +76,52 @@ Page({
       }
     }
     // }
+    if (app.globalData.showNearListTopTip) {
+      wx.request({
+        url: app.requestHost + 'Store/store_list_tip/',
+        method: 'POST',
+        data: {
+          store_id: options.store_id,
+        },
+        success: function (res) {
+          if (res.data.code === 201) {
+            let result = res.data.result
+            if (result.tip.trim().length !== 0) {
+              that.setData({
+                showTopInfo: true,
+                topInfoTip: result.tip
+              })
+            } else {
+              that.setData({
+                showTopInfo: false,
+              })
+            }
+          } else {
+            that.setData({
+              showTopInfo: false
+            })
+          }
+        },
+        fail: function () {
+          that.setData({
+            showTopInfo: false
+          })
+        }
+      })
+    }
   },
 
 
   getUserInfo(res) {
     let that = this
+    if (!wx.canIUse('button.open-type.getUserInfo')) {
+      wx.showModal({
+        title: '提示',
+        showCancel: false,
+        content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+      })
+      return
+    }
     let detail = res.detail
     // console.log(detail)
     if (detail.rawData) {
@@ -116,6 +161,9 @@ Page({
     let that = this;
     let coordinate = app.globalData.coordinate
     if(coordinate){
+      wx.showLoading({
+        title: '获取数据中',
+      })
       that.toFetch()
     } else {
       // 一般走到这一步是由于未授权和初次打开小程序和地理位置获取失败
@@ -147,18 +195,20 @@ Page({
   toFetch(page) {
     let that = this
     let coordinate = app.globalData.coordinate
+    page = page || 1
     wx.request({
       url: app.requestHost + 'Store/store_list/',
       method: 'POST',
       data: {
         longitude: coordinate.longitude,
         latitude: coordinate.latitude,
-        page: page || 1
+        page: page
       },
       success: function (res) {
-        wx.hideLoading()
+        // console.log(res)
         wx.stopPullDownRefresh()
         if(res.data.code === 101){
+          wx.hideLoading()
           // 无数据
           if(page === 1) {
             that.setData({
@@ -172,13 +222,27 @@ Page({
         } else if(res.data.code === 201){
           let result = res.data.result
           let shopList = that.data.shopList
+          if(app.sdk >= 150){
+            that.setData({
+              shopList: page === 1 ? result.store_list : shopList.concat(result.store_list),
+              shopListEmpty: false,
+              dataOk: true,
+              fetchDataFail: false
+            }, ()=>{
+              wx.hideLoading()
+            })
+          } else {
             that.setData({
               shopList: page === 1 ? result.store_list : shopList.concat(result.store_list),
               shopListEmpty: false,
               dataOk: true,
               fetchDataFail: false
             })
+            wx.hideLoading()
+          }
+
         } else {
+          wx.hideLoading()
           that.setData({
             dataOk: false,
             fetchDataFail: true,
@@ -213,6 +277,7 @@ Page({
       this.toFetch()
     }
   },
+  
 
   toMe() {
     wx.navigateTo({
@@ -224,6 +289,27 @@ Page({
     wx.navigateTo({
       url: '/pages/msgList/msgList',
     })
+  },
+
+  closeTopInfo() {
+    app.globalData.showNearListTopTip = false
+    this.setData({
+      showTopInfo: false
+    })
+  },
+
+  navigateToStore(e){
+    let store_id = e.currentTarget.dataset.storeid
+    let storeInfo = app.globalData.storeInfo
+    if (app.inStore && storeInfo && storeInfo.storeId === store_id){
+      wx.navigateTo({
+        url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/shopDetail/shopDetail?store_id=' + store_id,
+      })
+    }
   },
 
   /**
@@ -247,6 +333,16 @@ Page({
       })
     }, 2000)
 
+    let storeInfo = app.globalData.storeInfo
+    if (app.inStore && storeInfo) {
+      that.setData({
+        theStoreId: storeInfo.storeId
+      })
+    } else {
+      that.setData({
+        theStoreId: null
+      })
+    }
   },
 
   /**
@@ -287,8 +383,9 @@ Page({
       // console.log(res.target)
     }
     return {
-      title: '你附近有这些商家',
+      title: '饮识——重新定义饮食',
       path: '/pages/nearlist/nearlist',
+      imageUrl: '/images/logo.png',
       success: function (res) {
         // 转发成功
       },

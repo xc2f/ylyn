@@ -6,6 +6,7 @@ Page({
   getLocationErrorTimes: 0,
   currentPage: 1,
   currentGender: 0,
+  fetchDataTime: new Date().getTime(),
 
   /**
    * 页面的初始数据
@@ -31,9 +32,6 @@ Page({
     // 呼叫维特延时
     callWaiterTimeout: 0,
 
-    // 地理位置检测
-    checkLocationInterval: null,
-
     // 一直在跳的那个定位标记
     loadingTip: '店铺正马不停蹄地向你赶来',
     // 定位失败
@@ -52,7 +50,9 @@ Page({
     login: false,
 
     // 登录以及数据拉取成功
-    dataOk: false
+    dataOk: false,
+
+    showGuide: false
   },
 
 
@@ -60,13 +60,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // console.log(options)
     // TODO 用户返回到微信，再从微信回来的情况
     let that = this
     // 扫码
     that.setData({
       qrcodeInfo: {
-        store_id: options.store_id || '14b00ff3-f9f7-7337-a713-599d8f8d9c62',
-        table_id: options.table_id || 2
+        store_id: options.store_id,
+        table_id: options.table_id
       }
     })
 
@@ -75,29 +76,30 @@ Page({
       deviceInfo: app.globalData.deviceInfo
     })
 
+
+    // let token = wx.getStorageSync('TOKEN')
+    // if (token) {
+    //   that.getCurrentLocation()
+    // } else {
+    //   // 未登录
+    //   that.fetchShopInfoWithoutLogin()
+    // }
+
+    // 登录
     if (app.globalData.userId) {
       that.setData({
         login: true,
         showLogin: false,
       })
-      that.getCurrentLocation()
+      that.getCurrentLocation('refresh')
     } else {
       let token = wx.getStorageSync('TOKEN')
       if (token) {
-        // 登陆过
         app.TOKEN = token
-        app.connectWebsocket('auto', null, login => {
-          if (login) {
-            that.setData({
-              login: true,
-              showLogin: false,
-            })
-            that.getCurrentLocation()
-          } else {
-            that.setData({
-              loadingTip: '登录失败'
-            })
-          }
+        // 登陆过
+        that.getCurrentLocation('autoLogin')
+        that.setData({
+          loadingTip: '获取位置中'
         })
       } else {
         // 未登录
@@ -105,42 +107,57 @@ Page({
       }
     }
 
+    wx.getStorage({
+      key: 'guideToDetail',
+      success: function(res) {
+      },
+      fail: function(){
+        that.setData({
+          showGuide: true
+        })
+      }
+    })
+
+  },
+
+  toDetail(){
+    wx.setStorage({
+      key: 'guideToDetail',
+      data: '',
+    })
+    setTimeout(() => {
+      this.setData({
+        showGuide: false
+      })
+    }, 1000)
   },
 
   getUserInfo(res) {
+    // wx.canIUse('button.open-type.getUserInfo')
     let that = this
+    if (!wx.canIUse('button.open-type.getUserInfo')){
+      wx.showModal({
+        title: '提示',
+        showCancel: false,
+        content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+      })
+      return
+    }
     let detail = res.detail
     if (detail.rawData) {
+      that.getCurrentLocation('manualLogin', detail)
       that.setData({
         login: false,
         showLogin: false,
         showLoginStatus: true,
-        loginStatus: '登录中',
-      })
-      app.manualLogin(detail.encryptedData, detail.iv, res => {
-        if (res) {
-          that.setData({
-            login: true,
-            showLogin: false,
-            showLoginStatus: true,
-            loginStatus: '登录成功，获取位置中'
-          })
-          that.getCurrentLocation()
-        } else {
-          that.setData({
-            login: false,
-            showLogin: true,
-            showLoginStatus: false,
-            loginStatus: '登录失败，请重试',
-          })
-        }
+        loginStatus: '获取位置中',
       })
     } else {
       that.setData({
         login: false,
         showLogin: true,
         showLoginStatus: false,
-        loginStatus: '用户信息获取失败',
+        loginStatus: '',
       })
     }
   },
@@ -163,11 +180,13 @@ Page({
         wx.stopPullDownRefresh()
         if (res.data.code === 201) {
           that.setData({
+            loginStatus: '',
             store: res.data.result
           })
         } else {
           // TODO
           that.setData({
+            loginStatus: '数据获取失败',
             loadingTip: '数据获取失败'
           })
         }
@@ -175,6 +194,7 @@ Page({
       fail: function (res) {
         // TODO
         that.setData({
+          loginStatus: '数据获取失败',
           loadingTip: '数据获取失败'
         })
       }
@@ -182,25 +202,36 @@ Page({
   },
 
 
-  getCurrentLocation() {
+  getCurrentLocation(type, data) {
     let that = this
     let coordinate = app.globalData.coordinate
     if (coordinate) {
-      // TODO
-      that.toFetch()
+      if(that.data.login){
+        that.toFetch()
+      } else {
+        that.toLogin(type, data)
+      }
+      that.setData({
+        getLocationFail: false,
+        showLoginStatus: true,
+        loginStatus: '位置获取成功，登录中',
+        loadingTip: '位置获取成功，登录中',
+      })
     } else {
       app.getLocation(res => {
         if (res) {
+          that.toLogin(type, data)
           that.setData({
+            getLocationFail: false,
             showLoginStatus: true,
-            loginStatus: '位置获取成功，获取数据中',
-            getLocationFail: false
+            loginStatus: '位置获取成功，登录中',
+            loadingTip: '位置获取成功，登录中',
           })
-          that.toFetch()
         } else {
           that.setData({
             showLoginStatus: false,
-            loginStatus: '位置获取失败，请下拉刷新重试',
+            showLogin: true,
+            loginStatus: '位置获取失败，请重试',
             loadingTip: '位置获取失败，请点击页面重试',
             getLocationFail: true
           })
@@ -209,10 +240,55 @@ Page({
     }
   },
 
+  toLogin(type, data){
+    // 位置已经获取到
+    let that = this
+    if (type === 'autoLogin') {
+      app.connectWebsocket('auto', null, login => {
+        if (login) {
+          that.toFetch()
+          that.setData({
+            login: true,
+            fetchDataFail: false,
+            loadingTip: '登录成功，获取数据中'
+          })
+        } else {
+          that.setData({
+            login: false,
+            loadingTip: '登录失败，请重试',
+            fetchDataFail: false
+          })
+        }
+      })
+    } else if (type === 'manualLogin') {
+      app.manualLogin(data.encryptedData, data.iv, res => {
+        if (res) {
+          that.setData({
+            login: true,
+            showLogin: false,
+            showLoginStatus: true,
+            loginStatus: '登录成功，获取数据中'
+          })
+          that.toFetch()
+        } else {
+          that.setData({
+            login: false,
+            showLogin: true,
+            showLoginStatus: false,
+            loginStatus: '登录失败，请重试',
+          })
+        }
+      })
+    } else {
+      that.toFetch()
+    }
+  },
+
   toFetch(gender, page) {
     let that = this
     gender = gender || 0
     page = page || 1
+    let coordinate = app.globalData.coordinate
     wx.request({
       // url: 'https://easy-mock.com/mock/592e223d91470c0ac1fec1bb/ylyn/shop',
       url: app.requestHost + 'Store/store_user/',
@@ -220,10 +296,10 @@ Page({
       data: {
         // longitude: 108.8871237 || coordinate.longitude,
         // latitude: 34.1863376 || coordinate.latitude,
-        // longitude: coordinate.longitude,
-        // latitude: coordinate.latitude,
-        latitude: 34.2048991715,
-        longitude: 108.9146214724,
+        longitude: coordinate.longitude,
+        latitude: coordinate.latitude,
+        // latitude: 34.2048991715,
+        // longitude: 108.9146214724,
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
@@ -236,6 +312,7 @@ Page({
         wx.stopPullDownRefresh()
         // TODO
         if (res.data.code === 201) {
+          app.inStore = true
           let result = res.data.result
 
           // 设置导航条
@@ -282,6 +359,7 @@ Page({
             content: res.data.message,
             showCancel: false,
             complete: function (res) {
+              app.inStore = false
               wx.redirectTo({
                 url: '/pages/nearlist/nearlist',
               })
@@ -293,12 +371,14 @@ Page({
             content: res.data.message,
             showCancel: false,
             complete: function (res) {
+              app.inStore = false
               wx.redirectTo({
                 url: '/pages/nearlist/nearlist',
               })
             }
           })
         } else {
+          app.inStore = false
           that.setData({
             dataOk: false,
             showLoginStatus: false,
@@ -309,6 +389,7 @@ Page({
         }
       },
       fail: function () {
+        app.inStore = false
         wx.hideLoading()
         wx.stopPullDownRefresh()
         that.setData({
@@ -325,13 +406,13 @@ Page({
   occurFail() {
     if (this.data.getLocationFail) {
       this.setData({
-        loadingTip: '店铺正马不停蹄地向你赶来',
+        loadingTip: '重新获取位置中',
         getLocationFail: false
       })
       this.getCurrentLocation()
     } else {
       this.setData({
-        loadingTip: '店铺正马不停蹄地向你赶来',
+        loadingTip: '重新获取数据中',
         fetchDataFail: false
       })
       this.toFetch()
@@ -418,10 +499,6 @@ Page({
       })
     }, 2000)
 
-    // 检测位置
-    that.data.checkLocationInterval = setInterval(function () {
-      that.checkLocation()
-    }, 1000 * 60 * .2)
   },
 
   /**
@@ -430,7 +507,6 @@ Page({
   onHide: function () {
     // console.log('main hide')
     clearInterval(this.data.getMsgStatusInterval)
-    clearInterval(this.data.checkLocationInterval)
   },
 
   /**
@@ -439,7 +515,6 @@ Page({
   onUnload: function () {
     // console.log('main unload')
     clearInterval(this.data.getMsgStatusInterval)
-    clearInterval(this.data.checkLocationInterval)
   },
 
   /**
@@ -447,22 +522,30 @@ Page({
    */
   onPullDownRefresh: function () {
     if (this.data.login) {
-      this.getCurrentLocation()
+      this.getCurrentLocation('pullDown')
     } else {
       this.fetchShopInfoWithoutLogin()
     }
     this.setData({
       loadingTip: '店铺正马不停蹄地向你赶来',
-      loginStatus: '数据获取中'
+      loginStatus: '获取位置中'
     })
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
+  scrollToEnd: function(){
+    let now = new Date().getTime()
+    if (this.fetchDataTime + 3000 > now){
+      return
+    }
+    this.fetchDataTime = now
     this.currentPage += 1
     this.toFetch(this.currentGender, this.currentPage)
+  },
+
+  onReachBottom: function () {
   },
 
   /**
@@ -531,71 +614,5 @@ Page({
       })
     }
   },
-
-  checkLocation() {
-    let that = this
-    app.getLocation(res => {
-      if (res) {
-        let globalData = app.globalData
-        wx.request({
-          url: app.requestHost + '/Store/check_address/',
-          method: 'POST',
-          data: {
-            latitude: globalData.coordinate.latitude,
-            longitude: globalData.coordinate.longitude,
-            token: app.TOKEN,
-            store_id: globalData.storeInfo.storeId,
-            table_id: globalData.storeInfo.tableId
-          },
-          success: function (res) {
-            if (res.data.code === 201) {
-              console.log('位置正常')
-            } else if (res.data.code === 102) {
-              wx.showModal({
-                title: '提示',
-                content: res.data.message,
-                showCancel: false,
-                complete: function (res) {
-                  wx.redirectTo({
-                    url: '/pages/nearlist/nearlist',
-                  })
-                }
-              })
-            } else if (res.data.code === 103) {
-              wx.showModal({
-                title: '提示',
-                content: res.data.message,
-                showCancel: false,
-                complete: function () {
-                  wx.redirectTo({
-                    url: '/pages/nearlist/nearlist',
-                  })
-                }
-              })
-            } else {
-              // 不处理
-            }
-          },
-          fail: function (err) {
-            // 不处理
-          }
-        })
-      } else {
-        that.getLocationErrorTimes++
-        if (that.getLocationErrorTimes >= 3) {
-          wx.showModal({
-            title: '提示',
-            content: '无法获取到您的位置',
-            showCancel: false,
-            complete: function (res) {
-              wx.redirectTo({
-                url: '/pages/nearlist/nearlist',
-              })
-            }
-          })
-        }
-      }
-    })
-  }
 
 })

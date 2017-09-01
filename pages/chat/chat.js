@@ -248,6 +248,7 @@ Page({
   },
 
   requestShield(type) {
+    return 
     let that = this
     wx.request({
       url: app.requestHost + (type === 'toShield' ? '/Chat/shield_user/' : '/Chat/cancel_shield/'),

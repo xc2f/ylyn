@@ -23,19 +23,110 @@ App({
     login: false,
     // 是否要显示分享
     showShare: true,
-    showTopInfo: true,
-    // 定时发送socket ping包
-    sendSocketMsgInterval: null
+    showDetailTopTip: true,
+    showNearListTopTip: true,
   },
 
+
+  // 定时发送socket ping包
+  sendSocketMsgInterval: null,
+  checkChatRecords: null,
   TOKEN: null,
   requestHost: requestHost,
+  // sdkVersion
+  sdk: 0,
+  resetLocation: null,
+  checkLocationInterval: null,
+  inStore: false,
+  getLocationErrorTimes: 0,
+
 
   onLaunch: function () {
+    if (this.globalData.storeInfo) {
+      let storeInfo = this.globalData.storeInfo
+      wx.reLaunch({
+        url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+      })
+    }
     // 获取设备信息
     this.getDeviceInfo()
     // 获取本地消息状态
     this.getMsgStatus()
+
+    this.resetLocation = setInterval(() => {
+      let coordinate = this.globalData.coordinate
+      let now = new Date().getTime()
+      if (coordinate && ((coordinate.time + 1000 * 60 * 2) < now)){
+        this.globalData.coordinate = null
+      }
+    }, 1000 * 60 * 2)
+
+    this.checkLocationInterval = setInterval(() => {
+      this.checkLocation()
+    }, 1000 * 60 * 3)
+  },
+
+  checkLocation() {
+    let that = this
+    if (that.inStore) {
+      let coordinate = that.globalData.coordinate
+      let now = new Date().getTime()
+      if (coordinate && ((coordinate.time + 1000 * 60 * 2) >= now)) {
+        // 坐标合法且是在两分钟内更新
+        that.checkLocationFun(coordinate)
+      } else {
+        that.getLocation(res => {
+          if (res) {
+            let coordinate = that.globalData.coordinate
+            that.checkLocationFun(coordinate)
+          } else {
+            that.getLocationErrorTimes++
+            if (that.getLocationErrorTimes >= 3) {
+              wx.showModal({
+                title: '提示',
+                content: '无法获取到您的位置',
+                showCancel: false,
+                complete: function (res) {
+                  that.inStore = false
+                  that.globalData.storeInfo = null
+                  wx.reLaunch({
+                    url: '/pages/nearlist/nearlist',
+                  })
+                }
+              })
+            }
+          }
+        })
+      }
+    }
+  },
+
+  checkLocationFun(coordinate) {
+    let that = this
+    wx.request({
+      url: that.requestHost + '/Store/check_address/',
+      method: 'POST',
+      data: {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+        token: that.TOKEN,
+        store_id: that.globalData.storeInfo.storeId,
+        table_id: that.globalData.storeInfo.tableId
+      },
+      success: function (res) {
+        if (res.data.code === 201) {
+          // console.log('位置正常')
+        } else {
+          that.inStore = false
+        }
+      },
+      fail: function (err) {
+        // 不处理
+      }
+    })
+  },
+
+  onHide() {
   },
 
   /**
@@ -56,23 +147,32 @@ App({
       }
     })
 
-    setInterval(function () {
+    that.checkChatRecords = setInterval(function () {
       wx.getStorage({
         key: 'chatRecords',
         success: function (res) {
           let data = res.data
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].msgClean === false) {
-              that.globalData.msgClean = false
-              wx.setStorageSync('msgClean', false)
-              break
+          if(res.data.length){
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].msgClean === false) {
+                that.globalData.msgClean = false
+                wx.setStorageSync('msgClean', false)
+                break
+              }
+              if (i === data.length - 1 && data[i].msgClean === true) {
+                that.globalData.msgClean = true
+                wx.setStorageSync('msgClean', true)
+              }
             }
-            if (i === data.length - 1 && data[i].msgClean === true) {
-              that.globalData.msgClean = true
-              wx.setStorageSync('msgClean', true)
-            }
+          } else {
+            that.globalData.msgClean = true
+            wx.setStorageSync('msgClean', true)
           }
         },
+        fail: function(){
+          that.globalData.msgClean = true
+          wx.setStorageSync('msgClean', true)
+        }
       })
     }, 2000)
   },
@@ -82,6 +182,7 @@ App({
     wx.getSystemInfo({
       success: function (res) {
         that.globalData.deviceInfo = res
+        that.sdk = parseInt(res.SDKVersion.split('.').join(''))
       }
     })
   },
@@ -105,7 +206,7 @@ App({
       // console.log('----- socket open -----')
       // console.log(res)
       // console.log('WebSocket连接已打开！')
-      that.globalData.sendSocketMsgInterval = setInterval(function(){
+      that.sendSocketMsgInterval = setInterval(function () {
         // console.log('----- ping -------')
         wx.sendSocketMessage({
           data: 'ping'
@@ -165,8 +266,8 @@ App({
               that.login(autoLoginCallback)
             }
           }
-        } else if( data.type === 'ping'){
-          return 
+        } else if (data.type === 'ping') {
+          return
         } else {
           that.loadMsg(data)
         }
@@ -177,10 +278,10 @@ App({
       // console.log(res)
     })
 
-    wx.onSocketClose( res => {
+    wx.onSocketClose(res => {
       that.globalData.client_id = null
       that.globalData.socketBroken = true
-      clearInterval(that.globalData.sendSocketMsgInterval)
+      clearInterval(that.sendSocketMsgInterval)
       // wx.closeSocket()
       // console.log('WebSocket 已关闭！')
       that.connectWebsocket('auto', null, null)
@@ -191,7 +292,7 @@ App({
   // rebuild ok
   login(callback) {
     let that = this
-    console.log('login with token')
+    // console.log('login with token')
     wx.request({
       url: that.requestHost + 'User/token_login/',
       method: 'POST',
@@ -200,7 +301,7 @@ App({
         client_id: that.globalData.client_id
       },
       success: function (res) {
-        if(res.data.code === 201 || res.data.code === 202){
+        if (res.data.code === 201 || res.data.code === 202) {
           if (res.data.code === 202) {
             that.TOKEN = res.data.result.token
             wx.setStorageSync('TOKEN', res.data.result.token)
@@ -296,7 +397,7 @@ App({
             callback(false)
           }
         },
-        fail: function(){
+        fail: function () {
           // wx.login接口调用失败
           callback(false)
         }
@@ -326,7 +427,8 @@ App({
                             success: function (res) {
                               that.globalData.coordinate = {
                                 latitude: res.latitude,
-                                longitude: res.longitude
+                                longitude: res.longitude,
+                                time: new Date().getTime()
                               }
                               callback(true)
                             },
@@ -373,14 +475,14 @@ App({
 
 
   loadMsg(msg) {
-    console.log(msg)
+    // console.log(msg)
     let that = this
     let messageList = wx.getStorageSync('chatWith' + msg.from_user_id)
     // 获取chatid
     wx.getStorage({
       key: 'chatIdWith' + msg.from_user_id,
-      success: function(res) {},
-      fail: function(){
+      success: function (res) { },
+      fail: function () {
         wx.setStorage({
           key: 'chatIdWith' + msg.from_user_id,
           data: {
@@ -556,6 +658,10 @@ App({
       // console.log('WebSocket 已关闭！')
     })
 
+    clearInterval(this.resetLocation)
+    clearInterval(this.checkLocationInterval)
+    clearInterval(this.sendSocketMsgInterval)
+    clearInterval(this.checkChatRecords)
 
     // clearInterval(this.globalData.checkLocationInterval)
   }

@@ -126,7 +126,6 @@ Page({
         let tempFilePaths = res.tempFilePaths
         let tempList = that.data.pics
         for(let i=0; i<tempFilePaths.length; i++){
-          // TODO 上传照片
           let suffix = tempFilePaths[i].slice(tempFilePaths[i].lastIndexOf('.'))
           let fileName = app.globalData.userId + '-' + new Date().getTime() + suffix
           upload('userAlbum', tempFilePaths[i], fileName, resUrl => {
@@ -140,7 +139,6 @@ Page({
               },
               success: function (res) {
                 if (res.data.code === 201) {
-                  // TODO
                   tempList.push({
                     album: tempFilePaths[i],
                     album_id: res.data.result.album_id

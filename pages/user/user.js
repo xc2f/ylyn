@@ -58,26 +58,39 @@ Page({
         token: app.TOKEN
       },
       success: function(res){
-        wx.hideLoading()
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({
             title: res.data.result.nickname
           })
+          if(app.sdk >= 150){
+            that.setData({
+              userInfo: res.data.result,
+              gallery: res.data.result.album,
+              size: res.data.result.album.length,
+              dataOk: true,
+              fetchDataFail: false,
+            }, ()=>{
+              wx.hideLoading()
+            })
+          } else {
+            that.setData({
+              userInfo: res.data.result,
+              gallery: res.data.result.album,
+              size: res.data.result.album.length,
+              dataOk: true,
+              fetchDataFail: false,
+            })
+            wx.hideLoading()
+          }
 
-          that.setData({
-            userInfo: res.data.result,
-            gallery: res.data.result.album,
-            size: res.data.result.album.length,
-            dataOk: true,
-            fetchDataFail: false,
-          })
           if (res.data.result.height && res.data.result.album.length !== 0) {
             that.setData({
               showTall: true
             })
           }
         } else if(res.data.code === 102){
+          wx.hideLoading()
           wx.showModal({
             title: '提示',
             content: res.data.message,
@@ -89,6 +102,7 @@ Page({
             }
           })
         } else {
+          wx.hideLoading()
           that.setData({
             fetchDataFail: true
           })
@@ -181,7 +195,6 @@ Page({
             },
             success: function(res){
               if(res.data.code === 201){
-                // TODO
                 that.setData({
                   'userInfo.avatar': resUrl.data.access_url
                 })

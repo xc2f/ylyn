@@ -96,3 +96,8 @@
   <import src="/pages/common/errorPage/errorPage" />
   <template is="errorPage" />
 </view>
+
+<!-- <view class="loadingData" wx:if="{{!dataOk}}">
+  <import src="/pages/common/loadingPage/loadingPage" />
+  <template is="loadingPage" />
+</view> -->

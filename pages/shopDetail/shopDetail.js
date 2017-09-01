@@ -46,8 +46,7 @@ Page({
 
     that.getCurrentLocation(options)
 
-    if (app.globalData.showTopInfo) {
-      app.globalData.showTopInfo = false
+    if (app.globalData.showDetailTopTip) {
       wx.request({
         url: app.requestHost + 'Store/store_info_tip/',
         method: 'POST',
@@ -55,12 +54,19 @@ Page({
           store_id: options.store_id,
         },
         success: function (res) {
+          console.log(res)
           if (res.data.code === 201) {
             let result = res.data.result
-            that.setData({
-              showTopInfo: true,
-              topInfoTip: result.tip
-            })
+            if(result.tip.trim().length !== 0){
+              that.setData({
+                showTopInfo: true,
+                topInfoTip: result.tip
+              })
+            } else {
+              that.setData({
+                showTopInfo: false,
+              })
+            }
           } else {
             that.setData({
               showTopInfo: false
@@ -108,19 +114,17 @@ Page({
         latitude: coordinate ? coordinate.latitude : ''
       },
       success: function (res) {
-        wx.hideLoading()
         if (res.data.code === 201) {
           let result = res.data.result
-          console.log(result)
           // 设置导航条
           wx.setNavigationBarTitle({
             title: result.store_name
           })
 
-          let globalData = app.globalData.storeInfo
+          let storeInfo = app.globalData.storeInfo
 
-          // TODO showQuit， how to quit
-          if (globalData !== null && globalData.storeId == result.store_id) {
+          // FIXED: showQuit
+          if (app.inStore && storeInfo && storeInfo.storeId == result.store_id) {
             that.setData({
               showQuit: true
             })
@@ -152,12 +156,22 @@ Page({
 
           result.food = result.food.length === 0 ? 0 : result.food
 
-          that.setData({
-            shop: result,
-            dataOk: true,
-            fetchDataFail: false
-          })
-
+          if(app.sdk >= 150){
+            that.setData({
+              shop: result,
+              dataOk: true,
+              fetchDataFail: false
+            }, () => {
+              wx.hideLoading()
+            })
+          } else {
+            that.setData({
+              shop: result,
+              dataOk: true,
+              fetchDataFail: false
+            })
+            wx.hideLoading()
+          }
 
           if (result.food) {
             let foodLength = result.food.length
@@ -248,6 +262,7 @@ Page({
       success: function (res) {
         // console.log(res)
         if (res.data.code === 201 || res.data.code === 102) {
+          app.inStore = false
           app.globalData.storeInfo = null
           wx.reLaunch({
             url: '/pages/nearlist/nearlist',
@@ -292,6 +307,7 @@ Page({
   },
 
   closeTopInfo() {
+    app.globalData.showDetailTopTip = false
     this.setData({
       showTopInfo: false
     })
@@ -357,8 +373,12 @@ Page({
    */
   onShareAppMessage: function () {
     let that = this
+    let shopName = this.data.shop.store_name
+    let list = ['真的有意思！', '真的不一般！', '真的很独特！', '不知道咋说了🙃', '双击666！', '给你32个赞👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍', '很棒哦>_<', '😃😀😎']
+    let targetNum = Math.floor(Math.random() * (list.length + 1))
+    let phrase = targetNum===list.length ? ('厉害了我的'+shopName+'！') : (shopName + '，' + list[targetNum])
     return {
-      title: this.data.shop.store_name,
+      title: phrase,
       path: '/pages/shopDetail/shopDetail?store_id=' + this.data.shop.store_id,
       success: function (res) {
         // 转发成功

@@ -7,6 +7,6 @@
     <view style="height: 156px; margin: 0 0 10px 10px;">
       <template is="eachTableList" data="{{users: item.user_list}}"></template>
     </view>
-    <view class="division" style="height: 10px; background: #eee; width: 100%;" wx:if="{{index !== tableLength-1}}"></view>
+    <view class="division" style="height: 7px; background: #eee; width: 100%;" wx:if="{{index !== tableLength-1}}"></view>
   </block>
 </template>

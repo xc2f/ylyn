@@ -87,14 +87,17 @@ Page({
       chatBodyHeight: globalData.deviceInfo.windowHeight - 52,
     })
 
+    let friendInfo = JSON.parse(options.friendinfo)
+    that.pageName = 'chatWith' + friendInfo.user_id
+
     that.setData({
-      friendInfo: JSON.parse(options.friendinfo),
+      friendInfo: friendInfo,
     })
 
 
     // 获取聊天信息
     wx.getStorage({
-      key: 'chatWith' + that.data.friendInfo.user_id,
+      key: 'chatWith' + friendInfo.user_id,
       success: function (res) {
         // console.log(res)
         let messages = objDeepCopy(res.data)
@@ -116,7 +119,7 @@ Page({
 
     // 设置导航条
     wx.setNavigationBarTitle({
-      title: that.data.friendInfo.nickname
+      title: friendInfo.nickname
     })
 
 
@@ -138,7 +141,7 @@ Page({
 
     // 检查是否屏蔽
     wx.getStorage({
-      key: 'chatStatusWith' + that.data.friendInfo.user_id,
+      key: 'chatStatusWith' + friendInfo.user_id,
       success: function (res) {
         // console.log(res)
         if (res.data.isShield === true) {
@@ -152,7 +155,7 @@ Page({
 
     // 本地是否有chatId,有则显示屏蔽，没有则不显示
     wx.getStorage({
-      key: 'chatIdWith' + that.data.friendInfo.user_id,
+      key: 'chatIdWith' + friendInfo.user_id,
       success: function (res) {
         that.setData({
           showShield: true,
@@ -161,16 +164,17 @@ Page({
       },
     })
 
-    // store_info
+    // 更新获取store_info
+    // 如果存储的store_id与当前所在店铺store_id相同，更新store_info,否则选用之前的store_info
     wx.getStorage({
       key: 'chatRecords',
-      success: function(res) {
+      success: function (res) {
         // console.log(res)
         let data = res.data
         data.forEach(item => {
           // 如果有这份聊天记录才会更新storeInfo
-          if (item.chatName === 'chatWith' + that.data.friendInfo.user_id){
-            item.storeInfo = (item.storeInfo.storeId === (app.globalData.storeInfo ? app.globalData.storeInfo.storeId : '' )) ? app.globalData.storeInfo : item.storeInfo
+          if (item.chatName === 'chatWith' + friendInfo.user_id) {
+            item.storeInfo = (item.storeInfo.storeId == (globalData.storeInfo ? globalData.storeInfo.storeId : '')) ? globalData.storeInfo : item.storeInfo
             that.setData({
               storeInfo: item.storeInfo
             })
@@ -190,7 +194,7 @@ Page({
       success: function (res) {
         let data = res.data
         for (let i = 0; i < data.length; i++) {
-          if (data[i].chatName === 'chatWith' + that.data.friendInfo.user_id) {
+          if (data[i].chatName === 'chatWith' + friendInfo.user_id) {
             data[i].msgClean = true
             break
           }
@@ -203,6 +207,8 @@ Page({
       },
     })
 
+
+    // =============== onLoad end ================
   },
 
 
@@ -253,20 +259,15 @@ Page({
       },
       success: function (res) {
         // console.log(res)
-
         if (res.data.code === 201 || res.data.code === 102) {
-
-
           let tempMessageList = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id);
           let now = new Date().getTime()
-
           if (tempMessageList[tempMessageList.length - 1].time + (1000 * 60 * 5) < now) {
             tempMessageList.push({
               content: now,
               type: 'time'
             })
           }
-
 
           let postData = that.refreshShield(type === 'toShield' ? true : false, type === 'toShield' ? '您已将对方消息屏蔽' : '您已取消屏蔽', res.data.result.time * 1000)
 
@@ -300,14 +301,18 @@ Page({
             friendInfo: that.data.friendInfo,
             storeInfo: that.data.storeInfo ? that.data.storeInfo : app.globalData.storeInfo
           }, true)
+
+        } else {
+          // other res.data.code
         }
-      }
+      },
+      fail: function(){}
     })
   },
 
 
   inputFocus() {
-    if (this.data.inputValue !== '') {
+    if (this.data.inputValue.trim() !== '') {
       this.setData({
         isFocus: true,
       })
@@ -323,7 +328,7 @@ Page({
   },
 
   inputBlur() {
-    if (this.data.inputValue !== '') {
+    if (this.data.inputValue.trim() !== '') {
       this.setData({
         isFocus: true,
       })
@@ -338,7 +343,7 @@ Page({
     this.setData({
       inputValue: e.detail.value
     })
-    if (this.data.inputValue !== '') {
+    if (this.data.inputValue.trim() !== '') {
       this.setData({
         isFocus: true,
       })
@@ -370,7 +375,10 @@ Page({
   // 消息处理函数
   handleMsg(type, value) {
     let that = this
-    var tempMessageList = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id);
+
+    let friendInfo = that.data.friendInfo
+
+    var tempMessageList = wx.getStorageSync('chatWith' + friendInfo.user_id);
     // console.log(tempMessageList)
     // debugger
     let now = new Date().getTime()
@@ -430,7 +438,7 @@ Page({
     })
 
     wx.setStorage({
-      key: 'chatWith' + that.data.friendInfo.user_id,
+      key: 'chatWith' + friendInfo.user_id,
       data: tempMessageList,
     })
 
@@ -440,27 +448,27 @@ Page({
       url: app.requestHost + 'Chat/send_message/',
       method: 'POST',
       data: {
-        tuser_id: that.data.friendInfo.user_id,
+        tuser_id: friendInfo.user_id,
         token: app.TOKEN,
         content: JSON.stringify(postData),
         store_id: that.data.storeInfo ? that.data.storeInfo.storeId : app.globalData.storeInfo.storeId
       },
       success: function (res) {
         // console.log(res)
-        let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
+        let messages = wx.getStorageSync('chatWith' + friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {
             // 屏蔽是102
             if (res.data.code === 201) {
               messages[i].status = 'sendOk'
               messages[i].time = res.data.result.time * 1000
-              if (that.data.isShield){
+              if (that.data.isShield) {
                 that.setData({
                   isShield: false
                 })
 
                 wx.setStorage({
-                  key: 'chatStatusWith' + that.data.friendInfo.user_id,
+                  key: 'chatStatusWith' + friendInfo.user_id,
                   data: {
                     isShield: false
                   }
@@ -472,8 +480,7 @@ Page({
               if (res.data.code === 103) {
                 // 对方已将您的消息屏蔽
                 messages.push(that.refreshShield(false, '消息可能送往火星了', null))
-              }
-              if (res.data.code === 102) {
+              } else if (res.data.code === 102) {
                 // 您已将对方的消息屏蔽
                 messages.push(that.refreshShield(true, '消息可能送往火星了', null))
                 if (!that.data.isShield) {
@@ -483,7 +490,7 @@ Page({
                   })
 
                   wx.setStorage({
-                    key: 'chatStatusWith' + that.data.friendInfo.user_id,
+                    key: 'chatStatusWith' + friendInfo.user_id,
                     data: {
                       isShield: true
                     }
@@ -508,18 +515,18 @@ Page({
           messages: showList
         })
         wx.setStorage({
-          key: 'chatWith' + that.data.friendInfo.user_id,
+          key: 'chatWith' + friendInfo.user_id,
           data: messages,
         })
 
         let chat_id = res.data.result.chat_id
-        
+
         wx.getStorage({
-          key: 'chatIdWith' + that.data.friendInfo.user_id,
+          key: 'chatIdWith' + friendInfo.user_id,
           success: function (res) { },
           fail: function () {
             wx.setStorage({
-              key: 'chatIdWith' + that.data.friendInfo.user_id,
+              key: 'chatIdWith' + friendInfo.user_id,
               data: {
                 chat_id: chat_id,
               }
@@ -528,7 +535,7 @@ Page({
         })
       },
       fail: function () {
-        let messages = wx.getStorageSync('chatWith' + that.data.friendInfo.user_id)
+        let messages = wx.getStorageSync('chatWith' + friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {
             messages[i].status = 'fail'
@@ -548,7 +555,7 @@ Page({
           messages: showList
         })
         wx.setStorage({
-          key: 'chatWith' + that.data.friendInfo.user_id,
+          key: 'chatWith' + friendInfo.user_id,
           data: messages,
         })
       },
@@ -560,6 +567,8 @@ Page({
       friendInfo: that.data.friendInfo,
       storeInfo: that.data.storeInfo ? that.data.storeInfo : app.globalData.storeInfo
     }, true)
+
+    // ============ handleMsg end ============
   },
 
   sendPic() {
@@ -591,13 +600,16 @@ Page({
       urls: [e.currentTarget.dataset.src]
     })
   },
+
   // 弹起表情框
   toggleFace() {
+    // 默认为false
+    let hideFace = this.data.faceShow
     this.setData({
-      faceShow: !this.data.faceShow,
+      faceShow: !hideFace,
     })
     // 避免表情弹起后遮挡聊天内容
-    if (this.data.faceShow) {
+    if (!hideFace) {
       this.setData({
         chatBodyHeight: this.data.deviceInfo.windowHeight - 202 //184
       })
@@ -675,8 +687,6 @@ Page({
   onShow: function () {
     let that = this
 
-    
-
     // 获取本人信息，放这里是因为若是从设置页返回则更新数据
     wx.getStorage({
       key: 'meInfo',
@@ -687,18 +697,13 @@ Page({
       },
     })
 
-    that.pageName = 'chatWith' + that.data.friendInfo.user_id
-
     setTimeout(function () {
       // 存最后一条消息的msgId, 有新消息来后跟msgId比对，不同则定位到页面底部
       if (that.data.messages.length !== 0) {
 
-        // console.log('in')
-
-        // console.log('in timeout')
-
         // 第一次发消息没有msgId
         let lastMsgId = that.data.messages[that.data.messages.length - 1].msgId
+
         // 监听消息
         that.data.checkMsgStatusInterval = setInterval(function () {
 
@@ -707,43 +712,49 @@ Page({
           wx.getStorage({
             key: 'chatWith' + that.data.friendInfo.user_id,
             success: function (res) {
-              let messages = objDeepCopy(res.data)
-              messages.map(item => {
-                if (item.type === 'time') {
-                  item.content = computeTime(item.content)
-                }
-              })
 
-              that.setData({
-                messages: messages
-              })
-
-              let newMsgId = messages[messages.length - 1].msgId
-              if (lastMsgId !== newMsgId) {
-                // 消息发送后滚动到底部，在上一setData后
-                that.setData({
-                  toView: 'm' + newMsgId
+              // FIXED: msgId不同时再渲染
+              if (res.data[res.data.length - 1].msgId !== lastMsgId){
+                let messages = objDeepCopy(res.data)
+                messages.map(item => {
+                  if (item.type === 'time') {
+                    item.content = computeTime(item.content)
+                  }
                 })
-                lastMsgId = newMsgId
+
+                that.setData({
+                  messages: messages
+                })
+
+                let newMsgId = messages[messages.length - 1].msgId
+                if (lastMsgId !== newMsgId) {
+                  // 消息发送后滚动到底部，在上一setData后
+                  that.setData({
+                    toView: 'm' + newMsgId
+                  })
+                  lastMsgId = newMsgId
+                }
               }
+
             },
           })
 
-          if (!that.data.showShield && messages[messages.length - 1].user_id === that.data.friendInfo.user_id){
-              wx.getStorage({
-                key: 'chatIdWith' + that.data.friendInfo.user_id,
-                success: function (res) {
-                  that.setData({
-                    showShield: true,
-                    chatId: res.data.chat_id
-                  })
-                },
-              })
+          // 第一次对方发来消息
+          if (!that.data.showShield && (messages[messages.length - 1].user_id == that.data.friendInfo.user_id)) {
+            wx.getStorage({
+              key: 'chatIdWith' + that.data.friendInfo.user_id,
+              success: function (res) {
+                that.setData({
+                  showShield: true,
+                  chatId: res.data.chat_id
+                })
+              },
+            })
           }
 
         }, 2000)
       }
-    }, 1000)
+    }, 1500)
   },
 
   /**

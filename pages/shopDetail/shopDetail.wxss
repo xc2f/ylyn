@@ -447,6 +447,10 @@
   flex: 10;
 }
 
+.topInfo .closeTopInfo {
+  align-self: flex-start
+}
+
 .topInfo image {
   flex: 1;
   width: 15px;

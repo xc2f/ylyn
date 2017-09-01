@@ -244,3 +244,7 @@
   width: 200px;
   height: 200px;
 }
+
+.shopList .item.storeClose {
+  filter: grayscale(1);
+}

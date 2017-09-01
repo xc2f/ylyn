@@ -1,9 +1,9 @@
 <view class="container" wx:if="{{dataOk}}">
   <view class="topInfo" wx:if="{{showTopInfo}}">
     <view class='textBox'>
-      <text>{{topInfoTip}}</text>
+      <text>{{topInfoTip}} </text>
     </view>
-    <view bindtap='closeTopInfo'>
+    <view bindtap='closeTopInfo' class="closeTopInfo">
       <image src="/images/close2.png"></image>
     </view>
   </view>

@@ -19,7 +19,7 @@
     <view class="shopList" wx:if="{{!shopListEmpty}}">
       <block wx:for="{{shopList}}" wx:key="store_id">
         <navigator url="/pages/shopDetail/shopDetail?store_id={{item.store_id}}">
-          <view class="item">
+          <view class='{{item.store_status==1 ? "item" : "item storeClose"}}'>
             <view wx:if="{{item.is_activity}}" class="inSales">
               <text class="inSaleText">活动</text>
             </view>
@@ -27,7 +27,7 @@
             <view class="right">
               <view class="wrap">
                 <view class="shopName">
-                  <text class="noWrap">{{item.store_name}}</text>
+                  <text class="noWrap">{{item.store_status==1 ? "" : "[关店]"}}{{item.store_name}}</text>
                 </view>
                 <view class="wrapBottom">
                   <view class="persons">

@@ -125,6 +125,9 @@ Page({
       app.getLocation(res => {
         wx.hideLoading()
         if (res) {
+          wx.showLoading({
+            title: '获取数据中',
+          })
           that.toFetch()
           that.setData({
             // TODO
@@ -144,9 +147,6 @@ Page({
   toFetch(page) {
     let that = this
     let coordinate = app.globalData.coordinate
-    wx.showLoading({
-      title: '获取数据中',
-    })
     wx.request({
       url: app.requestHost + 'Store/store_list/',
       method: 'POST',

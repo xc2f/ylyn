@@ -31,11 +31,8 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-
-    that.renderList()
-
+    // that.renderList()
     that.computeFileSize()
-
   },
 
   checkShield() {
@@ -48,22 +45,21 @@ Page({
       },
       success: function (res) {
         // console.log(res)
-        if (res.data.result.length !== 0) {
-          that.setData({
-            showShield: true
-          })
-        } else {
-          that.setData({
-            showShield: false
-          })
+        if(res.data.code === 201){
+          if (res.data.result.length !== 0) {
+            that.setData({
+              showShield: true
+            })
+          } else {
+            that.setData({
+              showShield: false
+            })
+          }
         }
       }
     })
   },
 
-  closesocket() {
-    wx.closeSocket()
-  },
   computeFileSize() {
     let that = this
     // 获取本地缓存和文件大小
@@ -126,7 +122,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id == that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'img') {
             recordList.push({
@@ -136,7 +132,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id == that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'face') {
             recordList.push({
@@ -146,7 +142,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id == that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'shield') {
             recordList.push({
@@ -156,7 +152,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id == that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           } else if (newestMsg.type === 'card') {
             recordList.push({
@@ -166,7 +162,7 @@ Page({
               // date: that.parseDate(newestMsg.time),
               date: fromNow(newestMsg.time),
               msgClean: records[i].msgClean,
-              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id === that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
+              isTouchMove: that.data.chatRecords ? (records[i].friendInfo.user_id == that.data.chatRecords[i].friendInfo.user_id ? that.data.chatRecords[i].isTouchMove : false) : false //默认全隐藏删除
             })
           }
         }
@@ -286,10 +282,6 @@ Page({
   // onShareAppMessage: function () {
 
   // },
-
-  clearStorage() {
-    wx.clearStorage()
-  },
 
   //手指触摸动作开始 记录起点X坐标
   touchstart: function (e) {

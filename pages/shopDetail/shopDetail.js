@@ -19,14 +19,14 @@ Page({
     // checkShopValue: null
     shareAnimation: null,
     windowWidth: 375,
-    
+
     dataOk: false,
     fetchDataFail: false,
 
     showFoodsAnimation: null,
     rotateArrowAnimation: null,
 
-    showTopInfo: true,
+    showTopInfo: false,
     topInfoTip: ''
   },
 
@@ -46,50 +46,54 @@ Page({
 
     that.getCurrentLocation(options)
 
-    // TODO
-    wx.request({
-      url: app.requestHost + 'Store/store_info_tip/',
-      method: 'POST',
-      data: {
-        store_id: options.store_id,
-      },
-      success: function(res){
-        if(res.data.code === 201){
-          let result = res.data.result
-          that.setData({
-            topInfoTip: result.tip
-          })
-        } else {
+    if (app.globalData.showTopInfo) {
+      app.globalData.showTopInfo = false
+      wx.request({
+        url: app.requestHost + 'Store/store_info_tip/',
+        method: 'POST',
+        data: {
+          store_id: options.store_id,
+        },
+        success: function (res) {
+          if (res.data.code === 201) {
+            let result = res.data.result
+            that.setData({
+              showTopInfo: true,
+              topInfoTip: result.tip
+            })
+          } else {
+            that.setData({
+              showTopInfo: false
+            })
+          }
+        },
+        fail: function () {
           that.setData({
             showTopInfo: false
           })
         }
-      },
-      fail: function(){
-        that.setData({
-          showTopInfo: false
-        })
-      }
-    })
+      })
+    }
+
   },
 
-  getCurrentLocation(options){
+  getCurrentLocation(options) {
     let that = this;
     // 先获取数据， 如果未定位（分享入口进），定位后再获取数据
     that.toFetch()
     let coordinate = app.globalData.coordinate
-    if (coordinate){
+    if (coordinate) {
 
     } else {
       app.getLocation(res => {
-        if(res) {
+        if (res) {
           that.toFetch()
         }
       })
     }
   },
 
-  toFetch(){
+  toFetch() {
     let that = this
     let coordinate = app.globalData.coordinate
     wx.showLoading({
@@ -103,9 +107,9 @@ Page({
         longitude: coordinate ? coordinate.longitude : '',
         latitude: coordinate ? coordinate.latitude : ''
       },
-      success: function(res){
+      success: function (res) {
         wx.hideLoading()
-        if(res.data.code === 201){
+        if (res.data.code === 201) {
           let result = res.data.result
           console.log(result)
           // 设置导航条
@@ -122,8 +126,8 @@ Page({
             })
           }
 
-          if (result.activity){
-            if (result.activity.is_open != 0){
+          if (result.activity) {
+            if (result.activity.is_open != 0) {
               // open   
               result.activity.activity_content = result.activity.activity_content.replace(/\n/g, '<br>')
               that.setData({
@@ -154,38 +158,40 @@ Page({
             fetchDataFail: false
           })
 
-          if (result.food){
+
+          if (result.food) {
             let foodLength = result.food.length
             // 70 == 图片上下2*5个padding + 文字50的height + item 10 的margin-bottom
             // 在图片box-shadow处有未知的3~5个高度，ios和开发工具尤甚
-            if (app.globalData.deviceInfo.platform === 'android'){
+            if (app.globalData.deviceInfo.platform === 'android') {
               that.toogleFoodsHeight = Math.ceil(foodLength / 2) * (200 * that.data.foodWidth / 240 + 72)
             } else {
               that.toogleFoodsHeight = Math.ceil(foodLength / 2) * (200 * that.data.foodWidth / 240 + 75)
             }
           }
 
-        } else if (res.data.code === 101){
+        } else if (res.data.code === 101) {
+          wx.hideLoading()
           wx.showModal({
             title: '提示',
             content: res.data.message,
             showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                wx.redirectTo({
-                  url: '/pages/nearlist/nearlist',
-                })
-              }
+            complete: function (res) {
+              wx.navigateBack()
+              // wx.redirectTo({
+              //   url: '/pages/nearlist/nearlist',
+              // })
             }
           })
         } else {
+          wx.hideLoading()
           that.setData({
             dataOk: false,
             fetchDataFail: true
           })
         }
       },
-      fail: function(){
+      fail: function () {
         wx.hideLoading()
         that.setData({
           dataOk: false,
@@ -195,41 +201,41 @@ Page({
     })
   },
 
-  occurFail(){
+  occurFail() {
     this.setData({
       fetchDataFail: false,
     })
-    this.getCurrentLocation({storeId: this.data.storeId})
+    this.getCurrentLocation({ storeId: this.data.storeId })
   },
 
 
-  mapNavigation(){
+  mapNavigation() {
     let shop = this.data.shop
     // console.log(shop)
     // this.data.checkShopValue = setInterval(() => {
-      wx.openLocation({
-        latitude: parseFloat(shop.store_latitude),
-        longitude: parseFloat(shop.store_longitude),
-        scale: 20,
-        name: shop.store_name,
-        address: shop.address,
-        success: function(res){
-          // console.log(res)
-        },
-        fail: function(err) {
-          // console.log(err)
-        }
-      })
+    wx.openLocation({
+      latitude: parseFloat(shop.store_latitude),
+      longitude: parseFloat(shop.store_longitude),
+      scale: 20,
+      name: shop.store_name,
+      address: shop.address,
+      success: function (res) {
+        // console.log(res)
+      },
+      fail: function (err) {
+        // console.log(err)
+      }
+    })
     // }, 200)
   },
 
-  callPhone(){
+  callPhone() {
     wx.makePhoneCall({
       phoneNumber: this.data.shop.phone,
     })
   },
 
-  quit(){
+  quit() {
     let storeInfo = app.globalData.storeInfo
     // console.log(storeInfo)
     wx.request({
@@ -239,9 +245,9 @@ Page({
         store_id: storeInfo.storeId,
         table_id: storeInfo.tableId
       },
-      success: function(res){
+      success: function (res) {
         // console.log(res)
-        if(res.data.code === 201 || res.data.code === 102){
+        if (res.data.code === 201 || res.data.code === 102) {
           app.globalData.storeInfo = null
           wx.reLaunch({
             url: '/pages/nearlist/nearlist',
@@ -254,45 +260,45 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    
+
   },
 
-  closeTopInfo(){
+  closeTopInfo() {
     this.setData({
       showTopInfo: false
     })
   },
 
-  closeShare(e){
-    if(e.target.id !== 'share'){
+  closeShare(e) {
+    if (e.target.id !== 'share') {
       this.setData({
         showShare: false
       })
@@ -308,12 +314,12 @@ Page({
     return animation;
   },
 
-  toggleFoods(e){
+  toggleFoods(e) {
     let that = this
     // if (foodLength % 2 === 1){
     //   foodLength += 1
     // }
-    if(that.showFoods){
+    if (that.showFoods) {
       that.showFoods = false
       // showFoodsAnimation
       that.setData({
@@ -333,16 +339,16 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    if (app.globalData.noShowShare){
-      app.globalData.noShowShare = false
+    if (app.globalData.showShare) {
+      app.globalData.showShare = false
+      this.setData({
+        showShare: true,
+      })
+      setTimeout(() => {
         this.setData({
-          showShare: true,
+          shareAnimation: this.basicAnimation(500, 0).scale(1).step().export()
         })
-        setTimeout(() => {
-          this.setData({
-            shareAnimation: this.basicAnimation(500, 0).scale(1).step().export()
-          })
-        }, 50)
+      }, 50)
     }
   },
 
@@ -353,7 +359,7 @@ Page({
     let that = this
     return {
       title: this.data.shop.store_name,
-      path: '/pages/shopDetail/shopDetail?store_id='+this.data.shop.store_id,
+      path: '/pages/shopDetail/shopDetail?store_id=' + this.data.shop.store_id,
       success: function (res) {
         // 转发成功
         that.setData({

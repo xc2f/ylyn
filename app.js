@@ -22,7 +22,8 @@ App({
     // 是否登录
     login: false,
     // 是否要显示分享
-    noShowShare: true,
+    showShare: true,
+    showTopInfo: true,
     // 定时发送socket ping包
     sendSocketMsgInterval: null
   },

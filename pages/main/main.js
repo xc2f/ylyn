@@ -237,10 +237,12 @@ Page({
         // TODO
         if (res.data.code === 201) {
           let result = res.data.result
+
           // 设置导航条
           wx.setNavigationBarTitle({
             title: result.store_name
           })
+
           app.globalData.storeInfo = {
             storeId: that.data.qrcodeInfo.store_id,
             storeName: result.store_name,
@@ -251,15 +253,15 @@ Page({
             fetchDataFail: false,
           })
 
-          if (page === 1){
+          if (page === 1) {
             that.setData({
               store: result,
               userListLength: result.table_list.length
             })
           } else {
             // 翻页
-            if (result.table_list.length === 0){
-            // 翻页没有数据时tablelist为空
+            if (result.table_list.length === 0) {
+              // 翻页没有数据时tablelist为空
               that.currentPage = page - 1
             } else {
 
@@ -279,25 +281,21 @@ Page({
             title: '提示',
             content: res.data.message,
             showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                wx.redirectTo({
-                  url: '/pages/nearlist/nearlist',
-                })
-              }
+            complete: function (res) {
+              wx.redirectTo({
+                url: '/pages/nearlist/nearlist',
+              })
             }
           })
-        } else if (res.data.code === 103){
+        } else if (res.data.code === 103) {
           wx.showModal({
             title: '提示',
             content: res.data.message,
             showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                wx.redirectTo({
-                  url: '/pages/nearlist/nearlist',
-                })
-              }
+            complete: function (res) {
+              wx.redirectTo({
+                url: '/pages/nearlist/nearlist',
+              })
             }
           })
         } else {
@@ -383,7 +381,7 @@ Page({
   },
 
 
- // 性别筛选总是返回第一页数据
+  // 性别筛选总是返回第一页数据
   showGirl() {
     this.currentGender = 2
     this.toFetch(2)
@@ -397,6 +395,10 @@ Page({
   showAll() {
     this.currentGender = 0
     this.toFetch(0)
+  },
+
+
+  onReady: function () {
   },
 
 
@@ -419,7 +421,7 @@ Page({
     // 检测位置
     that.data.checkLocationInterval = setInterval(function () {
       that.checkLocation()
-    }, 1000 * 60 * 2)
+    }, 1000 * 60 * .2)
   },
 
   /**
@@ -553,12 +555,10 @@ Page({
                 title: '提示',
                 content: res.data.message,
                 showCancel: false,
-                success: function (res) {
-                  if (res.confirm) {
-                    wx.redirectTo({
-                      url: '/pages/nearlist/nearlist',
-                    })
-                  }
+                complete: function (res) {
+                  wx.redirectTo({
+                    url: '/pages/nearlist/nearlist',
+                  })
                 }
               })
             } else if (res.data.code === 103) {
@@ -566,12 +566,10 @@ Page({
                 title: '提示',
                 content: res.data.message,
                 showCancel: false,
-                success: function (res) {
-                  if (res.confirm) {
-                    wx.redirectTo({
-                      url: '/pages/nearlist/nearlist',
-                    })
-                  }
+                complete: function () {
+                  wx.redirectTo({
+                    url: '/pages/nearlist/nearlist',
+                  })
                 }
               })
             } else {
@@ -589,12 +587,10 @@ Page({
             title: '提示',
             content: '无法获取到您的位置',
             showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                wx.redirectTo({
-                  url: '/pages/nearlist/nearlist',
-                })
-              }
+            complete: function (res) {
+              wx.redirectTo({
+                url: '/pages/nearlist/nearlist',
+              })
             }
           })
         }

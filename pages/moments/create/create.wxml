@@ -1,0 +1,24 @@
+<view class="container moments">
+  <view class='uploading' wx:if="{{loading}}">
+    <import src="/pages/common/loading/loading" />
+    <template is="loading" />
+  </view>
+  <view class='item'>
+    <view class='top'>
+      <image src='/images/face.png'></image>
+      <view class='info'>
+        <text class='author'>小明</text>
+        <text class='time'>{{time}}</text>
+      </view>
+    </view>
+    <view class='content'>
+      <textarea placeholder='20字以内' bindinput="contentInput" class='{{overText ? "overText" : ""}}'></textarea>
+      <view class='addPic center' wx:if="{{src===''}}" bindtap='addPic'>+</view>
+      <view class='imageContent' wx:if="{{src!==''}}">
+        <image src="{{src}}" mode='aspectFill' bindtap='prevImg'></image>
+        <view class='changeImg' bindtap='addPic'>更换图片</view>
+      </view>
+    </view>
+  </view>
+  <button class='post center baseColor' bindtap='submit'>{{submitStatus}}</button>
+</view>

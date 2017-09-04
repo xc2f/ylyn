@@ -1,5 +1,6 @@
 .container {
   position: relative;
+  height: 100%;
 }
 
 .banner {
@@ -107,14 +108,7 @@
   /* backface-visibility: hidden; */
 }
 
-.userBanner {
-  transform-style: preserve-3d;
-  transform-origin: 0;
-  transform: rotateY(180deg);
-  backface-visibility: hidden;
-}
-
-.shopBanner, .userBanner {
+.shopBanner {
   background: transparent;
   position: absolute;
   top: 0;
@@ -129,7 +123,7 @@
   overflow: hidden;
 }
 
-.shopBanner .shopAvatar, .userBanner .shopAvatar {
+.shopBanner .shopAvatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -137,38 +131,33 @@
   /*top: -10px;*//*z-index: 99;*/
 }
 
-.shopBanner .shopAvatar image, .userBanner .shopAvatar image {
+.shopBanner .shopAvatar image {
   width: 100%;
   height: 100%;
   border-radius: 50%;
 }
 
-.shopBanner .shopName, .userBanner .shopName {
+.shopBanner .shopName {
   /*color: #fff;*/
   margin-top: 10px;
 }
 
-.shopBanner .flipConner, .userBanner .flipConner {
+.toMe {
   position: absolute;
-  bottom: -1px;
+  top: 130px;
   width: 50px;
-  height: 50px;
-  /*z-index: 999;*//*display: none;*/
-}
-
-.shopBanner .flipConnerImg, .userBanner .flipConnerImg {
-  width: 100%;
-  height: 100%;
-}
-
-.shopBanner .flipConnerText, .userBanner .flipConnerText {
-  position: absolute;
+  height: 20px;
+  line-height: 20px;
   right: 0;
-  bottom: 0;
-  font-size: 12px;
-  font-weight: bold;
-  transform: rotate(-45deg);
-  padding-bottom: 7px;
+  z-index: 999;
+  text-align: center;
+  background: RGB(255,193,7);
+  border-radius: 0 0 0 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .3)
+}
+.toMe text {
+  font-size: 18px;
+  color: #fff;
 }
 
 .body {
@@ -413,4 +402,20 @@ button.retryToGetLocation {
 .login .loginStatus {
   text-align: center;
   margin-top: 17px;
+}
+
+.toMoments {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: RGB(227,26,28);
+  box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  z-index: 9999;
+}
+.toMoments text {
+  font-size: 40px;
+  color: #fff;
 }

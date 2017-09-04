@@ -1,15 +1,25 @@
 <!--pages/main/main.wxml-->
 <view class="container" style="" wx:if="{{store !== null}}">
 
+  <view class="toMoments center">
+    <navigator url='/pages/moments/index/index'>
+      <text class='fa fa-bullseye'></text>
+    </navigator>
+  </view>
+
   <view class="banner" style="width: {{ deviceInfo.windowWidth }}px">
+
     <view class="wrap">
+
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
         <image class="bannerImg" src="{{store.store_bgimg === '' ? '/images/banner.jpg' : store.store_bgimg}}"></image>
+
         <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}" bindtap='toDetail'>
           <view class="shopAvatar">
             <image src="{{store.store_logo==='' ? '/images/defaultLogo.png' : store.store_logo}}"></image>
           </view>
         </navigator>
+
         <view class="shopName">
           <view class="line"></view>
           <view class="dot"></view>
@@ -17,25 +27,29 @@
           <view class="dot"></view>
           <view class="line"></view>
         </view>
+
         <view class="bottomText">本店正有{{store.total_number}}位小伙伴使用</view>
-        <view class="flipConner" wx:if="{{login}}" bindtap="switchToMe" style="left: {{ deviceInfo.windowWidth-49 }}px">
-          <image class="flipConnerImg" src="/images/flipConner.png"></image>
-          <text class="flipConnerText">我的</text>
-        </view>
       </view>
+
       <view class='guideShadow' wx:if="{{showGuide}}">
         <view style="visibility: hidden;">
           <text>placeholder</text>
         </view>
         <view class='guideImageWrap'>
-           <image src='/images/guideToDetail.png'></image> 
+          <image src='/images/guideToDetail.png'></image>
         </view>
       </view>
-    </view>
 
+    </view>
   </view>
 
-  <scroll-view  bindscrolltolower="scrollToEnd" scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;">
+  <view class="toMe" wx:if="{{login}}" bindtap="switchToMe" >
+    <!-- <image class="flipConnerImg" src="/images/flipConner.png"></image>
+    <text class="flipConnerText">我的</text> -->
+    <text class='fa fa-user'></text>
+  </view>
+
+  <scroll-view bindscrolltolower="scrollToEnd" scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;">
     <view class="allInOne">
       <view class="up">
         <view class="line"></view>

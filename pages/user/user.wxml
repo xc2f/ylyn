@@ -19,76 +19,98 @@
         <text wx:if="{{userInfo.age}}">{{userInfo.age}}岁</text>
       </view>
       <view wx:if="{{userInfo.introduction}}" class="bottomText noWrap">{{userInfo.introduction}}</view>
-      <view class="flipConner"  bindtap="switchToShop" wx:if="{{userId === userInfo.user_id}}">
+      <!-- <view class="flipConner" bindtap="switchToShop" wx:if="{{userId === userInfo.user_id}}">
         <image class="flipConnerImg" src="/images/flipConner.png"></image>
-        <text class="flipConnerText">首页</text>
-      </view>
+         <text class="flipConnerText">首页</text> 
+      </view> -->
     </view>
+    <!-- <view class="toHome" bindtap="switchToShop" wx:if="{{userId == userInfo.user_id}}">
+       <text class='fa fa-home'></text> 
+     </view>  -->
   </view>
 
   <!-- <view class="galleryHD">
     <image src="/images/xc.png"></image>
     <text>个人展示</text>
   </view> -->
-<view class="gallery">
-  <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
-    <image src="/images/tall.png"></image>
-    <text>{{userInfo.height}}</text>
-  </view>
-  <view class="wrap s0" wx:if="{{size === 0}}">
-    <text>空空如也</text>
-  </view>
-  <view class="wrap s1" wx:if="{{size === 1}}">
-    <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-  </view>
-  <view class="wrap s2" wx:if="{{size === 2}}">
-    <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-    <image src="{{gallery[1].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-  </view>
-  <view class="wrap" wx:if="{{size > 2}}">
-    <!--<block wx:for="{{gallery}}">
+  <view class="gallery">
+    <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
+      <image src="/images/tall.png"></image>
+      <text>{{userInfo.height}}</text>
+    </view>
+    <view class="wrap s0" wx:if="{{size === 0}}">
+      <text>空空如也</text>
+    </view>
+    <view class="wrap s1" wx:if="{{size === 1}}">
+      <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
+    </view>
+    <view class="wrap s2" wx:if="{{size === 2}}">
+      <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
+      <image src="{{gallery[1].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
+    </view>
+    <view class="wrap" wx:if="{{size > 2}}">
+      <!--<block wx:for="{{gallery}}">
       <view class="item item{{index}}" animation="{{'animation' + index}}" bindtap="{{'tap' + index}}">
         <image src="{{item}}"></image>
       </view>
     </block>-->
-    <view class="g0" wx:if="{{size > 0}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[0].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g1" wx:if="{{size > 1}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[1].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g2" wx:if="{{size > 2}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[2].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g3" wx:if="{{size > 3}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[3].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g4" wx:if="{{size > 4}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[4].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g5" wx:if="{{size > 5}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[5].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g6" wx:if="{{size > 6}}" style="transform: translateX({{tx6}}%) translateZ({{currentPic===6 ? '100px' : currentPic===5 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[6].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g7" wx:if="{{size > 7}}" style="transform: translateX({{tx7}}%) translateZ({{currentPic===7 ? '100px' : currentPic===6 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[7].album}}" mode="aspectFill"></image>
-    </view>
-    <view class="g8" wx:if="{{size > 8}}" style="transform: translateX({{tx8}}%) translateZ({{currentPic===8 ? '100px' : currentPic===7 ? '1px': '0px'}}); height: {{imgHeight}}px">
-      <image src="{{gallery[8].album}}" mode="aspectFill"></image>
-    </view>
-    
-    <view bindtap="prev" id="prev" wx:if="{{size>2 && currentPic !== 0}}"></view>
-    <view bindtap="next" id="next" wx:if="{{size>2 && currentPic !== size-1}}"></view>
-  </view>
-</view>
+      <view class="g0" wx:if="{{size > 0}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[0].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g1" wx:if="{{size > 1}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[1].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g2" wx:if="{{size > 2}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[2].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g3" wx:if="{{size > 3}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[3].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g4" wx:if="{{size > 4}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[4].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g5" wx:if="{{size > 5}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[5].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g6" wx:if="{{size > 6}}" style="transform: translateX({{tx6}}%) translateZ({{currentPic===6 ? '100px' : currentPic===5 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[6].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g7" wx:if="{{size > 7}}" style="transform: translateX({{tx7}}%) translateZ({{currentPic===7 ? '100px' : currentPic===6 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[7].album}}" mode="aspectFill"></image>
+      </view>
+      <view class="g8" wx:if="{{size > 8}}" style="transform: translateX({{tx8}}%) translateZ({{currentPic===8 ? '100px' : currentPic===7 ? '1px': '0px'}}); height: {{imgHeight}}px">
+        <image src="{{gallery[8].album}}" mode="aspectFill"></image>
+      </view>
 
-<view class="bottom" wx:if="{{currentUserId && userId}}">
-  <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}">
-    <text>{{userId == currentUserId ? '设置' : '开始聊天'}}</text>
+      <view bindtap="prev" id="prev" wx:if="{{size>2 && currentPic !== 0}}"></view>
+      <view bindtap="next" id="next" wx:if="{{size>2 && currentPic !== size-1}}"></view>
+    </view>
   </view>
-</view>
+
+  <view class="setingOrChat" wx:if="{{currentUserId && userId}}">
+    <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}">
+      <text>{{userId == currentUserId ? '设置' : '开始聊天'}}</text>
+    </view>
+  </view>
+
+
+  <!-- moments -->
+  <view class='userMoments'>
+    <view class='hd'>
+      <view class='active'>
+      <text>我的动态</text></view>
+      <view>
+      <text>我的参与</text></view>
+    </view>
+    <view class='bd'>
+      
+    </view>
+  </view>
+
+
+
+
+
 
 </view>
 

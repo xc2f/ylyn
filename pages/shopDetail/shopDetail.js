@@ -54,7 +54,7 @@ Page({
           store_id: options.store_id,
         },
         success: function (res) {
-          console.log(res)
+          // console.log(res)
           if (res.data.code === 201) {
             let result = res.data.result
             if(result.tip.trim().length !== 0){

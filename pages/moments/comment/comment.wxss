@@ -1,0 +1,7 @@
+.container {
+  position: relative;
+}
+
+.comments {
+  height: 1000px;
+}

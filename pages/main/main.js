@@ -66,8 +66,8 @@ Page({
     // 扫码
     that.setData({
       qrcodeInfo: {
-        store_id: options.store_id,
-        table_id: options.table_id
+        store_id: options.store_id || '14b00ff3-f9f7-7337-a713-599d8f8d9c62',
+        table_id: options.table_id || 2
       }
     })
 
@@ -296,10 +296,10 @@ Page({
       data: {
         // longitude: 108.8871237 || coordinate.longitude,
         // latitude: 34.1863376 || coordinate.latitude,
-        longitude: coordinate.longitude,
-        latitude: coordinate.latitude,
-        // latitude: 34.2048991715,
-        // longitude: 108.9146214724,
+        // longitude: coordinate.longitude,
+        // latitude: coordinate.latitude,
+        latitude: 34.2048991715,
+        longitude: 108.9146214724,
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,

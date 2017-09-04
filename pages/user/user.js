@@ -55,9 +55,10 @@ Page({
       method: 'POST',
       data: {
         tuser_id: options.user_id,
-        token: app.TOKEN
+        token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6'
       },
       success: function(res){
+        // console.log(app.TOKEN)
         if(res.data.code === 201){
           // 设置导航条
           wx.setNavigationBarTitle({

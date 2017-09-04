@@ -1,0 +1,21 @@
+<!--pages/moments/comment/comment.wxml-->
+<view class='container moments'>
+  <scroll-view scroll-y scroll-into-view="comments" style="height: 100vh;">
+    <view class='item'>
+      <view class='top'>
+        <image src='/images/face.png'></image>
+        <view class='info'>
+          <text class='author'>小明</text>
+          <text class='time'>12:21</text>
+        </view>
+      </view>
+      <view class='content'>
+        <text>你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊</text>
+        <image src="/images/banner.jpg" mode='aspectFill'></image>
+      </view>
+       <view class='comments' id="comments">
+        <text>评论列表</text>
+      </view> 
+    </view>
+  </scroll-view>
+</view>

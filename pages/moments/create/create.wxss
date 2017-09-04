@@ -1,0 +1,58 @@
+.container {
+  position: relative;
+  height: 100vh;
+}
+.container .uploading {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.item .addPic {
+  width: 100px;
+  height: 100px;
+  border: 1px dashed #eee;
+  font-size: 70px;
+  color: #bbb;
+}
+
+.item textarea {
+  height: 50px;
+  width: 100%;
+}
+.post {
+  height: 50px;
+  color: #fff;
+  width: 70%;
+  left: 15%;
+  border-radius: 2px;
+  position: absolute;
+  bottom: 50px;
+}
+.content textarea {
+  padding: 3px;
+  border-radius: 2px;
+}
+.overText {
+  box-shadow: 1px 0 7px RGB(251,114,114) inset;
+}
+.content .imageContent {
+  margin: 5px 0;
+  position: relative;
+  overflow: hidden;
+}
+.content .imageContent .changeImg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 30px;
+  color: #fff;
+  text-align: center;
+  width: 80%;
+  background: rgba(0, 0, 0, .3);
+  line-height: 30px;
+}

@@ -1,5 +1,5 @@
 // pages/changePic/changePic.js
-import { upload, deleteFile, getFileInfo } from '../../untils/update.js'
+import { upload } from '../../untils/update.js'
 var app = getApp()
 
 Page({

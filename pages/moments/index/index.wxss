@@ -1,0 +1,56 @@
+/* pages/moments/index/index.wxss */
+
+.container {
+  position: relative;
+}
+
+.createNew {
+  width: 50px;
+  height: 50px;
+  background: RGB(255, 193, 7);
+  border-radius: 50%;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+}
+
+.createNew text {
+  color: #fff;
+  font-size: 30px;
+}
+
+.container .list {
+  background: #eee;
+}
+
+.item {
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.item .bottom {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border-top: 1px solid #eee;
+}
+
+.item .bottom > button {
+  flex: 1;
+  height: 35px;
+  border-right: 1px solid #eee;
+  background: #fff;
+}
+.item .bottom > button:last-child {
+  border: none;
+}
+
+.item .bottom .fa {
+  font-size: 20px;
+  color: #777;
+  transform: scale(1);
+}
+
+.item .bottom .button-hover .fa {
+  transform: scale(1.2);
+}

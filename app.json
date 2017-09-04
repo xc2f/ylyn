@@ -12,7 +12,11 @@
 
     "pages/common/eachTableList/eachTableList",
     "pages/common/face/face",
-    "pages/common/tableList/tableList"
+    "pages/common/tableList/tableList",
+
+    "pages/moments/index/index",
+    "pages/moments/comment/comment",
+    "pages/moments/create/create"
   ],
   "window": {
     "navigationBarBackgroundColor": "#fff",

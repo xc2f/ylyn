@@ -456,7 +456,8 @@ App({
                 success: function (res) {
                   that.globalData.coordinate = {
                     latitude: res.latitude,
-                    longitude: res.longitude
+                    longitude: res.longitude,
+                    time: new Date().getTime()
                   }
                   callback(true)
                 },

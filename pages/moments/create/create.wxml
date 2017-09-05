@@ -5,9 +5,9 @@
   </view>
   <view class='item'>
     <view class='top'>
-      <image src='/images/face.png'></image>
+      <image src='{{userInfo.avatar}}'></image>
       <view class='info'>
-        <text class='author'>小明</text>
+        <text class='author'>{{userInfo.nickname}}</text>
         <text class='time'>{{time}}</text>
       </view>
     </view>

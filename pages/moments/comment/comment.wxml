@@ -1,21 +1,65 @@
 <!--pages/moments/comment/comment.wxml-->
 <view class='container moments'>
-  <scroll-view scroll-y scroll-into-view="comments" style="height: 100vh;">
+  <scroll-view scroll-y scroll-into-view="comments" class='scroll' bindscrolltolower="fetchMoreComment">
     <view class='item'>
       <view class='top'>
-        <image src='/images/face.png'></image>
+        <image src='{{item.portrait}}'></image>
         <view class='info'>
-          <text class='author'>小明</text>
-          <text class='time'>12:21</text>
+          <text class='author'>{{item.name}}</text>
+          <text class='time'>{{item.parseTime}}</text>
         </view>
       </view>
       <view class='content'>
-        <text>你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊</text>
-        <image src="/images/banner.jpg" mode='aspectFill'></image>
+        <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="moment">
+          <text>{{item.content}}</text>
+          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg'></image>
+        </picker>
       </view>
-       <view class='comments' id="comments">
-        <text>评论列表</text>
-      </view> 
+      <view class='bottom'>
+        <button class='share center' open-type='share' data-idx="{{index}}">
+            <text class='fa fa-share-alt'></text>
+          </button>
+        <button class='comment center' bindtap='toCommentPage' data-item="{{item}}">
+            <text class='fa fa-reply'></text>
+            <!-- <text class='counts'> -->
+              {{commentsLength ? commentsLength : ''}}
+            <!-- </text> -->
+          </button>
+        <button class='like center'>
+            <text class='fa fa-thumbs-up'></text>
+            <!-- <text class='counts'> -->
+              {{item.thumbs_num ? item.thumbs_num : ''}}
+            <!-- </text> -->
+          </button>
+      </view>
+      <view class='comments' id="comments">
+        <view class='title'>评论{{commentsLength ? ('(' + commentsLength+'条)') : ''}}</view>
+        <block wx:if="comments" wx:for="{{comments}}" wx:key="evaluate_id">
+          <view class='cRow'>
+            <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="comment">
+              <view class='left'>
+                <image src="{{item.f_portrait}}"></image>
+              </view>
+              <view class='right'>
+                <view class='cInfo'>
+                  <text class='author'>{{item.f_nickname}}</text>
+                  <text class='time'>{{item.parseTime}}</text>
+                </view>
+                <view class='cContent'>
+                  <view>{{item.content}}</view>
+                </view>
+              </view>
+            </picker>
+          </view>
+        </block>
+        <!-- <view wx:else>
+          {{commentsStatus}}
+        </view> -->
+      </view>
     </view>
   </scroll-view>
+  <view class='post'>
+    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}"></textarea>
+    <button class='baseColor center' bindtap='toComment'>发送</button>
+  </view>
 </view>

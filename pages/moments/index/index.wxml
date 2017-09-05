@@ -4,32 +4,45 @@
       <text class='fa fa-plus'></text>
     </view>
   </navigator>
-  <view class='list moments'>
-    <view class='item'>
+
+  <view class='list moments' wx:if="{{userMoments}}">
+    <view class='item' wx:for="{{userMoments}}" wx:key="notice_id">
       <view class='top'>
-        <image src='/images/face.png'></image>
+        <image src='{{item.portrait}}'></image>
         <view class='info'>
-          <text class='author'>小明</text>
-          <text class='time'>12:21</text>
+          <text class='author'>{{item.name}}</text>
+          <text class='time'>{{item.parseTime}}</text>
         </view>
       </view>
       <view class='content'>
-        <picker range="{{['回复', '举报']}}" bindchange='pickChange'>
-          <text>你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊</text>
-          <image src="/images/banner.jpg" mode='aspectFill' catchtap='prevImg'></image>
+        <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}">
+          <text>{{item.content}}</text>
+          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}'></image>
         </picker>
       </view>
       <view class='bottom'>
-        <button class='share center'>
+        <button class='share center' open-type='share' data-idx="{{index}}">
             <text class='fa fa-share-alt'></text>
           </button>
-        <button class='comment center' bindtap='toCommentPage'>
+        <button class='comment center' bindtap='toCommentPage' data-item="{{item}}">
             <text class='fa fa-reply'></text>
+             <!-- <text class='counts'>  -->
+              {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
+             <!-- </text>  -->
           </button>
         <button class='like center'>
             <text class='fa fa-thumbs-up'></text>
+            <!-- <text class='counts'> -->
+              {{item.thumbs_num !=0 ? item.thumbs_num : ''}}
+            <!-- </text> -->
           </button>
       </view>
     </view>
   </view>
+
+  <!-- 没有状态 -->
+  <view wx:else>
+    木有更多动态
+  </view>
+
 </view>

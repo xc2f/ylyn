@@ -1,6 +1,5 @@
 // pages/moments/create/create.js
 import { upload } from '../../../untils/update.js'
-import checkCnTextLength from '../../../untils/checkCnTextLength.js'
 let app = getApp()
 
 Page({
@@ -14,6 +13,7 @@ Page({
     loading: false,
     submitStatus: '发送',
     overText: false,
+    userInfo: null
   },
   content: '',
   refreshTimeInterval: null,
@@ -23,9 +23,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    wx.getStorage({
+      key: 'meInfo',
+      success: (res) => {
+        this.setData({
+          userInfo: res.data
+        })
+      },
+    })
+
     let now = new Date()
     let hours = now.getHours()
     let minutes = now.getMinutes()
+    minutes = minutes < 10 ? ('0' + minutes) : minutes
     this.setData({
       time: hours + ':' + minutes
     })
@@ -37,6 +47,7 @@ Page({
       let now = new Date()
       let hours = now.getHours()
       let minutes = now.getMinutes()
+      minutes = minutes < 10 ? ('0' + minutes) : minutes
       this.setData({
         time: hours + ':' + minutes
       })
@@ -99,7 +110,8 @@ Page({
       submitStatus: '发送中'
     })
     let imgSrc = that.data.src
-    if (imgSrc.indexOf('myqcloud')){
+    if (imgSrc.indexOf('myqcloud')>=0){
+      // console.log(imgSrc.indexOf('myqcloud'))
       that.postData(imgSrc)
     } else {
       let suffix = imgSrc.slice(imgSrc.lastIndexOf('.'))
@@ -120,7 +132,7 @@ Page({
   postData(src){
     let that = this
     wx.request({
-      url: app.requestHost + 'member/update_user_album/',
+      url: app.requestHost + 'Notice/report_user_notice/',
       method: 'POST',
       data: {
         token: app.TOKEN,
@@ -129,12 +141,13 @@ Page({
         image: src
       },
       success: function (res) {
-        // console.log(app.TOKEN, app.globalData.storeInfo.storeId, that.content, resUrl.data.access_url)
+        // console.log('app.TOKEN', app.TOKEN, 'app.globalData.storeInfo.storeId', app.globalData.storeInfo.storeId, 'that.content', that.content, 'resUrl.data.access_url', src)
         that.setData({
           loading: false,
           submitStatus: '发送'
         })
         if (res.data.code === 201) {
+          app.globalData.momentNeedToRefetch = true
           wx.navigateBack()
         } else {
           wx.showModal({

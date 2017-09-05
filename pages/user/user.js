@@ -44,6 +44,12 @@ Page({
       imgHeight: app.globalData.deviceInfo.screenHeight / 2 * 0.85
     })
 
+    this.fetchUserInfo(options.user_id)
+    this.fetchUserMoments(options.user_id)
+
+  },
+
+  fetchUserInfo(userId){
     let that = this
 
     wx.showLoading({
@@ -54,24 +60,24 @@ Page({
       url: app.requestHost + 'Store/get_tuser_info/',
       method: 'POST',
       data: {
-        tuser_id: options.user_id,
+        tuser_id: userId,
         token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6'
       },
-      success: function(res){
+      success: function (res) {
         // console.log(app.TOKEN)
-        if(res.data.code === 201){
+        if (res.data.code === 201) {
           // 设置导航条
           wx.setNavigationBarTitle({
             title: res.data.result.nickname
           })
-          if(app.sdk >= 150){
+          if (app.sdk >= 150) {
             that.setData({
               userInfo: res.data.result,
               gallery: res.data.result.album,
               size: res.data.result.album.length,
               dataOk: true,
               fetchDataFail: false,
-            }, ()=>{
+            }, () => {
               wx.hideLoading()
             })
           } else {
@@ -90,7 +96,7 @@ Page({
               showTall: true
             })
           }
-        } else if(res.data.code === 102){
+        } else if (res.data.code === 102) {
           wx.hideLoading()
           wx.showModal({
             title: '提示',
@@ -109,11 +115,30 @@ Page({
           })
         }
       },
-      fail: function(){
+      fail: function () {
         wx.hideLoading()
         that.setData({
           fetchDataFail: true
         })
+      }
+    })
+  },
+
+  fetchUserMoments(userId){
+    wx.request({
+      url: app.requestHost + 'Store/get_tuser_notice/',
+      method: 'POST',
+      data: {
+        tuser_id: userId,
+        token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6'
+      },
+      success: (res) => {
+        if(res.data.code === 201){
+          console.log(res)
+        }
+      },
+      fail: () => {
+        // error needn't to handle
       }
     })
     

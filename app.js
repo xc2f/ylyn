@@ -25,6 +25,7 @@ App({
     showShare: true,
     showDetailTopTip: true,
     showNearListTopTip: true,
+    momentNeedToRefetch: false,
   },
 
 

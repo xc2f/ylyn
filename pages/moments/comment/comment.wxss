@@ -2,6 +2,95 @@
   position: relative;
 }
 
+.item .bottom {
+  margin-bottom: 10px;
+}
+
+.scroll {
+  height: 100vh;
+}
+
 .comments {
-  height: 1000px;
+  /* height: 1000px; */
+  height: 100vh;
+}
+
+.comments > view:last-child {
+  margin-bottom: 40px;
+}
+
+.comments .title {
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  font-size: 20px;
+  line-height: 2;
+}
+.post {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+.post textarea {
+  padding: 2px;
+  margin: 5px 0 3px 5px;
+  width: 100%;
+  flex: 7;
+  border-bottom: 1px solid #eee;
+}
+.post textarea.overText {
+   border-bottom: 1px solid RGB(251,114,114); 
+  /* box-shadow: 1px 0 7px RGB(251,114,114) inset; */
+}
+.post button {
+  flex: 2;
+  padding: 0;
+  height: 28px;
+  border-radius: 2px;
+  font-size: 14px;
+  margin: 5px;
+  align-self: flex-start;
+}
+
+.comments .cRow {
+  clear: both;
+}
+
+.comments .cRow .left {
+  width: 50px;
+  height: 50px;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.comments .cRow .left image {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.comments .cRow .right {
+  border-bottom: 1px solid #eee;
+  margin-left: 50px;
+  padding-bottom: 10px;
+}
+.comments .cRow .right .cInfo {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.comments .cRow .cInfo .author {
+  font-size: 14px;
+}
+.comments .cRow .cInfo .time {
+  font-size: 12px;
+  color: #bbb;
+}
+.comments .cRow .cContent {
+  font-size: 13px;
 }

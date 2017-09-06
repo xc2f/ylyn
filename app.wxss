@@ -63,62 +63,83 @@ wx-button:after {
 }
 
 .sk-cube-grid .sk-cube {
-  background: RGB(255, 193, 7)!important;
+  background: RGB(255, 193, 7) !important;
   width: 33%;
   height: 33%;
   background-color: #333;
   float: left;
   -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
-          animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out; 
+  animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
 }
+
 .sk-cube-grid .sk-cube1 {
   -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s; }
+  animation-delay: 0.2s;
+}
+
 .sk-cube-grid .sk-cube2 {
   -webkit-animation-delay: 0.3s;
-          animation-delay: 0.3s; }
+  animation-delay: 0.3s;
+}
+
 .sk-cube-grid .sk-cube3 {
   -webkit-animation-delay: 0.4s;
-          animation-delay: 0.4s; }
+  animation-delay: 0.4s;
+}
+
 .sk-cube-grid .sk-cube4 {
   -webkit-animation-delay: 0.1s;
-          animation-delay: 0.1s; }
+  animation-delay: 0.1s;
+}
+
 .sk-cube-grid .sk-cube5 {
   -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s; }
+  animation-delay: 0.2s;
+}
+
 .sk-cube-grid .sk-cube6 {
   -webkit-animation-delay: 0.3s;
-          animation-delay: 0.3s; }
+  animation-delay: 0.3s;
+}
+
 .sk-cube-grid .sk-cube7 {
   -webkit-animation-delay: 0s;
-          animation-delay: 0s; }
+  animation-delay: 0s;
+}
+
 .sk-cube-grid .sk-cube8 {
   -webkit-animation-delay: 0.1s;
-          animation-delay: 0.1s; }
+  animation-delay: 0.1s;
+}
+
 .sk-cube-grid .sk-cube9 {
   -webkit-animation-delay: 0.2s;
-          animation-delay: 0.2s; }
+  animation-delay: 0.2s;
+}
 
 @-webkit-keyframes sk-cubeGridScaleDelay {
   0%, 70%, 100% {
     -webkit-transform: scale3D(1, 1, 1);
-            transform: scale3D(1, 1, 1);
-  } 35% {
+    transform: scale3D(1, 1, 1);
+  }
+
+  35% {
     -webkit-transform: scale3D(0, 0, 1);
-            transform: scale3D(0, 0, 1); 
+    transform: scale3D(0, 0, 1);
   }
 }
 
 @keyframes sk-cubeGridScaleDelay {
   0%, 70%, 100% {
     -webkit-transform: scale3D(1, 1, 1);
-            transform: scale3D(1, 1, 1);
-  } 35% {
-    -webkit-transform: scale3D(0, 0, 1);
-            transform: scale3D(0, 0, 1);
-  } 
-}
+    transform: scale3D(1, 1, 1);
+  }
 
+  35% {
+    -webkit-transform: scale3D(0, 0, 1);
+    transform: scale3D(0, 0, 1);
+  }
+}
 
 /* main & nearlist 错误页面 */
 
@@ -239,27 +260,29 @@ wx-button:after {
 .moments .item .top .info {
   margin-left: 10px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 50px;
+  flex-direction: row;
+  /* justify-content: flex-end;  */
+  align-items: flex-end;
+  height: 30px;
 }
 
 .moments .item .top .info .author {
   color: RGB(31, 120, 180);
-  font-size: 14px;
-  margin-bottom: 3px;
+  font-size: 16px;
+  /* margin-bottom: 3px; */
 }
 
 .moments .item .top .info .time {
   color: #bbb;
   font-size: 12px;
+  margin-left: 7px;
 }
 
 .moments .item .content {
   font-size: 16px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .moments .item .content text {
@@ -272,32 +295,35 @@ wx-button:after {
   max-width: 80%;
   max-height: 180px;
   border-radius: 2px;
+  margin: 7px 0 10px;
 }
 
 .moments .item .bottom {
   display: flex;
   align-items: center;
-  height: 50px;
+  height: 35px;
   border-top: 1px solid #eee;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .moments .item .bottom > button {
   flex: 1;
-  height: 35px;
+  height: 30px;
   border-right: 1px solid #eee;
   background: #fff;
 }
+
 .moments .item .bottom > button:last-child {
   border: none;
 }
+
 .moments .item .bottom button {
   font-size: 14px;
   color: #777;
 }
+
 .moments .item .bottom .fa {
   padding-right: 7px;
-  font-size: 20px;
+  font-size: 16px;
   /* color: #777; */
   transform: scale(1);
 }
@@ -305,7 +331,9 @@ wx-button:after {
 .moments .item .bottom .button-hover .fa {
   transform: scale(1.2);
 }
-
+.moments .item .bottom .like .fa {
+  color: RGB(251,128,114);
+}
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

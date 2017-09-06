@@ -24,7 +24,7 @@
   width: 100%;
 }
 .post {
-  height: 50px;
+  height: 40px;
   color: #fff;
   width: 70%;
   left: 15%;

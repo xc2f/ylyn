@@ -3,9 +3,9 @@
   <scroll-view scroll-y scroll-into-view="comments" class='scroll' bindscrolltolower="fetchMoreComment">
     <view class='item'>
       <view class='top'>
-        <image src='{{item.portrait}}'></image>
+        <image src='{{item.portrait}}' catchtap='toUserPage' data-type="moment"></image>
         <view class='info'>
-          <text class='author'>{{item.name}}</text>
+          <text class='author' catchtap='toUserPage' data-type="moment">{{item.name}}</text>
           <text class='time'>{{item.parseTime}}</text>
         </view>
       </view>
@@ -19,13 +19,13 @@
         <button class='share center' open-type='share' data-idx="{{index}}">
             <text class='fa fa-share-alt'></text>
           </button>
-        <button class='comment center' bindtap='toCommentPage' data-item="{{item}}">
+        <button class='comment center' bindtap='textareaFocus' data-item="{{item}}">
             <text class='fa fa-reply'></text>
             <!-- <text class='counts'> -->
               {{commentsLength ? commentsLength : ''}}
             <!-- </text> -->
           </button>
-        <button class='like center'>
+        <button class="{{item.is_thumbs ? 'like center' : 'center'}}" bindtap='like'>
             <text class='fa fa-thumbs-up'></text>
             <!-- <text class='counts'> -->
               {{item.thumbs_num ? item.thumbs_num : ''}}
@@ -33,28 +33,33 @@
           </button>
       </view>
       <view class='comments' id="comments">
-        <view class='title'>评论{{commentsLength ? ('(' + commentsLength+'条)') : ''}}</view>
+        <view class='title'>评论
+          <text>{{commentsLength ? ('(' + commentsLength+'条)') : ''}}</text>
+        </view>
         <block wx:if="comments" wx:for="{{comments}}" wx:key="evaluate_id">
           <view class='cRow'>
             <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="comment">
               <view class='left'>
-                <image src="{{item.f_portrait}}"></image>
+                <image src="{{item.f_portrait}}" catchtap='toUserPage' data-type="comment" data-idx="{{index}}"></image>
               </view>
               <view class='right'>
                 <view class='cInfo'>
-                  <text class='author'>{{item.f_nickname}}</text>
+                  <text class='author' catchtap='toUserPage' data-type="comment" data-idx="{{index}}">{{item.f_nickname}}</text>
                   <text class='time'>{{item.parseTime}}</text>
                 </view>
                 <view class='cContent'>
                   <view>{{item.content}}</view>
+                  <view wx:if="{{item.last_content}}" class='cInContent'>
+                    {{item.t_nickname}}: {{item.last_content}}
+                  </view>
                 </view>
               </view>
             </picker>
           </view>
         </block>
-        <!-- <view wx:else>
+        <view wx:if="{{commentsLength===0}}" class='commentStatus'>
           {{commentsStatus}}
-        </view> -->
+        </view>
       </view>
     </view>
   </scroll-view>

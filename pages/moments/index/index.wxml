@@ -8,16 +8,16 @@
   <view class='list moments' wx:if="{{userMoments}}">
     <view class='item' wx:for="{{userMoments}}" wx:key="notice_id">
       <view class='top'>
-        <image src='{{item.portrait}}'></image>
+        <image src='{{item.portrait}}' catchtap='toUserPage' data-idx="{{index}}"></image>
         <view class='info'>
-          <text class='author'>{{item.name}}</text>
+          <text class='author' catchtap='toUserPage' data-idx="{{index}}">{{item.name}}</text>
           <text class='time'>{{item.parseTime}}</text>
         </view>
       </view>
       <view class='content'>
         <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}">
           <text>{{item.content}}</text>
-          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}'></image>
+          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}"></image>
         </picker>
       </view>
       <view class='bottom'>
@@ -30,7 +30,7 @@
               {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
              <!-- </text>  -->
           </button>
-        <button class='like center'>
+        <button class="{{item.is_thumbs ? 'like center' : 'center'}}" bindtap='like' data-idx="{{index}}">
             <text class='fa fa-thumbs-up'></text>
             <!-- <text class='counts'> -->
               {{item.thumbs_num !=0 ? item.thumbs_num : ''}}
@@ -41,8 +41,8 @@
   </view>
 
   <!-- 没有状态 -->
-  <view wx:else>
-    木有更多动态
+  <view wx:if='{{empty}}' class='empty'>
+    {{storeName}}还木有小伙伴的动态，快来发第一条吧^^
   </view>
 
 </view>

@@ -126,9 +126,10 @@
   right: 0;
   z-index: 999;
   text-align: center;
-  background: RGB(255,193,7);
+  background: RGB(255, 193, 7);
   border-radius: 2px;
 }
+
 .toHome text {
   font-size: 18px;
   color: #fff;
@@ -229,7 +230,7 @@
 
 .s1 image {
   width: 50% !important;
-  transform:translateZ(100px);
+  transform: translateZ(100px);
 }
 
 .s2 {
@@ -268,19 +269,188 @@
 }
 
 /* moments */
+
 .userMoments {
-  margin: 20px 10px;
+  margin: 20px 0;
 }
+
 .userMoments .hd {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
-.userMoments .hd text {
-  padding: 7px;
-  color: #bbb;
+.userMoments .hd > view {
+  margin: 7px;
 }
+.userMoments .hd text {
+  color: #bbb;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+}
+
 .userMoments .hd .active text {
   color: #222;
+  border-bottom: 2px solid #eee;
+}
+
+.moments {
+  /* display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center; */
+  margin: 20px 0;
+}
+
+.moments .item {
+  /* flex: 1; */
+  width: calc(50% - 2px);
+  float: left;
+  padding: 0;
+  border: 1px solid #fff;
+  position: relative;
+}
+
+.moments .item image {
+  width: 100%;
+  height: 100%;
+}
+
+image.notAllow {
+  opacity: 0.7;
+}
+
+.moments .item .more {
+  height: 30px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+}
+
+.moments .bar {
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.moments .bar .left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.moments .bar .left > view {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+}
+
+.moments .bar .right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 22px;
+  color: #777;
+  height: 100%;
+  padding-right: 7px;
+}
+
+.moments .more .content {
+  padding: 7px;
+  color: #222;
+  font-size: 14px;
+  /* font-weight: bold; */
+  line-height: 2;
+}
+
+.notices {
+  /* text-align: center; */
+}
+
+.notices .item {
+  width: 80%;
+  margin: 20px auto;
+  padding-bottom: 20px;
+  clear: both;
+  border-bottom: 1px solid #eee;
+}
+.notices .item:last-child {
+  border: none;
+}
+
+.notices .item:after, .moments:after {
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
+  clear: both;
+}
+
+.notices .item .quote {
+  clear: both;
+  background: #eee;
+  padding: 5px;
+  margin-top: 7px;
+}
+
+.notices .item .newReply {
+  font-size: 14px;
+  color: #222;
+}
+
+.notices .item .time {
+  float: right;
+  font-size: 10px;
+  color: #bbb;
+  padding: 5px;
+}
+
+.notices .quote image {
+  width: 50px;
+  height: 50px;
+  float: left;
+}
+
+.notices .quote .info {
+  height: 50px;
+  position: relative;
+}
+
+.notices .quote .info .myReply {
+  font-size: 14px;
+  color: #777;
+  height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: absolute;
+  top: 0;
+  left: 55px;
+}
+
+.notices .quote .info .storeName {
+  font-size: 12px;
+  color: #999;
+  position: absolute;
+  bottom: 0;
+  text-align: right;
+  width: 80%;
+}
+
+.notices .whoReply {
+  color: RGB(30, 56, 161);
+}
+
+.fetchFail {
+  text-align: center;
+  color: #777;
+  font-size: 14px;
 }

@@ -6,7 +6,7 @@
   <view class="bd" style="height: {{itemWidth * 3}}px">
     <view class="item" style="width: {{itemWidth}}px; height: {{itemWidth}}px" wx:for="{{pics}}" wx:key="album_id">
       <view class="picWrap" style="width: {{itemWidth-20}}px; height: {{itemWidth-20}}px" bindtap="prevImg" data-src="{{item.album}}">
-        <image src="{{item.album}}" class="pic" mode="widthFix"></image>
+        <image src="{{item.album}}" class="pic"  mode='aspectFill'></image>
       </view>
        <image src="/images/close.png" class="close" bindtap="removePic" data-idx="{{index}}"></image> 
     </view>

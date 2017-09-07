@@ -301,13 +301,14 @@ wx-button:after {
 .moments .item .bottom {
   display: flex;
   align-items: center;
-  height: 35px;
+  height: 40px;
   border-top: 1px solid #eee;
 }
 
 .moments .item .bottom > button {
   flex: 1;
-  height: 30px;
+  height: 27px;
+  border-radius: 0;
   border-right: 1px solid #eee;
   background: #fff;
 }
@@ -318,7 +319,7 @@ wx-button:after {
 
 .moments .item .bottom button {
   font-size: 14px;
-  color: #777;
+  color: #bbb;
 }
 
 .moments .item .bottom .fa {

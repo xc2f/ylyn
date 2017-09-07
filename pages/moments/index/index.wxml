@@ -5,8 +5,47 @@
     </view>
   </navigator>
 
-  <view class='list moments' wx:if="{{userMoments}}">
-    <view class='item' wx:for="{{userMoments}}" wx:key="notice_id">
+  <view class='list moments'>
+    <!-- 商家动态 -->
+    <view class='item store' wx:if="{{storeMoment.image}}">
+      <view class='top'>
+        <image src='{{storeMoment.logo}}' catchtap='toShopPage'></image>
+        <view class='info'>
+          <text class='author' catchtap='toShopPage'>{{storeMoment.name}}</text>
+          <text class='time'>{{storeMoment.parseTime}}</text>
+        </view>
+      </view>
+      <view class='content'>
+        <picker range="{{['回复', '举报']}}" bindchange='pickChange' data-type="store">
+          <view>{{storeMoment.content}}</view>
+          <view class='image'>
+            <block wx:for="{{storeMoment.image}}" wx:key=''>
+              <image src="{{item}}" mode='aspectFill' data-type='store' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" style="width: {{storeImgWidth}}px; height: {{storeImgWidth}}px"></image>
+            </block>
+          </view>
+        </picker>
+      </view>
+      <view class='bottom'>
+        <button class='share center' open-type='share' data-type='store'>
+            <text class='fa fa-share-alt'></text>
+          </button>
+        <button class='comment center' bindtap='toCommentPage' data-type='store' data-item="{{storeMoment}}">
+            <text class='fa fa-commenting'></text>
+             <!-- <text class='counts'>  -->
+              {{storeMoment.evaluate_num !=0 ? storeMoment.evaluate_num : ''}}
+             <!-- </text>  -->
+          </button>
+        <button class="{{item.is_thumbs ? 'like center' : 'center'}}" bindtap='like' data-type='store'>
+            <text class='fa fa-thumbs-up'></text>
+            <!-- <text class='counts'> -->
+              {{storeMoment.thumbs_num !=0 ? storeMoment.thumbs_num : ''}}
+            <!-- </text> -->
+          </button>
+      </view>
+    </view>
+
+    <!-- 用户动态 -->
+    <view class='item' wx:for="{{userMoments}}" wx:key="notice_id" wx:if="{{userMoments}}">
       <view class='top'>
         <image src='{{item.portrait}}' catchtap='toUserPage' data-idx="{{index}}"></image>
         <view class='info'>
@@ -15,22 +54,22 @@
         </view>
       </view>
       <view class='content'>
-        <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}">
-          <text>{{item.content}}</text>
-          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}"></image>
+        <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type='user'>
+          <view>{{item.content}}</view>
+          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" data-type='user'></image>
         </picker>
       </view>
       <view class='bottom'>
-        <button class='share center' open-type='share' data-idx="{{index}}">
+        <button class='share center' open-type='share' data-idx="{{index}}"  data-type='user'>
             <text class='fa fa-share-alt'></text>
           </button>
-        <button class='comment center' bindtap='toCommentPage' data-item="{{item}}">
-            <text class='fa fa-reply'></text>
+        <button class='comment center' bindtap='toCommentPage' data-type='user' data-item="{{item}}">
+            <text class='fa fa-commenting'></text>
              <!-- <text class='counts'>  -->
               {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
              <!-- </text>  -->
           </button>
-        <button class="{{item.is_thumbs ? 'like center' : 'center'}}" bindtap='like' data-idx="{{index}}">
+        <button class="{{item.is_thumbs ? 'like center' : 'center'}}" bindtap='like' data-idx="{{index}}" data-type='user'>
             <text class='fa fa-thumbs-up'></text>
             <!-- <text class='counts'> -->
               {{item.thumbs_num !=0 ? item.thumbs_num : ''}}

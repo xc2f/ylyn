@@ -81,8 +81,8 @@
   <view class='userMoments'>
     <view class='hd'>
       <view class='{{showMoment ? "active" : ""}}' bindtap='showMoment'>
-        <text>我的动态</text></view>
-      <view class='{{showNotice ? "active" : ""}}' bindtap='showNotice'>
+        <text>{{currentUserId===userId ? '我的动态' : (userInfo.gender ? (userInfo.gender==1 ? '他的动态' : '她的动态') : '动态')}}</text></view>
+      <view class='{{showNotice ? "active" : ""}}' bindtap='showNotice' wx:if="{{userId===currentUserId}}">
         <text>我的参与</text></view>
     </view>
     <view class='bd'>
@@ -105,7 +105,9 @@
               </view>
             </view>
             <!-- end bar -->
-            <view class='content' catchtap='toMoment' data-type="moment" data-idx="{{index}}">{{item.content}}</view>
+            <view class='content' data-type='user' catchtap='toMoment' data-side="moment" data-idx="{{index}}">{{item.content}}
+            <text>{{item.parseTime}} --{{item.store_name}}</text>
+            </view>
           </view>
         </view>
         <view class='fetchFail' wx:if="{{fetchMomentsFail}}">获取数据失败</view>
@@ -118,7 +120,7 @@
             <text class='whoReply'>{{item.f_nickname}}: </text>
             {{item.content}}
           </view>
-          <view class='quote' catchtap='toMoment' data-type='notice' data-idx='{{index}}'>
+          <view class='quote' catchtap='toMoment' data-side='notice' data-idx='{{index}}'>
             <image src="{{item.notice_info.image[0]}}" class='{{item.access ? "" : "notAllow"}}'></image>
             <view class='info'>
               <text class='myReply'>{{item.last_content}}</text>

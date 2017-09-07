@@ -11,7 +11,7 @@
       </view>
       <view class='content'>
         <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="moment">
-          <text>{{item.content}}</text>
+          <view>{{item.content}}</view>
           <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg'></image>
         </picker>
       </view>
@@ -20,7 +20,7 @@
             <text class='fa fa-share-alt'></text>
           </button>
         <button class='comment center' bindtap='textareaFocus' data-item="{{item}}">
-            <text class='fa fa-reply'></text>
+            <text class='fa fa-commenting'></text>
             <!-- <text class='counts'> -->
               {{commentsLength ? commentsLength : ''}}
             <!-- </text> -->

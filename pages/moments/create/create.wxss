@@ -21,7 +21,8 @@
 
 .item textarea {
   height: 50px;
-  width: 100%;
+  width: calc(100% - 6px);
+  border: 1px dashed #eee;
 }
 .post {
   height: 40px;
@@ -35,9 +36,11 @@
 .content textarea {
   padding: 3px;
   border-radius: 2px;
+  margin-bottom: 10px;
 }
 .overText {
   box-shadow: 1px 0 7px RGB(251,114,114) inset;
+  border-color: transparent;
 }
 .content .imageContent {
   margin: 5px 0;

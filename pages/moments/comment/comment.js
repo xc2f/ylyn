@@ -24,41 +24,55 @@ Page({
   // 被评论人信息
   commented: null,
 
+  momentType: 'user',
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(options)
     let storeInfo = app.globalData.storeInfo
     let data = JSON.parse(options.item)
-    // console.log(data)
-    if (storeInfo){
-      if(storeInfo.storeId === data.store_id){
-        this.setData({
-          item: data
-        })
-        this.fetchComments(data.notice_id)
+    let source = options.from || null
+    // 动态类型
+    this.momentType = options.type
+
+    if (storeInfo) {
+      if (storeInfo.storeId === data.store_id) {
+        if (source === 'user') {
+          // 从用户页进入
+          // 调用获取动态详情接口重绘动态内容
+        } else {
+          // 从动态主页列表进入
+          this.setData({
+            item: data
+          })
+        }
+        this.fetchComments(data.notice_id, 1, source)
       } else {
-        wx.reLaunch({
-          url: '/pages/moments/index/index',
+        // 未在同一家店
+        wx.navigateTo({
+          url: '/pages/shopDetail/shopDetail?store_id=' + data.store_id,
         })
       }
     } else {
+      // TODO shopDetail
       wx.reLaunch({
-        url: '/pages/nearlist/nearlist',
+        url: '/pages/shopDetail/shopDetail?store_id=' + data.store_id,
       })
     }
   },
 
-  fetchComments(notice_id, page, type) {
+  fetchComments(notice_id, page, source) {
     // TODO type, page
-    type = type || 2
+    type = this.momentType === 'user' ? 2 : 1,
     page = page || 1
     this.fetchCommentOk = false
     wx.request({
       url: app.requestHost + 'Notice/notice_info/',
       method: 'POST',
       data: {
-        token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6',
+        token: app.TOKEN,
         notice_id: notice_id,
         type: type,
         page: page
@@ -66,17 +80,18 @@ Page({
       success: res => {
         console.log(res)
         let data = res.data.result
+        let commentList = data.evaluate_list
         if (res.data.code === 201) {
-          if(page <= 1){
-            this.parseComment(data.evaluate_list)
+          if (page <= 1) {
+            this.parseComment(commentList)
           } else {
             let list = this.data.comments.slice()
             // 为何concat不能用？
             // list.concat(...res.data.result.evaluate_list)
-            data.evaluate_list.map(item => {
+            commentList.map(item => {
               list.push(item)
             })
-            this.parseComment(list) 
+            this.parseComment(list)
           }
           if (data.evaluate_num == 0) {
             this.currentPage = page - 1
@@ -87,6 +102,10 @@ Page({
             this.setData({
               commentsLength: data.evaluate_num
             })
+          }
+          if (source === 'user') {
+            delete data.evaluate_list
+            this.parseMoment(data)
           }
           this.fetchCommentOk = true
         } else {
@@ -116,6 +135,18 @@ Page({
     })
     this.setData({
       comments: templist,
+    })
+  },
+
+  parseMoment(data) {
+    console.log(data)
+    let meId = app.globalData.userId
+    data.parseTime = fromNow(data.add_time * 1000)
+    if (meId === data.user_id) {
+      data.del = true
+    }
+    this.setData({
+      item: data
     })
   },
 
@@ -182,9 +213,9 @@ Page({
       url: app.requestHost + 'Notice/evaluate_notice/',
       method: 'POST',
       data: {
-        token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6',
+        token: app.TOKEN,
         notice_id: item.notice_id,
-        store_id: '14b00ff3-f9f7-7337-a713-599d8f8d9c62' || app.globalData.storeInfo.storeId,
+        store_id: app.globalData.storeInfo.storeId,
         content: this.data.content,
         notice_type: 2,
         t_user_id: t_user_id,
@@ -425,7 +456,7 @@ Page({
       },
       success: res => {
         console.log(res)
-        if(res.data.code === 201 || res.data.code === 202){
+        if (res.data.code === 201 || res.data.code === 202) {
           app.globalData.momentNeedToRefetch = true
         }
       },
@@ -435,10 +466,10 @@ Page({
     })
   },
 
-  toUserPage(e){
+  toUserPage(e) {
     let data = e.currentTarget.dataset
     let userId
-    if(data.type === 'moment'){
+    if (data.type === 'moment') {
       userId = this.data.item.user_id
     } else {
       let idx = data.idx

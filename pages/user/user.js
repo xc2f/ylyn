@@ -76,6 +76,7 @@ Page({
         token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6'
       },
       success: function (res) {
+        console.log(res)
         // console.log(app.TOKEN)
         if (res.data.code === 201) {
           // 设置导航条
@@ -147,6 +148,7 @@ Page({
         page: page
       },
       success: (res) => {
+        console.log(res)
         if (res.data.code === 201) {
           this.setData({
             fetchMomentsFail: false
@@ -469,35 +471,39 @@ Page({
   },
 
   toMoment(e) {
+    if (this.data.currentUserId !== this.data.userId){
+      return
+    }
     let idx = e.currentTarget.dataset.idx
-    let type = e.currentTarget.dataset.type
-    if (type === 'moment') {
+    let side = e.currentTarget.dataset.side
+    if (side === 'moment') {
       let data = this.data.moments[idx]
-      if (data.access) {
+      // if (data.access) {
         // 删除两个动画键
         delete data.animation
         delete data.animationAngle
         wx.navigateTo({
-          url: '/pages/moments/comment/comment?item=' + JSON.stringify(data),
+          url: '/pages/moments/comment/comment?from=user&type=user&item=' + JSON.stringify(data),
         })
-      } else {
-        wx.showModal({
-          showCancel: false,
-          content: '我只能在' + data.store_name + '打开哦',
-        })
-      }
-    } else if (type === 'notice') {
+      // } else {
+      //   wx.showModal({
+      //     showCancel: false,
+      //     content: '我只能在' + data.store_name + '打开哦',
+      //   })
+      // }
+    } else if (side === 'notice') {
       let data = this.data.notices[idx]
-      if (data.access) {
+      // TODO 商家动态
+      // if (data.access) {
         wx.navigateTo({
-          url: '/pages/moments/comment/comment?item=' + JSON.stringify(data.notice_info),
+          url: '/pages/moments/comment/comment?from=user&item=' + JSON.stringify(data.notice_info),
         })
-      } else {
-        wx.showModal({
-          showCancel: false,
-          content: '我只能在' + data.store_name + '打开哦',
-        })
-      }
+      // } else {
+      //   wx.showModal({
+      //     showCancel: false,
+      //     content: '我只能在' + data.store_name + '打开哦',
+      //   })
+      // }
     }
   },
 

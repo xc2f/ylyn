@@ -323,7 +323,8 @@ Page({
           app.globalData.storeInfo = {
             storeId: that.data.qrcodeInfo.store_id,
             storeName: result.store_name,
-            tableId: that.data.qrcodeInfo.table_id
+            tableId: that.data.qrcodeInfo.table_id,
+            logo: result.store_logo
           }
           that.setData({
             dataOk: true,

@@ -7,6 +7,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    storeImgWidth: '',
     storeMoment: null,
     userMoments: null,
 
@@ -22,18 +23,37 @@ Page({
   onLoad: function (options) {
     let storeInfo = app.globalData.storeInfo
     if (storeInfo) {
-      wx.showLoading({
-        title: '动态获取中',
-      })
-      this.setData({
-        storeName: storeInfo.storeName
-      })
-      this.fetchShopMoment(storeInfo.storeId)
-      this.fetchMomentList()
+      if(options.from === 'share') {
+        if (storeInfo.storeId === options.store_id) {
+          wx.showLoading({
+            title: '动态获取中',
+          })
+          this.setData({
+            storeName: storeInfo.storeName
+          })
+          this.fetchShopMoment(storeInfo.storeId)
+          this.fetchMomentList()
+        } else {
+          // 未在同一家店
+          wx.navigateTo({
+            url: '/pages/shopDetail/shopDetail?store_id=' + options.store_id,
+          })
+        }
+      } else {
+        wx.showLoading({
+          title: '动态获取中',
+        })
+        this.setData({
+          storeName: storeInfo.storeName
+        })
+        this.fetchShopMoment(storeInfo.storeId)
+        this.fetchMomentList()
+      }
+
     } else {
       //未在任何一家店内
       wx.reLaunch({
-        url: '/pages/nearlist/nearlist',
+        url: '/pages/shopDetail/shopDetail?store_id=' + options.store_id,
       })
     }
   },
@@ -51,7 +71,7 @@ Page({
         wx.stopPullDownRefresh()
         console.log(res)
         if (res.data.code === 201) {
-
+          this.parseShopMoment(res.data.result)
         } else {
           
         }
@@ -59,6 +79,24 @@ Page({
       fail: () => {
 
       }
+    })
+  },
+
+  parseShopMoment(data){
+    let screenWidth = app.globalData.deviceInfo.screenWidth - 20
+    let imgWidth = ''
+    if(data.image.length === 2){
+      imgWidth = screenWidth / 2
+    } else if(data.image.length === 3) {
+      imgWidth = screenWidth / 3
+    }
+    data.parseTime = fromNow(data.add_time * 1000)
+    data.logo = app.globalData.storeInfo.logo
+    data.name = app.globalData.storeInfo.storeName
+    this.setData({
+      storeImgWidth: imgWidth,
+      storeMoment: data,
+      storeImgLength: data.image.length
     })
   },
 
@@ -127,43 +165,75 @@ Page({
   },
 
   prevImg(e) {
+    let type = e.currentTarget.dataset.type
     let idx = e.currentTarget.dataset.idx
-    let img = this.data.userMoments[idx].image
-    wx.previewImage({
-      urls: [img],
-    })
+
+    if(type === 'user'){
+      let img = this.data.userMoments[idx].image
+      wx.previewImage({
+        urls: [img],
+      })
+    } else {
+      let imgs = this.data.storeMoment.image
+      wx.previewImage({
+        urls: imgs,
+        current: imgs[idx]
+      })
+    }
+
   },
 
   pickChange(e) {
-    let idx = e.currentTarget.dataset.idx
     let id = parseInt(e.detail.value)
-    let item = this.data.userMoments[idx]
-    if (id === 0) {
-      wx.navigateTo({
-        url: '/pages/moments/comment/comment?item=' + JSON.stringify(item),
-      })
-    } else if (id === 1) {
-      if (item.user_id === app.globalData.userId) {
-        wx.showModal({
-          title: '提示',
-          content: '确认删除？',
-          success: res => {
-            if (res.confirm) {
-              this.delMoment(item)
-            }
-          }
+    let type = e.currentTarget.dataset.type
+    if(type === 'user'){
+      let idx = e.currentTarget.dataset.idx
+      let item = this.data.userMoments[idx]
+      if (id === 0) {
+        wx.navigateTo({
+          url: '/pages/moments/comment/comment?type=user&item=' + JSON.stringify(item),
         })
-      } else {
-        // tousu
-        wx.showModal({
-          title: '提示',
-          content: '确认举报？',
-          success: res => {
-            if (res.confirm) {
-              this.report(item)
+      } else if (id === 1) {
+        if (item.user_id === app.globalData.userId) {
+          wx.showModal({
+            title: '提示',
+            content: '确认删除？',
+            success: res => {
+              if (res.confirm) {
+                this.delMoment(item)
+              }
             }
-          }
+          })
+        } else {
+          // tousu
+          wx.showModal({
+            title: '提示',
+            content: '确认举报？',
+            success: res => {
+              if (res.confirm) {
+                this.report(item)
+              }
+            }
+          })
+        }
+      }
+    } else {
+      if (id === 0) {
+        let item = this.data.storeMoment
+        wx.navigateTo({
+          url: '/pages/moments/comment/comment?type=store&item=' + JSON.stringify(item),
         })
+      } else if (id === 1) {
+          // tousu
+          wx.showModal({
+            title: '提示',
+            content: '确认举报？',
+            success: res => {
+              if (res.confirm) {
+                this.report(item)
+              }
+            }
+          })
       }
     }
   },
@@ -243,16 +313,31 @@ Page({
 
   toCommentPage(e) {
     let item = JSON.stringify(e.currentTarget.dataset.item)
-    wx.navigateTo({
-      url: '/pages/moments/comment/comment?item=' + item,
-    })
+    let type = e.currentTarget.dataset.type
+    if(type === 'user'){
+      wx.navigateTo({
+        url: '/pages/moments/comment/comment?type=user&item=' + item,
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/moments/comment/comment?type=store&item=' + item,
+      })
+    }
+
   },
 
 
   like(e) {
-    let idx = e.currentTarget.dataset.idx
-    let templist = this.data.userMoments.slice()
-    let item = templist[idx]
+    let type = e.currentTarget.dataset.type
+    let item
+    if(type === 'user'){
+      let idx = e.currentTarget.dataset.idx
+      let templist = this.data.userMoments.slice()
+      item = templist[idx]
+    } else {
+      item = this.data.storeMoment
+    }
+
     if (item.is_thumbs) {
       item.is_thumbs = 0
       item.thumbs_num--
@@ -260,9 +345,16 @@ Page({
       item.is_thumbs = 1
       item.thumbs_num++
     }
-    this.setData({
-      userMoments: templist
-    })
+    if(type === 'user'){
+      this.setData({
+        userMoments: templist
+      })
+    } else {
+      this.setData({
+        storeMoment: item
+      })
+    }
+
     wx.request({
       url: app.requestHost + 'Notice/thumbs_notice/',
       method: 'POST',
@@ -285,6 +377,15 @@ Page({
     wx.navigateTo({
       url: '/pages/user/user?user_id=' + userId,
     })
+  },
+
+  toShopPage(){
+    let storeInfo = app.globalData.storeInfo
+    if(storeInfo){
+      wx.navigateTo({
+        url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+      })
+    }
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -336,15 +437,28 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function (options) {
+    options = options.target.dataset
     if (options.from === 'button') {
-      let idx = options.target.dataset.idx
-      let data = this.data.userMoments[idx]
-      let title = data.name + ' ' + data.content + ' --' + app.globalData.storeInfo.storeName
-      let image = data.image
-      return {
-        title: title,
-        path: '/pages/moments/comment/comment?item=' + JSON.stringify(data),
-        imageUrl: image
+      let data, title, image
+      if (options.type === 'user') {
+        let idx = options.idx
+        data = this.data.userMoments[idx]
+        title = data.name + ' ' + data.content + ' --' + app.globalData.storeInfo.storeName
+        image = data.image
+        return {
+          title: title,
+          path: '/pages/moments/comment/comment?type=user&item=' + JSON.stringify(data),
+          imageUrl: image
+        }
+      } else {
+        data = this.data.storeMoment
+        title = data.name + ' ' + data.content
+        image = data.image[0]
+        return {
+          title: title,
+          path: '/pages/moments/comment/comment?type=store&item=' + JSON.stringify(data),
+          imageUrl: image
+        }
       }
     } else {
       return {

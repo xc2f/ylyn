@@ -282,8 +282,9 @@
 }
 .userMoments .hd > view {
   margin: 7px;
+  position: relative;
 }
-.userMoments .hd text {
+.userMoments .hd text.title {
   color: #bbb;
   padding-bottom: 5px;
   border-bottom: 2px solid transparent;
@@ -458,4 +459,14 @@ image.notAllow {
   text-align: center;
   color: #777;
   font-size: 14px;
+}
+.userMoments .hd .newNotice {
+  right: -10px;
+}
+.moments .newNotice {
+  top: 12px;
+  right: 20px;
+  z-index: 999;
+  width: 7px;
+  height: 7px;
 }

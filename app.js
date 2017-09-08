@@ -1,7 +1,6 @@
 import { requestHost, socketUrl } from './untils/config.js'
 
 App({
-
   globalData: {
     // 设备信息
     deviceInfo: null,
@@ -26,6 +25,8 @@ App({
     showDetailTopTip: true,
     showNearListTopTip: true,
     momentNeedToRefetch: false,
+    hasNewMoment: false,
+    hasNewComment: false
   },
 
 
@@ -41,6 +42,9 @@ App({
   inStore: false,
   getLocationErrorTimes: 0,
 
+  // 动态检查
+  checkNoticeInterval: null,
+
 
   onLaunch: function () {
     if (this.globalData.storeInfo) {
@@ -53,11 +57,13 @@ App({
     this.getDeviceInfo()
     // 获取本地消息状态
     this.getMsgStatus()
+    // 动态状态
+    this.checkNoticeStatus()
 
     this.resetLocation = setInterval(() => {
       let coordinate = this.globalData.coordinate
       let now = new Date().getTime()
-      if (coordinate && ((coordinate.time + 1000 * 60 * 2) < now)){
+      if (coordinate && ((coordinate.time + 1000 * 60 * 2) < now)) {
         this.globalData.coordinate = null
       }
     }, 1000 * 60 * 2)
@@ -153,7 +159,7 @@ App({
         key: 'chatRecords',
         success: function (res) {
           let data = res.data
-          if(res.data.length){
+          if (res.data.length) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].msgClean === false) {
                 that.globalData.msgClean = false
@@ -170,12 +176,42 @@ App({
             wx.setStorageSync('msgClean', true)
           }
         },
-        fail: function(){
+        fail: function () {
           that.globalData.msgClean = true
           wx.setStorageSync('msgClean', true)
         }
       })
     }, 2000)
+  },
+
+  checkNotice() {
+    let that = this
+    wx.getStorage({
+      key: 'moments',
+      success: function (res) {
+        that.globalData.hasNewMoment = true
+      },
+      fail: function () {
+        that.globalData.hasNewMoment = false
+      }
+    })
+    wx.getStorage({
+      key: 'comments',
+      success: function (res) {
+        that.globalData.hasNewComment = true
+      },
+      fail: function () {
+        that.globalData.hasNewComment = false
+      }
+    })
+  },
+
+  checkNoticeStatus() {
+    let that = this
+    that.checkNotice()
+    that.checkNoticeInterval = setInterval(() => {
+      that.checkNotice()
+    }, 10000)
   },
 
   getDeviceInfo: function () {
@@ -219,7 +255,7 @@ App({
         // console.log('-------- socket msg ------------')
         // console.log(res)
         let data = JSON.parse(res.data)
-        // console.log(data)
+        console.log(data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
           if (connectType === 'manual') {
@@ -238,9 +274,12 @@ App({
                     type: 2
                   },
                   success: function (res) {
-                    // console.log(res)
+                    console.log(res)
                     if (res.data.code === 201) {
                       // console.log('重连成功！')
+                      if (res.data.result.new_evaluate && res.data.result.new_notice) {
+                        that.handleNoticeStatus(res.data.result.new_evaluate, res.data.result.new_notice)
+                      }
                     }
                   }
                 })
@@ -256,9 +295,13 @@ App({
                     type: 1
                   },
                   success: function (res) {
-                    // console.log(res)
+                    console.log(res)
                     if (res.data.code === 201) {
                       // console.log('重连成功！')
+
+                      if (res.data.result.new_evaluate && res.data.result.new_notice) {
+                        that.handleNoticeStatus(res.data.result.new_evaluate, res.data.result.new_notice)
+                      }
                     }
                   }
                 })
@@ -269,6 +312,22 @@ App({
           }
         } else if (data.type === 'ping') {
           return
+        } else if (data.type === 'new_evaluate') {
+          let comments = []
+          comments.push(data.notice_id)
+          let data = comments
+          wx.setStorage({
+            key: 'comments',
+            data: data,
+          })
+        } else if (data.type === 'new_notice') {
+          let moments = []
+          moments.push(data.notice_id)
+          let data = moments
+          wx.setStorage({
+            key: 'moments',
+            data: data,
+          })
         } else {
           that.loadMsg(data)
         }
@@ -302,6 +361,7 @@ App({
         client_id: that.globalData.client_id
       },
       success: function (res) {
+        console.log(res)
         if (res.data.code === 201 || res.data.code === 202) {
           if (res.data.code === 202) {
             that.TOKEN = res.data.result.token
@@ -319,6 +379,9 @@ App({
               that.loadMsg(unreadMsg[i])
             }
           }
+
+          that.handleNoticeStatus(res.data.result.new_evaluate, res.data.result.new_notice)
+
           // 覆盖用户信息
           wx.setStorage({
             key: 'meInfo',
@@ -362,6 +425,7 @@ App({
                 client_id: client_id
               },
               success: function (res) {
+                console.log(res)
                 if (res.data.code === 201) {
                   // 存储TOKEN
                   that.TOKEN = res.data.result.token
@@ -379,6 +443,8 @@ App({
                       that.loadMsg(unreadMsg[i])
                     }
                   }
+
+                  that.handleNoticeStatus(res.data.result.new_evaluate, res.data.result.new_notice)
                   // 覆盖用户信息
                   wx.setStorage({
                     key: 'meInfo',
@@ -474,7 +540,20 @@ App({
     }
   },
 
-
+  handleNoticeStatus(comments, moments) {
+    if (comments.length > 0) {
+      wx.setStorage({
+        key: 'comments',
+        data: comments,
+      })
+    }
+    if (moments.length > 0) {
+      wx.setStorage({
+        key: 'moments',
+        data: moments,
+      })
+    }
+  },
 
   loadMsg(msg) {
     // console.log(msg)

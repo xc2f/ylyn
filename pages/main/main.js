@@ -52,7 +52,11 @@ Page({
     // 登录以及数据拉取成功
     dataOk: false,
 
-    showGuide: false
+    showGuide: false,
+
+    hasNewNotice: false,
+
+    showLayer: true,
   },
 
 
@@ -491,12 +495,14 @@ Page({
     // 获取未读消息
     let that = this
     that.setData({
-      hasNewMsg: !app.globalData.msgClean
+      hasNewMsg: !app.globalData.msgClean,
+      hasNewNotice: app.globalData.hasNewMoment || app.globalData.hasNewComment
     })
 
     that.data.getMsgStatusInterval = setInterval(function () {
       that.setData({
-        hasNewMsg: !app.globalData.msgClean
+        hasNewMsg: !app.globalData.msgClean,
+        hasNewNotice: app.globalData.hasNewMoment || app.globalData.hasNewComment
       })
     }, 2000)
 

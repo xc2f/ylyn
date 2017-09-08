@@ -89,6 +89,7 @@
 
   <view class="toMe bottomIcon" bindtap="toMe" wx:if="{{login}}">
     <!-- <text class="fa fa-user-o"></text> -->
+    <text class='newNotice' wx:if="{{hasNewNotice}}"></text>
     <image src="/images/gr.png"></image>
     <!-- <text class="text">我的</text> -->
   </view>

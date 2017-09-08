@@ -43,10 +43,13 @@
     </view>
   </view>
 
-  <view class="toMe" wx:if="{{login}}" bindtap="switchToMe" >
+  <view class="toMe" wx:if="{{login}}" bindtap="switchToMe">
+
     <!-- <image class="flipConnerImg" src="/images/flipConner.png"></image>
     <text class="flipConnerText">我的</text> -->
-    <text class='fa fa-user'></text>
+    <text wx:if='{{hasNewNotice}}' class='newNotice'></text>
+    <text class='fa fa-user'>
+    </text>
   </view>
 
   <scroll-view bindscrolltolower="scrollToEnd" scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;">
@@ -135,4 +138,9 @@
     <view>- 打开GPS</view>
     <view>- 打开Wi-Fi</view>
   </view>
+</view>
+
+
+<view wx:if="{{showLayer}}">
+  
 </view>

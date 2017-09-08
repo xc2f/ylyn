@@ -81,9 +81,12 @@
   <view class='userMoments'>
     <view class='hd'>
       <view class='{{showMoment ? "active" : ""}}' bindtap='showMoment'>
-        <text>{{currentUserId===userId ? '我的动态' : (userInfo.gender ? (userInfo.gender==1 ? '他的动态' : '她的动态') : '动态')}}</text></view>
+        <text class='title'>{{currentUserId===userId ? '我的动态' : (userInfo.gender ? (userInfo.gender==1 ? '他的动态' : '她的动态') : '动态')}}</text>
+      </view>
       <view class='{{showNotice ? "active" : ""}}' bindtap='showNotice' wx:if="{{userId===currentUserId}}">
-        <text>我的参与</text></view>
+        <text class='title'>我的参与</text>
+        <text class='newNotice' wx:if="{{hasNewComment}}"></text>
+      </view>
     </view>
     <view class='bd'>
 
@@ -101,12 +104,14 @@
                 </view>
               </view>
               <view class='{{item.toggleStatus ? "open right" : "right"}}' bindtap='toggleBar' data-idx="{{index}}">
+
+                <text wx:if='{{item.unRead}}' class='newNotice'></text>
                 <text class='fa fa-angle-right' animation='{{item.animationAngle}}'></text>
               </view>
             </view>
             <!-- end bar -->
             <view class='content' data-type='user' catchtap='toMoment' data-side="moment" data-idx="{{index}}">{{item.content}}
-            <text>{{item.parseTime}} --{{item.store_name}}</text>
+              <text>{{item.parseTime}} --{{item.store_name}}</text>
             </view>
           </view>
         </view>

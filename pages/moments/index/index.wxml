@@ -7,7 +7,7 @@
 
   <view class='list moments'>
     <!-- 商家动态 -->
-    <view class='item store' wx:if="{{storeMoment.image}}">
+    <view class='item store' wx:if="{{storeMoment.image[0]}}">
       <view class='top'>
         <image src='{{storeMoment.logo}}' catchtap='toShopPage'></image>
         <view class='info'>
@@ -20,7 +20,7 @@
           <view>{{storeMoment.content}}</view>
           <view class='image'>
             <block wx:for="{{storeMoment.image}}" wx:key=''>
-              <image src="{{item}}" mode='aspectFill' data-type='store' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" style="width: {{storeImgWidth}}px; height: {{storeImgWidth}}px"></image>
+              <image src="{{item}}" mode='aspectFill' data-type='store' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" style="width: {{storeMoment.imgSize ? storeMoment.imgSize - 2 : ''}}px; height: {{storeMoment.imgSize ? storeMoment.imgSize * .8 : ''}}px; margin: 7px 2px 7px 0;"></image>
             </block>
           </view>
         </picker>
@@ -35,7 +35,7 @@
               {{storeMoment.evaluate_num !=0 ? storeMoment.evaluate_num : ''}}
              <!-- </text>  -->
           </button>
-        <button class="{{item.is_thumbs ? 'like center' : 'center'}}" bindtap='like' data-type='store'>
+        <button class="{{storeMoment.is_thumbs ? 'like center' : 'center'}}" bindtap='like' data-type='store'>
             <text class='fa fa-thumbs-up'></text>
             <!-- <text class='counts'> -->
               {{storeMoment.thumbs_num !=0 ? storeMoment.thumbs_num : ''}}

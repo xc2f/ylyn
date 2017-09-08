@@ -7,7 +7,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    item: null,
+    moment: null,
+    imgIsArray: false,
     overText: false,
     textareaPlaceHolder: '说点什么',
     comments: [],
@@ -15,6 +16,7 @@ Page({
     commentsStatus: '正在努力获取评论',
     content: '',
     makeTextareaFocus: false,
+    replyDisabled: false
   },
 
   currentPage: 1,
@@ -26,6 +28,9 @@ Page({
 
   momentType: 'user',
 
+  // 是否举报过
+  reported: false,
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -33,39 +38,37 @@ Page({
     console.log(options)
     let storeInfo = app.globalData.storeInfo
     let data = JSON.parse(options.item)
+    console.log(data)
+    if (!storeInfo || (data.store_id !== storeInfo.storeId)) {
+      this.setData({
+        replyDisabled: true,
+        textareaPlaceHolder: '只能在' + data.store_name + '回复'
+      })
+    }
+    if (data.image instanceof Array) {
+      this.setData({
+        imgIsArray: true
+      })
+    } else {
+      this.setData({
+        imgIsArray: false
+      })
+    }
+    // 从用户页面过来需要获取动态更多数据
     let source = options.from || null
     // 动态类型
     this.momentType = options.type
 
-    if (storeInfo) {
-      if (storeInfo.storeId === data.store_id) {
-        if (source === 'user') {
-          // 从用户页进入
-          // 调用获取动态详情接口重绘动态内容
-        } else {
-          // 从动态主页列表进入
-          this.setData({
-            item: data
-          })
-        }
-        this.fetchComments(data.notice_id, 1, source)
-      } else {
-        // 未在同一家店
-        wx.navigateTo({
-          url: '/pages/shopDetail/shopDetail?store_id=' + data.store_id,
-        })
-      }
-    } else {
-      // TODO shopDetail
-      wx.reLaunch({
-        url: '/pages/shopDetail/shopDetail?store_id=' + data.store_id,
-      })
-    }
+    // 可以从分享、用户页面入口进入
+    this.setData({
+      moment: data
+    })
+    this.fetchComments(data.notice_id, 1, source)
   },
 
   fetchComments(notice_id, page, source) {
     // TODO type, page
-    type = this.momentType === 'user' ? 2 : 1,
+    let type = this.momentType === 'user' ? 2 : 1
     page = page || 1
     this.fetchCommentOk = false
     wx.request({
@@ -139,14 +142,22 @@ Page({
   },
 
   parseMoment(data) {
-    console.log(data)
+    if (data.image instanceof Array) {
+      this.setData({
+        imgIsArray: true
+      })
+    } else {
+      this.setData({
+        imgIsArray: false
+      })
+    }
     let meId = app.globalData.userId
     data.parseTime = fromNow(data.add_time * 1000)
     if (meId === data.user_id) {
       data.del = true
     }
     this.setData({
-      item: data
+      moment: data
     })
   },
 
@@ -177,7 +188,7 @@ Page({
 
   textareaBlur() {
     this.setData({
-      textareaPlaceHolder: '说点什么'
+      textareaPlaceHolder: '有何高见'
     })
   },
 
@@ -193,19 +204,30 @@ Page({
       return
     }
     // 被引用人存在，并且提交的内容中前几个字为被引用人名字
+    // commented为被引用人信息，如果是用户有f_user_id，否则只有store_id
     if (this.commented && this.data.content.indexOf(this.commented.f_nickname) === 0) {
       // console.log(this.commented)
       let commented = this.commented
+      let t_user_id, type
+      if (commented.f_user_id === commented.store_id) {
+        t_user_id = this.data.moment.store_id
+      } else {
+        t_user_id = commented.t_user_id || commented.f_user_id
+      }
       // 引用回复
-      this.postComment(commented.t_user_id || commented.f_user_id, commented.e_id || commented.evaluate_id, commented.evaluate_id)
+      // 引用回复评论，回复用户为1，回复商家为3
+      type = commented.f_user_id ? 1 : 3
+      this.postComment(type, t_user_id, commented.e_id || commented.evaluate_id, commented.evaluate_id)
     } else {
       // 没有引用回复
-      this.postComment()
+      // 直接回复状态，回复用户为1，回复商家为3
+      this.postComment(this.momentType === 'user' ? 1 : 3)
     }
   },
 
-  postComment(t_user_id, e_id, last_e_id) {
-    let item = this.data.item
+  postComment(type, t_user_id, e_id, last_e_id) {
+    console.log(type, t_user_id, e_id, last_e_id)
+    let moment = this.data.moment
     t_user_id = t_user_id || ''
     e_id = e_id || ''
     last_e_id = last_e_id || ''
@@ -214,14 +236,14 @@ Page({
       method: 'POST',
       data: {
         token: app.TOKEN,
-        notice_id: item.notice_id,
+        notice_id: moment.notice_id,
         store_id: app.globalData.storeInfo.storeId,
         content: this.data.content,
-        notice_type: 2,
+        notice_type: this.momentType === 'user' ? 2 : 1,
         t_user_id: t_user_id,
         e_id: e_id,
         last_e_id: last_e_id,
-        type: 1
+        type: type
       },
       success: res => {
         console.log(res)
@@ -230,7 +252,7 @@ Page({
             content: '',
             commentsLength: this.data.commentsLength + 1
           })
-          this.fetchComments(this.data.item.notice_id)
+          this.fetchComments(moment.notice_id)
           app.globalData.momentNeedToRefetch = true
         } else {
           wx.showModal({
@@ -253,13 +275,13 @@ Page({
     let idx = e.currentTarget.dataset.idx
     let type = e.currentTarget.dataset.type
     let id = parseInt(e.detail.value)
-    let item = type === 'comment' ? this.data.comments[idx] : this.data.item
+    let data = type === 'comment' ? this.data.comments[idx] : this.data.moment
     if (id === 0) {
       // 回复
       if (type === 'comment') {
-        this.commented = item
+        this.commented = data
         this.setData({
-          content: item.f_nickname + ' ',
+          content: data.f_nickname + ' ',
           makeTextareaFocus: true
         })
       } else if (type === 'moment') {
@@ -271,14 +293,14 @@ Page({
     } else if (id === 1) {
       // 删除或举报
       if (type === 'comment') {
-        if (item.f_user_id === app.globalData.userId) {
+        if (data.f_user_id && (data.f_user_id === app.globalData.userId)) {
           // del
           wx.showModal({
             title: '提示',
             content: '确认删除？',
             success: res => {
               if (res.confirm) {
-                this.delComment(item, idx)
+                this.delComment(data, idx)
               }
             }
           })
@@ -289,20 +311,20 @@ Page({
             content: '确认举报？',
             success: res => {
               if (res.confirm) {
-                this.report(item, type)
+                this.report(data, type)
               }
             }
           })
         }
       } else if (type === 'moment') {
-        if (item.user_id === app.globalData.userId) {
+        if (data.user_id && (data.user_id === app.globalData.userId)) {
           // del
           wx.showModal({
             title: '提示',
             content: '确认删除？',
             success: res => {
               if (res.confirm) {
-                this.delMoment(item)
+                this.delMoment(data)
               }
             }
           })
@@ -313,7 +335,7 @@ Page({
             content: '确认举报？',
             success: res => {
               if (res.confirm) {
-                this.report(item, type)
+                this.report(data, type)
               }
             }
           })
@@ -396,19 +418,37 @@ Page({
   },
 
   report(item, type) {
+    if (this.reported) {
+      wx.showModal({
+        content: '已收到您的举报',
+        showCancel: false
+      })
+      return
+    }
     // 举报
+    let data
+    if (type === 'comment') {
+      data = {
+        token: app.TOKEN,
+        evaluate_id: item.evaluate_id || '',
+        type: 2
+      }
+    } else {
+      data = {
+        token: app.TOKEN,
+        notice_id: item.notice_id || '',
+        is_store: this.momentType === 'user' ? 0 : 1,
+        type: 1
+      }
+    }
     wx.request({
       url: app.requestHost + 'Notice/complaint_notice/',
       method: 'POST',
-      data: {
-        token: app.TOKEN,
-        notice_id: item.notice_id || '',
-        evaluate_id: item.evaluate_id || '',
-        type: type === 'comment' ? 2 : 1
-      },
+      data: data,
       success: res => {
         console.log(res)
         if (res.data.code === 201) {
+          this.reported = true
           wx.showModal({
             content: '举报成功',
             showCancel: false
@@ -429,30 +469,41 @@ Page({
     })
   },
 
-  prevImg() {
-    wx.previewImage({
-      urls: [this.data.item.image],
-    })
+  prevImg(e) {
+    let image = this.data.moment.image
+    let type = e.currentTarget.dataset.type
+    if (type === 'single') {
+      wx.previewImage({
+        urls: [image],
+      })
+    } else {
+      let idx = e.currentTarget.dataset.idx
+      wx.previewImage({
+        urls: image,
+        current: image[idx]
+      })
+    }
+
   },
 
   like(e) {
-    let item = this.data.item
-    if (item.is_thumbs) {
-      item.is_thumbs = 0
-      item.thumbs_num--
+    let moment = this.data.moment
+    if (moment.is_thumbs) {
+      moment.is_thumbs = 0
+      moment.thumbs_num--
     } else {
-      item.is_thumbs = 1
-      item.thumbs_num++
+      moment.is_thumbs = 1
+      moment.thumbs_num++
     }
     this.setData({
-      item: item
+      moment: moment
     })
     wx.request({
       url: app.requestHost + 'Notice/thumbs_notice/',
       method: 'POST',
       data: {
         token: app.TOKEN,
-        notice_id: item.notice_id,
+        notice_id: moment.notice_id,
       },
       success: res => {
         console.log(res)
@@ -469,15 +520,59 @@ Page({
   toUserPage(e) {
     let data = e.currentTarget.dataset
     let userId
+    // if(this.commentType === 'user'){
     if (data.type === 'moment') {
-      userId = this.data.item.user_id
+      if (this.commentType === 'user') {
+        userId = this.data.moment.user_id
+        wx.navigateTo({
+          url: '/pages/user/user?user_id=' + userId,
+        })
+      } else {
+        let storeInfo = app.globalData.storeInfo
+        if (storeInfo && this.data.moment.store_id === storeInfo.storeId) {
+          wx.navigateTo({
+            url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+          })
+        } else {
+          wx.navigateTo({
+            url: '/pages/shopDetail/shopDetail?store_id=' + this.data.moment.store_id,
+          })
+        }
+      }
     } else {
       let idx = data.idx
-      userId = this.data.comments[idx].f_user_id
+      let item = this.data.comments[idx]
+      if (item.f_user_id === item.store_id) {
+        let storeInfo = app.globalData.storeInfo
+        if (storeInfo && this.data.comments[idx].store_id === storeInfo.storeId) {
+          wx.navigateTo({
+            url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+          })
+        } else {
+          wx.navigateTo({
+            url: '/pages/shopDetail/shopDetail?store_id=' + item.store_id,
+          })
+        }
+      } else {
+        userId = item.f_user_id
+        wx.navigateTo({
+          url: '/pages/user/user?user_id=' + userId,
+        })
+      }
     }
-    wx.redirectTo({
-      url: '/pages/user/user?user_id=' + userId,
-    })
+
+    // } else {
+    //   let storeInfo = app.globalData.storeInfo
+    //   if (storeInfo && this.data.moment.store_id === storeInfo.storeId){
+    //     wx.navigateTo({
+    //       url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+    //     })
+    //   } else {
+    //     wx.navigateTo({
+    //       url: '/pages/shopDetail/shopDetail?store_id=' + this.data.moment.store_id,
+    //     })
+    //   }
+    // }
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -511,7 +606,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.fetchComments(this.item.notice_id)
+    this.fetchComments(this.data.moment.notice_id)
   },
 
   /**
@@ -519,25 +614,37 @@ Page({
    */
   onReachBottom: function () {
     // this.currentPage ++ 
-    // this.fetchComments(this.item.notice_id, this.currentPage)
+    // this.fetchComments(this.data.moment.notice_id, this.currentPage)
   },
   fetchMoreComment() {
     if (this.fetchCommentOk) {
       this.currentPage++
-      this.fetchComments(this.data.item.notice_id, this.currentPage)
+      this.fetchComments(this.data.moment.notice_id, this.currentPage)
     }
   },
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    let data = this.data.item
-    let title = data.name + ' ' + data.content + ' --' + app.globalData.storeInfo.storeName
-    let image = data.image
-    return {
-      title: title,
-      path: '/pages/moments/comment/comment?item=' + JSON.stringify(data),
-      imageUrl: image
+    let data, title, image
+    if (this.momentType === 'user') {
+      data = this.data.moment
+      title = data.name + ': ' + data.content + ' --' + data.store_name
+      image = data.image
+      return {
+        title: title,
+        path: '/pages/moments/comment/comment?type=user&item=' + JSON.stringify(data),
+        imageUrl: image
+      }
+    } else {
+      data = this.data.moment
+      title = data.name + ' ' + data.content
+      image = data.image[0]
+      return {
+        title: title,
+        path: '/pages/moments/comment/comment?type=store&item=' + JSON.stringify(data),
+        imageUrl: image
+      }
     }
   }
 })

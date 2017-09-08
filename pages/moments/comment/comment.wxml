@@ -3,32 +3,35 @@
   <scroll-view scroll-y scroll-into-view="comments" class='scroll' bindscrolltolower="fetchMoreComment">
     <view class='item'>
       <view class='top'>
-        <image src='{{item.portrait}}' catchtap='toUserPage' data-type="moment"></image>
+        <image src='{{moment.portrait || moment.logo}}' catchtap='toUserPage' data-type="moment"></image>
         <view class='info'>
-          <text class='author' catchtap='toUserPage' data-type="moment">{{item.name}}</text>
-          <text class='time'>{{item.parseTime}}</text>
+          <text class='author' catchtap='toUserPage' data-type="moment">{{moment.name}}</text>
+          <text class='time'>{{moment.parseTime}}</text>
         </view>
       </view>
       <view class='content'>
-        <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="moment">
-          <view>{{item.content}}</view>
-          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg'></image>
+        <picker range="{{ moment.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-type="moment" disabled="{{replyDisabled}}">
+          <view>{{moment.content}}</view>
+          <block wx:for='{{moment.image}}' wx:if="{{imgIsArray}}" wx:key="">
+            <image src="{{item}}" mode='aspectFill' data-idx="{{index}}" data-type="multiply" catchtap='prevImg' style="width: {{moment.imgSize ? moment.imgSize-2 : ''}}px; height: {{moment.imgSize ? moment.imgSize*.8 : ''}}px; margin: 7px 2px 7px 0;"></image>
+          </block>
+            <image wx:if="{{!imgIsArray}}" src="{{moment.image}}" mode='aspectFill' data-type="single" catchtap='prevImg'></image>
         </picker>
       </view>
       <view class='bottom'>
         <button class='share center' open-type='share' data-idx="{{index}}">
             <text class='fa fa-share-alt'></text>
           </button>
-        <button class='comment center' bindtap='textareaFocus' data-item="{{item}}">
+        <button class='comment center' bindtap='textareaFocus' data-moment="{{moment}}" disabled="{{replyDisabled}}">
             <text class='fa fa-commenting'></text>
             <!-- <text class='counts'> -->
               {{commentsLength ? commentsLength : ''}}
             <!-- </text> -->
           </button>
-        <button class="{{item.is_thumbs ? 'like center' : 'center'}}" bindtap='like'>
+        <button class="{{moment.is_thumbs ? 'like center' : 'center'}}" bindtap='like' disabled="{{replyDisabled}}">
             <text class='fa fa-thumbs-up'></text>
             <!-- <text class='counts'> -->
-              {{item.thumbs_num ? item.thumbs_num : ''}}
+              {{moment.thumbs_num ? moment.thumbs_num : ''}}
             <!-- </text> -->
           </button>
       </view>
@@ -38,7 +41,7 @@
         </view>
         <block wx:if="comments" wx:for="{{comments}}" wx:key="evaluate_id">
           <view class='cRow'>
-            <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="comment">
+            <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="comment" disabled="{{replyDisabled}}">
               <view class='left'>
                 <image src="{{item.f_portrait}}" catchtap='toUserPage' data-type="comment" data-idx="{{index}}"></image>
               </view>
@@ -64,7 +67,7 @@
     </view>
   </scroll-view>
   <view class='post'>
-    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}"></textarea>
-    <button class='baseColor center' bindtap='toComment'>发送</button>
+    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}" disabled="{{replyDisabled}}" placeholder-style="font-size: 14px; line-height: 30px;"></textarea>
+    <button class='baseColor center' bindtap='toComment' disabled="{{replyDisabled}}">发送</button>
   </view>
 </view>

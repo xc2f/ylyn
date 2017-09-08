@@ -27,6 +27,18 @@ wx-button:after {
   border: none;
 }
 
+.newNotice {
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: RGB(201, 48, 44);
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+}
+
 /* login */
 
 .cssload-container {
@@ -319,7 +331,7 @@ wx-button:after {
 
 .moments .item .bottom button {
   font-size: 14px;
-  color: #bbb;
+  color: #999;
 }
 
 .moments .item .bottom .fa {
@@ -332,9 +344,11 @@ wx-button:after {
 .moments .item .bottom .button-hover .fa {
   transform: scale(1.2);
 }
+
 .moments .item .bottom .like .fa {
-  color: RGB(251,128,114);
+  color: RGB(251, 128, 114);
 }
+
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

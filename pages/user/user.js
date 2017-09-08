@@ -39,7 +39,10 @@ Page({
     showTall: false,
     fetchMomentsFail: false,
     fetchNoticesFail: false,
+    hasNewComment: false,
   },
+
+  getNoticeInterval: null,
 
   currentMomentPage: 1,
   currentNoticePage: 1,
@@ -154,7 +157,7 @@ Page({
             fetchMomentsFail: false
           })
           let result = res.data.result
-          if(result.length === 0){
+          if (result.length === 0) {
             this.currentMomentPage = page - 1
           } else {
             let list = this.data.moments.slice()
@@ -214,7 +217,7 @@ Page({
           if (result.length === 0) {
             this.currentNoticePage = page - 1
           } else {
-            if(page === 1){
+            if (page === 1) {
               this.parseTime(result)
             } else {
               let list = this.data.notices.slice()
@@ -367,11 +370,53 @@ Page({
 
   },
 
+  getNoticeStatus() {
+    let that = this
+    let globalData = app.globalData
+    if (globalData.hasNewMoment) {
+      wx.getStorage({
+        key: 'moments',
+        success: function (res) {
+          let data = res.data
+          if(data.length === 0){
+            app.globalData.hasNewMoment = false
+            wx.removeStorage({
+              key: 'moments',
+              success: function(res) {},
+            })
+          } else {
+            let moments = that.data.moments.slice()
+            data.map(notice_id => {
+              moments.map(item => {
+                if (item.notice_id === notice_id) {
+                  item.unRead = true
+                }
+              })
+            })
+            that.setData({
+              moments: moments
+            })
+          }
+        },
+      })
+    }
+    if (globalData.hasNewComment) {
+      that.setData({
+        hasNewComment: true
+      })
+    }
+  },
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
     let that = this
+    if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId){
+      that.getNoticeStatus()
+      that.getNoticeInterval = setInterval(() => {
+        that.getNoticeStatus()
+      }, 5000)
+    }
     if (that.data.currentUserId === that.data.userId) {
       wx.request({
         url: app.requestHost + 'Store/get_tuser_info/',
@@ -471,20 +516,43 @@ Page({
   },
 
   toMoment(e) {
-    if (this.data.currentUserId !== this.data.userId){
-      return
-    }
+    // if (this.data.currentUserId !== this.data.userId){
+    //   return
+    // }
     let idx = e.currentTarget.dataset.idx
     let side = e.currentTarget.dataset.side
     if (side === 'moment') {
-      let data = this.data.moments[idx]
+      let data = this.data.moments
+      console.log(data)
+      data[idx].unRead = false
+      this.setData({
+        moments: data
+      })
+
+      wx.getStorage({
+        key: 'moments',
+        success: function(res) {
+          let list = res.data.slice()
+          list.map((notice_id, idx) => {
+            if (notice_id === data[idx].notice_id) {
+              list.splice(idx, 1)
+            }
+          })
+          wx.setStorage({
+            key: 'moments',
+            data: list,
+          })
+        },
+      })
+
+
       // if (data.access) {
-        // 删除两个动画键
-        delete data.animation
-        delete data.animationAngle
-        wx.navigateTo({
-          url: '/pages/moments/comment/comment?from=user&type=user&item=' + JSON.stringify(data),
-        })
+      // 删除两个动画键
+      delete data[idx].animation
+      delete data[idx].animationAngle
+      wx.navigateTo({
+        url: '/pages/moments/comment/comment?from=user&type=user&item=' + JSON.stringify(data[idx]),
+      })
       // } else {
       //   wx.showModal({
       //     showCancel: false,
@@ -493,11 +561,17 @@ Page({
       // }
     } else if (side === 'notice') {
       let data = this.data.notices[idx]
+      console.log(data)
+      let noticeInfo = data.notice_info
+      noticeInfo.store_name = data.store_name
+      // noticeInfo.logo
+      // noticeInfo.parseTime = data.parseTime
       // TODO 商家动态
       // if (data.access) {
-        wx.navigateTo({
-          url: '/pages/moments/comment/comment?from=user&item=' + JSON.stringify(data.notice_info),
-        })
+      let type = data.notice_type === 1 ? 'store' : 'user'
+      wx.navigateTo({
+        url: '/pages/moments/comment/comment?from=user&type=' + type + '&item=' + JSON.stringify(noticeInfo),
+      })
       // } else {
       //   wx.showModal({
       //     showCancel: false,
@@ -514,10 +588,16 @@ Page({
     })
   },
   showNotice() {
+    app.globalData.hasNewComment = false
+    wx.removeStorage({
+      key: 'comments',
+      success: function(res) {},
+    })
     this.fetchUserNotices()
     this.setData({
       showMoment: false,
       showNotice: true,
+      hasNewComment: false,
     })
   },
 
@@ -526,7 +606,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    clearInterval(this.getNoticeInterval)
   },
 
   /**
@@ -547,7 +627,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    if(this.data.showMoment){
+    if (this.data.showMoment) {
       this.currentMomentPage++
       this.fetchUserMoments(this.data.currentUserId, this.currentMomentPage)
     } else {

@@ -7,7 +7,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    storeImgWidth: '',
+    // storeImgWidth: '',
     storeMoment: null,
     userMoments: null,
 
@@ -16,6 +16,9 @@ Page({
   },
 
   currentPage: 1,
+
+  // 是否举报过
+  reported: false,
 
   /**
    * 生命周期函数--监听页面加载
@@ -84,17 +87,19 @@ Page({
 
   parseShopMoment(data){
     let screenWidth = app.globalData.deviceInfo.screenWidth - 20
-    let imgWidth = ''
+    let imgSize = ''
     if(data.image.length === 2){
-      imgWidth = screenWidth / 2
+      imgSize = screenWidth / 2
     } else if(data.image.length === 3) {
-      imgWidth = screenWidth / 3
+      imgSize = screenWidth / 3
     }
     data.parseTime = fromNow(data.add_time * 1000)
     data.logo = app.globalData.storeInfo.logo
     data.name = app.globalData.storeInfo.storeName
+    data.store_name = app.globalData.storeInfo.storeName
+    data.imgSize = imgSize
     this.setData({
-      storeImgWidth: imgWidth,
+      // storeImgWidth: imgSize,
       storeMoment: data,
       storeImgLength: data.image.length
     })
@@ -154,6 +159,7 @@ Page({
     let meId = app.globalData.userId
     templist.map(item => {
       item.parseTime = fromNow(item.add_time * 1000)
+      item.store_name = app.globalData.storeInfo.storeName
       if (meId === item.user_id) {
         item.del = true
       }
@@ -279,6 +285,13 @@ Page({
   },
 
   report(item) {
+    if( this.reported) {
+      wx.showModal({
+        content: '已收到您的举报',
+        showCancel: false
+      })
+      return
+    }
     // 举报
     wx.request({
       url: app.requestHost + 'Notice/complaint_notice/',
@@ -291,6 +304,7 @@ Page({
       success: res => {
         console.log(res)
         if (res.data.code === 201) {
+          this.reported = true
           wx.showModal({
             content: '举报成功',
             showCancel: false
@@ -323,16 +337,15 @@ Page({
         url: '/pages/moments/comment/comment?type=store&item=' + item,
       })
     }
-
   },
 
 
   like(e) {
     let type = e.currentTarget.dataset.type
-    let item
+    let templist, item
     if(type === 'user'){
       let idx = e.currentTarget.dataset.idx
-      let templist = this.data.userMoments.slice()
+      templist = this.data.userMoments.slice()
       item = templist[idx]
     } else {
       item = this.data.storeMoment
@@ -401,6 +414,7 @@ Page({
     if (app.globalData.momentNeedToRefetch) {
       app.globalData.momentNeedToRefetch = false
       this.fetchMomentList()
+      this.fetchShopMoment(app.globalData.storeInfo.storeId)
     }
   },
 
@@ -423,6 +437,7 @@ Page({
    */
   onPullDownRefresh: function () {
     this.fetchMomentList()
+    this.fetchShopMoment(app.globalData.storeInfo.storeId)
   },
 
   /**
@@ -437,13 +452,13 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function (options) {
-    options = options.target.dataset
     if (options.from === 'button') {
+      options = options.target.dataset
       let data, title, image
       if (options.type === 'user') {
         let idx = options.idx
         data = this.data.userMoments[idx]
-        title = data.name + ' ' + data.content + ' --' + app.globalData.storeInfo.storeName
+        title = data.name + ': ' + data.content + ' --' + app.globalData.storeInfo.storeName
         image = data.image
         return {
           title: title,

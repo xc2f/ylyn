@@ -56,8 +56,12 @@ Page({
 
     hasNewNotice: false,
 
-    showLayer: true,
+    // 呼叫服务员
+    showLayer: false,
+    showPrompt: false,
   },
+
+  fetchTableListOk: false,
 
 
   /**
@@ -113,9 +117,9 @@ Page({
 
     wx.getStorage({
       key: 'guideToDetail',
-      success: function(res) {
+      success: function (res) {
       },
-      fail: function(){
+      fail: function () {
         that.setData({
           showGuide: true
         })
@@ -124,7 +128,7 @@ Page({
 
   },
 
-  toDetail(){
+  toDetail() {
     wx.setStorage({
       key: 'guideToDetail',
       data: '',
@@ -139,7 +143,7 @@ Page({
   getUserInfo(res) {
     // wx.canIUse('button.open-type.getUserInfo')
     let that = this
-    if (!wx.canIUse('button.open-type.getUserInfo')){
+    if (!wx.canIUse('button.open-type.getUserInfo')) {
       wx.showModal({
         title: '提示',
         showCancel: false,
@@ -210,7 +214,7 @@ Page({
     let that = this
     let coordinate = app.globalData.coordinate
     if (coordinate) {
-      if(that.data.login){
+      if (that.data.login) {
         that.toFetch()
       } else {
         that.toLogin(type, data)
@@ -244,7 +248,7 @@ Page({
     }
   },
 
-  toLogin(type, data){
+  toLogin(type, data) {
     // 位置已经获取到
     let that = this
     if (type === 'autoLogin') {
@@ -289,6 +293,7 @@ Page({
   },
 
   toFetch(gender, page) {
+    this.fetchTableListOk = false
     let that = this
     gender = gender || 0
     page = page || 1
@@ -311,6 +316,7 @@ Page({
         page: page
       },
       success: function (res) {
+        that.fetchTableListOk = true
         // 隐藏加载动画和下拉刷新动作
         wx.hideLoading()
         wx.stopPullDownRefresh()
@@ -394,6 +400,7 @@ Page({
         }
       },
       fail: function () {
+        that.fetchTableListOk = true
         app.inStore = false
         wx.hideLoading()
         wx.stopPullDownRefresh()
@@ -542,14 +549,12 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
-  scrollToEnd: function(){
-    let now = new Date().getTime()
-    if (this.fetchDataTime + 3000 > now){
-      return
+  scrollToEnd: function () {
+    console.log(this.fetchTableListOk, this.currentPage)
+    if (this.fetchTableListOk) {
+      this.currentPage += 1
+      this.toFetch(this.currentGender, this.currentPage)
     }
-    this.fetchDataTime = now
-    this.currentPage += 1
-    this.toFetch(this.currentGender, this.currentPage)
   },
 
   onReachBottom: function () {
@@ -581,45 +586,55 @@ Page({
         content: '请' + (60 - that.data.callWaiterTimeout) + '秒后再试',
       })
     } else {
-      wx.showModal({
-        title: '提示',
-        content: '呼叫Waiter?',
-        success: function (res) {
-          if (res.confirm) {
-            wx.request({
-              url: app.requestHost + 'User/call_waiter/',
-              method: 'POST',
-              data: {
-                token: app.TOKEN,
-                store_id: app.globalData.storeInfo.storeId,
-                table_id: app.globalData.storeInfo.tableId
-              },
-              success: function (res) {
-                if (res.data.code === 201) {
-                  wx.showToast({
-                    title: '呼叫成功',
-                  })
-                  let callWaiterInterval = setInterval(function () {
-                    // 不行啊，modal content不会变
-                    // that.setData({
-                    //   callWaiterTimeout: that.data.callWaiterTimeout + 1
-                    // })
-                    that.data.callWaiterTimeout++
-                    if (that.data.callWaiterTimeout >= 60) {
-                      that.data.callWaiterTimeout = 0
-                      clearInterval(callWaiterInterval)
-                    }
-                  }, 1000)
-                }
-              }
-            })
-          } else if (res.cancel) {
-            return
-            // console.log('用户点击取消')
-          }
-        }
+      this.setData({
+        showLayer: true,
+        showPrompt: true
       })
     }
   },
+
+  callWaiterSubmit(e) {
+    let that = this
+    let type = e.detail.target.dataset.type
+    if (type === 'cancle') {
+      this.setData({
+        showLayer: false,
+        showPrompt: false,
+      })
+      return
+    }
+    wx.request({
+      url: app.requestHost + 'User/call_waiter/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        store_id: app.globalData.storeInfo.storeId,
+        table_id: app.globalData.storeInfo.tableId,
+        content: e.detail.value.content
+      },
+      success: function (res) {
+        if (res.data.code === 201) {
+          wx.showToast({
+            title: '呼叫成功',
+          })
+          that.setData({
+            showLayer: false,
+            showPrompt: false,
+          })
+          let callWaiterInterval = setInterval(function () {
+            // 不行啊，modal content不会变
+            // that.setData({
+            //   callWaiterTimeout: that.data.callWaiterTimeout + 1
+            // })
+            that.data.callWaiterTimeout++
+            if (that.data.callWaiterTimeout >= 60) {
+              that.data.callWaiterTimeout = 0
+              clearInterval(callWaiterInterval)
+            }
+          }, 1000)
+        }
+      }
+    })
+  }
 
 })

@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 130px;
+  height: 110px;
   perspective: 300px;
   /*transform: scale(0.7);*/
 }
@@ -26,29 +26,31 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: row;
   height: 100%;
   width: 100%;
   overflow: hidden;
 }
+
 .banner .wrap .guideShadow > view {
-  flex: 1
+  flex: 1;
 }
 
 .banner .guideShadow .guideImageWrap {
   position: relative;
   z-index: 2;
-  /* left: 30px; */
-  /* top: 30px; */
+  /* left: 30px; *//* top: 30px; */
 }
+
 .banner .guideShadow .guideImageWrap image {
   width: 90%;
   height: 100px;
   margin-left: 30px;
   margin-top: 30px;
 }
+
 .banner .bannerImg {
   position: absolute;
   top: 0;
@@ -59,6 +61,22 @@
   width: 100%;
   height: 100%;
 }
+
+.banner .shopBanner .bannerTop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.banner .shopBanner .bannerTop .fa-bell {
+  align-self: flex-end;
+  /* margin-left: 7px; */
+  padding-left: 7px;
+  color: #d9534f;
+  text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
 .banner .shopBanner navigator {
   border-radius: 50%;
   position: relative;
@@ -90,7 +108,7 @@
   margin-left: 17px;
   margin-right: 17px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
   display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -119,7 +137,7 @@
   align-items: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  height: 130px;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -144,17 +162,18 @@
 
 .toMe {
   position: absolute;
-  top: 130px;
+  top: 110px;
   width: 50px;
   height: 20px;
   line-height: 20px;
   right: 0;
-  z-index: 999;
+  z-index: 1;
   text-align: center;
-  background: RGB(255,193,7);
+  background: RGB(255, 193, 7);
   border-radius: 0 0 0 2px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .3)
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
+
 .toMe text {
   font-size: 18px;
   color: #fff;
@@ -162,7 +181,7 @@
 
 .body {
   /*border: 1px solid red;*/
-  top: 130px;
+  top: 110px;
   position: absolute;
   opacity: 1;
   background: #fff;
@@ -194,6 +213,7 @@
 .allInOne .up .big {
   /* font-weight: bold; */
   color: #777;
+  font-size: 14px;
 }
 
 .allInOne .down text {
@@ -390,16 +410,14 @@
   margin-top: 50px;
 }
 
-button.needLogin[type="primary"][plain],
-button.retryToGetLocation {
+button.needLogin[type="primary"][plain], button.retryToGetLocation {
   color: #222;
   border: 1px solid #222;
   width: 70%;
   border-radius: 0;
 }
 
-.loadingStatus,
-.login .loginStatus {
+.loadingStatus, .login .loginStatus {
   text-align: center;
   margin-top: 17px;
 }
@@ -408,14 +426,78 @@ button.retryToGetLocation {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: RGB(227,26,28);
-  box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+  background: RGB(227, 26, 28);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   position: absolute;
   bottom: 100px;
   right: 20px;
-  z-index: 9999;
+  z-index: 1;
 }
+
 .toMoments text {
   font-size: 40px;
   color: #fff;
+}
+
+/*提示输入框*/
+
+.wxapp-prompt {
+  width: 80%;
+  left: 10%;
+  height: 140px;
+  margin: auto;
+  background-color: #e7e7eb;
+  border: 1px #d2d2d3 solid;
+  border-radius: 2px;
+  position: fixed;
+  top: 30%;
+  z-index: 2;
+}
+
+.wxapp-prompt .prompt-tip {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 10px;
+  font-size: 14PX;
+}
+
+.wxapp-prompt .prompt-input {
+  height: 40px;
+  line-height: 40px;
+  padding: 10px 10px 0px 10px;
+  background-color: #fff;
+}
+
+.wxapp-prompt .prompt-input input {
+  border: 1px #eee solid;
+  border-radius: 3px;
+  padding-left: 5px;
+  font-size: 14px;
+}
+
+.wxapp-prompt .prompt-input input:hover {
+  border: 1px #4d90fe solid;
+}
+
+.wxapp-prompt .prompt-btns {
+  height: 60px;
+  line-height: 60px;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.callWaiterSubmit {
+  margin-right: 10px;
+}
+
+.bgShadow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2;
 }

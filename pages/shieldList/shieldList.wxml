@@ -3,8 +3,9 @@
     <view class="topBan">
     <view class="line"></view>
     <view class="dot"></view>
-    <image src="/images/nomsg.png"></image>
-    <text>屏蔽列表</text>
+    <!-- <image src="/images/nomsg.png"></image> -->
+    <text class='fa fa-bell-slash-o'></text>
+    <text class='text'>屏蔽列表</text>
     <view class="dot"></view>
     <view class="line"></view>
   </view>

@@ -28,12 +28,12 @@ wx-button:after {
 }
 
 .newNotice {
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
   position: absolute;
   top: 2px;
   right: 2px;
-  background: RGB(201, 48, 44);
+  background: #d9534f;
   border-radius: 50%;
   padding: 0;
   border: none;
@@ -235,13 +235,14 @@ wx-button:after {
   word-break: break-word;
   margin: 5px 20px 5px 10px;
   flex: 10;
+  font-size: 14px;
 }
 
 .topInfo .closeTopInfo {
   align-self: center;
 }
 
-.topInfo image {
+.topInfo .fa-close {
   flex: 1;
   width: 15px;
   height: 15px;
@@ -261,12 +262,14 @@ wx-button:after {
   display: flex;
   align-items: center;
   flex-direction: row;
+  border-radius: 50%;
 }
 
 .moments .item .top image {
   width: 35px;
   height: 35px;
   border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3)
 }
 
 .moments .item .top .info {

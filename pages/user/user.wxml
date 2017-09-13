@@ -1,148 +1,162 @@
 <!--pages/user/user.wxml-->
 
 <view class="container" wx:if="{{dataOk}}">
-  <view class="banner">
-    <view class="userBanner">
-      <image class="bannerImg" src="{{userInfo.avatar}}" mode="aspectFill"></image>
-      <view class="userAvatar" bindtap="changeAvatar">
-        <image src="{{userInfo.avatar}}"></image>
+  <scroll-view scroll-y bindscrolltolower="scrollToBottom" enable-back-to-top class='scroll' scroll-into-view='{{toMomentView}}' scroll-with-animation scroll-top="{{scrollTop}}" bindscroll="handleScroll">
+    <view class="banner">
+      <view class="userBanner">
+        <image class="bannerImg" src="{{userInfo.avatar}}" mode="aspectFill"></image>
+        <view class="userAvatar" bindtap="changeAvatar">
+          <image src="{{userInfo.avatar}}"></image>
+        </view>
+        <view class="userName">
+          <view class="line"></view>
+          <view class="dot"></view>
+          <text>{{userInfo.nickname}}</text>
+          <view class="dot"></view>
+          <view class="line"></view>
+        </view>
+        <view class="userDetail">
+          <text wx:if="{{userInfo.gender}}">{{userInfo.gender == 1 ? '男' : '女'}}</text>
+          <text wx:if="{{userInfo.age}}">{{userInfo.age}}岁</text>
+        </view>
+        <view wx:if="{{userInfo.introduction}}" class="bottomText noWrap">{{userInfo.introduction}}</view>
       </view>
-      <view class="userName">
-        <view class="line"></view>
-        <view class="dot"></view>
-        <text>{{userInfo.nickname}}</text>
-        <view class="dot"></view>
-        <view class="line"></view>
-      </view>
-      <view class="userDetail">
-        <text wx:if="{{userInfo.gender}}">{{userInfo.gender == 1 ? '男' : '女'}}</text>
-        <text wx:if="{{userInfo.age}}">{{userInfo.age}}岁</text>
-      </view>
-      <view wx:if="{{userInfo.introduction}}" class="bottomText noWrap">{{userInfo.introduction}}</view>
     </view>
-  </view>
-  <view class="gallery">
-    <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
-      <image src="/images/tall.png"></image>
-      <text>{{userInfo.height}}</text>
-    </view>
-    <view class="wrap s0" wx:if="{{size === 0}}">
-      <text>空空如也</text>
-    </view>
-    <view class="wrap s1" wx:if="{{size === 1}}">
-      <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-    </view>
-    <view class="wrap s2" wx:if="{{size === 2}}">
-      <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-      <image src="{{gallery[1].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-    </view>
-    <view class="wrap" wx:if="{{size > 2}}">
-      <view class="g0" wx:if="{{size > 0}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[0].album}}" mode="aspectFill"></image>
+    <view class="gallery">
+      <!-- <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
+        <image src="/images/tall.png"></image>
+        <text>{{userInfo.height}}</text>
+      </view> -->
+      <view class="wrap s0" wx:if="{{size === 0}}">
+        <text>空空如也</text>
       </view>
-      <view class="g1" wx:if="{{size > 1}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[1].album}}" mode="aspectFill"></image>
+      <view class="wrap s1" wx:if="{{size === 1}}">
+        <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
       </view>
-      <view class="g2" wx:if="{{size > 2}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[2].album}}" mode="aspectFill"></image>
+      <view class="wrap s2" wx:if="{{size === 2}}">
+        <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
+        <image src="{{gallery[1].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
       </view>
-      <view class="g3" wx:if="{{size > 3}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[3].album}}" mode="aspectFill"></image>
-      </view>
-      <view class="g4" wx:if="{{size > 4}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[4].album}}" mode="aspectFill"></image>
-      </view>
-      <view class="g5" wx:if="{{size > 5}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[5].album}}" mode="aspectFill"></image>
-      </view>
-      <view class="g6" wx:if="{{size > 6}}" style="transform: translateX({{tx6}}%) translateZ({{currentPic===6 ? '100px' : currentPic===5 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[6].album}}" mode="aspectFill"></image>
-      </view>
-      <view class="g7" wx:if="{{size > 7}}" style="transform: translateX({{tx7}}%) translateZ({{currentPic===7 ? '100px' : currentPic===6 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[7].album}}" mode="aspectFill"></image>
-      </view>
-      <view class="g8" wx:if="{{size > 8}}" style="transform: translateX({{tx8}}%) translateZ({{currentPic===8 ? '100px' : currentPic===7 ? '1px': '0px'}}); height: {{imgHeight}}px">
-        <image src="{{gallery[8].album}}" mode="aspectFill"></image>
-      </view>
+      <view class="wrap" wx:if="{{size > 2}}">
+        <view class="g0" wx:if="{{size > 0}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[0].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g1" wx:if="{{size > 1}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[1].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g2" wx:if="{{size > 2}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[2].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g3" wx:if="{{size > 3}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[3].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g4" wx:if="{{size > 4}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[4].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g5" wx:if="{{size > 5}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[5].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g6" wx:if="{{size > 6}}" style="transform: translateX({{tx6}}%) translateZ({{currentPic===6 ? '100px' : currentPic===5 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[6].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g7" wx:if="{{size > 7}}" style="transform: translateX({{tx7}}%) translateZ({{currentPic===7 ? '100px' : currentPic===6 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[7].album}}" mode="aspectFill"></image>
+        </view>
+        <view class="g8" wx:if="{{size > 8}}" style="transform: translateX({{tx8}}%) translateZ({{currentPic===8 ? '100px' : currentPic===7 ? '1px': '0px'}}); height: {{imgHeight}}px">
+          <image src="{{gallery[8].album}}" mode="aspectFill"></image>
+        </view>
 
-      <view bindtap="prev" id="prev" wx:if="{{size>2 && currentPic !== 0}}"></view>
-      <view bindtap="next" id="next" wx:if="{{size>2 && currentPic !== size-1}}"></view>
-    </view>
-  </view>
-
-  <view class="setingOrChat" wx:if="{{currentUserId && userId}}">
-    <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}">
-      <text>{{userId == currentUserId ? '设置' : '开始聊天'}}</text>
-    </view>
-  </view>
-
-
-  <!-- moments -->
-  <view class='userMoments'>
-    <view class='hd'>
-      <view class='{{showMoment ? "active" : ""}}' bindtap='showMoment'>
-        <text class='title'>{{currentUserId===userId ? '我的动态' : (userInfo.gender ? (userInfo.gender==1 ? '他的动态' : '她的动态') : '动态')}}</text>
-      </view>
-      <view class='{{showNotice ? "active" : ""}}' bindtap='showNotice' wx:if="{{userId===currentUserId}}">
-        <text class='title'>我的参与</text>
-        <text class='newNotice' wx:if="{{hasNewComment}}"></text>
+        <view bindtap="prev" id="prev" wx:if="{{size>2 && currentPic !== 0}}"></view>
+        <view bindtap="next" id="next" wx:if="{{size>2 && currentPic !== size-1}}"></view>
       </view>
     </view>
-    <view class='bd'>
 
-      <view class='moments' wx:if="{{showMoment}}">
-        <view class='item' wx:for="{{moments}}" wx:key="notice_id" style="height: {{momentImgHeight}}px">
-          <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" class='{{item.access ? "" : "notAllow"}}'></image>
-          <view class='more' animation='{{item.animation}}'>
+    <view class="setingOrChat" wx:if="{{currentUserId && userId}}">
+      <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}">
+        <text>{{userId == currentUserId ? '设置' : '开始聊天'}}</text>
+      </view>
+    </view>
+
+
+    <!-- moments -->
+    <view class='userMoments' id="moment">
+      <view class='hd'>
+        <view class='{{showMoment ? "active" : ""}}' bindtap='showMoment'>
+          <text class='title'>{{currentUserId===userId ? '我的动态' : (userInfo.gender ? (userInfo.gender==1 ? '他的动态' : '她的动态') : '动态')}}</text>
+        </view>
+        <view class='{{showNotice ? "active" : ""}}' bindtap='showNotice' wx:if="{{userId===currentUserId}}">
+          <text class='title'>我的参与</text>
+          <text class='newNotice' wx:if="{{hasNewComment}}"></text>
+        </view>
+      </view>
+      <view class='bd'>
+
+        <view class='moments' wx:if="{{showMoment}}">
+          <view class='item' wx:for="{{moments}}" wx:key="notice_id" style="height: {{momentImgHeight + 50}}px">
+            <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" class='{{item.access ? "" : "notAllow"}}' style="height: {{momentImgHeight}}px"></image>
+
             <view class='bar'>
-              <view class='left'>
-                <view class='like'>
-                  <text class='fa fa-thumbs-up'></text> {{item.thumbs_num !=0 ? item.thumbs_num : ''}}
-                </view>
-                <view class='comment'>
-                  <text class='fa fa-reply'></text> {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
-                </view>
-              </view>
-              <view class='{{item.toggleStatus ? "open right" : "right"}}' bindtap='toggleBar' data-idx="{{index}}">
 
+              <view class='title' data-type="user" data-side="moment" catchtap='toMoment' data-idx="{{index}}">
                 <text wx:if='{{item.unRead}}' class='newNotice'></text>
-                <text class='fa fa-angle-right' animation='{{item.animationAngle}}'></text>
+                <text class='{{item.toggleStatus ? "open" : "collapse"}}'>{{item.content}}</text>
+              </view>
+
+              <!-- end bar -->
+              <view class='more'>
+                <view class='left'>
+                  <view class='like'>
+                    <text class='fa fa-thumbs-up'></text> {{item.thumbs_num !=0 ? item.thumbs_num : ''}}
+                  </view>
+                  <view class='comment'>
+                    <text class='fa fa-reply'></text> {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
+                  </view>
+                </view>
+                <view class='right' catchtap='toShop'  data-type='user' data-side="moment" data-idx="{{index}}" data-idx="{{index}}">
+
+                  <text>{{item.store_name}}</text>
+                </view>
+                <!-- <text>{{item.parseTime}} --{{item.store_name}}</text> -->
+              </view>
+              <!-- end more -->
+            </view>
+
+
+          </view>
+          <view class='fetchFail' wx:if="{{fetchMomentsFail}}">获取数据失败</view>
+        </view>
+        <!-- moments end -->
+
+        <view class='notices' wx:if="{{showNotice}}">
+          <view wx:for="{{notices}}" class='item' wx:key="evaluate_id">
+            <view class='newReply'>
+              <text class='whoReply'>{{item.f_nickname}}: </text>
+              {{item.content}}
+            </view>
+            <view class='quote' catchtap='toMoment' data-side='notice' data-idx='{{index}}'>
+              <image src="{{item.notice_info.image[0]}}" class='{{item.access ? "" : "notAllow"}}'></image>
+              <view class='info'>
+                <text class='myReply'>{{item.last_content}}</text>
+                <text class='storeName'>--{{item.store_name}}</text>
               </view>
             </view>
-            <!-- end bar -->
-            <view class='content' data-type='user' catchtap='toMoment' data-side="moment" data-idx="{{index}}">{{item.content}}
-              <text>{{item.parseTime}} --{{item.store_name}}</text>
-            </view>
+            <text class='time'>{{item.parseTime}}</text>
           </view>
+          <view class='fetchFail' wx:if="{{fetchNoticesFail}}">获取数据失败</view>
         </view>
-        <view class='fetchFail' wx:if="{{fetchMomentsFail}}">获取数据失败</view>
+        <!-- notice end -->
       </view>
-      <!-- moments end -->
-
-      <view class='notices' wx:if="{{showNotice}}">
-        <view wx:for="{{notices}}" class='item' wx:key="evaluate_id">
-          <view class='newReply'>
-            <text class='whoReply'>{{item.f_nickname}}: </text>
-            {{item.content}}
-          </view>
-          <view class='quote' catchtap='toMoment' data-side='notice' data-idx='{{index}}'>
-            <image src="{{item.notice_info.image[0]}}" class='{{item.access ? "" : "notAllow"}}'></image>
-            <view class='info'>
-              <text class='myReply'>{{item.last_content}}</text>
-              <text class='storeName'>--{{item.store_name}}</text>
-            </view>
-          </view>
-          <text class='time'>{{item.parseTime}}</text>
-        </view>
-        <view class='fetchFail' wx:if="{{fetchNoticesFail}}">获取数据失败</view>
-      </view>
-      <!-- notice end -->
     </view>
-  </view>
-
+  </scroll-view>
 </view>
 
 <view class="occurCommonFail" wx:if="{{fetchDataFail}}" bindtap="occurFail">
   <import src="/pages/common/errorPage/errorPage" />
   <template is="errorPage" />
+</view>
+
+<view class='toTop' bindtap='toTop' wx:if='{{showToTop}}'>
+  <text class='fa fa-arrow-up'>
+  </text>
+  回到顶部
 </view>

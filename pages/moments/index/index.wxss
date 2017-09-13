@@ -4,6 +4,10 @@
   position: relative;
 }
 
+.scroll {
+  height: 100vh;
+}
+
 .empty {
   text-align: center;
   margin: 30px 0;

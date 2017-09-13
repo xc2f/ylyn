@@ -18,7 +18,7 @@
 
 .chatBody .time {
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   width: 30%;
   margin: auto;
   clear: both;
@@ -119,7 +119,8 @@
   align-items: center;
   position: relative;
   word-break: break-word;
-  line-height: 1.5
+  line-height: 1.5;
+  font-size: 14px;
 }
 
 .faceMsg {
@@ -290,7 +291,7 @@
 }
 
 .shield .outer {
-  font-size: 16px;
+  font-size: 14px;
   height: 20px;
 }
 
@@ -300,7 +301,7 @@
   float: left;
 }
 
-.shield image {
+.shield .fa-close {
   width: 12px;
   height: 12px;
   position: absolute;
@@ -310,7 +311,7 @@
 
 .shieldMsg {
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   width: 50%;
   margin: 0 auto;
   background: rgb(221, 221, 221);

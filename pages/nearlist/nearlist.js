@@ -206,7 +206,7 @@ Page({
         page: page
       },
       success: function (res) {
-        // console.log(res)
+        console.log(res)
         wx.stopPullDownRefresh()
         if(res.data.code === 101){
           wx.hideLoading()

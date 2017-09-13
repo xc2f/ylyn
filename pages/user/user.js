@@ -47,6 +47,8 @@ Page({
   currentMomentPage: 1,
   currentNoticePage: 1,
 
+  initNotice: false,
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -56,7 +58,7 @@ Page({
       currentUserId: options.user_id,
       userId: app.globalData.userId,
       imgHeight: deviceInfo.screenHeight / 2 * 0.85,
-      momentImgHeight: deviceInfo.screenWidth / 2 * 0.85
+      momentImgHeight: deviceInfo.screenWidth / 2 * 0.85,
     })
 
     this.fetchUserInfo(options.user_id)
@@ -141,6 +143,7 @@ Page({
   },
 
   fetchUserMoments(userId, page) {
+    this.fetchDataAlready = false
     page = page || 1
     wx.request({
       url: app.requestHost + 'Store/get_tuser_notice/',
@@ -172,8 +175,12 @@ Page({
             fetchMomentsFail: true
           })
         }
+        setTimeout(() => {
+          this.fetchDataAlready = true
+        }, 200)
       },
       fail: () => {
+        this.fetchDataAlready = true
         // error needn't to handle
         this.currentMomentPage = page - 1
         this.setData({
@@ -188,9 +195,9 @@ Page({
     // add animation
     let storeId = app.globalData.storeInfo ? app.globalData.storeInfo.storeId : null
     data.map((item, idx) => {
-      item.animation = {}
-      item.animationAngle = {}
-      item.toggleStatus = false
+      // item.animation = {}
+      // item.animationAngle = {}
+      // item.toggleStatus = false
       item.access = storeId === item.store_id ? true : false
       item.parseTime = fromNow(item.add_time * 1000)
     })
@@ -200,6 +207,7 @@ Page({
   },
 
   fetchUserNotices(page) {
+    this.fetchDataAlready = false
     page = page || 1
     wx.request({
       url: app.requestHost + 'Store/get_user_partake/',
@@ -209,6 +217,7 @@ Page({
         page: page
       },
       success: res => {
+        console.log(res)
         if (res.data.code === 201) {
           this.setData({
             fetchNoticesFail: false
@@ -234,8 +243,12 @@ Page({
             fetchNoticesFail: true
           })
         }
+        setTimeout(() => {
+          this.fetchDataAlready = true
+        }, 200)
       },
       fail: () => {
+        this.fetchDataAlready = true
         this.currentNoticePage = page - 1
         this.setData({
           fetchNoticesFail: true
@@ -378,11 +391,11 @@ Page({
         key: 'moments',
         success: function (res) {
           let data = res.data
-          if(data.length === 0){
+          if (data.length === 0) {
             app.globalData.hasNewMoment = false
             wx.removeStorage({
               key: 'moments',
-              success: function(res) {},
+              success: function (res) { },
             })
           } else {
             let moments = that.data.moments.slice()
@@ -394,16 +407,30 @@ Page({
               })
             })
             that.setData({
-              moments: moments
+              moments: moments,
             })
+            if(!that.initNotice){
+              that.setData({
+                toMomentView: 'moment',
+              })
+            }
+            that.initNotice = true
           }
         },
       })
     }
     if (globalData.hasNewComment) {
       that.setData({
-        hasNewComment: true
+        hasNewComment: true,
       })
+      if (!that.initNotice) {
+        that.setData({
+          toMomentView: 'moment',
+          showMoment: false,
+          showNotice: true
+        })
+      }
+      that.initNotice = true
     }
   },
   /**
@@ -411,7 +438,7 @@ Page({
    */
   onShow: function () {
     let that = this
-    if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId){
+    if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
       that.getNoticeStatus()
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()
@@ -475,6 +502,19 @@ Page({
     }
   },
 
+  handleScroll(e) {
+    if (!this.data.showToTop && e.detail.scrollTop > 135) {
+      this.setData({
+        showToTop: true
+      })
+    }
+    if (this.data.showToTop && e.detail.scrollTop <= 135) {
+      this.setData({
+        showToTop: false
+      })
+    }
+  },
+
 
   basicAnimation(duration, delay) {
     let animation = wx.createAnimation({
@@ -485,23 +525,23 @@ Page({
     return animation;
   },
 
-  toggleBar(e) {
-    let idx = e.currentTarget.dataset.idx
-    let templist = this.data.moments
-    let item = templist[idx]
-    if (item.toggleStatus) {
-      item.toggleStatus = false
-      item.animation = this.basicAnimation().height(30).step().export()
-      item.animationAngle = this.basicAnimation().rotate(0).step().export()
-    } else {
-      item.toggleStatus = true
-      item.animation = this.basicAnimation().height('100%').step().export()
-      item.animationAngle = this.basicAnimation().rotate(90).step().export()
-    }
-    this.setData({
-      moments: templist
-    })
-  },
+  // toggleBar(e) {
+  //   let idx = e.currentTarget.dataset.idx
+  //   let templist = this.data.moments
+  //   let item = templist[idx]
+  //   if (item.toggleStatus) {
+  //     item.toggleStatus = false
+  //     item.animation = this.basicAnimation().height(30).step().export()
+  //     item.animationAngle = this.basicAnimation().rotate(0).step().export()
+  //   } else {
+  //     item.toggleStatus = true
+  //     item.animation = this.basicAnimation().height('100%').step().export()
+  //     item.animationAngle = this.basicAnimation().rotate(90).step().export()
+  //   }
+  //   this.setData({
+  //     moments: templist
+  //   })
+  // },
 
   prevImg(e) {
     let idx = e.currentTarget.dataset.idx
@@ -515,15 +555,25 @@ Page({
     })
   },
 
+  toShop(e){
+    let idx = e.currentTarget.dataset.idx
+    let data = this.data.moments
+    let storeId = data[idx].store_id
+    wx.navigateTo({
+      url: '/pages/shopDetail/shopDetail?store_id=' + storeId,
+    })
+  },
+
   toMoment(e) {
     // if (this.data.currentUserId !== this.data.userId){
     //   return
     // }
+    console.log(e)
     let idx = e.currentTarget.dataset.idx
     let side = e.currentTarget.dataset.side
     if (side === 'moment') {
       let data = this.data.moments
-      console.log(data)
+      // console.log(data)
       data[idx].unRead = false
       this.setData({
         moments: data
@@ -531,7 +581,7 @@ Page({
 
       wx.getStorage({
         key: 'moments',
-        success: function(res) {
+        success: function (res) {
           let list = res.data.slice()
           list.map((notice_id, idx) => {
             if (notice_id === data[idx].notice_id) {
@@ -548,8 +598,8 @@ Page({
 
       // if (data.access) {
       // 删除两个动画键
-      delete data[idx].animation
-      delete data[idx].animationAngle
+      // delete data[idx].animation
+      // delete data[idx].animationAngle
       wx.navigateTo({
         url: '/pages/moments/comment/comment?from=user&type=user&item=' + JSON.stringify(data[idx]),
       })
@@ -591,7 +641,7 @@ Page({
     app.globalData.hasNewComment = false
     wx.removeStorage({
       key: 'comments',
-      success: function(res) {},
+      success: function (res) { },
     })
     this.fetchUserNotices()
     this.setData({
@@ -601,6 +651,11 @@ Page({
     })
   },
 
+  toTop() {
+    this.setData({
+      scrollTop: 0
+    })
+  },
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -626,14 +681,20 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
-    if (this.data.showMoment) {
-      this.currentMomentPage++
-      this.fetchUserMoments(this.data.currentUserId, this.currentMomentPage)
-    } else {
-      this.currentNoticePage++
-      this.fetchUserNotices(this.currentNoticePage)
+  scrollToBottom() {
+    console.log(this.fetchDataAlready)
+    if (this.fetchDataAlready) {
+      if (this.data.showMoment) {
+        this.currentMomentPage++
+        this.fetchUserMoments(this.data.currentUserId, this.currentMomentPage)
+      } else {
+        this.currentNoticePage++
+        this.fetchUserNotices(this.currentNoticePage)
+      }
     }
+  },
+  onReachBottom: function () {
+
   },
 
   /**

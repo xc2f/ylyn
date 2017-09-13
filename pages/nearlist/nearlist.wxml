@@ -7,14 +7,16 @@
       <text>{{topInfoTip}} </text>
     </view>
     <view bindtap='closeTopInfo' class="closeTopInfo">
-      <image src="/images/close2.png"></image>
+      <!-- <image src="/images/close2.png"></image> -->
+      <text class='fa fa-close'></text>
     </view>
   </view>
   <view class="head">
     <view class="line"></view>
     <view class="dot"></view>
-    <image src="/images/zjlxr-dp.png"></image>
-    <text>附近商家</text>
+    <!-- <image src="/images/zjlxr-dp.png"></image> -->
+    <text class='fa fa-home'></text>
+    <text class='text'>附近商家</text>
     <view class="dot"></view>
     <view class="line"></view>
   </view>
@@ -26,7 +28,7 @@
     <view class="shopList" wx:if="{{!shopListEmpty}}">
       <block wx:for="{{shopList}}" wx:key="store_id">
         <view bindtap='navigateToStore' data-storeid='{{item.store_id}}'>
-         <!-- class="{{theStoreId === item.store_id ? 'theStore' : ''}}" -->
+          <!-- class="{{theStoreId === item.store_id ? 'theStore' : ''}}" -->
           <view class='{{item.store_status==1 ? "item" : "item storeClose"}}'>
             <view wx:if="{{item.is_activity}}" class="inSales">
               <text class="inSaleText">活动</text>
@@ -88,15 +90,15 @@
   </view>
 
   <view class="toMe bottomIcon" bindtap="toMe" wx:if="{{login}}">
-    <!-- <text class="fa fa-user-o"></text> -->
+    <text class="fa fa-user-o"></text>
     <text class='newNotice' wx:if="{{hasNewNotice}}"></text>
-    <image src="/images/gr.png"></image>
+    <!-- <image src="/images/gr.png"></image> -->
     <!-- <text class="text">我的</text> -->
   </view>
   <view class="toMsgList bottomIcon" bindtap="toMsgList" wx:if="{{login}}">
-    <!-- <text class="fa fa-commenting-o"></text> -->
+    <text class="fa fa-commenting-o"></text>
     <!-- <text class="text">消息列表</text> -->
-    <image src="/images/message-l.png"></image>
+    <!-- <image src="/images/message-l.png"></image> -->
     <view class="msgNew" wx:if="{{hasNewMsg}}"></view>
   </view>
 

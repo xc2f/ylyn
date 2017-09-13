@@ -2,13 +2,16 @@
 
 .container {
   position: relative;
-  height: 100%;
+  height: 100vh;
   background: #fff;
 }
 
+.scroll {
+  height: 100vh;
+}
+
 .banner {
-  transform-style: preserve-3d;
-  /* position: absolute; 
+  /* transform-style: preserve-3d; *//* position: absolute; 
   top: 0;
   left: 0;
   right: 0; */
@@ -272,6 +275,7 @@
 
 .userMoments {
   margin: 20px 0;
+  height: 100vh;
 }
 
 .userMoments .hd {
@@ -280,10 +284,12 @@
   justify-content: center;
   align-items: center;
 }
+
 .userMoments .hd > view {
   margin: 7px;
   position: relative;
 }
+
 .userMoments .hd text.title {
   color: #bbb;
   padding-bottom: 5px;
@@ -300,29 +306,33 @@
   flex-direction: row;
   justify-content: center;
   align-items: center; */
-  margin: 20px 0;
+  margin: 20px 10px;
 }
 
 .moments .item {
   /* flex: 1; */
-  width: calc(50% - 2px);
+  width: calc(50% - 5px);
   float: left;
   padding: 0;
-  border: 1px solid #fff;
+  /* border: 1px solid #fff; */
   position: relative;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, .3);
+  margin: 0 10px 10px 0;
+  border-radius: 2px;
 }
-
+.moments .item:nth-child(2n) {
+  margin-right: 0;
+}
 .moments .item image {
   width: 100%;
-  height: 100%;
 }
 
 image.notAllow {
   opacity: 0.7;
 }
 
-.moments .item .more {
-  height: 30px;
+.moments .item .bar {
+  height: 50px;
   position: absolute;
   left: 0;
   bottom: 0;
@@ -331,15 +341,60 @@ image.notAllow {
   overflow: hidden;
 }
 
-.moments .bar {
+.moments .title {
   height: 30px;
+  line-height: 30px;
+  width: 90%;
+  font-size: 14px;
+  color: #222;
+  text-align: left;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-left: 5px;
+}
+
+.moments .bar > view {
+}
+
+.moments .more {
+  height: 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
+  color: #777;
+}
+.moments .more .left {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: #777;
+}
+.moments .more .left .like,
+.moments .more .left .comment {
+  flex: 1;
+  text-align: center;
+}
+.moments .more .right {
+  flex: 1.5;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 20px;
+  text-align: right;
+  padding: 0 5px;
+  color: #222;
+  font-weight: bold;
 }
 
-.moments .bar .left {
+/* .moments .bar .left {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -368,15 +423,16 @@ image.notAllow {
   padding: 7px;
   color: #222;
   font-size: 14px;
-  /* font-weight: bold; */
   line-height: 2;
   height: calc(100% - 44px);
 }
+
 .moments .more .content text {
   font-size: 12px;
   color: #777;
   margin-top: 7px;
-}
+} */
+
 .notices {
   /* text-align: center; */
 }
@@ -388,6 +444,7 @@ image.notAllow {
   clear: both;
   border-bottom: 1px solid #eee;
 }
+
 .notices .item:last-child {
   border: none;
 }
@@ -460,13 +517,35 @@ image.notAllow {
   color: #777;
   font-size: 14px;
 }
+
 .userMoments .hd .newNotice {
   right: -10px;
 }
+
 .moments .newNotice {
   top: 12px;
   right: 20px;
   z-index: 999;
   width: 7px;
   height: 7px;
+}
+
+.toTop {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+}
+
+.toTop .fa {
+  font-size: 20px;
 }

@@ -313,21 +313,9 @@ App({
         } else if (data.type === 'ping') {
           return
         } else if (data.type === 'new_evaluate') {
-          let comments = []
-          comments.push(data.notice_id)
-          let data = comments
-          wx.setStorage({
-            key: 'comments',
-            data: data,
-          })
+          that.pushNoticeMsg('comments', data)
         } else if (data.type === 'new_notice') {
-          let moments = []
-          moments.push(data.notice_id)
-          let data = moments
-          wx.setStorage({
-            key: 'moments',
-            data: data,
-          })
+          that.pushNoticeMsg('moments', data)
         } else {
           that.loadMsg(data)
         }
@@ -348,6 +336,27 @@ App({
     })
   },
 
+  pushNoticeMsg(type, data){
+    wx.getStorage({
+      key: type,
+      success: function (res) {
+        let notices = res.data
+        notices.push(data.notice_id)
+        wx.setStorage({
+          key: type,
+          data: notices,
+        })
+      },
+      fail: function () {
+        let notices = []
+        notices.push(data.notice_id)
+        wx.setStorage({
+          key: type,
+          data: notices,
+        })
+      }
+    })
+  },
 
   // rebuild ok
   login(callback) {

@@ -21,7 +21,7 @@ Page({
 
   currentPage: 1,
   // 为防止scroll频繁触发触底事件
-  fetchCommentOk: false,
+  fetchCommentAlready: false,
 
   // 被评论人信息
   commented: null,
@@ -69,8 +69,9 @@ Page({
   fetchComments(notice_id, page, source) {
     // TODO type, page
     let type = this.momentType === 'user' ? 2 : 1
+    console.log(type, notice_id)
     page = page || 1
-    this.fetchCommentOk = false
+    this.fetchCommentAlready = false
     wx.request({
       url: app.requestHost + 'Notice/notice_info/',
       method: 'POST',
@@ -110,15 +111,18 @@ Page({
             delete data.evaluate_list
             this.parseMoment(data)
           }
-          this.fetchCommentOk = true
         } else {
           this.currentPage = page - 1
           this.setData({
             commentsStatus: '评论飞到火星了'
           })
         }
+        setTimeout(() => {
+          this.fetchCommentAlready = true
+        }, 200)
       },
       fail: () => {
+        this.fetchCommentAlready = true
         this.currentPage = page - 1
         this.setData({
           commentsStatus: '评论飞到火星了'
@@ -212,7 +216,8 @@ Page({
       if (commented.f_user_id === commented.store_id) {
         t_user_id = this.data.moment.store_id
       } else {
-        t_user_id = commented.t_user_id || commented.f_user_id
+        // t_user_id = commented.t_user_id || commented.f_user_id
+        t_user_id = commented.f_user_id || ''
       }
       // 引用回复
       // 引用回复评论，回复用户为1，回复商家为3
@@ -389,12 +394,13 @@ Page({
         evaluate_id: item.evaluate_id
       },
       success: res => {
+        console.log(res)
         if (res.data.code === 201) {
           let templist = this.data.comments.slice()
           templist.splice(idx, 1)
           this.setData({
             comments: templist,
-            commentsLength: this.commentsLength - 1
+            commentsLength: this.data.commentsLength - 1
           })
         } else if (res.data.code === 102) {
           wx.showModal({
@@ -520,9 +526,10 @@ Page({
   toUserPage(e) {
     let data = e.currentTarget.dataset
     let userId
-    // if(this.commentType === 'user'){
+    console.log(this.momentType)
+    // if(this.momentType === 'user'){
     if (data.type === 'moment') {
-      if (this.commentType === 'user') {
+      if (this.momentType === 'user') {
         userId = this.data.moment.user_id
         wx.navigateTo({
           url: '/pages/user/user?user_id=' + userId,
@@ -617,7 +624,7 @@ Page({
     // this.fetchComments(this.data.moment.notice_id, this.currentPage)
   },
   fetchMoreComment() {
-    if (this.fetchCommentOk) {
+    if (this.fetchCommentAlready) {
       this.currentPage++
       this.fetchComments(this.data.moment.notice_id, this.currentPage)
     }

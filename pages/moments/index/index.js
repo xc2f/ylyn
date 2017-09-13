@@ -106,6 +106,7 @@ Page({
   },
 
   fetchMomentList(page) {
+    this.fetchMomentAlready = false
     page = page || 1
     wx.request({
       url: app.requestHost + 'Notice/get_user_notice/',
@@ -116,6 +117,7 @@ Page({
         page: page
       },
       success: (res) => {
+        console.log(page, res)
         wx.hideLoading()
         wx.stopPullDownRefresh()
         if (res.data.code === 201) {
@@ -143,8 +145,12 @@ Page({
             content: '获取失败',
           })
         }
+        setTimeout(() => {
+          this.fetchMomentAlready = true
+        }, 200)
       },
       fail: () => {
+        this.fetchMomentAlready = true
         this.currentPage = page - 1
         wx.showModal({
           showCancel: false,
@@ -443,9 +449,14 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
+  scrollToBottom(){
+    console.log(this.fetchMomentAlready)
+    if(this.fetchMomentAlready){
+      this.currentPage++
+      this.fetchMomentList(this.currentPage)
+    }
+  },
   onReachBottom: function () {
-    this.currentPage++
-    this.fetchMomentList(this.currentPage)
   },
 
   /**

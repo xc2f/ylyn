@@ -9,7 +9,8 @@
       <view style="float: left;">你已将对方屏蔽可以</view>
       <view class="inner" bindtap="toShield" data-target="cancleShield">取消屏蔽</view>
     </view>
-    <image src="/images/close2.png" bindtap="closeShield"></image>
+    <!-- <image src="/images/close2.png" bindtap="closeShield"></image> -->
+    <text class='fa fa-close'  bindtap="closeShield"></text>
   </view>
   <scroll-view class="chatBody" scroll-y="{{true}}" style="height: {{chatBodyHeight}}px;" bindtap="inputFocus" scroll-into-view="{{toView}}">
     <block wx:for="{{messages}}" wx:key="">

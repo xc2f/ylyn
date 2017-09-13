@@ -14,11 +14,15 @@
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
         <image class="bannerImg" src="{{store.store_bgimg === '' ? '/images/banner.jpg' : store.store_bgimg}}"></image>
 
-        <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}" bindtap='toDetail'>
-          <view class="shopAvatar">
-            <image src="{{store.store_logo==='' ? '/images/defaultLogo.png' : store.store_logo}}"></image>
-          </view>
-        </navigator>
+        <view class='bannerTop'>
+          <navigator url="/pages/shopDetail/shopDetail?store_id={{qrcodeInfo.store_id}}" bindtap='toDetail'>
+            <view class="shopAvatar">
+              <image src="{{store.store_logo==='' ? '/images/defaultLogo.png' : store.store_logo}}"></image>
+            </view>
+          </navigator>
+
+          <text class='fa fa-bell' style=""></text>
+        </view>
 
         <view class="shopName">
           <view class="line"></view>
@@ -28,7 +32,8 @@
           <view class="line"></view>
         </view>
 
-        <view class="bottomText">本店正有{{store.total_number}}位小伙伴使用</view>
+        <!-- <view></view> -->
+        <!-- <view class="bottomText"></view> -->
       </view>
 
       <view class='guideShadow' wx:if="{{showGuide}}">
@@ -52,11 +57,11 @@
     </text>
   </view>
 
-  <scroll-view bindscrolltolower="scrollToEnd" scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-130-50 }}px;">
+  <scroll-view bindscrolltolower="scrollToEnd" scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-110-50 }}px;">
     <view class="allInOne">
       <view class="up">
         <view class="line"></view>
-        <text class="big">此刻店里的人</text>
+        <text class="big">本店正有{{store.total_number}}位小伙伴使用</text>
         <view class="line"></view>
       </view>
       <view class="down">
@@ -108,8 +113,9 @@
     </view>
 
     <view class="waiter" bindtap="callWaiter">
-      <image src="/images/waiter.png"></image>
-      <text>呼叫维特</text>
+      <!-- <image src="/images/waiter.png"></image> -->
+      <text class='fa fa-user-o'></text>
+      <text>个人中心</text>
     </view>
   </view>
 
@@ -140,7 +146,16 @@
   </view>
 </view>
 
-
-<view wx:if="{{showLayer}}">
-  
+<view class='bgShadow' wx:if="{{showLayer}}"></view>
+<view class="wxapp-prompt" wx:if="{{showPrompt}}">
+  <form bindsubmit="callWaiterSubmit">
+    <view class="prompt-tip">呼叫服务员</view>
+    <view class="prompt-input">
+      <input type="text" placeholder="点餐、加水、买单..." name="content" />
+    </view>
+    <view class="prompt-btns">
+      <button size="mini" class='callWaiterSubmit' formType="submit" type="default" data-type="confirm">确定</button>
+      <button size="mini" type="default" formType="submit" data-type="cancle">取消</button>
+    </view>
+  </form>
 </view>

@@ -59,7 +59,11 @@ Page({
     // 呼叫服务员
     showLayer: false,
     showPrompt: false,
+
+    filterAnimation: null,
+    filterAngleAnimation: null
   },
+  filterShow: false,
 
   fetchTableListOk: false,
 
@@ -442,26 +446,35 @@ Page({
 
   showFilter() {
     let that = this
-    if (that.data.filterShow) {
-      that.showAll()
-      that.setData({
-        filterShow: false,
+    if (that.filterShow) {
+      // that.showAll()
+      // that.setData({
+      //   filterShow: false,
+      // })
+      // setTimeout(function () {
+      //   that.setData({
+      //     filterShowAnimation: that.basicAnimation(300, 0).width(45).step().export()
+      //   })
+      // }, 10)
+      this.setData({
+        filterAnimation: that.basicAnimation(300, 0).right(-100).step().export(),
+        filterAngleAnimation: that.basicAnimation(300, 0).rotate(0).step().export()
       })
-      setTimeout(function () {
-        that.setData({
-          filterShowAnimation: that.basicAnimation(300, 0).width(45).step().export()
-        })
-      }, 10)
     } else {
-      that.setData({
-        filterShow: true,
+      this.setData({
+        filterAnimation: that.basicAnimation(300, 0).right(0).step().export(),
+        filterAngleAnimation: that.basicAnimation(300, 0).rotate(180).step().export()
       })
-      setTimeout(function () {
-        that.setData({
-          filterShowAnimation: that.basicAnimation(300, 0).width(170).step().export()
-        })
-      }, 10)
+      // that.setData({
+      //   filterShow: true,
+      // })
+      // setTimeout(function () {
+      //   that.setData({
+      //     filterShowAnimation: that.basicAnimation(300, 0).width(170).step().export()
+      //   })
+      // }, 10)
     }
+    this.filterShow = !this.filterShow
 
   },
 
@@ -634,6 +647,12 @@ Page({
           }, 1000)
         }
       }
+    })
+  },
+
+  toMomentPage(){
+    wx.navigateTo({
+      url: '/pages/moments/index/index',
     })
   }
 

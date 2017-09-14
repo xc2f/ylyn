@@ -535,31 +535,31 @@ Page({
           url: '/pages/user/user?user_id=' + userId,
         })
       } else {
-        let storeInfo = app.globalData.storeInfo
-        if (storeInfo && this.data.moment.store_id === storeInfo.storeId) {
-          wx.navigateTo({
-            url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
-          })
-        } else {
+        // let storeInfo = app.globalData.storeInfo
+        // if (storeInfo && this.data.moment.store_id === storeInfo.storeId) {
+        //   wx.navigateTo({
+        //     url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+        //   })
+        // } else {
           wx.navigateTo({
             url: '/pages/shopDetail/shopDetail?store_id=' + this.data.moment.store_id,
           })
-        }
+        // }
       }
     } else {
       let idx = data.idx
       let item = this.data.comments[idx]
       if (item.f_user_id === item.store_id) {
-        let storeInfo = app.globalData.storeInfo
-        if (storeInfo && this.data.comments[idx].store_id === storeInfo.storeId) {
-          wx.navigateTo({
-            url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
-          })
-        } else {
+        // let storeInfo = app.globalData.storeInfo
+        // if (storeInfo && this.data.comments[idx].store_id === storeInfo.storeId) {
+        //   wx.navigateTo({
+        //     url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
+        //   })
+        // } else {
           wx.navigateTo({
             url: '/pages/shopDetail/shopDetail?store_id=' + item.store_id,
           })
-        }
+        // }
       } else {
         userId = item.f_user_id
         wx.navigateTo({

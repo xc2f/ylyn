@@ -137,10 +137,10 @@
               <image src="{{item.notice_info.image[0]}}" class='{{item.access ? "" : "notAllow"}}'></image>
               <view class='info'>
                 <text class='myReply'>{{item.last_content}}</text>
-                <text class='storeName'>--{{item.store_name}}</text>
+                <text class='storeName'>{{item.parseTime}}</text>
               </view>
             </view>
-            <text class='time'>{{item.parseTime}}</text>
+            <text class='time' data-idx='{{index}}' data-side='notice' catchtap='toShop'>{{item.store_name}}</text>
           </view>
           <view class='fetchFail' wx:if="{{fetchNoticesFail}}">获取数据失败</view>
         </view>

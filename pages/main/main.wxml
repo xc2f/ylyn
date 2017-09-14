@@ -1,10 +1,24 @@
 <!--pages/main/main.wxml-->
 <view class="container" style="" wx:if="{{store !== null}}">
 
-  <view class="toMoments center">
+  <!-- <view class="toMoments center">
     <navigator url='/pages/moments/index/index'>
-      <text class='fa fa-bullseye'></text>
+       <text class='fa fa-bullseye'></text> 
     </navigator>
+  </view> -->
+
+  <view class="filterBox" bindtap='showFilter' animation="{{filterAnimation}}">
+    <!-- <navigator url='/pages/moments/index/index'> -->
+    <view class='fa fa-angle-left' animation="{{filterAngleAnimation}}"></view>
+    <!-- </navigator> -->
+    <view class='right'>
+      <view class='item' bindtap="showBoy">
+        <image src="/images/show_boy.png"></image>
+      </view>
+      <view class='item' bindtap="showGirl">
+        <image src="/images/show_girl.png"></image>
+      </view>
+    </view>
   </view>
 
   <view class="banner" style="width: {{ deviceInfo.windowWidth }}px">
@@ -21,7 +35,7 @@
             </view>
           </navigator>
 
-          <text class='fa fa-bell' style=""></text>
+          <!-- <text class='fa fa-bell' style=""></text> -->
         </view>
 
         <view class="shopName">
@@ -48,14 +62,11 @@
     </view>
   </view>
 
-  <view class="toMe" wx:if="{{login}}" bindtap="switchToMe">
-
-    <!-- <image class="flipConnerImg" src="/images/flipConner.png"></image>
-    <text class="flipConnerText">我的</text> -->
+  <!-- <view class="toMe" wx:if="{{login}}" bindtap="switchToMe">
     <text wx:if='{{hasNewNotice}}' class='newNotice'></text>
     <text class='fa fa-user'>
     </text>
-  </view>
+  </view> -->
 
   <scroll-view bindscrolltolower="scrollToEnd" scroll-y="true" class="body" style="height: {{ deviceInfo.windowHeight-110-50 }}px;">
     <view class="allInOne">
@@ -86,15 +97,29 @@
 
 
   <view class="toolBar" wx:if="{{login}}">
+    <view class="waiter" bindtap="callWaiter">
+      <view class="msgwrap">
+        <!-- <image src="/images/message.png"></image> -->
+        <text class='fa fa-bell-o'></text>
+      </view>
+      <text>呼叫服务</text>
+    </view>
     <view class="message" bindtap="toChatRecords">
       <view class="msgwrap">
         <image src="/images/message.png"></image>
-        <view class="msgStatus" wx:if="{{hasNewMsg}}"></view>
+        <!-- <text class='fa fa-commenting-o'></text> -->
+        <view class="newNotice" wx:if="{{!hasNewMsg}}"></view>
       </view>
-      <text>消息列表</text>
+      <text>消息</text>
     </view>
-
-    <view class="middleBlock">
+    <view class="waiter" bindtap='toMomentPage'>
+        <view class="msgwrap">
+          <!-- <image src="/images/message.png"></image> -->
+          <text class='fa fa-mercury'></text>
+        </view>
+        <text>店友圈</text>
+    </view>
+    <!-- <view class="middleBlock">
       <view class="middleWrap">
         <image src="/images/plus.png" wx:if="{{!filterShow}}" bindtap="showFilter" style="z-index: 1;"></image>
         <image src="/images/all.png" wx:if="{{filterShow}}" bindtap="showFilter" style="z-index: 1;"></image>
@@ -110,11 +135,14 @@
           <text>只看男生</text>
         </view>
       </view>
-    </view>
+    </view> -->
 
-    <view class="waiter" bindtap="callWaiter">
+    <view class="waiter" bindtap="switchToMe">
       <!-- <image src="/images/waiter.png"></image> -->
-      <text class='fa fa-user-o'></text>
+      <view class='noticeWrap'>
+        <text wx:if='{{hasNewNotice}}' class='newNotice'></text>
+        <text class='fa fa-user-o'></text>
+      </view>
       <text>个人中心</text>
     </view>
   </view>

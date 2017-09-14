@@ -26,7 +26,7 @@ Page({
   onLoad: function (options) {
     let storeInfo = app.globalData.storeInfo
     if (storeInfo) {
-      if(options.from === 'share') {
+      if (options.from === 'share') {
         if (storeInfo.storeId === options.store_id) {
           wx.showLoading({
             title: '动态获取中',
@@ -76,7 +76,7 @@ Page({
         if (res.data.code === 201) {
           this.parseShopMoment(res.data.result)
         } else {
-          
+
         }
       },
       fail: () => {
@@ -85,12 +85,12 @@ Page({
     })
   },
 
-  parseShopMoment(data){
+  parseShopMoment(data) {
     let screenWidth = app.globalData.deviceInfo.screenWidth - 20
     let imgSize = ''
-    if(data.image.length === 2){
+    if (data.image.length === 2) {
       imgSize = screenWidth / 2
-    } else if(data.image.length === 3) {
+    } else if (data.image.length === 3) {
       imgSize = screenWidth / 3
     }
     data.parseTime = fromNow(data.add_time * 1000)
@@ -180,7 +180,7 @@ Page({
     let type = e.currentTarget.dataset.type
     let idx = e.currentTarget.dataset.idx
 
-    if(type === 'user'){
+    if (type === 'user') {
       let img = this.data.userMoments[idx].image
       wx.previewImage({
         urls: [img],
@@ -198,7 +198,7 @@ Page({
   pickChange(e) {
     let id = parseInt(e.detail.value)
     let type = e.currentTarget.dataset.type
-    if(type === 'user'){
+    if (type === 'user') {
       let idx = e.currentTarget.dataset.idx
       let item = this.data.userMoments[idx]
       if (id === 0) {
@@ -236,16 +236,16 @@ Page({
           url: '/pages/moments/comment/comment?type=store&item=' + JSON.stringify(item),
         })
       } else if (id === 1) {
-          // tousu
-          wx.showModal({
-            title: '提示',
-            content: '确认举报？',
-            success: res => {
-              if (res.confirm) {
-                this.report(item)
-              }
+        // tousu
+        wx.showModal({
+          title: '提示',
+          content: '确认举报？',
+          success: res => {
+            if (res.confirm) {
+              this.report(item)
             }
-          })
+          }
+        })
       }
     }
   },
@@ -291,7 +291,7 @@ Page({
   },
 
   report(item) {
-    if( this.reported) {
+    if (this.reported) {
       wx.showModal({
         content: '已收到您的举报',
         showCancel: false
@@ -334,7 +334,7 @@ Page({
   toCommentPage(e) {
     let item = JSON.stringify(e.currentTarget.dataset.item)
     let type = e.currentTarget.dataset.type
-    if(type === 'user'){
+    if (type === 'user') {
       wx.navigateTo({
         url: '/pages/moments/comment/comment?type=user&item=' + item,
       })
@@ -349,7 +349,7 @@ Page({
   like(e) {
     let type = e.currentTarget.dataset.type
     let templist, item
-    if(type === 'user'){
+    if (type === 'user') {
       let idx = e.currentTarget.dataset.idx
       templist = this.data.userMoments.slice()
       item = templist[idx]
@@ -364,7 +364,7 @@ Page({
       item.is_thumbs = 1
       item.thumbs_num++
     }
-    if(type === 'user'){
+    if (type === 'user') {
       this.setData({
         userMoments: templist
       })
@@ -398,13 +398,10 @@ Page({
     })
   },
 
-  toShopPage(){
-    let storeInfo = app.globalData.storeInfo
-    if(storeInfo){
-      wx.navigateTo({
-        url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
-      })
-    }
+  toShopPage(e) {
+    wx.navigateTo({
+      url: '/pages/shopDetail/shopDetail?store_id=' + this.data.storeMoment.store_id
+    })
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -449,9 +446,9 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
-  scrollToBottom(){
+  scrollToBottom() {
     console.log(this.fetchMomentAlready)
-    if(this.fetchMomentAlready){
+    if (this.fetchMomentAlready) {
       this.currentPage++
       this.fetchMomentList(this.currentPage)
     }

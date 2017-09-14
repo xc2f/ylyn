@@ -390,12 +390,14 @@ Page({
       wx.getStorage({
         key: 'moments',
         success: function (res) {
+          console.log(res)
           let data = res.data
           if (data.length === 0) {
-            app.globalData.hasNewMoment = false
             wx.removeStorage({
               key: 'moments',
-              success: function (res) { },
+              success: function (res) {
+                app.globalData.hasNewMoment = false
+              },
             })
           } else {
             let moments = that.data.moments.slice()
@@ -409,7 +411,7 @@ Page({
             that.setData({
               moments: moments,
             })
-            if(!that.initNotice){
+            if (!that.initNotice) {
               that.setData({
                 toMomentView: 'moment',
               })
@@ -555,9 +557,15 @@ Page({
     })
   },
 
-  toShop(e){
+  toShop(e) {
     let idx = e.currentTarget.dataset.idx
-    let data = this.data.moments
+    let side = e.currentTarget.dataset.side
+    let data
+    if (side === 'moment') {
+      data = this.data.moments
+    } else {
+      data = this.data.notices
+    }
     let storeId = data[idx].store_id
     wx.navigateTo({
       url: '/pages/shopDetail/shopDetail?store_id=' + storeId,
@@ -582,12 +590,15 @@ Page({
       wx.getStorage({
         key: 'moments',
         success: function (res) {
+          console.log(res)
           let list = res.data.slice()
           list.map((notice_id, idx) => {
             if (notice_id === data[idx].notice_id) {
-              list.splice(idx, 1)
+              // splice后idx会变
+              list.splice(list.indexOf(res.data[idx]), 1)
             }
           })
+          console.log(list)
           wx.setStorage({
             key: 'moments',
             data: list,

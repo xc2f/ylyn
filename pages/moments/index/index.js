@@ -130,6 +130,9 @@ Page({
             })
             this.parseMoment(list)
           }
+          this.setData({
+            empty: false
+          })
         } else if (res.data.code === 202) {
           this.currentPage = page - 1
           // 没有更多
@@ -212,7 +215,7 @@ Page({
             content: '确认删除？',
             success: res => {
               if (res.confirm) {
-                this.delMoment(item)
+                this.delMoment(item, idx)
               }
             }
           })
@@ -250,7 +253,7 @@ Page({
     }
   },
 
-  delMoment() {
+  delMoment(item, idx) {
     // del
     wx.request({
       url: app.requestHost + 'Notice/del_notice/',
@@ -466,7 +469,7 @@ Page({
       if (options.type === 'user') {
         let idx = options.idx
         data = this.data.userMoments[idx]
-        title = data.name + ': ' + data.content + ' --' + app.globalData.storeInfo.storeName
+        title = data.name + ': ' + (data.content ? data.content : '[图片]') + ' --' + app.globalData.storeInfo.storeName
         image = data.image
         return {
           title: title,
@@ -475,7 +478,7 @@ Page({
         }
       } else {
         data = this.data.storeMoment
-        title = data.name + ' ' + data.content
+        title = data.name + ': ' + (data.content ? data.content : '[图片]')
         image = data.image[0]
         return {
           title: title,

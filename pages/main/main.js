@@ -61,7 +61,8 @@ Page({
     showPrompt: false,
 
     filterAnimation: null,
-    filterAngleAnimation: null
+    filterAngleAnimation: null,
+    filter: 'all'
   },
   filterShow: false,
 
@@ -367,7 +368,6 @@ Page({
               })
             }
           }
-
         } else if (res.data.code === 102) {
           wx.showModal({
             title: '提示',
@@ -399,7 +399,8 @@ Page({
             showLoginStatus: false,
             loginStatus: '数据获取失败，请下拉刷新重试',
             loadingTip: '数据获取失败, 请点击页面重试',
-            fetchDataFail: true
+            fetchDataFail: true,
+            store: null
           })
         }
       },
@@ -491,16 +492,25 @@ Page({
   showGirl() {
     this.currentGender = 2
     this.toFetch(2)
+    this.setData({
+      filter: 'girl'
+    })
   },
 
   showBoy() {
     this.currentGender = 1
     this.toFetch(1)
+    this.setData({
+      filter: 'boy'
+    })
   },
 
   showAll() {
     this.currentGender = 0
     this.toFetch(0)
+    this.setData({
+      filter: 'all',
+    })
   },
 
 
@@ -650,7 +660,7 @@ Page({
     })
   },
 
-  toMomentPage(){
+  toMomentPage() {
     wx.navigateTo({
       url: '/pages/moments/index/index',
     })

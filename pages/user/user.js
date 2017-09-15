@@ -39,6 +39,8 @@ Page({
     showTall: false,
     fetchMomentsFail: false,
     fetchNoticesFail: false,
+    fetchMomentsEmpty: true,
+    fetchNoticesEmpty: true,
     hasNewComment: false,
   },
 
@@ -47,6 +49,7 @@ Page({
   currentMomentPage: 1,
   currentNoticePage: 1,
 
+  // toMomentView只执行一次
   initNotice: false,
 
   /**
@@ -78,7 +81,7 @@ Page({
       method: 'POST',
       data: {
         tuser_id: userId,
-        token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6'
+        token: app.TOKEN
       },
       success: function (res) {
         console.log(res)
@@ -150,14 +153,14 @@ Page({
       method: 'POST',
       data: {
         tuser_id: userId,
-        token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6',
+        token: app.TOKEN,
         page: page
       },
       success: (res) => {
         console.log(res)
         if (res.data.code === 201) {
           this.setData({
-            fetchMomentsFail: false
+            fetchMomentsFail: false,
           })
           let result = res.data.result
           if (result.length === 0) {
@@ -168,11 +171,19 @@ Page({
               list.push(item)
             })
             this.parseMoment(list)
+            this.setData({
+              fetchMomentsEmpty: false
+            })
           }
+
+          this.getNoticeStatus()
+        } else if (res.data.code === 202) {
+
         } else {
           this.currentMomentPage = page - 1
           this.setData({
-            fetchMomentsFail: true
+            fetchMomentsFail: true,
+            fetchMomentsEmpty: false
           })
         }
         setTimeout(() => {
@@ -184,7 +195,8 @@ Page({
         // error needn't to handle
         this.currentMomentPage = page - 1
         this.setData({
-          fetchMomentsFail: true
+          fetchMomentsFail: true,
+          fetchMomentsEmpty: false
         })
       }
     })
@@ -213,14 +225,14 @@ Page({
       url: app.requestHost + 'Store/get_user_partake/',
       method: 'POST',
       data: {
-        token: app.TOKEN || 'eyJ0eXBlIjoiand0IiwiYWxnIjoic2hhMSxtZDUifQ==.eyJ1c2VyX2lkIjoiNzM2ZTA4MzUtMmFiYi0wYzRmLThlOTMtNTk5MmMxODA0NGZiIiwic3RhcnRfdGltZSI6MTUwNDQ5NTU4NiwiZW5kX3RpbWUiOjE1MDcwMDExODZ9.7f310b4442559d3c7385537ffd2f4d40730d4bc6',
+        token: app.TOKEN,
         page: page
       },
       success: res => {
         console.log(res)
         if (res.data.code === 201) {
           this.setData({
-            fetchNoticesFail: false
+            fetchNoticesFail: false,
           })
           let result = res.data.result
           if (result.length === 0) {
@@ -235,12 +247,16 @@ Page({
               })
               this.parseTime(list)
             }
+            this.setData({
+              fetchNoticesEmpty: false
+            })
           }
 
         } else {
           this.currentNoticePage = page - 1
           this.setData({
-            fetchNoticesFail: true
+            fetchNoticesFail: true,
+            fetchNoticesEmpty: false
           })
         }
         setTimeout(() => {
@@ -251,7 +267,8 @@ Page({
         this.fetchDataAlready = true
         this.currentNoticePage = page - 1
         this.setData({
-          fetchNoticesFail: true
+          fetchNoticesFail: true,
+          fetchNoticesEmpty: false
         })
       }
     })
@@ -318,10 +335,16 @@ Page({
   },
 
   toChatOrConfig(e) {
-    // console.log(e.currentTarget.dataset.friendinfo)
-    wx.navigateTo({
-      url: this.data.userId === this.data.userInfo.user_id ? '/pages/config/config' : '/pages/chat/chat?friendinfo=' + JSON.stringify(e.currentTarget.dataset.friendinfo),
-    })
+    let type = e.currentTarget.dataset.type
+    if (type === 'config') {
+      wx.navigateTo({
+        url: '/pages/config/config'
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/chat/chat?friendinfo=' + JSON.stringify(e.currentTarget.dataset.friendinfo),
+      })
+    }
   },
 
   changeAvatar() {
@@ -428,20 +451,19 @@ Page({
       if (!that.initNotice) {
         that.setData({
           toMomentView: 'moment',
-          showMoment: false,
-          showNotice: true
         })
+        this.showNotice()
       }
       that.initNotice = true
     }
   },
+
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
     let that = this
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
-      that.getNoticeStatus()
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()
       }, 5000)
@@ -598,11 +620,20 @@ Page({
               list.splice(list.indexOf(res.data[idx]), 1)
             }
           })
-          console.log(list)
-          wx.setStorage({
-            key: 'moments',
-            data: list,
-          })
+          if (list.length === 0) {
+            app.globalData.hasNewMoment = false
+            wx.removeStorage({
+              key: 'moments',
+              success: function (res) {
+                app.globalData.hasNewMoment = false
+              },
+            })
+          } else {
+            wx.setStorage({
+              key: 'moments',
+              data: list,
+            })
+          }
         },
       })
 

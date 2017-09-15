@@ -15,11 +15,13 @@ page {
   align-items: center;
 }
 
-.baseColor {
+.baseColor,
+.baseBgColor {
   background: RGB(255, 193, 7);
 }
 
-button.baseColor.button-hover {
+button.baseColor.button-hover,
+button.baseBgColor.button-hover {
   background: RGB(255, 170, 7);
 }
 
@@ -318,6 +320,7 @@ wx-button:after {
   align-items: center;
   height: 40px;
   border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 
 .moments .item .bottom > button {

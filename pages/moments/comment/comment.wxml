@@ -1,6 +1,6 @@
 <!--pages/moments/comment/comment.wxml-->
 <view class='container moments'>
-  <scroll-view scroll-y scroll-into-view="comments" class='scroll' bindscrolltolower="fetchMoreComment">
+  <scroll-view scroll-y scroll-into-view="{{toView}}" class='scroll' bindscrolltolower="fetchMoreComment">
     <view class='item'>
       <view class='top'>
         <image src='{{moment.portrait || moment.logo}}' catchtap='toUserPage' data-type="moment"></image>
@@ -12,35 +12,36 @@
       <view class='content'>
         <picker range="{{ moment.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-type="moment" disabled="{{replyDisabled}}">
           <view>{{moment.content}}</view>
-          <block wx:for='{{moment.image}}' wx:if="{{imgIsArray}}" wx:key="">
+          <block wx:for='{{moment.image}}' wx:if="{{imgIsArray}}" wx:key="*this">
             <image src="{{item}}" mode='aspectFill' data-idx="{{index}}" data-type="multiply" catchtap='prevImg' style="width: {{moment.imgSize ? moment.imgSize-2 : ''}}px; height: {{moment.imgSize ? moment.imgSize*.8 : ''}}px; margin: 7px 2px 7px 0;"></image>
           </block>
-            <image wx:if="{{!imgIsArray}}" src="{{moment.image}}" mode='aspectFill' data-type="single" catchtap='prevImg'></image>
+          <image wx:if="{{!imgIsArray}}" src="{{moment.image}}" mode='aspectFill' data-type="single" catchtap='prevImg'></image>
         </picker>
       </view>
       <view class='bottom'>
         <button class='share center' open-type='share' data-idx="{{index}}">
-            <text class='fa fa-share-alt'></text>
-          </button>
+          <text class='fa fa-share-alt'></text>
+        </button>
         <button class='comment center' bindtap='textareaFocus' data-moment="{{moment}}" disabled="{{replyDisabled}}">
-            <text class='fa fa-commenting'></text>
-            <!-- <text class='counts'> -->
-              {{commentsLength ? commentsLength : ''}}
-            <!-- </text> -->
-          </button>
+          <text class='fa fa-commenting'></text>
+          <!-- <text class='counts'> -->
+          {{commentsLength ? commentsLength : ''}}
+          <!-- </text> -->
+        </button>
         <button class="{{moment.is_thumbs ? 'like center' : 'center'}}" bindtap='like' disabled="{{replyDisabled}}">
-            <text class='fa fa-thumbs-up'></text>
-            <!-- <text class='counts'> -->
-              {{moment.thumbs_num ? moment.thumbs_num : ''}}
-            <!-- </text> -->
-          </button>
+          <text class='fa fa-thumbs-up'></text>
+          <!-- <text class='counts'> -->
+          {{moment.thumbs_num ? moment.thumbs_num : ''}}
+          <!-- </text> -->
+        </button>
       </view>
       <view class='comments' id="comments">
         <view class='title'>评论
           <text>{{commentsLength ? ('(' + commentsLength+'条)') : ''}}</text>
+          <text class='shopName' bindtap='toShop'>{{moment.store_name}}</text>
         </view>
         <block wx:if="comments" wx:for="{{comments}}" wx:key="evaluate_id">
-          <view class='cRow'>
+          <view class='cRow' wx:if="{{item.is_delete === 0}}">
             <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="comment" disabled="{{replyDisabled}}">
               <view class='left'>
                 <image src="{{item.f_portrait}}" catchtap='toUserPage' data-type="comment" data-idx="{{index}}"></image>
@@ -52,8 +53,12 @@
                 </view>
                 <view class='cContent'>
                   <view>{{item.content}}</view>
-                  <view wx:if="{{item.last_content}}" class='cInContent'>
-                    {{item.t_nickname}}: {{item.last_content}}
+                  <view wx:if="{{item.last_content}}" class='{{item.last_is_delete===0 ? "cInContent" : "cInContent delete"}}'>
+                    <block wx:if="{{item.last_is_delete===0}}">
+                      {{item.t_nickname}}: {{item.last_content}}</block>
+                    <block wx:else>
+                      <text>该评论已删除</text>
+                    </block>
                   </view>
                 </view>
               </view>
@@ -67,7 +72,8 @@
     </view>
   </scroll-view>
   <view class='post'>
-    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}" disabled="{{replyDisabled}}" placeholder-style="font-size: 14px; line-height: 30px;"></textarea>
+    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}" disabled="{{replyDisabled}}"
+      placeholder-style="font-size: 14px; line-height: 30px;"></textarea>
     <button class='baseColor center' bindtap='toComment' disabled="{{replyDisabled}}">发送</button>
   </view>
 </view>

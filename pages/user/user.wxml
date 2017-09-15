@@ -21,8 +21,11 @@
         </view>
         <view wx:if="{{userInfo.introduction}}" class="bottomText noWrap">{{userInfo.introduction}}</view>
       </view>
+      <button class="setting" wx:if="{{currentUserId && userId && (userId === currentUserId)}}" bindtap="toChatOrConfig" data-type='config'>修改资料</button>
     </view>
     <view class="gallery">
+      <view class='hd'>
+        <text class='fa fa-image'></text> 相册</view>
       <!-- <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
         <image src="/images/tall.png"></image>
         <text>{{userInfo.height}}</text>
@@ -71,9 +74,9 @@
       </view>
     </view>
 
-    <view class="setingOrChat" wx:if="{{currentUserId && userId}}">
-      <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}">
-        <text>{{userId == currentUserId ? '设置' : '开始聊天'}}</text>
+    <view class="setingOrChat" wx:if="{{currentUserId && userId && (userId !== currentUserId)}}">
+      <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}" data-type='chat'>
+        <text>开始聊天</text>
       </view>
     </view>
 
@@ -112,7 +115,7 @@
                     <text class='fa fa-reply'></text> {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
                   </view>
                 </view>
-                <view class='right' catchtap='toShop'  data-type='user' data-side="moment" data-idx="{{index}}" data-idx="{{index}}">
+                <view class='right' catchtap='toShop' data-type='user' data-side="moment" data-idx="{{index}}" data-idx="{{index}}">
 
                   <text>{{item.store_name}}</text>
                 </view>
@@ -124,6 +127,7 @@
 
           </view>
           <view class='fetchFail' wx:if="{{fetchMomentsFail}}">获取数据失败</view>
+          <view class='fetchFail' wx:if="{{fetchMomentsEmpty}}">暂时为空</view>
         </view>
         <!-- moments end -->
 
@@ -133,16 +137,24 @@
               <text class='whoReply'>{{item.f_nickname}}: </text>
               {{item.content}}
             </view>
-            <view class='quote' catchtap='toMoment' data-side='notice' data-idx='{{index}}'>
-              <image src="{{item.notice_info.image[0]}}" class='{{item.access ? "" : "notAllow"}}'></image>
-              <view class='info'>
-                <text class='myReply'>{{item.last_content}}</text>
-                <text class='storeName'>{{item.parseTime}}</text>
-              </view>
+            <view class='quote' catchtap='{{item.notice_info.is_delete===1 ? "" : "toMoment"}}' data-side='notice' data-idx='{{index}}'>
+              <block wx:if="{{item.notice_info.is_delete===1}}">
+                <view class='momentDelete'>
+                  <text class='fa fa-trash'></text> 该动态已删除
+                </view>
+              </block>
+              <block wx:else>
+                <image src="{{item.notice_info.image[0]}}" class='{{item.access ? "" : "notAllow"}}'></image>
+                <view class='info'>
+                  <text class='{{item.is_delete===1 ? "myReply delete" : "myReply"}}'>{{item.is_delete===1 ? '该评论已删除' : item.last_content}}</text>
+                  <text class='storeName'>{{item.parseTime}}</text>
+                </view>
+              </block>
             </view>
             <text class='time' data-idx='{{index}}' data-side='notice' catchtap='toShop'>{{item.store_name}}</text>
           </view>
           <view class='fetchFail' wx:if="{{fetchNoticesFail}}">获取数据失败</view>
+          <view class='fetchFail' wx:if="{{fetchNoticesEmpty}}">暂时为空</view>
         </view>
         <!-- notice end -->
       </view>

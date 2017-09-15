@@ -512,7 +512,7 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
   height: 50px;
   position: absolute;
   right: -100px;
-  top: 70%;
+  top: 60%;
   z-index: 999;
   justify-content: center;
   align-items: center;
@@ -561,4 +561,9 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 .filterBox image {
   width: 30px;
   height: 35px;
+}
+
+.filterBox .item .fa {
+  color: #d9534f;
+  font-size: 24px;
 }

@@ -16,7 +16,8 @@ Page({
     commentsStatus: '正在努力获取评论',
     content: '',
     makeTextareaFocus: false,
-    replyDisabled: false
+    replyDisabled: false,
+    toView: ''
   },
 
   currentPage: 1,
@@ -35,6 +36,15 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(app.scene)
+    let shareScene = [1007, 1008]
+    if (shareScene.indexOf(app.scene) !== -1){
+      // 分享
+    } else {
+      this.setData({
+        toView: 'comments'
+      })
+    }
     console.log(options)
     let storeInfo = app.globalData.storeInfo
     let data = JSON.parse(options.item)
@@ -104,7 +114,7 @@ Page({
             })
           } else {
             this.setData({
-              commentsLength: data.evaluate_num
+              commentsLength: data.evaluate_num,
             })
           }
           if (source === 'user') {
@@ -215,13 +225,15 @@ Page({
       let t_user_id, type
       if (commented.f_user_id === commented.store_id) {
         t_user_id = this.data.moment.store_id
+        type = 3
       } else {
         // t_user_id = commented.t_user_id || commented.f_user_id
         t_user_id = commented.f_user_id || ''
+        type = 1
       }
       // 引用回复
       // 引用回复评论，回复用户为1，回复商家为3
-      type = commented.f_user_id ? 1 : 3
+      
       this.postComment(type, t_user_id, commented.e_id || commented.evaluate_id, commented.evaluate_id)
     } else {
       // 没有引用回复
@@ -284,11 +296,17 @@ Page({
     if (id === 0) {
       // 回复
       if (type === 'comment') {
-        this.commented = data
-        this.setData({
-          content: data.f_nickname + ' ',
-          makeTextareaFocus: true
-        })
+        if (data.f_user_id !== app.globalData.userId){
+          this.commented = data
+          this.setData({
+            content: data.f_nickname + ' ',
+            makeTextareaFocus: true
+          })
+        } else {
+          this.setData({
+            makeTextareaFocus: true
+          })
+        }
       } else if (type === 'moment') {
         // 点动态回复
         this.setData({
@@ -581,6 +599,15 @@ Page({
     //   }
     // }
   },
+
+
+  toShop(){
+    wx.navigateTo({
+      url: '/pages/shopDetail/shopDetail?store_id=' + this.data.moment.store_id,
+    })
+  },
+
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -636,7 +663,7 @@ Page({
     let data, title, image
     if (this.momentType === 'user') {
       data = this.data.moment
-      title = data.name + ': ' + data.content + ' --' + data.store_name
+      title = data.name + ': ' + (data.content ? data.content : '[图片]') + ' --' + data.store_name
       image = data.image
       return {
         title: title,
@@ -645,7 +672,7 @@ Page({
       }
     } else {
       data = this.data.moment
-      title = data.name + ' ' + data.content
+      title = data.name + ': ' + (data.content ? data.content : '[图片]')
       image = data.image[0]
       return {
         title: title,

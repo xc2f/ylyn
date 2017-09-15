@@ -7,16 +7,18 @@
     </navigator>
   </view> -->
 
-  <view class="filterBox" bindtap='showFilter' animation="{{filterAnimation}}">
+  <view class="filterBox" catchtap='showFilter' animation="{{filterAnimation}}" wx:if="{{login}}">
     <!-- <navigator url='/pages/moments/index/index'> -->
     <view class='fa fa-angle-left' animation="{{filterAngleAnimation}}"></view>
     <!-- </navigator> -->
     <view class='right'>
-      <view class='item' bindtap="showBoy">
-        <image src="/images/show_boy.png"></image>
+      <view class='item' catchtap="showBoy">
+        <text class='fa fa-ban' wx:if="{{filter==='boy'}}" catchtap='showAll'></text>
+        <image src="/images/show_boy.png" wx:if="{{filter==='girl' || filter === 'all'}}"></image>
       </view>
-      <view class='item' bindtap="showGirl">
-        <image src="/images/show_girl.png"></image>
+      <view class='item' catchtap="showGirl">
+        <text class='fa fa-ban' wx:if="{{filter==='girl'}}" catchtap='showAll'></text>
+        <image src="/images/show_girl.png" wx:if="{{filter==='boy' || filter === 'all'}}"></image>
       </view>
     </view>
   </view>
@@ -97,6 +99,14 @@
 
 
   <view class="toolBar" wx:if="{{login}}">
+    <view class="message" bindtap="toChatRecords">
+      <view class="msgwrap">
+        <image src="/images/message.png"></image>
+        <!-- <text class='fa fa-commenting-o'></text> -->
+        <view class="newNotice" wx:if="{{hasNewMsg}}"></view>
+      </view>
+      <text>消息</text>
+    </view>
     <view class="waiter" bindtap="callWaiter">
       <view class="msgwrap">
         <!-- <image src="/images/message.png"></image> -->
@@ -104,20 +114,14 @@
       </view>
       <text>呼叫服务</text>
     </view>
-    <view class="message" bindtap="toChatRecords">
-      <view class="msgwrap">
-        <image src="/images/message.png"></image>
-        <!-- <text class='fa fa-commenting-o'></text> -->
-        <view class="newNotice" wx:if="{{!hasNewMsg}}"></view>
-      </view>
-      <text>消息</text>
-    </view>
+
     <view class="waiter" bindtap='toMomentPage'>
-        <view class="msgwrap">
-          <!-- <image src="/images/message.png"></image> -->
-          <text class='fa fa-mercury'></text>
-        </view>
-        <text>店友圈</text>
+      <view class="msgwrap">
+        <!-- <image src="/images/message.png"></image> -->
+        <text class='fa fa-mercury'></text>
+        <!-- <text class='fa fa-link'></text> -->
+      </view>
+      <text>店友印记</text>
     </view>
     <!-- <view class="middleBlock">
       <view class="middleWrap">

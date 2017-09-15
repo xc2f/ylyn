@@ -139,7 +139,7 @@
 }
 
 .shopInfo .fa {
-  font-size: 17px;
+  font-size: 24px;
   color: #777;
   /* text-align:center; */
 }
@@ -214,6 +214,7 @@
 
 .foods .bd {
   overflow: hidden;
+  clear: both;
 }
 
 .foods .bd:after {
@@ -282,8 +283,8 @@
   width: 10%;
 }
 .inSalesInfo .iconWrap .fa {
-  line-height: 2;
-  font-size: 14px;
+  line-height: 1;
+  font-size: 24px;
 }
 
 .inSalesInfo .iconWrap image {

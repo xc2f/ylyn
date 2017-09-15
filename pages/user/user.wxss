@@ -17,6 +17,20 @@
   right: 0; */
   height: 135px;
   /* z-index: 99; */
+  position: relative;
+}
+
+.banner .setting {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  padding: 3px 5px;
+  line-height: 1.5;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 3px;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+  background: rgba(51, 51, 51, .7)
 }
 
 .banner .wrap {
@@ -144,6 +158,11 @@
   margin-right: 10px;
   overflow: hidden;
   padding: 50px 0 0;
+}
+
+.gallery .hd {
+  position: relative;
+  top: -35px;
 }
 
 .gallery .wrap {
@@ -316,13 +335,15 @@
   padding: 0;
   /* border: 1px solid #fff; */
   position: relative;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, .3);
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
   margin: 0 10px 10px 0;
   border-radius: 2px;
 }
+
 .moments .item:nth-child(2n) {
   margin-right: 0;
 }
+
 .moments .item image {
   width: 100%;
 }
@@ -367,6 +388,7 @@ image.notAllow {
   font-size: 10px;
   color: #777;
 }
+
 .moments .more .left {
   flex: 1;
   display: flex;
@@ -376,11 +398,12 @@ image.notAllow {
   font-size: 10px;
   color: #777;
 }
-.moments .more .left .like,
-.moments .more .left .comment {
+
+.moments .more .left .like, .moments .more .left .comment {
   flex: 1;
   text-align: center;
 }
+
 .moments .more .right {
   flex: 1.5;
   display: block;
@@ -435,6 +458,7 @@ image.notAllow {
 
 .notices {
   /* text-align: center; */
+  margin: 20px 10px;
 }
 
 .notices .item {
@@ -462,6 +486,13 @@ image.notAllow {
   background: #eee;
   padding: 5px;
   margin-top: 7px;
+}
+
+.notices .item .quote .momentDelete {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  color: #777;
 }
 
 .notices .item .newReply {
@@ -500,6 +531,14 @@ image.notAllow {
   left: 55px;
 }
 
+.notices .quote .info .myReply.delete {
+  background: #555;
+  color: #eee;
+  padding: 2px 7px;
+  height: auto;
+  border-radius: 3px;
+}
+
 .notices .quote .info .storeName {
   font-size: 12px;
   color: #999;
@@ -524,11 +563,11 @@ image.notAllow {
 }
 
 .moments .newNotice {
-  top: 12px;
-  right: 20px;
+  top: 7px;
+  right: 7px;
   z-index: 999;
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
 }
 
 .toTop {

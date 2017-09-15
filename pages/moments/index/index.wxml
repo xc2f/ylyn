@@ -1,5 +1,5 @@
 <view class="container">
-  <scroll-view class='scroll' scroll-y enable-back-to-top bindscrolltolower="scrollToBottom" scroll-with-animation>
+  <!-- <scroll-view class='scroll' scroll-y enable-back-to-top bindscrolltolower="scrollToBottom" scroll-with-animation> -->
 
     <navigator url="/pages/moments/create/create">
       <view class='createNew center'>
@@ -85,5 +85,5 @@
     <view wx:if='{{empty}}' class='empty'>
       {{storeName}}还木有小伙伴的动态，快来发第一条吧^^
     </view>
-  </scroll-view>
+  <!-- </scroll-view> -->
 </view>

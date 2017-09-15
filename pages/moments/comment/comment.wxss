@@ -32,6 +32,13 @@
   font-size: 16px;
 }
 
+.comments .title .shopName {
+  float: right;
+  line-height: 40px;
+  color: #286090;
+  font-size: 14px;
+}
+
 .post {
   position: absolute;
   bottom: 0;
@@ -130,4 +137,11 @@
   border-left: 2px solid RGB(255, 193, 7);
   font-size: 11px;
   color: #777;
+}
+
+.cInContent.delete text {
+  background: #777;
+  color: #eee;
+  padding: 3px 5px;
+  border-radius: 2px;
 }

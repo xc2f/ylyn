@@ -45,8 +45,11 @@ App({
   // 动态检查
   checkNoticeInterval: null,
 
+  scene: '',
 
-  onLaunch: function () {
+  onLaunch: function (e) {
+    this.scene = e.scene
+    console.log(e.scene, this.scene)
     if (this.globalData.storeInfo) {
       let storeInfo = this.globalData.storeInfo
       wx.reLaunch({
@@ -336,7 +339,7 @@ App({
     })
   },
 
-  pushNoticeMsg(type, data){
+  pushNoticeMsg(type, data) {
     wx.getStorage({
       key: type,
       success: function (res) {
@@ -380,7 +383,7 @@ App({
           // 存储userid
           that.globalData.userId = res.data.result.user_id
           // 回调
-          callback(true)
+          callback ? callback(true) : ''
           // 未读消息
           let unreadMsg = res.data.result.unread_msg
           if (unreadMsg.length) {
@@ -403,7 +406,7 @@ App({
             showCancel: false
           })
           that.globalData.login = false
-          callback(false)
+          callback ? callback(false) : ''
         }
       },
       fail: function (e) {
@@ -413,7 +416,7 @@ App({
           showCancel: false
         })
         that.globalData.login = false
-        callback(false)
+        callback ? callback(false) : ''
       }
     })
   },
@@ -443,7 +446,7 @@ App({
                   that.globalData.userId = res.data.result.user_id
 
                   // 执行回调
-                  callback(true)
+                  callback ? callback(true) : ''
 
                   // 未读消息
                   let unreadMsg = res.data.result.unread_msg
@@ -460,22 +463,22 @@ App({
                     data: res.data.result.user_info,
                   })
                 } else {
-                  callback(false)
+                  callback ? callback(false) : ''
                 }
               },
               fail: function (e) {
                 // request请求失败
-                callback(false)
+                callback ? callback(false) : ''
               }
             })
           } else {
             // res.code 为 null
-            callback(false)
+            callback ? callback(false) : ''
           }
         },
         fail: function () {
           // wx.login接口调用失败
-          callback(false)
+          callback ? callback(false) : ''
         }
       })
     }, null)
@@ -506,23 +509,29 @@ App({
                                 longitude: res.longitude,
                                 time: new Date().getTime()
                               }
-                              callback(true)
+                              callback ? callback(true) : ''
                             },
                             fail: function () {
                               // 用户重新授权，但获取位置失败
-                              callback(false)
+                              cakkback ? callback(false) : ''
                             }
                           })
                         } else {
                           // 用户在设置界面未授权
-                          callback(false)
+                          callback ? callback(false) : ''
                         }
+                      },
+                      fail: function () {
+                        callback ? callback(false) : ''
                       }
                     })
                   } else if (res.cancel) {
                     // 用户再次拒绝授权
-                    callback(false)
+                    callback ? callback(false) : ''
                   }
+                },
+                fail: function () {
+                  callback ? callback(false) : ''
                 }
               })
             } else {
@@ -535,17 +544,22 @@ App({
                     longitude: res.longitude,
                     time: new Date().getTime()
                   }
-                  callback(true)
+                  callback ? callback(true) : ''
                 },
                 fail: function () {
                   // 获取位置失败
-                  callback(false)
+                  callback ? callback(false) : ''
                 }
               })
             }
           },
+          fail: function () {
+            callback ? callback(false) : ''
+          }
         })
       }, 500)
+    } else {
+      callback ? callback(false) : ''
     }
   },
 

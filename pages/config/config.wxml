@@ -63,7 +63,7 @@
 
   <view class="show" bindtap="changePic">
     <view class="l">
-      <text>个人展示</text>
+      <text>相册</text>
     </view>
     <view class="r">
       <image src="/images/arrowRight.png"></image>

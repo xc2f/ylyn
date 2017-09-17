@@ -2,6 +2,17 @@
   position: relative;
 }
 
+.content .shopName {
+  font-size: 12px;
+  text-align: right;
+  padding: 0 10px 5px;
+  color: #286090;
+}
+
+.content .shopName text {
+  padding: 3px;
+}
+
 .item .bottom {
   margin-bottom: 10px;
   border-bottom: 1px solid #eee;

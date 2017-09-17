@@ -61,7 +61,7 @@ App({
     // 获取本地消息状态
     this.getMsgStatus()
     // 动态状态
-    this.checkNoticeStatus()
+    this.checkNotice()
 
     this.resetLocation = setInterval(() => {
       let coordinate = this.globalData.coordinate
@@ -209,14 +209,6 @@ App({
     })
   },
 
-  checkNoticeStatus() {
-    let that = this
-    that.checkNotice()
-    that.checkNoticeInterval = setInterval(() => {
-      that.checkNotice()
-    }, 10000)
-  },
-
   getDeviceInfo: function () {
     let that = this
     wx.getSystemInfo({
@@ -340,6 +332,11 @@ App({
   },
 
   pushNoticeMsg(type, data) {
+    if (type === 'moments') {
+      this.globalData.hasNewMoment = true
+    } else {
+      this.globalData.hasNewComment = true
+    }
     wx.getStorage({
       key: type,
       success: function (res) {
@@ -564,22 +561,50 @@ App({
   },
 
   handleNoticeStatus(comments, moments) {
-    if (comments.length > 0) {
-      wx.setStorage({
-        key: 'comments',
-        data: comments,
+    if (moments.length > 0) {
+      this.globalData.hasNewMoment = true
+      wx.getStorage({
+        key: 'moments',
+        success: function (res) {
+          let notices = res.data
+          notices.concat(moments)
+          wx.setStorage({
+            key: 'moments',
+            data: notices,
+          })
+        },
+        fail: function () {
+          wx.setStorage({
+            key: 'moments',
+            data: notices,
+          })
+        }
       })
     }
-    if (moments.length > 0) {
-      wx.setStorage({
-        key: 'moments',
-        data: moments,
+    if (comments.length > 0) {
+      this.globalData.hasNewMoment = true
+      wx.getStorage({
+        key: 'comments',
+        success: function (res) {
+          let notices = res.data
+          notices.concat(comments)
+          wx.setStorage({
+            key: 'comments',
+            data: notices,
+          })
+        },
+        fail: function () {
+          wx.setStorage({
+            key: 'comments',
+            data: notices,
+          })
+        }
       })
     }
   },
 
   loadMsg(msg) {
-    // console.log(msg)
+    console.log(msg)
     let that = this
     let messageList = wx.getStorageSync('chatWith' + msg.from_user_id)
     // 获取chatid

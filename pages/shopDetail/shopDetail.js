@@ -114,6 +114,7 @@ Page({
         latitude: coordinate ? coordinate.latitude : ''
       },
       success: function (res) {
+        wx.hideLoading()
         if (res.data.code === 201) {
           let result = res.data.result
           // 设置导航条
@@ -156,22 +157,11 @@ Page({
 
           result.food = result.food.length === 0 ? 0 : result.food
 
-          if(app.sdk >= 150){
-            that.setData({
-              shop: result,
-              dataOk: true,
-              fetchDataFail: false
-            }, () => {
-              wx.hideLoading()
-            })
-          } else {
-            that.setData({
-              shop: result,
-              dataOk: true,
-              fetchDataFail: false
-            })
-            wx.hideLoading()
-          }
+          that.setData({
+            shop: result,
+            dataOk: true,
+            fetchDataFail: false
+          })
 
           if (result.food) {
             let foodLength = result.food.length
@@ -185,7 +175,6 @@ Page({
           }
 
         } else if (res.data.code === 101) {
-          wx.hideLoading()
           wx.showModal({
             title: '提示',
             content: res.data.message,
@@ -198,7 +187,6 @@ Page({
             }
           })
         } else {
-          wx.hideLoading()
           that.setData({
             dataOk: false,
             fetchDataFail: true

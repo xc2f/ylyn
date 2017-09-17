@@ -17,6 +17,10 @@
           </block>
           <image wx:if="{{!imgIsArray}}" src="{{moment.image}}" mode='aspectFill' data-type="single" catchtap='prevImg'></image>
         </picker>
+        <view class='shopName' bindtap='toShop'>
+          <text class='fa fa-map-marker'></text>
+          <text>{{moment.store_name || storeName}}</text>
+        </view>
       </view>
       <view class='bottom'>
         <button class='share center' open-type='share' data-idx="{{index}}">
@@ -38,7 +42,6 @@
       <view class='comments' id="comments">
         <view class='title'>评论
           <text>{{commentsLength ? ('(' + commentsLength+'条)') : ''}}</text>
-          <text class='shopName' bindtap='toShop'>{{moment.store_name}}</text>
         </view>
         <block wx:if="comments" wx:for="{{comments}}" wx:key="evaluate_id">
           <view class='cRow' wx:if="{{item.is_delete === 0}}">

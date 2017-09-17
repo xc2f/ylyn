@@ -19,6 +19,7 @@ Page({
     replyDisabled: false,
     toView: ''
   },
+  store_name: '',
 
   currentPage: 1,
   // 为防止scroll频繁触发触底事件
@@ -32,14 +33,19 @@ Page({
   // 是否举报过
   reported: false,
 
+  initComment: true,
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     console.log(app.scene)
     let shareScene = [1007, 1008]
-    if (shareScene.indexOf(app.scene) !== -1){
+    if (shareScene.indexOf(app.scene) !== -1) {
       // 分享
+      this.setData({
+        toView: ''
+      })
     } else {
       this.setData({
         toView: 'comments'
@@ -71,7 +77,8 @@ Page({
 
     // 可以从分享、用户页面入口进入
     this.setData({
-      moment: data
+      moment: data,
+      storeName: data.store_name || ''
     })
     this.fetchComments(data.notice_id, 1, source)
   },
@@ -93,6 +100,18 @@ Page({
       },
       success: res => {
         console.log(res)
+        if (res.data.result.is_delete === 1) {
+          wx.showModal({
+            content: '动态已被删除',
+            showCancel: false,
+            success: res => {
+              if (res.confirm) {
+                wx.navigateBack()
+              }
+            }
+          })
+          return
+        }
         let data = res.data.result
         let commentList = data.evaluate_list
         if (res.data.code === 201) {
@@ -219,12 +238,12 @@ Page({
     }
     // 被引用人存在，并且提交的内容中前几个字为被引用人名字
     // commented为被引用人信息，如果是用户有f_user_id，否则只有store_id
-    if (this.commented && this.data.content.indexOf(this.commented.f_nickname) === 0) {
+    if (this.commented) {
       // console.log(this.commented)
       let commented = this.commented
       let t_user_id, type
       if (commented.f_user_id === commented.store_id) {
-        t_user_id = this.data.moment.store_id
+        t_user_id = commented.store_id
         type = 3
       } else {
         // t_user_id = commented.t_user_id || commented.f_user_id
@@ -233,7 +252,7 @@ Page({
       }
       // 引用回复
       // 引用回复评论，回复用户为1，回复商家为3
-      
+
       this.postComment(type, t_user_id, commented.e_id || commented.evaluate_id, commented.evaluate_id)
     } else {
       // 没有引用回复
@@ -243,7 +262,10 @@ Page({
   },
 
   postComment(type, t_user_id, e_id, last_e_id) {
-    console.log(type, t_user_id, e_id, last_e_id)
+    if (!this.initComment) {
+      return
+    }
+    this.initComment = false
     let moment = this.data.moment
     t_user_id = t_user_id || ''
     e_id = e_id || ''
@@ -263,12 +285,15 @@ Page({
         type: type
       },
       success: res => {
+        console.log(this.momentType, t_user_id, e_id, last_e_id, type, this.commented)
+        this.initComment = true
         console.log(res)
         if (res.data.code === 201) {
           this.setData({
             content: '',
             commentsLength: this.data.commentsLength + 1
           })
+          this.commented = null
           this.fetchComments(moment.notice_id)
           app.globalData.momentNeedToRefetch = true
         } else {
@@ -279,6 +304,7 @@ Page({
         }
       },
       fail: res => {
+        this.initComment = true
         wx.showModal({
           showCancel: false,
           content: '发送失败',
@@ -296,10 +322,10 @@ Page({
     if (id === 0) {
       // 回复
       if (type === 'comment') {
-        if (data.f_user_id !== app.globalData.userId){
+        if (data.f_user_id !== app.globalData.userId) {
           this.commented = data
           this.setData({
-            content: data.f_nickname + ' ',
+            textareaPlaceHolder: '回复' + this.commented.f_nickname,
             makeTextareaFocus: true
           })
         } else {
@@ -559,9 +585,9 @@ Page({
         //     url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
         //   })
         // } else {
-          wx.navigateTo({
-            url: '/pages/shopDetail/shopDetail?store_id=' + this.data.moment.store_id,
-          })
+        wx.navigateTo({
+          url: '/pages/shopDetail/shopDetail?store_id=' + this.data.moment.store_id,
+        })
         // }
       }
     } else {
@@ -574,9 +600,9 @@ Page({
         //     url: '/pages/main/main?store_id=' + storeInfo.storeId + '&table_id=' + storeInfo.tableId,
         //   })
         // } else {
-          wx.navigateTo({
-            url: '/pages/shopDetail/shopDetail?store_id=' + item.store_id,
-          })
+        wx.navigateTo({
+          url: '/pages/shopDetail/shopDetail?store_id=' + item.store_id,
+        })
         // }
       } else {
         userId = item.f_user_id
@@ -601,7 +627,7 @@ Page({
   },
 
 
-  toShop(){
+  toShop() {
     wx.navigateTo({
       url: '/pages/shopDetail/shopDetail?store_id=' + this.data.moment.store_id,
     })

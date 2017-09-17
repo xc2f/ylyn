@@ -176,7 +176,7 @@ Page({
             })
           }
 
-          this.getNoticeStatus()
+
         } else if (res.data.code === 202) {
 
         } else {
@@ -416,10 +416,10 @@ Page({
           console.log(res)
           let data = res.data
           if (data.length === 0) {
+            app.globalData.hasNewMoment = false
             wx.removeStorage({
               key: 'moments',
               success: function (res) {
-                app.globalData.hasNewMoment = false
               },
             })
           } else {
@@ -464,6 +464,7 @@ Page({
   onShow: function () {
     let that = this
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
+      that.getNoticeStatus()
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()
       }, 5000)
@@ -617,7 +618,7 @@ Page({
           list.map((notice_id, idx) => {
             if (notice_id === data[idx].notice_id) {
               // splice后idx会变
-              list.splice(list.indexOf(res.data[idx]), 1)
+              list.splice(idx, 1)
             }
           })
           if (list.length === 0) {
@@ -625,7 +626,6 @@ Page({
             wx.removeStorage({
               key: 'moments',
               success: function (res) {
-                app.globalData.hasNewMoment = false
               },
             })
           } else {

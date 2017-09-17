@@ -175,8 +175,8 @@ Page({
               fetchMomentsEmpty: false
             })
           }
-
-
+          // 防止第一次moments为空
+          this.getNoticeStatus()
         } else if (res.data.code === 202) {
 
         } else {
@@ -229,7 +229,6 @@ Page({
         page: page
       },
       success: res => {
-        console.log(res)
         if (res.data.code === 201) {
           this.setData({
             fetchNoticesFail: false,
@@ -414,7 +413,7 @@ Page({
         key: 'moments',
         success: function (res) {
           console.log(res)
-          let data = res.data
+          let data = Array.from(new Set(res.data))
           if (data.length === 0) {
             app.globalData.hasNewMoment = false
             wx.removeStorage({
@@ -431,6 +430,7 @@ Page({
                 }
               })
             })
+            console.log(11111111111)
             that.setData({
               moments: moments,
             })
@@ -464,7 +464,6 @@ Page({
   onShow: function () {
     let that = this
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
-      that.getNoticeStatus()
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()
       }, 5000)
@@ -614,7 +613,8 @@ Page({
         key: 'moments',
         success: function (res) {
           console.log(res)
-          let list = res.data.slice()
+          // 去重
+          let list = Array.from(new Set(res.data.slice()))
           list.map((notice_id, idx) => {
             if (notice_id === data[idx].notice_id) {
               // splice后idx会变
@@ -680,15 +680,22 @@ Page({
     })
   },
   showNotice() {
+    this.fetchUserNotices()
+    this.setData({
+      showMoment: false,
+      showNotice: true,
+    })
+    this.hideNewCommentStatus()
+  },
+
+  hideNewCommentStatus() {
+    console.log('ininin')
     app.globalData.hasNewComment = false
     wx.removeStorage({
       key: 'comments',
       success: function (res) { },
     })
-    this.fetchUserNotices()
     this.setData({
-      showMoment: false,
-      showNotice: true,
       hasNewComment: false,
     })
   },
@@ -710,7 +717,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    clearInterval(this.getNoticeInterval)
   },
 
   /**

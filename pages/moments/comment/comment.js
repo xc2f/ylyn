@@ -86,7 +86,6 @@ Page({
   fetchComments(notice_id, page, source) {
     // TODO type, page
     let type = this.momentType === 'user' ? 2 : 1
-    console.log(type, notice_id)
     page = page || 1
     this.fetchCommentAlready = false
     wx.request({
@@ -136,7 +135,8 @@ Page({
               commentsLength: data.evaluate_num,
             })
           }
-          if (source === 'user') {
+          if (source === 'user' || source === 'share') {
+            // user的相册，share的时间、点赞等等
             delete data.evaluate_list
             this.parseMoment(data)
           }
@@ -214,12 +214,15 @@ Page({
   },
 
   textareaFocus() {
-    this.setData({
-      textareaPlaceHolder: '50字以内'
-    })
+    if (!this.commented) {
+      this.setData({
+        textareaPlaceHolder: '50字以内'
+      })
+    }
   },
 
   textareaBlur() {
+    this.commented = null
     this.setData({
       textareaPlaceHolder: '有何高见'
     })
@@ -290,6 +293,7 @@ Page({
         console.log(res)
         if (res.data.code === 201) {
           this.setData({
+            textareaPlaceHolder: '',
             content: '',
             commentsLength: this.data.commentsLength + 1
           })
@@ -693,7 +697,7 @@ Page({
       image = data.image
       return {
         title: title,
-        path: '/pages/moments/comment/comment?type=user&item=' + JSON.stringify(data),
+        path: '/pages/moments/comment/comment?from=share&type=user&item=' + JSON.stringify(data),
         imageUrl: image
       }
     } else {
@@ -702,7 +706,7 @@ Page({
       image = data.image[0]
       return {
         title: title,
-        path: '/pages/moments/comment/comment?type=store&item=' + JSON.stringify(data),
+        path: '/pages/moments/comment/comment?from=share&type=store&item=' + JSON.stringify(data),
         imageUrl: image
       }
     }

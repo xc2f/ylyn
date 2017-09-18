@@ -333,6 +333,12 @@
   height: 25px;
   margin-top: 3px;
 }
+.toolBar .message.dyyj image {
+  width: 30px;
+  height: 30px;
+  margin-top: 0;
+}
+
 .toolBar text {
   font-size: 12px;
   margin-top: 3px;
@@ -449,7 +455,7 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 .wxapp-prompt {
   width: 80%;
   left: 10%;
-  height: 140px;
+  height: 160px;
   margin: auto;
   background-color: #e7e7eb;
   border: 1px #d2d2d3 solid;
@@ -467,8 +473,8 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 }
 
 .wxapp-prompt .prompt-input {
-  height: 40px;
-  line-height: 40px;
+  height: 60px;
+  line-height: 60px;
   padding: 10px 10px 0px 10px;
   background-color: #fff;
 }
@@ -477,7 +483,8 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
   border: 1px #eee solid;
   border-radius: 3px;
   padding-left: 5px;
-  font-size: 14px;
+  font-size: 16px;
+  height: 50px;
 }
 
 .wxapp-prompt .prompt-input input:hover {

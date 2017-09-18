@@ -115,10 +115,10 @@
       <text>呼叫服务</text>
     </view>
 
-    <view class="waiter" bindtap='toMomentPage'>
+    <view class="message dyyj" bindtap='toMomentPage'>
       <view class="msgwrap">
-        <!-- <image src="/images/message.png"></image> -->
-        <text class='fa fa-mercury'></text>
+         <image src="/images/dyyj.png"></image> 
+        <!-- <text class='fa fa-mercury'></text> -->
         <!-- <text class='fa fa-link'></text> -->
       </view>
       <text>店友印记</text>

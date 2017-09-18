@@ -1,5 +1,7 @@
 /* pages/moments/index/index.wxss */
-
+page {
+  height: auto;
+}
 .container {
   position: relative;
 }

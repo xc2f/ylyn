@@ -25,6 +25,7 @@ App({
     showDetailTopTip: true,
     showNearListTopTip: true,
     momentNeedToRefetch: false,
+    momentScrollToTop: false,
     hasNewMoment: false,
     hasNewComment: false
   },
@@ -41,9 +42,6 @@ App({
   checkLocationInterval: null,
   inStore: false,
   getLocationErrorTimes: 0,
-
-  // 动态检查
-  checkNoticeInterval: null,
 
   scene: '',
 
@@ -192,18 +190,30 @@ App({
     wx.getStorage({
       key: 'moments',
       success: function (res) {
-        that.globalData.hasNewMoment = true
+        console.log(res)
+        if(res.data.length > 0){
+          that.globalData.hasNewMoment = true
+        } else {
+          that.globalData.hasNewMoment = false
+        }
       },
       fail: function () {
+        console.log('no moments')
         that.globalData.hasNewMoment = false
       }
     })
     wx.getStorage({
       key: 'comments',
       success: function (res) {
-        that.globalData.hasNewComment = true
+        console.log(res)
+        if(res.data.length > 0){
+          that.globalData.hasNewComment = true
+        } else {
+          that.globalData.hasNewComment = false
+        }
       },
       fail: function () {
+        console.log('no comments')
         that.globalData.hasNewComment = false
       }
     })
@@ -332,6 +342,7 @@ App({
   },
 
   pushNoticeMsg(type, data) {
+    console.log(data)
     if (type === 'moments') {
       this.globalData.hasNewMoment = true
     } else {
@@ -561,6 +572,7 @@ App({
   },
 
   handleNoticeStatus(comments, moments) {
+    console.log(comments, moments)
     if (moments.length > 0) {
       this.globalData.hasNewMoment = true
       wx.getStorage({
@@ -574,6 +586,8 @@ App({
           })
         },
         fail: function () {
+          let notices = []
+          notices.concat(moments)
           wx.setStorage({
             key: 'moments',
             data: notices,
@@ -594,6 +608,8 @@ App({
           })
         },
         fail: function () {
+          let notices = []
+          notices.concat(comments)
           wx.setStorage({
             key: 'comments',
             data: notices,

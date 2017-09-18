@@ -422,6 +422,12 @@ Page({
       this.fetchMomentList()
       this.fetchShopMoment(app.globalData.storeInfo.storeId)
     }
+    if(app.globalData.momentScrollToTop){
+      app.globalData.momentScrollToTop = false
+      wx.pageScrollTo({
+        scrollTop: 0
+      })
+    }
   },
 
   /**

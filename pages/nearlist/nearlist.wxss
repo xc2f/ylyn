@@ -251,7 +251,7 @@
   line-height: 50px;
   /* background: rgb(255, 207, 15); */
   background: #fcd800;
-  color: #fff;
+  color: #222;
   box-shadow: none;
 }
 

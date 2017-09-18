@@ -1,6 +1,6 @@
 <!--pages/moments/comment/comment.wxml-->
 <view class='container moments'>
-  <scroll-view scroll-y scroll-into-view="{{toView}}" class='scroll' bindscrolltolower="fetchMoreComment">
+  <scroll-view scroll-y scroll-into-view="toView" class='scroll' bindscrolltolower="fetchMoreComment">
     <view class='item'>
       <view class='top'>
         <image src='{{moment.portrait || moment.logo}}' catchtap='toUserPage' data-type="moment"></image>
@@ -17,7 +17,7 @@
           </block>
           <image wx:if="{{!imgIsArray}}" src="{{moment.image}}" mode='aspectFill' data-type="single" catchtap='prevImg'></image>
         </picker>
-        <view class='shopName' bindtap='toShop'>
+        <view class='shopName' bindtap='toShop' wx:if="{{moment.user_id}}">
           <text class='fa fa-map-marker'></text>
           <text>{{moment.store_name || storeName}}</text>
         </view>

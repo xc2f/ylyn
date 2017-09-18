@@ -148,6 +148,7 @@ Page({
         })
         if (res.data.code === 201) {
           app.globalData.momentNeedToRefetch = true
+          app.globalData.momentScrollToTop = true
           wx.navigateBack()
         } else {
           wx.showModal({
@@ -216,7 +217,4 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
-
-  }
 })

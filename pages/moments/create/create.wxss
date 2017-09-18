@@ -20,7 +20,7 @@
 }
 
 .item textarea {
-  height: 70px;
+  height: 110px;
   width: calc(100% - 6px);
   border: 1px dashed #eee;
 }

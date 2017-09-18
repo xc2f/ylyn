@@ -175,8 +175,6 @@ Page({
               fetchMomentsEmpty: false
             })
           }
-          // 防止第一次moments为空
-          this.getNoticeStatus()
         } else if (res.data.code === 202) {
 
         } else {
@@ -188,6 +186,8 @@ Page({
         }
         setTimeout(() => {
           this.fetchDataAlready = true
+          // 防止第一次moments为空
+          this.getNoticeStatus()
         }, 200)
       },
       fail: () => {
@@ -408,6 +408,7 @@ Page({
   getNoticeStatus() {
     let that = this
     let globalData = app.globalData
+    console.log(globalData)
     if (globalData.hasNewMoment) {
       wx.getStorage({
         key: 'moments',
@@ -442,6 +443,9 @@ Page({
             that.initNotice = true
           }
         },
+        fail: function(){
+          app.globalData.hasNewMoment = false
+        }
       })
     }
     if (globalData.hasNewComment) {
@@ -463,6 +467,7 @@ Page({
    */
   onShow: function () {
     let that = this
+    console.log(that.data.currentUserId, that.data.userId)
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()

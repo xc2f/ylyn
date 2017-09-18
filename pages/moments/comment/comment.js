@@ -30,8 +30,8 @@ Page({
 
   momentType: 'user',
 
-  // 是否举报过
-  reported: false,
+  // 当前举报队列
+  reported: [],
 
   initComment: true,
 
@@ -295,8 +295,13 @@ Page({
           this.setData({
             textareaPlaceHolder: '',
             content: '',
-            commentsLength: this.data.commentsLength + 1
+            commentsLength: this.data.commentsLength + 1,
           })
+          setTimeout(() => {
+            this.setData({
+              makeTextareaFocus: false,
+            })
+          }, 200)
           this.commented = null
           this.fetchComments(moment.notice_id)
           app.globalData.momentNeedToRefetch = true
@@ -472,22 +477,31 @@ Page({
   },
 
   report(item, type) {
-    if (this.reported) {
-      wx.showModal({
-        content: '已收到您的举报',
-        showCancel: false
-      })
-      return
-    }
     // 举报
     let data
     if (type === 'comment') {
+      if (this.reported.indexOf(item.evaluate_id) >= 0) {
+        wx.showModal({
+          content: '已收到您的举报',
+          showCancel: false
+        })
+        return
+      }
+      this.reported.push(item.evaluate_id)
       data = {
         token: app.TOKEN,
         evaluate_id: item.evaluate_id || '',
         type: 2
       }
     } else {
+      if (this.reported.indexOf(item.notice_id) >= 0) {
+        wx.showModal({
+          content: '已收到您的举报',
+          showCancel: false
+        })
+        return
+      }
+      this.reported.push(item.notice_id)
       data = {
         token: app.TOKEN,
         notice_id: item.notice_id || '',
@@ -502,7 +516,6 @@ Page({
       success: res => {
         console.log(res)
         if (res.data.code === 201) {
-          this.reported = true
           wx.showModal({
             content: '举报成功',
             showCancel: false

@@ -21,7 +21,7 @@
         </view>
         <view wx:if="{{userInfo.introduction}}" class="bottomText noWrap">{{userInfo.introduction}}</view>
       </view>
-      <button class="setting" wx:if="{{currentUserId && userId && (userId === currentUserId)}}" bindtap="toChatOrConfig" data-type='config'>修改资料</button>
+      <text class="setting fa fa-gear" wx:if="{{currentUserId && userId && (userId === currentUserId)}}" bindtap="toChatOrConfig" data-type='config'></text>
     </view>
     <view class="gallery">
       <view class='hd'>
@@ -112,12 +112,12 @@
                     <text class='fa fa-thumbs-up'></text> {{item.thumbs_num !=0 ? item.thumbs_num : ''}}
                   </view>
                   <view class='comment'>
-                    <text class='fa fa-reply'></text> {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
+                    <text class='fa fa-commenting'></text> {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
                   </view>
                 </view>
                 <view class='right' catchtap='toShop' data-type='user' data-side="moment" data-idx="{{index}}" data-idx="{{index}}">
 
-                  <text>{{item.store_name}}</text>
+                  <text><text class='fa fa-map-marker'></text>{{item.store_name}}</text>
                 </view>
                 <!-- <text>{{item.parseTime}} --{{item.store_name}}</text> -->
               </view>
@@ -151,7 +151,7 @@
                 </view>
               </block>
             </view>
-            <text class='time' data-idx='{{index}}' data-side='notice' catchtap='toShop'>{{item.store_name}}</text>
+            <text class='time' data-idx='{{index}}' data-side='notice' catchtap='toShop'><text class='fa fa-map-marker'></text>{{item.store_name}}</text>
           </view>
           <view class='fetchFail' wx:if="{{fetchNoticesFail}}">获取数据失败</view>
           <view class='fetchFail' wx:if="{{fetchNoticesEmpty}}">暂时为空</view>

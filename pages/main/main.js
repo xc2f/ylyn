@@ -522,6 +522,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    console.log(app.globalData.hasNewMoment, app.globalData.hasNewComment)
     // 获取未读消息
     let that = this
     that.setData({

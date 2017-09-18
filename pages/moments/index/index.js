@@ -146,6 +146,11 @@ Page({
           wx.showModal({
             showCancel: false,
             content: '获取失败',
+            success: res => {
+              if (res.confirm) {
+                wx.navigateBack()
+              }
+            }
           })
         }
         setTimeout(() => {
@@ -158,6 +163,11 @@ Page({
         wx.showModal({
           showCancel: false,
           content: '获取失败',
+          success: res => {
+            if (res.confirm) {
+              wx.navigateBack()
+            }
+          }
         })
       }
     })
@@ -422,7 +432,7 @@ Page({
       this.fetchMomentList()
       this.fetchShopMoment(app.globalData.storeInfo.storeId)
     }
-    if(app.globalData.momentScrollToTop){
+    if (app.globalData.momentScrollToTop) {
       app.globalData.momentScrollToTop = false
       wx.pageScrollTo({
         scrollTop: 0

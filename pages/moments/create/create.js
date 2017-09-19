@@ -101,7 +101,7 @@ Page({
     if(that.data.src === ''){
       wx.showModal({
         showCancel: false,
-        content: '请选择一张图片',
+        content: '请添加一张图片',
       })
       return
     }

@@ -4,81 +4,52 @@
   <scroll-view scroll-y bindscrolltolower="scrollToBottom" enable-back-to-top class='scroll' scroll-into-view='{{toMomentView}}' scroll-with-animation scroll-top="{{scrollTop}}" bindscroll="handleScroll">
     <view class="banner">
       <view class="userBanner">
-        <image class="bannerImg" src="{{userInfo.avatar}}" mode="aspectFill"></image>
-        <view class="userAvatar" bindtap="changeAvatar">
-          <image src="{{userInfo.avatar}}"></image>
+        <view class="userAvatar">
+          <image src="{{userInfo.avatar}}" catchtap="changeAvatar"></image>
+          <text wx:if="{{userInfo.gender && userInfo.gender == 1}}" class='fa fa-mars'></text>
+          <text wx:if="{{userInfo.gender && userInfo.gender == 2}}" class='fa fa-venus'></text>
         </view>
         <view class="userName">
-          <view class="line"></view>
-          <view class="dot"></view>
           <text>{{userInfo.nickname}}</text>
-          <view class="dot"></view>
-          <view class="line"></view>
-        </view>
-        <view class="userDetail">
-          <text wx:if="{{userInfo.gender}}">{{userInfo.gender == 1 ? '男' : '女'}}</text>
+          <text wx:if="{{userInfo.age}}" class='border'></text>
           <text wx:if="{{userInfo.age}}">{{userInfo.age}}岁</text>
+          <text wx:if="{{showTall}}" class='border'></text>
+          <text wx:if="{{showTall}}">{{userInfo.height}}</text>
         </view>
-        <view wx:if="{{userInfo.introduction}}" class="bottomText noWrap">{{userInfo.introduction}}</view>
+        <view wx:if="{{userInfo.introduction}}" class="introduction noWrap">{{userInfo.introduction}}</view>
+        <!-- <view wx:if="{{currentUserId!==userId}}" class='toChat'>
+          <button bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}" data-type='chat'>认识{{userInfo.gender ? (userInfo.gender==1 ? '他' : '她') : 'Ta'}}</button>
+        </view> -->
+        <!-- end userBanner -->
       </view>
       <text class="setting fa fa-gear" wx:if="{{currentUserId && userId && (userId === currentUserId)}}" bindtap="toChatOrConfig" data-type='config'></text>
+      <text class="chat fa fa-comments" wx:if="{{login && currentUserId && userId && (userId !== currentUserId)}}" bindtap="toChatOrConfig" data-type='chat'></text>
+      <!-- end banner -->
     </view>
+
+
     <view class="gallery">
-      <view class='hd'>
-        <text class='fa fa-image'></text> 相册</view>
-      <!-- <view class="showTall" wx:if="{{showTall}}" style="left: {{size === 2 ? '45%' : '70%'}}">
-        <image src="/images/tall.png"></image>
-        <text>{{userInfo.height}}</text>
-      </view> -->
-      <view class="wrap s0" wx:if="{{size === 0}}">
+      <view class='hd'>相册</view>
+      <view class='right' bindtap='prevgGallery' data-type="all">查看全部
+        <text class='fa fa-angle-right'></text>
+      </view>
+      <view class="wrap" wx:if="{{size === 0}}">
         <text>空空如也</text>
       </view>
-      <view class="wrap s1" wx:if="{{size === 1}}">
-        <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-      </view>
-      <view class="wrap s2" wx:if="{{size === 2}}">
-        <image src="{{gallery[0].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-        <image src="{{gallery[1].album}}" style="height: {{imgHeight}}px" mode="aspectFill"></image>
-      </view>
-      <view class="wrap" wx:if="{{size > 2}}">
-        <view class="g0" wx:if="{{size > 0}}" style="transform: translateX({{tx0}}%) translateZ({{currentPic===0 ? '100px' : '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[0].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g1" wx:if="{{size > 1}}" style="transform: translateX({{tx1}}%) translateZ({{currentPic===1 ? '100px' : currentPic===0 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[1].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g2" wx:if="{{size > 2}}" style="transform: translateX({{tx2}}%) translateZ({{currentPic===2 ? '100px' : currentPic===1 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[2].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g3" wx:if="{{size > 3}}" style="transform: translateX({{tx3}}%) translateZ({{currentPic===3 ? '100px' : currentPic===2 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[3].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g4" wx:if="{{size > 4}}" style="transform: translateX({{tx4}}%) translateZ({{currentPic===4 ? '100px' : currentPic===3 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[4].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g5" wx:if="{{size > 5}}" style="transform: translateX({{tx5}}%) translateZ({{currentPic===5 ? '100px' : currentPic===4 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[5].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g6" wx:if="{{size > 6}}" style="transform: translateX({{tx6}}%) translateZ({{currentPic===6 ? '100px' : currentPic===5 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[6].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g7" wx:if="{{size > 7}}" style="transform: translateX({{tx7}}%) translateZ({{currentPic===7 ? '100px' : currentPic===6 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[7].album}}" mode="aspectFill"></image>
-        </view>
-        <view class="g8" wx:if="{{size > 8}}" style="transform: translateX({{tx8}}%) translateZ({{currentPic===8 ? '100px' : currentPic===7 ? '1px': '0px'}}); height: {{imgHeight}}px">
-          <image src="{{gallery[8].album}}" mode="aspectFill"></image>
-        </view>
-
-        <view bindtap="prev" id="prev" wx:if="{{size>2 && currentPic !== 0}}"></view>
-        <view bindtap="next" id="next" wx:if="{{size>2 && currentPic !== size-1}}"></view>
+      <view class="wrap" wx:if="{{size !== 0}}">
+        <scroll-view scroll-x class='scrollX'>
+          <view wx:for="{{gallery}}" class='item' wx:key="*this" style="width: {{imgWidth}}px; height: {{imgWidth * 12 / 16}}px">
+            <image src='{{item.album}}' mode='aspectFill' bindtap='prevgGallery' data-type="one" data-idx='{{index}}'></image>
+          </view>
+        </scroll-view>
       </view>
     </view>
 
-    <view class="setingOrChat" wx:if="{{currentUserId && userId && (userId !== currentUserId)}}">
+    <!-- <view class="setingOrChat" wx:if="{{currentUserId && userId && (userId !== currentUserId)}}">
       <view class="btn" bindtap="toChatOrConfig" data-friendinfo="{{userInfo}}" data-storeid="{{storeId}}" data-type='chat'>
         <text>开始聊天</text>
       </view>
-    </view>
+    </view> -->
 
 
     <!-- moments -->
@@ -86,46 +57,39 @@
       <view class='hd'>
         <view class='{{showMoment ? "active" : ""}}' bindtap='showMoment'>
           <text class='title'>{{currentUserId===userId ? '我的动态' : (userInfo.gender ? (userInfo.gender==1 ? '他的动态' : '她的动态') : '动态')}}</text>
+          <text class='border'></text>
         </view>
         <view class='{{showNotice ? "active" : ""}}' bindtap='showNotice' wx:if="{{userId===currentUserId}}">
           <text class='title'>我的参与</text>
+          <text class='border'></text>
           <text class='newNotice' wx:if="{{hasNewComment}}"></text>
         </view>
       </view>
+
       <view class='bd'>
 
         <view class='moments' wx:if="{{showMoment}}">
-          <view class='item' wx:for="{{moments}}" wx:key="notice_id" style="height: {{momentImgHeight + 50}}px">
-            <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" class='{{item.access ? "" : "notAllow"}}' style="height: {{momentImgHeight}}px"></image>
-
-            <view class='bar'>
-
-              <view class='title' data-type="user" data-side="moment" catchtap='toMoment' data-idx="{{index}}">
-                <text wx:if='{{item.unRead}}' class='newNotice'></text>
-                <text class='{{item.toggleStatus ? "open" : "collapse"}}'>{{item.content}}</text>
-              </view>
-
-              <!-- end bar -->
-              <view class='more'>
+          <block wx:for="{{moments}}" wx:key="notice_id">
+            <view class='item' data-type="user" data-side="moment" catchtap='toMoment' data-idx="{{index}}">
+              <view class='content'>{{item.content}}</view>
+              <text wx:if='{{item.unRead}}' class='newNotice'></text>
+              <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" class='{{item.access ? "" : "notAllow"}}' style="height: {{momentImgHeight}}px"></image>
+              <view class='bottom'>
                 <view class='left'>
-                  <view class='like'>
-                    <text class='fa fa-thumbs-up'></text> {{item.thumbs_num !=0 ? item.thumbs_num : ''}}
+                  <view class='likes'>
+                    <text class='fa fa-thumbs-o-up'></text> {{item.thumbs_num !=0 ? item.thumbs_num : ''}}
                   </view>
-                  <view class='comment'>
-                    <text class='fa fa-commenting'></text> {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
+                  <view class='comments'>
+                    <text class='fa fa-commenting-o'></text> {{item.evaluate_num !=0 ? item.evaluate_num : ''}}
                   </view>
                 </view>
-                <view class='right' catchtap='toShop' data-type='user' data-side="moment" data-idx="{{index}}" data-idx="{{index}}">
-
-                  <text><text class='fa fa-map-marker'></text>{{item.store_name}}</text>
+                <view class='right' catchtap='toShop' data-type='user' data-side="moment" data-idx="{{index}}">
+                  <text class='fa fa-location-arrow'></text>
+                  {{item.store_name}}
                 </view>
-                <!-- <text>{{item.parseTime}} --{{item.store_name}}</text> -->
               </view>
-              <!-- end more -->
             </view>
-
-
-          </view>
+          </block>
           <view class='fetchFail' wx:if="{{fetchMomentsFail}}">获取数据失败</view>
           <view class='fetchFail' wx:if="{{fetchMomentsEmpty}}">暂时为空</view>
         </view>
@@ -151,7 +115,8 @@
                 </view>
               </block>
             </view>
-            <text class='time' data-idx='{{index}}' data-side='notice' catchtap='toShop'><text class='fa fa-map-marker'></text>{{item.store_name}}</text>
+            <text class='time' data-idx='{{index}}' data-side='notice' catchtap='toShop'>
+              <text class='fa fa-location-arrow'></text>{{item.store_name}}</text>
           </view>
           <view class='fetchFail' wx:if="{{fetchNoticesFail}}">获取数据失败</view>
           <view class='fetchFail' wx:if="{{fetchNoticesEmpty}}">暂时为空</view>

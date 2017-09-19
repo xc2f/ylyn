@@ -87,13 +87,15 @@ Page({
   },
 
   nameFocus() {
+    console.log(1111)
     this.setData({
-      nameBtnShow: true
+      nameBtnShow: true,
+      nameFocus: true,
     })
   },
   nameBlur() {
     this.setData({
-      nameBtnShow: false
+      nameBtnShow: false,
     })
   },
   nameChange(e) {
@@ -155,7 +157,8 @@ Page({
 
   wxIdFocus() {
     this.setData({
-      wxIdBtnShow: true
+      wxIdBtnShow: true,
+      wxIdFocus: true,
     })
   },
   wxIdBlur() {
@@ -244,7 +247,8 @@ Page({
 
   ageFocus() {
     this.setData({
-      ageBtnShow: true
+      ageBtnShow: true,
+      ageFocus: true
     })
   },
   ageBlur() {
@@ -300,7 +304,8 @@ Page({
 
   tallFocus() {
     this.setData({
-      tallBtnShow: true
+      tallBtnShow: true,
+      tallFocus: true
     })
   },
   tallBlur() {
@@ -365,7 +370,8 @@ Page({
 
   introFocus() {
     this.setData({
-      introBtnShow: true
+      introBtnShow: true,
+      introFocus: true
     })
   },
   introBlur() {

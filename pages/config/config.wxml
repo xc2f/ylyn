@@ -1,23 +1,23 @@
 <!--pages/config/config.wxml-->
 
 <view class="container" wx:if="{{dataOk}}">
-  <view class="name">
+  <view class="name" bindtap='nameFocus'>
     <view class="l">
       <text>昵称</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.nickname}}" bindinput="nameChange" bindfocus="nameFocus" bindblur="nameBlur" />
+      <input value="{{userInfo.nickname}}" bindinput="nameChange" bindfocus="nameFocus" bindblur="nameBlur" focus='{{nameFocus}}' />
     </view>
-    <view class="s" style="visibility:{{nameBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="nameSubmit">确认</button></view>
+    <view class="s" style="visibility:{{nameBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" catchtap="nameSubmit">确认</button></view>
   </view>
-  <view class="wxId">
+  <view class="wxId" bindtap='wxIdFocus'>
     <view class="l">
       <text>微信号</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.wechat_num}}" bindinput="wxIdChange"  bindfocus="wxIdFocus" bindblur="wxIdBlur"/>
+      <input value="{{userInfo.wechat_num}}" bindinput="wxIdChange"  bindfocus="wxIdFocus" bindblur="wxIdBlur" focus='{{wxIdFocus}}'/>
     </view>
-    <view class="s"  style="visibility:{{wxIdBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="wxIdSubmit">确认</button></view>
+    <view class="s"  style="visibility:{{wxIdBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" catchtap="wxIdSubmit">确认</button></view>
   </view>
   <view class="gender">
     <view class="l">
@@ -32,33 +32,33 @@
     </view>
     <view class="s"></view>
   </view>
-  <view class="age">
+  <view class="age" bindtap='ageFocus'>
     <view class="l">
       <text>年龄</text>
     </view>
     <view class="r">
-      <input value='{{userInfo.age}}' bindinput="ageChange" type="number" maxlength='3'  bindfocus="ageFocus" bindblur="ageBlur"/>
+      <input value='{{userInfo.age}}' bindinput="ageChange" type="number" maxlength='3'  bindfocus="ageFocus" bindblur="ageBlur" focus='{{ageFocus}}'/>
     </view>
-    <view class="s"  style="visibility:{{ageBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="ageSubmit">确认</button></view>
+    <view class="s"  style="visibility:{{ageBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" catchtap="ageSubmit">确认</button></view>
   </view>
-  <view class="tall">
+  <view class="tall" bindtap='tallFocus'>
     <view class="l">
       <text>身高</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.height}}" bindinput="tallChange" type="number" maxlength='5'  bindfocus="tallFocus" bindblur="tallBlur"/>
+      <input value="{{userInfo.height}}" bindinput="tallChange" type="number" maxlength='5'  bindfocus="tallFocus" bindblur="tallBlur" focus='{{tallFocus}}'/>
     </view>
-    <view class="s"  style="visibility:{{tallBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="tallSubmit">确认</button></view>
+    <view class="s"  style="visibility:{{tallBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" catchtap="tallSubmit">确认</button></view>
   </view>
-  <view class="intro">
+  <view class="intro" bindtap='introFocus'>
     <view class="l">
       <text>简介</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.introduction}}" bindinput="introChange" bindfocus="introFocus" bindblur="introBlur" cursor-spacing='10' />
+      <input value="{{userInfo.introduction}}" bindinput="introChange" bindfocus="introFocus" bindblur="introBlur" cursor-spacing='10' focus='{{introFocus}}' />
       <!--<textarea value="{{userInfo.info}}" bindinput="infoChange" />-->
     </view>
-    <view class="s"  style="visibility:{{introBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" bindtap="introSubmit">确认</button></view>
+    <view class="s"  style="visibility:{{introBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" catchtap="introSubmit">确认</button></view>
   </view>
 
   <view class="show" bindtap="changePic">

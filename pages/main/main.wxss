@@ -516,11 +516,11 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 
 .filterBox {
   width: 117px;
-  height: 50px;
+  height: 70px;
   position: absolute;
   right: -100px;
   top: 60%;
-  z-index: 999;
+  z-index: 10;
   justify-content: center;
   align-items: center;
   /* box-shadow: 1px 2px 3px rgba(0, 0, 0, .3) *//* border: 1px solid #fff; */
@@ -537,17 +537,17 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 
  .filterBox .fa {
   width: 17px;
-  height: 50px;
+  height: 70px;
   float: left;
   font-size: 12px;
   font-weight: bold;
-  line-height: 50px;
+  line-height: 70px;
 } 
 
 .filterBox view.right {
   background: #fff;
   width: 100px;
-  height: 50px;
+  height: 70px;
   float: left;
   display: flex;
   flex-direction: row;
@@ -561,9 +561,24 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
   justify-content: center;
   align-items: center;
   width: 50px;
-  height: 50px;
+  height: 70px;
 }
 
+.filterBox view.item > view {
+  width: 50px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.filterBox view.item > view text {
+  margin-top: 2px;
+  height: 20px;
+  line-height: 20px;
+  color: #222;
+  font-size: 12px;
+}
 
 .filterBox image {
   width: 30px;

@@ -88,10 +88,11 @@ Page({
   parseShopMoment(data) {
     let screenWidth = app.globalData.deviceInfo.screenWidth - 20
     let imgSize = ''
+    // 三张图片两个2的margin-right，6条1px的边框
     if (data.image.length === 2) {
-      imgSize = screenWidth / 2
+      imgSize = (screenWidth - 2 - 4) / 2
     } else if (data.image.length === 3) {
-      imgSize = screenWidth / 3
+      imgSize = (screenWidth - 4 - 6) / 3
     }
     data.parseTime = fromNow(data.add_time * 1000)
     data.logo = app.globalData.storeInfo.logo
@@ -466,13 +467,17 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   scrollToBottom() {
-    console.log(this.fetchMomentAlready)
+    // console.log(this.fetchMomentAlready)
+    // if (this.fetchMomentAlready) {
+    //   this.currentPage++
+    //   this.fetchMomentList(this.currentPage)
+    // }
+  },
+  onReachBottom: function () {
     if (this.fetchMomentAlready) {
       this.currentPage++
       this.fetchMomentList(this.currentPage)
     }
-  },
-  onReachBottom: function () {
   },
 
   /**

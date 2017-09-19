@@ -3,7 +3,7 @@
 .container {
   position: relative;
   height: 100vh;
-  background: #fff;
+  background: #eee;
 }
 
 .scroll {
@@ -11,212 +11,115 @@
 }
 
 .banner {
-  /* transform-style: preserve-3d; *//* position: absolute; 
-  top: 0;
-  left: 0;
-  right: 0; */
-  height: 135px;
-  /* z-index: 99; */
+  /* height: 190px; */
   position: relative;
 }
 
-.banner .setting {
+.banner .setting,
+.banner .chat {
   position: absolute;
   top: 10px;
   right: 10px;
-  /* padding: 3px 5px; */
-  /* line-height: 1.5; */
-  color: #222;
-  font-size: 24px;
-  /* border-radius: 3px; */
-  /* box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3); */
-  /* background: rgba(51, 51, 51, .7) */
-}
-
-.banner .wrap {
-  width: 100%;
-  height: 100%;
-}
-
-.banner .bannerImg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.3;
-  width: 100%;
-  height: 100%;
+  color: #fff;
+  font-size: 26px;
 }
 
 .userBanner {
   width: 100%;
   height: 100%;
-  background: transparent;
+  background: RGB(255, 93, 111);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  overflow: hidden;
-}
-
-.userName {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3px;
-}
-
-.userName .line {
-  width: 30px;
-  height: 2px;
-  background: #333;
-}
-
-.userName .dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #333;
-  margin: 0 3px 0 3px;
-}
-
-.userName text {
-  margin-left: 17px;
-  margin-right: 17px;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.userDetail {
-  margin: 3px 0 0;
-}
-
-.userDetail text {
-  margin: 0 5px;
-}
-
-.userDetail, .bottomText {
-  font-size: 14px;
-  color: #777;
-}
-
-.bottomText {
-  margin-top: 2px;
-  max-width: 80%;
-}
-
-.userBanner .userAvatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  position: relative;
-  /*top: -10px;*//*z-index: 99;*/
-  margin-top: 5px;
-}
-
-.userBanner .userAvatar image {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-}
-
-.userBanner .flipConner {
-  right: 0;
-  position: absolute;
-  bottom: -1px;
-  width: 50px;
-  height: 50px;
-  /*z-index: 999;*//*display: none;*/
-}
-
-.toHome {
-  position: absolute;
-  top: 135px;
-  width: 50px;
-  height: 20px;
-  line-height: 20px;
-  right: 0;
-  z-index: 999;
   text-align: center;
-  background: RGB(255, 193, 7);
-  border-radius: 2px;
-}
-
-.toHome text {
-  font-size: 18px;
   color: #fff;
 }
 
+.userAvatar {
+  padding-top: 30px;
+  position: relative;
+  height: 60px;
+}
+
+.userAvatar image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.userAvatar .fa {
+  font-size: 12px;
+  padding: 5px 10px 2px;
+  background: #fff;
+  color: RGB(255, 93, 111);
+  border-radius: 0 0 5px 5px;
+  position: absolute;
+  bottom: -17px;
+  /* margin: 0 auto; */
+  left: calc(50% - 15px);
+}
+
+.userName {
+  margin: 30px auto 15px;
+  font-size: 18px;
+}
+.userName .border {
+  margin: 0 10px;
+  border-right: 1px solid #fff;
+  font-size: 18px;
+  /* line-height: 24px; */
+}
+.introduction {
+  font-size: 15px;
+  margin: 15px auto;
+}
+
+.userBanner .toChat {
+  width: 50%;
+  margin: 15px auto;
+}
+.userBanner .toChat button {
+  color: RGB(255, 93, 111);
+}
 .gallery {
-  height: 315px;
-  margin-left: 10px;
-  margin-right: 10px;
-  overflow: hidden;
-  padding: 50px 0 0;
+  margin: 15px 0;
+  padding: 15px 0 15px 15px;
+  background: #fff;
 }
 
 .gallery .hd {
-  position: relative;
-  top: -35px;
+  margin-bottom: 15px;
+  font-size: 17px;
+  float: left;
 }
-
+.gallery .right {
+  float: right;
+  font-size: 15px;
+  color: #777;
+  margin-right: 15px;
+}
 .gallery .wrap {
-  position: relative;
-  perspective: 700px;
-  transform-style: preserve-3d;
-  height: 300px;
+  height: 100%;
+  clear: both;
+  text-align: center;
 }
 
-.gallery .wrap > view {
-  transition: transform 300ms ease 0ms;
-  position: absolute;
-  width: 50%;
-  border-radius: 7px;
+.gallery .wrap .scrollX {
+  white-space: nowrap;
+  height: 100%;
+  widows: 100%;
 }
 
-.gallery .wrap image {
+.gallery .wrap .item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.gallery .wrap .item image {
+  border-radius: 3px;
   width: 100%;
   height: 100%;
-  border-radius: 7px;
-  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.3);
 }
-
-#prev {
-  left: 0;
-  top: 0;
-  /* background: rgba(0, 0, 0, .3); */
-  transform: translateZ(10px);
-  height: 300px;
-  /* transition: background 13000ms ease 0ms!important; */
-}
-
-#next {
-  right: 0;
-  top: 0;
-  /* background: rgba(0, 0, 0, .3); */
-  transform: translateZ(10px);
-  height: 300px;
-  /* transition: background 1000ms ease 0ms!important; */
-}
-
-.galleryHD {
-  margin-top: 17px;
-  margin-left: 10px;
-}
-
-.galleryHD image {
-  width: 20px;
-  height: 15px;
-  margin-right: 5px;
-  position: relative;
-  top: 2px;
-}
-
 .setingOrChat {
   background: #fff;
   display: flex;
@@ -239,62 +142,11 @@
   color: #fff;
 }
 
-.s0 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.s1 {
-  display: flex;
-  justify-content: center;
-}
-
-.s1 image {
-  width: 50% !important;
-  transform: translateZ(100px);
-}
-
-.s2 {
-  display: flex;
-}
-
-.s2 image {
-  margin: 3px;
-}
-
-.showTall {
-  position: absolute;
-  width: 80px;
-  height: 25px;
-  left: 70%;
-  top: 50%;
-  z-index: 999;
-  /* box-shadow: 2px 2px 2px rgba(0, 0, 0, .3); */
-}
-
-.showTall image {
-  width: 100%;
-  height: 100%;
-}
-
-.showTall text {
-  width: 60%;
-  text-align: center;
-  left: 40%;
-  position: absolute;
-  /* right: 7px; */
-  top: 0;
-  height: 25px;
-  line-height: 25px;
-  font-size: 14px;
-}
-
 /* moments */
 
 .userMoments {
-  margin: 20px 0;
   height: 100vh;
+  background: #fff;
 }
 
 .userMoments .hd {
@@ -302,22 +154,40 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  height: 50px;
+  border-bottom: 1px solid #eee;
 }
 
 .userMoments .hd > view {
-  margin: 7px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 7px;
 }
 
 .userMoments .hd text.title {
-  color: #bbb;
+  color: #777;
   padding-bottom: 5px;
-  border-bottom: 2px solid transparent;
+  font-size: 17px;
 }
 
 .userMoments .hd .active text {
-  color: #222;
-  border-bottom: 2px solid #eee;
+  color: RGB(253,67,91);
+}
+.userMoments .border {
+  height: 4px;
+  width: 50px;
+  border-radius: 10px;
+  background: transparent;
+}
+.userMoments .active .border {
+  background: RGB(253,67,91);
+}
+
+.userMoments .bd {
+  background: #fff;
 }
 
 .moments {
@@ -325,139 +195,68 @@
   flex-direction: row;
   justify-content: center;
   align-items: center; */
-  margin: 20px 10px;
+  /* margin: 20px 10px; */
 }
 
 .moments .item {
   /* flex: 1; */
-  width: calc(50% - 5px);
-  float: left;
-  padding: 0;
+  /* padding: 0; */
   /* border: 1px solid #fff; */
   position: relative;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-  margin: 0 10px 10px 0;
-  border-radius: 2px;
+  margin: 15px;
+  border-bottom: 1px solid #eee;
 }
-
-.moments .item:nth-child(2n) {
-  margin-right: 0;
+.moments .item:last-child {
+  border: none;
 }
-
+.moments .item .content {
+  font-size: 15px;
+  margin-bottom: 7px;
+}
 .moments .item image {
-  width: 100%;
+  width: 80%;
+  border: 1px solid #eee;
 }
 
 image.notAllow {
-  opacity: 0.7;
+  /* opacity: 0.7; */
 }
 
-.moments .item .bar {
-  height: 50px;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.7);
-  overflow: hidden;
+.moments .item .bottom {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  border: none;
 }
-
-.moments .title {
-  height: 30px;
-  line-height: 30px;
-  width: 90%;
+.moments .item .bottom > view {
+  flex: 1;
   font-size: 14px;
-  color: #222;
-  text-align: left;
-  display: block;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  padding-left: 5px;
-}
-
-.moments .bar > view {
-}
-
-.moments .more {
-  height: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  font-size: 10px;
   color: #777;
 }
 
-.moments .more .left {
-  flex: 1;
+.moments .item .bottom .left {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  font-size: 10px;
-  color: #777;
 }
-
-.moments .more .left .like, .moments .more .left .comment {
+.moments .item .bottom .left > view {
   flex: 1;
-  text-align: center;
 }
-
-.moments .more .right {
-  flex: 1.5;
-  display: block;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  line-height: 20px;
+.moments .item .bottom .left .likes {
+  margin-right: 7px;
+}
+.moments .item .bottom .right {
   text-align: right;
-  padding: 0 5px;
-  color: #286090;
-  /* font-weight: bold; */
-}
-.moments .more .right .fa {
-  padding-right: 2px;
-}
-/* .moments .bar .left {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.moments .bar .left > view {
-  flex: 1;
-  text-align: center;
-  font-size: 12px;
-  color: #777;
-}
-
-.moments .bar .right {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 22px;
-  color: #777;
-  height: 100%;
-  padding-right: 7px;
-}
-
-.moments .more .content {
-  padding: 7px;
-  color: #222;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
   font-size: 14px;
-  line-height: 2;
-  height: calc(100% - 44px);
 }
-
-.moments .more .content text {
-  font-size: 12px;
-  color: #777;
-  margin-top: 7px;
-} */
-
 .notices {
   /* text-align: center; */
   margin: 20px 10px;
@@ -506,9 +305,11 @@ image.notAllow {
   float: right;
   font-size: 11px;
   /* font-weight: bold; */
-  color: #286090;
+  /* color: #286090; */
+  color: #777;
   padding: 5px;
 }
+
 .notices .item .time .fa {
   padding-right: 3px;
 }
@@ -561,6 +362,7 @@ image.notAllow {
   text-align: center;
   color: #777;
   font-size: 14px;
+  margin-top: 20px;
 }
 
 .userMoments .hd .newNotice {
@@ -568,7 +370,7 @@ image.notAllow {
 }
 
 .moments .newNotice {
-  top: 7px;
+  top: 0;
   right: 7px;
   z-index: 999;
   width: 10px;

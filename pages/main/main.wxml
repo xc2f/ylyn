@@ -14,11 +14,19 @@
     <view class='right'>
       <view class='item' catchtap="showBoy">
         <text class='fa fa-ban' wx:if="{{filter==='boy'}}" catchtap='showAll'></text>
-        <image src="/images/show_boy.png" wx:if="{{filter==='girl' || filter === 'all'}}"></image>
+        <view wx:if="{{filter==='girl' || filter === 'all'}}">
+          <image src="/images/show_boy.png"></image>
+          <text>只看男</text>
+        </view>
+
       </view>
       <view class='item' catchtap="showGirl">
         <text class='fa fa-ban' wx:if="{{filter==='girl'}}" catchtap='showAll'></text>
-        <image src="/images/show_girl.png" wx:if="{{filter==='boy' || filter === 'all'}}"></image>
+        <view wx:if="{{filter==='boy' || filter === 'all'}}">
+          <image src="/images/show_girl.png"></image>
+          <text>只看女</text>
+        </view>
+
       </view>
     </view>
   </view>
@@ -117,7 +125,7 @@
 
     <view class="message dyyj" bindtap='toMomentPage'>
       <view class="msgwrap">
-         <image src="/images/dyyj.png"></image> 
+        <image src="/images/dyyj.png"></image>
         <!-- <text class='fa fa-mercury'></text> -->
         <!-- <text class='fa fa-link'></text> -->
       </view>

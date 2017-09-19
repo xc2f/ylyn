@@ -34,7 +34,7 @@
   bottom: 50px;
 }
 .content textarea {
-  padding: 3px;
+  padding: 5px;
   border-radius: 2px;
   margin-bottom: 10px;
 }

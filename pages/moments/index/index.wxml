@@ -17,15 +17,15 @@
             <text class='time'>{{storeMoment.parseTime}}</text>
           </view>
         </view>
-        <view class='content'>
-          <picker range="{{['回复', '举报']}}" bindchange='pickChange' data-type="store">
+        <view class='content' bindtap='toCommentPage' data-type='store' data-item="{{storeMoment}}">
+          <!-- <picker range="{{['回复', '举报']}}" bindchange='pickChange' data-type="store"> -->
             <view>{{storeMoment.content}}</view>
             <view class='image'>
               <block wx:for="{{storeMoment.image}}" wx:key=''>
-                <image src="{{item}}" mode='aspectFill' data-type='store' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" style="width: {{storeMoment.imgSize ? storeMoment.imgSize - 2 : ''}}px; height: {{storeMoment.imgSize ? storeMoment.imgSize * .8 : ''}}px; margin: 7px 2px 7px 0;"></image>
+                <image src="{{item}}" mode='aspectFill' data-type='store' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" style="width: {{storeMoment.imgSize ? storeMoment.imgSize : ''}}px; height: {{storeMoment.imgSize ? storeMoment.imgSize * .8 : ''}}px; margin: 7px 2px 7px 0;"></image>
               </block>
             </view>
-          </picker>
+          <!-- </picker> -->
         </view>
         <view class='bottom'>
           <button class='share center' open-type='share' data-type='store'>
@@ -55,11 +55,11 @@
             <text class='time'>{{item.parseTime}}</text>
           </view>
         </view>
-        <view class='content'>
-          <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type='user'>
+        <view class='content' bindtap='toCommentPage'  data-type='user' data-item="{{item}}">
+          <!-- <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type='user'> -->
             <view>{{item.content}}</view>
             <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" data-type='user'></image>
-          </picker>
+          <!-- </picker> -->
         </view>
         <view class='bottom'>
           <button class='share center' open-type='share' data-idx="{{index}}" data-type='user'>

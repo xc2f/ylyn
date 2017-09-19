@@ -302,8 +302,9 @@ wx-button:after {
   /* margin-bottom: 10px; */
 }
 
-.moments .item .content text {
+.moments .item .content view {
   word-break: break-word;
+  margin-top: 3px;
   margin-bottom: 5px;
   line-height: 1.5;
 }
@@ -314,6 +315,9 @@ wx-button:after {
   border-radius: 2px;
   margin: 7px 0 10px;
   border: 1px solid #eee;
+}
+.moments .item .content image:last-child {
+  margin-right: 0!important;
 }
 
 .moments .item .bottom {

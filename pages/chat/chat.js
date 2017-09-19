@@ -455,7 +455,7 @@ Page({
         store_id: that.data.storeInfo ? that.data.storeInfo.storeId : app.globalData.storeInfo.storeId
       },
       success: function (res) {
-        // console.log(res)
+        console.log(res)
         let messages = wx.getStorageSync('chatWith' + friendInfo.user_id)
         for (let i = messages.length; i--; i > 0) {
           if (messages[i].msgId === msgId) {

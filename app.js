@@ -75,6 +75,7 @@ App({
   },
 
   checkLocation() {
+    console.log(new Date(), this.globalData.coordinate.time)
     let that = this
     if (that.inStore) {
       let coordinate = that.globalData.coordinate
@@ -122,6 +123,8 @@ App({
         table_id: that.globalData.storeInfo.tableId
       },
       success: function (res) {
+        console.log('========check location============')
+        console.log(res)
         if (res.data.code === 201) {
           // console.log('位置正常')
         } else {
@@ -281,6 +284,7 @@ App({
                   success: function (res) {
                     console.log(res)
                     if (res.data.code === 201) {
+                      that.globalData.login = true
                       // console.log('重连成功！')
                       if (res.data.result.new_evaluate && res.data.result.new_notice) {
                         that.handleNoticeStatus(res.data.result.new_evaluate, res.data.result.new_notice)
@@ -303,7 +307,7 @@ App({
                     console.log(res)
                     if (res.data.code === 201) {
                       // console.log('重连成功！')
-
+                      that.globalData.login = true
                       if (res.data.result.new_evaluate && res.data.result.new_notice) {
                         that.handleNoticeStatus(res.data.result.new_evaluate, res.data.result.new_notice)
                       }
@@ -332,6 +336,7 @@ App({
     })
 
     wx.onSocketClose(res => {
+      that.globalData.login = false
       that.globalData.client_id = null
       that.globalData.socketBroken = true
       clearInterval(that.sendSocketMsgInterval)
@@ -463,7 +468,7 @@ App({
                       that.loadMsg(unreadMsg[i])
                     }
                   }
-
+                  that.globalData.login = true
                   that.handleNoticeStatus(res.data.result.new_evaluate, res.data.result.new_notice)
                   // 覆盖用户信息
                   wx.setStorage({
@@ -472,9 +477,11 @@ App({
                   })
                 } else {
                   callback ? callback(false) : ''
+                  that.globalData.login = false
                 }
               },
               fail: function (e) {
+                that.globalData.login = false
                 // request请求失败
                 callback ? callback(false) : ''
               }

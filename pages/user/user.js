@@ -15,25 +15,13 @@ Page({
     userInfo: null,
     gallery: [],
     size: 0,
-    imgHeight: 0,
+    imgWidth: 0,
     momentImgHeight: 100,
     moments: [],
     showMoment: true,
     notices: [],
     showNotice: false,
-
-    tx0: 0,
-    tx1: 50,
-    tx2: 100,
-    tx3: 150,
-    tx4: 200,
-    tx5: 250,
-    tx6: 300,
-    tx7: 350,
-    tx8: 400,
-    // ty: 50,
-    // tz: 0
-    currentPic: 1,
+    login: false,
     dataOk: false,
     fetchDataFail: false,
     showTall: false,
@@ -50,7 +38,7 @@ Page({
   currentNoticePage: 1,
 
   // toMomentView只执行一次
-  initNotice: false,
+  // initNotice: false,
 
   /**
    * 生命周期函数--监听页面加载
@@ -60,7 +48,7 @@ Page({
     this.setData({
       currentUserId: options.user_id,
       userId: app.globalData.userId,
-      imgHeight: deviceInfo.screenHeight / 2 * 0.85,
+      imgWidth: (deviceInfo.windowWidth - 30 - 10) / 2.5,
       momentImgHeight: deviceInfo.screenWidth / 2 * 0.85,
     })
 
@@ -112,7 +100,7 @@ Page({
             wx.hideLoading()
           }
 
-          if (res.data.result.height && res.data.result.album.length !== 0) {
+          if (res.data.result.height) {
             that.setData({
               showTall: true
             })
@@ -295,43 +283,6 @@ Page({
     })
   },
 
-  switchToShop() {
-    wx.navigateBack()
-  },
-
-  prev() {
-    if (this.data.currentPic > 0) {
-      this.setData({
-        tx0: this.data.tx0 + 50,
-        tx1: this.data.tx1 + 50,
-        tx2: this.data.tx2 + 50,
-        tx3: this.data.tx3 + 50,
-        tx4: this.data.tx4 + 50,
-        tx5: this.data.tx5 + 50,
-        tx6: this.data.tx6 + 50,
-        tx7: this.data.tx7 + 50,
-        tx8: this.data.tx8 + 50,
-        currentPic: this.data.currentPic - 1,
-      })
-    }
-  },
-
-  next() {
-    if (this.data.currentPic < this.data.size - 1) {
-      this.setData({
-        tx0: this.data.tx0 - 50,
-        tx1: this.data.tx1 - 50,
-        tx2: this.data.tx2 - 50,
-        tx3: this.data.tx3 - 50,
-        tx4: this.data.tx4 - 50,
-        tx5: this.data.tx5 - 50,
-        tx6: this.data.tx6 - 50,
-        tx7: this.data.tx7 - 50,
-        tx8: this.data.tx8 - 50,
-        currentPic: this.data.currentPic + 1
-      })
-    }
-  },
 
   toChatOrConfig(e) {
     let type = e.currentTarget.dataset.type
@@ -341,7 +292,31 @@ Page({
       })
     } else {
       wx.navigateTo({
-        url: '/pages/chat/chat?friendinfo=' + JSON.stringify(e.currentTarget.dataset.friendinfo),
+        url: '/pages/chat/chat?friendinfo=' + JSON.stringify(this.data.userInfo),
+      })
+    }
+  },
+
+  prevgGallery(e){
+    let type = e.currentTarget.dataset.type
+    let gallery = this.data.gallery
+    if(gallery.length === 0){
+      return
+    }
+    let imgs = []
+    gallery.forEach(item => {
+      imgs.push(item.album)
+    })
+    if(type === 'all'){
+      wx.previewImage({
+        urls: imgs,
+        current: imgs[0]
+      })
+    } else {
+      let idx = e.currentTarget.dataset.idx
+      wx.previewImage({
+        urls: imgs,
+        current: imgs[idx]
       })
     }
   },
@@ -431,19 +406,19 @@ Page({
                 }
               })
             })
-            console.log(11111111111)
+            // console.log(11111111111)
             that.setData({
               moments: moments,
             })
-            if (!that.initNotice) {
-              that.setData({
-                toMomentView: 'moment',
-              })
-            }
-            that.initNotice = true
+            // if (!that.initNotice) {
+            //   that.setData({
+            //     toMomentView: 'moment',
+            //   })
+            // }
+            // that.initNotice = true
           }
         },
-        fail: function(){
+        fail: function () {
           app.globalData.hasNewMoment = false
         }
       })
@@ -452,13 +427,14 @@ Page({
       that.setData({
         hasNewComment: true,
       })
-      if (!that.initNotice) {
-        that.setData({
-          toMomentView: 'moment',
-        })
-        this.showNotice()
-      }
-      that.initNotice = true
+      // this.showNotice()
+      // if (!that.initNotice) {
+      //   that.setData({
+      //     toMomentView: 'moment',
+      //   })
+      //   this.showNotice()
+      // }
+      // that.initNotice = true
     }
   },
 
@@ -467,6 +443,9 @@ Page({
    */
   onShow: function () {
     let that = this
+    that.setData({
+      login: app.globalData.login
+    })
     console.log(that.data.currentUserId, that.data.userId)
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
       that.getNoticeInterval = setInterval(() => {
@@ -490,7 +469,7 @@ Page({
               dataOk: true,
               fetchDataFail: false
             })
-            if (res.data.result.height && res.data.result.album.length !== 0) {
+            if (res.data.result.height) {
               that.setData({
                 showTall: true
               })
@@ -508,7 +487,7 @@ Page({
                   dataOk: true,
                   fetchDataFail: false
                 })
-                if (res.data.height && that.data.gallery.length !== 0) {
+                if (res.data.height) {
                   that.setData({
                     showTall: true
                   })
@@ -603,27 +582,25 @@ Page({
     // if (this.data.currentUserId !== this.data.userId){
     //   return
     // }
-    console.log(e)
     let idx = e.currentTarget.dataset.idx
     let side = e.currentTarget.dataset.side
     if (side === 'moment') {
       let data = this.data.moments
-      // console.log(data)
       data[idx].unRead = false
       this.setData({
         moments: data
       })
-
       wx.getStorage({
         key: 'moments',
         success: function (res) {
           console.log(res)
           // 去重
-          let list = Array.from(new Set(res.data.slice()))
-          list.map((notice_id, idx) => {
+          let list = Array.from(new Set(res.data))
+          list.map((notice_id, i) => {
+            // 注意不要重复定义idx
             if (notice_id === data[idx].notice_id) {
-              // splice后idx会变
-              list.splice(idx, 1)
+              // splice后i会变
+              list.splice(i, 1)
             }
           })
           if (list.length === 0) {
@@ -658,7 +635,6 @@ Page({
       // }
     } else if (side === 'notice') {
       let data = this.data.notices[idx]
-      console.log(data)
       let noticeInfo = data.notice_info
       noticeInfo.store_name = data.store_name
       // noticeInfo.logo
@@ -694,7 +670,6 @@ Page({
   },
 
   hideNewCommentStatus() {
-    console.log('ininin')
     app.globalData.hasNewComment = false
     wx.removeStorage({
       key: 'comments',

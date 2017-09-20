@@ -8,17 +8,23 @@
           <text class='author' catchtap='toUserPage' data-type="moment">{{moment.name}}</text>
           <text class='time'>{{moment.parseTime}}</text>
         </view>
+        <view class='togglePanel'>
+          <text class='fa fa-angle-down' bindtap='togglePanel'></text>
+          <view class='panel' catchtap='toReport' hover-class='hover' wx:if="{{showPanel}}">
+            <view>{{moment.del ? '删除' : '举报'}}</view>
+          </view>
+        </view>
       </view>
-      <view class='content'>
-        <picker range="{{ moment.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-type="moment" disabled="{{replyDisabled}}">
+      <view class='content' bindtap='closePanel'>
+         <!-- <picker range="{{ moment.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-type="moment" disabled="{{replyDisabled}}">  -->
           <view>{{moment.content}}</view>
           <block wx:for='{{moment.image}}' wx:if="{{imgIsArray}}" wx:key="*this">
             <image src="{{item}}" mode='aspectFill' data-idx="{{index}}" data-type="multiply" catchtap='prevImg' style="width: {{moment.imgSize ? moment.imgSize : ''}}px; height: {{moment.imgSize ? moment.imgSize*.8 : ''}}px; margin: 7px 2px 7px 0;"></image>
           </block>
           <image wx:if="{{!imgIsArray}}" src="{{moment.image}}" mode='aspectFill' data-type="single" catchtap='prevImg'></image>
-        </picker>
+        <!-- </picker> -->
         <view class='shopName' bindtap='toShop' wx:if="{{moment.user_id}}">
-          <text class='fa fa-map-marker'></text>
+          <text class='fa fa-location-arrow'></text>
           <text>{{moment.store_name || storeName}}</text>
         </view>
       </view>

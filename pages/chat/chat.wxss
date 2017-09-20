@@ -101,7 +101,9 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
+.chatBar .submit.hover {
+  background: rgb(255, 158, 0)
+}
 .messageBlock {
   width: 80%;
   margin-top: 17px;

@@ -68,90 +68,52 @@ wx-button:after {
 }
 
 /* uploading */
-
-.sk-cube-grid {
+.spinner {
+  margin: 100px auto;
   width: 40px;
   height: 40px;
-  margin: 0 auto;
-  background: transparent;
+  position: relative;
+  text-align: center;
+  
+  -webkit-animation: sk-rotate 2.0s infinite linear;
+  animation: sk-rotate 2.0s infinite linear;
 }
 
-.sk-cube-grid .sk-cube {
-  background: RGB(255, 193, 7) !important;
-  width: 33%;
-  height: 33%;
-  background-color: #333;
-  float: left;
-  -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
-  animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+.dot1, .dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #ffc107;
+  border-radius: 100%;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
 }
 
-.sk-cube-grid .sk-cube1 {
-  -webkit-animation-delay: 0.2s;
-  animation-delay: 0.2s;
+.dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
 }
 
-.sk-cube-grid .sk-cube2 {
-  -webkit-animation-delay: 0.3s;
-  animation-delay: 0.3s;
+@-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
 }
 
-.sk-cube-grid .sk-cube3 {
-  -webkit-animation-delay: 0.4s;
-  animation-delay: 0.4s;
-}
-
-.sk-cube-grid .sk-cube4 {
-  -webkit-animation-delay: 0.1s;
-  animation-delay: 0.1s;
-}
-
-.sk-cube-grid .sk-cube5 {
-  -webkit-animation-delay: 0.2s;
-  animation-delay: 0.2s;
-}
-
-.sk-cube-grid .sk-cube6 {
-  -webkit-animation-delay: 0.3s;
-  animation-delay: 0.3s;
-}
-
-.sk-cube-grid .sk-cube7 {
-  -webkit-animation-delay: 0s;
-  animation-delay: 0s;
-}
-
-.sk-cube-grid .sk-cube8 {
-  -webkit-animation-delay: 0.1s;
-  animation-delay: 0.1s;
-}
-
-.sk-cube-grid .sk-cube9 {
-  -webkit-animation-delay: 0.2s;
-  animation-delay: 0.2s;
-}
-
-@-webkit-keyframes sk-cubeGridScaleDelay {
-  0%, 70%, 100% {
-    -webkit-transform: scale3D(1, 1, 1);
-    transform: scale3D(1, 1, 1);
-  }
-
-  35% {
-    -webkit-transform: scale3D(0, 0, 1);
-    transform: scale3D(0, 0, 1);
-  }
-}
-
-@keyframes sk-cubeGridScaleDelay {
-  0%, 70%, 100% {
-    -webkit-transform: scale3D(1, 1, 1);
-    transform: scale3D(1, 1, 1);
-  }
-
-  35% {
-    -webkit-transform: scale3D(0, 0, 1);
-    transform: scale3D(0, 0, 1);
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
   }
 }
 
@@ -297,15 +259,14 @@ wx-button:after {
 
 .moments .item .content {
   font-size: 14px;
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
+  margin-top: 3px;
   /* margin-bottom: 10px; */
 }
 
 .moments .item .content view {
   word-break: break-word;
-  margin-top: 3px;
-  margin-bottom: 5px;
   line-height: 1.5;
 }
 

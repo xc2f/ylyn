@@ -75,7 +75,6 @@ App({
   },
 
   checkLocation() {
-    console.log(new Date(), this.globalData.coordinate.time)
     let that = this
     if (that.inStore) {
       let coordinate = that.globalData.coordinate

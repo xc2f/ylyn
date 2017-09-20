@@ -104,25 +104,7 @@
     <template is="tableList" data="{{tables: store.table_list, tableLength: userListLength}}" />
   </scroll-view>
 
-
-
-  <view class="toolBar" wx:if="{{login}}">
-    <view class="message" bindtap="toChatRecords">
-      <view class="msgwrap">
-        <image src="/images/message.png"></image>
-        <!-- <text class='fa fa-commenting-o'></text> -->
-        <view class="newNotice" wx:if="{{hasNewMsg}}"></view>
-      </view>
-      <text>消息</text>
-    </view>
-    <view class="waiter" bindtap="callWaiter">
-      <view class="msgwrap">
-        <!-- <image src="/images/message.png"></image> -->
-        <text class='fa fa-bell-o'></text>
-      </view>
-      <text>呼叫服务</text>
-    </view>
-
+  <view class="toolBar" wx:if="{{login && dataOk}}">
     <view class="message dyyj" bindtap='toMomentPage'>
       <view class="msgwrap">
         <image src="/images/dyyj.png"></image>
@@ -131,6 +113,22 @@
       </view>
       <text>店友印记</text>
     </view>
+    <view class="waiter" bindtap="callWaiter">
+      <view class="msgwrap">
+        <!-- <image src="/images/message.png"></image> -->
+        <text class='fa fa-bell-o'></text>
+      </view>
+      <text>呼叫服务</text>
+    </view>
+    <view class="message" bindtap="toChatRecords">
+      <view class="msgwrap">
+        <!-- <image src="/images/message.png"></image> -->
+        <text class='fa fa-envelope-o'></text>
+        <view class="newNotice" wx:if="{{hasNewMsg}}"></view>
+      </view>
+      <text>消息</text>
+    </view>
+
     <!-- <view class="middleBlock">
       <view class="middleWrap">
         <image src="/images/plus.png" wx:if="{{!filterShow}}" bindtap="showFilter" style="z-index: 1;"></image>

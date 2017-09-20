@@ -17,7 +17,8 @@ Page({
     content: '',
     makeTextareaFocus: false,
     replyDisabled: false,
-    toView: ''
+    toView: '',
+    showPanel: false,
   },
   store_name: '',
 
@@ -39,7 +40,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(app.scene)
     let shareScene = [1007, 1008]
     if (shareScene.indexOf(app.scene) !== -1) {
       // 分享
@@ -51,7 +51,6 @@ Page({
         toView: 'comments'
       })
     }
-    console.log(options)
     let storeInfo = app.globalData.storeInfo
     let data = JSON.parse(options.item)
     console.log(data)
@@ -188,6 +187,17 @@ Page({
     data.parseTime = fromNow(data.add_time * 1000)
     if (meId === data.user_id) {
       data.del = true
+    }
+    if (this.momentType === 'store'){
+      let screenWidth = app.globalData.deviceInfo.screenWidth - 20
+      let imgSize = ''
+      // 三张图片两个2的margin-right，6条1px的边框
+      if (data.image.length === 2) {
+        imgSize = (screenWidth - 2 - 4) / 2
+      } else if (data.image.length === 3) {
+        imgSize = (screenWidth - 4 - 6) / 3
+      }
+      data.imgSize = imgSize
     }
     this.setData({
       moment: data
@@ -536,6 +546,49 @@ Page({
     })
   },
 
+  togglePanel(e){
+    let show = this.data.showPanel
+    this.setData({
+      showPanel: show ? false : true
+    })
+  },
+
+  closePanel(){
+    this.setData({
+      showPanel: false
+    })
+  },
+
+  toReport(){
+    let data = this.data.moment
+    if (data.user_id && (data.user_id === app.globalData.userId)) {
+      // del
+      wx.showModal({
+        title: '提示',
+        content: '确认删除？',
+        success: res => {
+          if (res.confirm) {
+            this.delMoment(data)
+          }
+        }
+      })
+    } else {
+      // jubao
+      wx.showModal({
+        title: '提示',
+        content: '确认举报？',
+        success: res => {
+          if (res.confirm) {
+            this.report(data, 'moment')
+          }
+        }
+      })
+    }
+    this.setData({
+      showPanel: false
+    })
+  },
+
   prevImg(e) {
     let image = this.data.moment.image
     let type = e.currentTarget.dataset.type
@@ -651,6 +704,7 @@ Page({
   },
 
 
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -682,9 +736,9 @@ Page({
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
-    this.fetchComments(this.data.moment.notice_id)
-  },
+  // onPullDownRefresh: function () {
+  //   this.fetchComments(this.data.moment.notice_id)
+  // },
 
   /**
    * 页面上拉触底事件的处理函数

@@ -4,9 +4,9 @@
 
 .content .shopName {
   font-size: 12px;
-  text-align: right;
-  padding: 0 10px 5px;
-  color: #286090;
+  text-align: left;
+  padding: 0 10px 5px 0;
+  color: #777;
 }
 
 .content .shopName text {
@@ -155,4 +155,35 @@
   color: #eee;
   padding: 3px 5px;
   border-radius: 2px;
+}
+
+
+/* 投诉 */
+
+.togglePanel {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+.togglePanel .fa {
+  padding: 5px;
+  color: #777;
+}
+.togglePanel .panel {
+  width: 70px;
+  height: 30px;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, .3);
+  position: absolute;
+  top: 20px;
+  right: -20px;
+  color: #555;
+  background: #fff;
+}
+.togglePanel .panel.hover {
+  background: #eee;
 }

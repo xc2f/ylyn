@@ -21,15 +21,15 @@ Page({
     showMoment: true,
     notices: [],
     showNotice: false,
-    login: false,
     dataOk: false,
     fetchDataFail: false,
-    showTall: false,
+    parseTall: false,
     fetchMomentsFail: false,
     fetchNoticesFail: false,
     fetchMomentsEmpty: true,
     fetchNoticesEmpty: true,
     hasNewComment: false,
+    login: false,
   },
 
   getNoticeInterval: null,
@@ -99,10 +99,14 @@ Page({
             })
             wx.hideLoading()
           }
-
-          if (res.data.result.height) {
+          let tall = res.data.result.height
+          if (tall) {
+            tall = String(tall).toLowerCase()
+            if (tall.indexOf('cm') === -1) {
+              tall = tall.concat('cm')
+            }
             that.setData({
-              showTall: true
+              parseTall: tall
             })
           }
         } else if (res.data.code === 102) {
@@ -145,6 +149,7 @@ Page({
         page: page
       },
       success: (res) => {
+        wx.hideLoading()
         console.log(res)
         if (res.data.code === 201) {
           this.setData({
@@ -179,6 +184,7 @@ Page({
         }, 200)
       },
       fail: () => {
+        wx.hideLoading()
         this.fetchDataAlready = true
         // error needn't to handle
         this.currentMomentPage = page - 1
@@ -217,6 +223,7 @@ Page({
         page: page
       },
       success: res => {
+        wx.hideLoading()
         if (res.data.code === 201) {
           this.setData({
             fetchNoticesFail: false,
@@ -251,6 +258,7 @@ Page({
         }, 200)
       },
       fail: () => {
+        wx.hideLoading()
         this.fetchDataAlready = true
         this.currentNoticePage = page - 1
         this.setData({
@@ -291,23 +299,49 @@ Page({
         url: '/pages/config/config'
       })
     } else {
-      wx.navigateTo({
-        url: '/pages/chat/chat?friendinfo=' + JSON.stringify(this.data.userInfo),
-      })
+      let hasStorage = wx.getStorageSync('chatWith' + this.data.currentUserId)
+      if (hasStorage) {
+        wx.navigateTo({
+          url: '/pages/chat/chat?friendinfo=' + JSON.stringify(this.data.userInfo),
+        })
+      } else {
+        wx.request({
+          url: app.requestHost + 'Chat/check_user/',
+          method: 'POST',
+          data: {
+            token: app.TOKEN,
+            tuser_id: this.data.currentUserId,
+            store_id: app.globalData.storeInfo.storeId
+          },
+          success: res => {
+            if (res.data.result) {
+              wx.navigateTo({
+                url: '/pages/chat/chat?friendinfo=' + JSON.stringify(this.data.userInfo),
+              })
+            } else {
+              wx.showModal({
+                content: '对方未在线或与您不在同一家店里',
+                showCancel: false
+              })
+            }
+          }
+        })
+      }
+
     }
   },
 
-  prevgGallery(e){
+  prevgGallery(e) {
     let type = e.currentTarget.dataset.type
     let gallery = this.data.gallery
-    if(gallery.length === 0){
+    if (gallery.length === 0) {
       return
     }
     let imgs = []
     gallery.forEach(item => {
       imgs.push(item.album)
     })
-    if(type === 'all'){
+    if (type === 'all') {
       wx.previewImage({
         urls: imgs,
         current: imgs[0]
@@ -446,7 +480,6 @@ Page({
     that.setData({
       login: app.globalData.login
     })
-    console.log(that.data.currentUserId, that.data.userId)
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()
@@ -461,6 +494,7 @@ Page({
           token: app.TOKEN
         },
         success: function (res) {
+          wx.hideLoading()
           if (res.data.code === 201) {
             that.setData({
               userInfo: res.data.result,
@@ -469,13 +503,14 @@ Page({
               dataOk: true,
               fetchDataFail: false
             })
-            if (res.data.result.height) {
+            let tall = res.data.result.height
+            if (tall) {
+              tall = String(tall).toLowerCase()
+              if (tall.indexOf('cm') === -1) {
+                tall = tall.concat('cm')
+              }
               that.setData({
-                showTall: true
-              })
-            } else {
-              that.setData({
-                showTall: false
+                parseTall: tall
               })
             }
           } else {
@@ -489,15 +524,16 @@ Page({
                 })
                 if (res.data.height) {
                   that.setData({
-                    showTall: true
+                    parseTall: true
                   })
                 } else {
                   that.setData({
-                    showTall: false
+                    parseTall: false
                   })
                 }
               },
               fail: function () {
+                wx.hideLoading()
                 that.setData({
                   dataOk: false,
                   fetchDataFail: true

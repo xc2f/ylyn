@@ -93,7 +93,7 @@
       </view>
       <view class="pic">
         <image src="/images/img.png" wx:if="{{!isFocus}}" bindtap="sendPic"></image>
-        <view class="submit" wx:if="{{isFocus}}" bindtap="submit">
+        <view class="submit" wx:if="{{isFocus}}" bindtap="submit" hover-class='hover'>
           <text>发送</text>
         </view>
       </view>

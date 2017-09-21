@@ -245,6 +245,7 @@
 .moments .item image {
   width: 80%;
   border: 1px solid #eee;
+  border-radius: 2px;
 }
 
 image.notAllow {

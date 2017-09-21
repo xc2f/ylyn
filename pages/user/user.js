@@ -29,7 +29,7 @@ Page({
     fetchMomentsEmpty: true,
     fetchNoticesEmpty: true,
     hasNewComment: false,
-    login: false,
+    showChatIcon: false,
   },
 
   getNoticeInterval: null,
@@ -223,6 +223,7 @@ Page({
         page: page
       },
       success: res => {
+        console.log(res)
         wx.hideLoading()
         if (res.data.code === 201) {
           this.setData({
@@ -299,35 +300,9 @@ Page({
         url: '/pages/config/config'
       })
     } else {
-      let hasStorage = wx.getStorageSync('chatWith' + this.data.currentUserId)
-      if (hasStorage) {
-        wx.navigateTo({
-          url: '/pages/chat/chat?friendinfo=' + JSON.stringify(this.data.userInfo),
-        })
-      } else {
-        wx.request({
-          url: app.requestHost + 'Chat/check_user/',
-          method: 'POST',
-          data: {
-            token: app.TOKEN,
-            tuser_id: this.data.currentUserId,
-            store_id: app.globalData.storeInfo.storeId
-          },
-          success: res => {
-            if (res.data.result) {
-              wx.navigateTo({
-                url: '/pages/chat/chat?friendinfo=' + JSON.stringify(this.data.userInfo),
-              })
-            } else {
-              wx.showModal({
-                content: '对方未在线或与您不在同一家店里',
-                showCancel: false
-              })
-            }
-          }
-        })
-      }
-
+      wx.navigateTo({
+        url: '/pages/chat/chat?friendinfo=' + JSON.stringify(this.data.userInfo),
+      })
     }
   },
 
@@ -477,9 +452,36 @@ Page({
    */
   onShow: function () {
     let that = this
-    that.setData({
-      login: app.globalData.login
-    })
+    let hasStorage = wx.getStorageSync('chatWith' + this.data.currentUserId)
+    if (hasStorage) {
+      this.setData({
+        showChatIcon: true
+      })
+    } else {
+      if (app.globalData.login) {
+        wx.request({
+          url: app.requestHost + 'Chat/check_user/',
+          method: 'POST',
+          data: {
+            token: app.TOKEN,
+            tuser_id: this.data.currentUserId,
+            store_id: app.globalData.storeInfo.storeId
+          },
+          success: res => {
+            if (res.data.code === 201) {
+              if (res.data.result) {
+                this.setData({
+                  showChatIcon: true
+                })
+              }
+            }
+          },
+          fail: () => {
+          }
+        })
+      }
+    }
+
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()

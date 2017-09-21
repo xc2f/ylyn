@@ -23,7 +23,7 @@
         <!-- end userBanner -->
       </view>
       <text class="setting fa fa-gear" wx:if="{{currentUserId && userId && (userId === currentUserId)}}" bindtap="toChatOrConfig" data-type='config'></text>
-      <text class="chat fa fa-envelope" wx:if="{{login && currentUserId && userId && (userId !== currentUserId)}}" bindtap="toChatOrConfig" data-type='chat'></text>
+      <text class="chat fa fa-envelope" wx:if="{{showChatIcon && currentUserId && userId && (userId !== currentUserId)}}" bindtap="toChatOrConfig" data-type='chat'></text>
       <!-- end banner -->
     </view>
 

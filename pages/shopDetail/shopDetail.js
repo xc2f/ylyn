@@ -9,6 +9,7 @@ Page({
    */
   data: {
     shop: null,
+    momentImgSize: 0,
     foodWidth: 170,
     inSale: false,
     storeId: null,
@@ -57,7 +58,7 @@ Page({
           // console.log(res)
           if (res.data.code === 201) {
             let result = res.data.result
-            if(result.tip.trim().length !== 0){
+            if (result.tip.trim().length !== 0) {
               that.setData({
                 showTopInfo: true,
                 topInfoTip: result.tip
@@ -86,6 +87,9 @@ Page({
   getCurrentLocation(options) {
     let that = this;
     // 先获取数据， 如果未定位（分享入口进），定位后再获取数据
+    wx.showLoading({
+      title: '数据获取中',
+    })
     that.toFetch()
     let coordinate = app.globalData.coordinate
     if (coordinate) {
@@ -102,18 +106,17 @@ Page({
   toFetch() {
     let that = this
     let coordinate = app.globalData.coordinate
-    wx.showLoading({
-      title: '数据获取中',
-    })
     wx.request({
       url: app.requestHost + 'Store/store_info/',
       method: 'POST',
       data: {
+        token: app.TOKEN,
         store_id: that.data.storeId,
         longitude: coordinate ? coordinate.longitude : '',
         latitude: coordinate ? coordinate.latitude : ''
       },
       success: function (res) {
+        console.log(res)
         wx.hideLoading()
         if (res.data.code === 201) {
           let result = res.data.result
@@ -121,6 +124,8 @@ Page({
           wx.setNavigationBarTitle({
             title: result.store_name
           })
+
+          result.notice_info ? that.parseMoment(result.notice_info) : ''
 
           let storeInfo = app.globalData.storeInfo
 
@@ -203,6 +208,71 @@ Page({
     })
   },
 
+  parseMoment(moment) {
+    let screenWidth = app.globalData.deviceInfo.screenWidth - 20
+    let imgSize = ''
+    // 三张图片两个2的margin-right，6条1px的边框
+    if (moment.image.length === 2) {
+      imgSize = (screenWidth - 2 - 4) / 2
+    } else if (moment.image.length === 3) {
+      imgSize = (screenWidth - 4 - 6) / 3
+    }
+    this.setData({
+      momentImgSize: imgSize
+    })
+  },
+
+  toCommentPage() {
+    let item = JSON.stringify(this.data.shop.notice_info)
+    wx.navigateTo({
+      url: '/pages/moments/comment/comment?type=store&from=detail&item=' + item,
+    })
+  },
+
+  like() {
+    if (!app.globalData.login){
+      return
+    }
+    let templist, shop
+    shop = this.data.shop
+
+    if (shop.notice_info.is_thumbs) {
+      shop.notice_info.is_thumbs = 0
+      shop.notice_info.thumbs_num--
+    } else {
+      shop.notice_info.is_thumbs = 1
+      shop.notice_info.thumbs_num++
+    }
+    
+    this.setData({
+      shop: shop
+    })
+
+    wx.request({
+      url: app.requestHost + 'Notice/thumbs_notice/',
+      method: 'POST',
+      data: {
+        token: app.TOKEN,
+        notice_id: shop.notice_info.notice_id,
+      },
+      success: res => {
+
+      },
+      fail: () => {
+
+      }
+    })
+  },
+
+  prevImg(e){
+    let idx = e.currentTarget.dataset.idx
+    let imgs = this.data.shop.notice_info.image
+    wx.previewImage({
+      urls: imgs,
+      current: imgs[idx]
+    })
+  },
+
   occurFail() {
     this.setData({
       fetchDataFail: false,
@@ -270,7 +340,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    if (app.globalData.momentNeedToRefetch) {
+      app.globalData.momentNeedToRefetch = false
+      this.toFetch()
+    }
   },
 
   /**
@@ -359,12 +432,22 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function (options) {
     let that = this
     let shopName = this.data.shop.store_name
+    if (options.target.dataset.type === 'moment') {
+      let data = this.data.shop.notice_info
+      let title = shopName + ': ' + (data.content ? data.content : '[图片]')
+      let image = data.image[0]
+      return {
+        title: title,
+        path: '/pages/moments/comment/comment?type=store&from=detail&item=' + JSON.stringify(data),
+        imageUrl: image
+      }
+    }
     let list = ['真的有意思！', '真的不一般！', '真的很独特！', '不知道咋说了🙃', '双击666！', '给你32个赞👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍', '很棒哦>_<', '😃😀😎']
     let targetNum = Math.floor(Math.random() * (list.length + 1))
-    let phrase = targetNum===list.length ? ('厉害了我的'+shopName+'！') : (shopName + '，' + list[targetNum])
+    let phrase = targetNum === list.length ? ('厉害了我的' + shopName + '！') : (shopName + '，' + list[targetNum])
     return {
       title: phrase,
       path: '/pages/shopDetail/shopDetail?store_id=' + this.data.shop.store_id,

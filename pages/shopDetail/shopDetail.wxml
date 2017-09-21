@@ -39,6 +39,41 @@
       <text class="num">{{shop.woman_count}}</text>女士</view>
   </view>
 
+  <!-- 商家动态 -->
+  <view class='moments' wx:if="{{shop.notice_info}}">
+    <view class='item moment'>
+      <view class="hd"><text class='fa fa-slack'></text><text>今日话题</text></view>
+      <view class='content' bindtap='toCommentPage' data-type='store' data-item="{{shop.notice_info}}">
+        <!-- <picker range="{{['回复', '举报']}}" bindchange='pickChange' data-type="store"> -->
+        <view>{{shop.notice_info.content}}</view>
+        <view class='image'>
+          <block wx:for="{{shop.notice_info.image}}" wx:key=''>
+            <image src="{{item}}" mode='aspectFill' data-type='store' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" style="width: {{momentImgSize ? momentImgSize : ''}}px; height: {{momentImgSize ? momentImgSize * .8 : ''}}px; margin: 7px 2px 7px 0;"></image>
+          </block>
+        </view>
+        <!-- </picker> -->
+      </view>
+      <view class='bottom'>
+        <button class='share-moment center' open-type='share' data-type='moment'>
+          <text class='fa fa-share-alt'></text>
+        </button>
+        <button class='comment center' bindtap='toCommentPage'>
+          <text class='fa fa-commenting'></text>
+          <!-- <text class='counts'>  -->
+          {{shop.notice_info.evaluate_num !=0 ? shop.notice_info.evaluate_num : ''}}
+          <!-- </text>  -->
+        </button>
+        <button class="{{shop.notice_info.is_thumbs ? 'like center' : 'center'}}" bindtap='like' data-type='store'>
+          <text class='fa fa-thumbs-up'></text>
+          <!-- <text class='counts'> -->
+          {{shop.notice_info.thumbs_num !=0 ? shop.notice_info.thumbs_num : ''}}
+          <!-- </text> -->
+        </button>
+      </view>
+    </view>
+  </view>
+
+
   <view class="shopInfo">
     <view class="inSalesInfo" wx:if="{{inSale}}">
       <view class="iconWrap">

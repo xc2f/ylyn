@@ -41,3 +41,12 @@ page {
 .container .list {
   background: #eee;
 }
+
+.moments .item:last-child .bottom {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+.moments .item.user {
+  padding-top: 7px;
+}

@@ -57,7 +57,7 @@ Page({
     if (!storeInfo || (data.store_id !== storeInfo.storeId)) {
       this.setData({
         replyDisabled: true,
-        textareaPlaceHolder: '只能在' + data.store_name + '回复'
+        textareaPlaceHolder: '只能在' + (data.store_name ? data.store_name : '店内') + '回复'
       })
     }
     if (data.image instanceof Array) {
@@ -76,7 +76,7 @@ Page({
 
     // 可以从分享、用户页面入口进入
     this.setData({
-      moment: data,
+      // moment: data,
       storeName: data.store_name || ''
     })
     this.fetchComments(data.notice_id, 1, source)
@@ -134,11 +134,11 @@ Page({
               commentsLength: data.evaluate_num,
             })
           }
-          if (source === 'user' || source === 'share') {
+          // if (source === 'user' || source === 'share' || source === 'detail') {
             // user的相册，share的时间、点赞等等
             delete data.evaluate_list
             this.parseMoment(data)
-          }
+          // }
         } else {
           this.currentPage = page - 1
           this.setData({
@@ -188,7 +188,7 @@ Page({
     if (meId === data.user_id) {
       data.del = true
     }
-    if (this.momentType === 'store'){
+    if (this.momentType === 'store') {
       let screenWidth = app.globalData.deviceInfo.screenWidth - 20
       let imgSize = ''
       // 三张图片两个2的margin-right，6条1px的边框
@@ -226,7 +226,8 @@ Page({
   textareaFocus() {
     if (!this.commented) {
       this.setData({
-        textareaPlaceHolder: '50字以内'
+        textareaPlaceHolder: '50字以内',
+        makeTextareaFocus: true,
       })
     }
   },
@@ -234,7 +235,7 @@ Page({
   textareaBlur() {
     this.commented = null
     this.setData({
-      textareaPlaceHolder: '有何高见'
+      textareaPlaceHolder: '有何高见',
     })
   },
 
@@ -546,20 +547,20 @@ Page({
     })
   },
 
-  togglePanel(e){
+  togglePanel(e) {
     let show = this.data.showPanel
     this.setData({
       showPanel: show ? false : true
     })
   },
 
-  closePanel(){
+  closePanel() {
     this.setData({
       showPanel: false
     })
   },
 
-  toReport(){
+  toReport() {
     let data = this.data.moment
     if (data.user_id && (data.user_id === app.globalData.userId)) {
       // del
@@ -576,7 +577,7 @@ Page({
       // jubao
       wx.showModal({
         title: '提示',
-        content: '确认举报？',
+        content: '举报这条动态，是否继续？',
         success: res => {
           if (res.confirm) {
             this.report(data, 'moment')
@@ -760,8 +761,10 @@ Page({
     let data, title, image
     if (this.momentType === 'user') {
       data = this.data.moment
-      title = data.name + ': ' + (data.content ? data.content : '[图片]') + ' --' + data.store_name
-      image = data.image
+      data.store_name = data.store_name || this.data.storeName
+      console.log(this.momentType,data)
+      title = data.name + ': ' + (data.content ? data.content : '[图片]') + (data.store_name ? (' --' + data.store_name) : '')
+      image = (data.image instanceof Array) ? data.image[0] : data.image
       return {
         title: title,
         path: '/pages/moments/comment/comment?from=share&type=user&item=' + JSON.stringify(data),
@@ -769,6 +772,7 @@ Page({
       }
     } else {
       data = this.data.moment
+      console.log(data)
       title = data.name + ': ' + (data.content ? data.content : '[图片]')
       image = data.image[0]
       return {

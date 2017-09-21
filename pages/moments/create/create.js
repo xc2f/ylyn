@@ -11,7 +11,7 @@ Page({
     src: '',
     time: '',
     loading: false,
-    submitStatus: '发送',
+    submitStatus: '发布',
     overText: false,
     userInfo: null
   },
@@ -107,7 +107,7 @@ Page({
     }
     that.setData({
       loading: true,
-      submitStatus: '发送中'
+      submitStatus: '发布中'
     })
     let imgSrc = that.data.src
     if (imgSrc.indexOf('myqcloud')>=0){
@@ -144,7 +144,7 @@ Page({
         // console.log('app.TOKEN', app.TOKEN, 'app.globalData.storeInfo.storeId', app.globalData.storeInfo.storeId, 'that.content', that.content, 'resUrl.data.access_url', src)
         that.setData({
           loading: false,
-          submitStatus: '发送'
+          submitStatus: '发布'
         })
         if (res.data.code === 201) {
           app.globalData.momentNeedToRefetch = true
@@ -153,14 +153,14 @@ Page({
         } else {
           wx.showModal({
             showCancel: false,
-            content: '发送失败',
+            content: '发布失败',
           })
         }
       },
       fail: function () {
         wx.showModal({
           showCancel: false,
-          content: '发送失败',
+          content: '发布失败',
         })
       }
     })

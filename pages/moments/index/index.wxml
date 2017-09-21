@@ -47,7 +47,7 @@
       </view>
 
       <!-- 用户动态 -->
-      <view class='item' wx:for="{{userMoments}}" wx:key="notice_id" wx:if="{{userMoments}}">
+      <view class='item user' wx:for="{{userMoments}}" wx:key="notice_id" wx:if="{{userMoments}}">
         <view class='top'>
           <image src='{{item.portrait}}' catchtap='toUserPage' data-idx="{{index}}"></image>
           <view class='info'>

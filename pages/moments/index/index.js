@@ -55,7 +55,7 @@ Page({
 
     } else {
       //未在任何一家店内
-      wx.reLaunch({
+      wx.redirectTo({
         url: '/pages/shopDetail/shopDetail?store_id=' + options.store_id,
       })
     }
@@ -459,6 +459,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
+    this.currentPage = 1
     this.fetchMomentList()
     this.fetchShopMoment(app.globalData.storeInfo.storeId)
   },
@@ -484,6 +485,7 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function (options) {
+    // wx.hideShareMenu()
     if (options.from === 'button') {
       options = options.target.dataset
       let data, title, image
@@ -508,10 +510,12 @@ Page({
         }
       }
     } else {
+      // wx.hideShareMenu()
       return {
         title: '我在' + app.globalData.storeInfo.storeName + '发现了好玩的东西',
         path: '/pages/moments/index/index?from=share&store_id=' + app.globalData.storeInfo.storeId
       }
+      // return false
     }
 
 

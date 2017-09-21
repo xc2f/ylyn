@@ -216,7 +216,7 @@ wx-button:after {
 /* moment page */
 
 .moments .item {
-  margin-bottom: 5px;
+  margin-top: 10px;
   background: #fff;
   padding: 0 10px;
 }
@@ -286,7 +286,7 @@ wx-button:after {
   align-items: center;
   height: 40px;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  /* border-bottom: 1px solid #eee; */
 }
 
 .moments .item .bottom > button {

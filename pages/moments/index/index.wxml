@@ -1,6 +1,6 @@
 <view class="container">
   <!-- <scroll-view class='scroll' scroll-y enable-back-to-top bindscrolltolower="scrollToBottom" scroll-with-animation> -->
-
+<!-- <textarea auto-height></textarea> -->
     <navigator url="/pages/moments/create/create">
       <view class='createNew center'>
         <text class='fa fa-plus'></text>
@@ -12,6 +12,7 @@
       <view class='item store' wx:if="{{storeMoment.image[0]}}">
         <view class='top'>
           <image src='{{storeMoment.logo}}' catchtap='toShopPage'></image>
+          <text class='storeFlag'>商</text>
           <view class='info'>
             <text class='author' catchtap='toShopPage'>{{storeMoment.name}}</text>
             <text class='time'>{{storeMoment.parseTime}}</text>

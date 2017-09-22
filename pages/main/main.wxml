@@ -9,14 +9,16 @@
 
   <view class="filterBox" catchtap='showFilter' animation="{{filterAnimation}}" wx:if="{{login}}">
     <!-- <navigator url='/pages/moments/index/index'> -->
-    <view class='fa fa-angle-left' animation="{{filterAngleAnimation}}"></view>
+    <view class='left'>
+      <text class='fa fa-angle-left' animation="{{filterAngleAnimation}}"></text>
+    </view>
     <!-- </navigator> -->
     <view class='right'>
       <view class='item' catchtap="showBoy">
         <text class='fa fa-ban' wx:if="{{filter==='boy'}}" catchtap='showAll'></text>
         <view wx:if="{{filter==='girl' || filter === 'all'}}">
           <image src="/images/show_boy.png"></image>
-          <text>只看男</text>
+          <text>不看男</text>
         </view>
 
       </view>
@@ -24,7 +26,7 @@
         <text class='fa fa-ban' wx:if="{{filter==='girl'}}" catchtap='showAll'></text>
         <view wx:if="{{filter==='boy' || filter === 'all'}}">
           <image src="/images/show_girl.png"></image>
-          <text>只看女</text>
+          <text>不看女</text>
         </view>
 
       </view>
@@ -32,7 +34,7 @@
   </view>
 
   <view class="banner" style="width: {{ deviceInfo.windowWidth }}px">
-
+    <view class='shade'></view>
     <view class="wrap">
 
       <view class="shopBanner" style="width: {{ deviceInfo.windowWidth }}px;">
@@ -189,11 +191,14 @@
   <form bindsubmit="callWaiterSubmit">
     <view class="prompt-tip">呼叫服务员</view>
     <view class="prompt-input">
-      <input type="text" placeholder="点餐、加水、买单..." name="content" />
+      <textarea maxlength="50" type="text" placeholder="在这里输入点餐、加水、买单..." name="content" />
     </view>
     <view class="prompt-btns">
-      <button size="mini" class='callWaiterSubmit' formType="submit" type="default" data-type="confirm">确定</button>
-      <button size="mini" type="default" formType="submit" data-type="cancle">取消</button>
+      <button size="mini" class='callWaiterSubmit' formType="submit" type="default" data-type="confirm">呼叫</button>
+    </view>
+    <view class='lineToCancle'></view>
+    <view class='cancleBtn' catchtap='closePrompt'>
+      <text class='fa fa-remove'></text>
     </view>
   </form>
 </view>

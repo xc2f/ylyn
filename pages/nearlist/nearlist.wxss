@@ -34,6 +34,7 @@
   margin: 0 7px 0 15px;
   font-size: 20px;
 }
+
 .head text.text {
   margin-right: 15px;
 }
@@ -190,7 +191,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, .3)
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
 }
 
 .bottomIcon .fa {
@@ -200,13 +201,13 @@
 .toMe {
   background: #31b0d5;
   right: 17px;
-  bottom: 17px;
+  bottom: 30px;
 }
 
 .toMsgList {
   background: RGB(255, 193, 7);
-  left: 17px;
-  bottom: 17px;
+  right: 17px;
+  bottom: 100px;
 }
 
 .body {
@@ -252,11 +253,13 @@
   /* background: rgb(255, 207, 15); */
   background: #fcd800;
   color: #222;
+  /* color: #fff; */
   box-shadow: none;
 }
 
 .login button[type="primary"][plain].button-hover {
   background: #ffb90f;
+  /* color: #fff; */
   color: #000;
 }
 
@@ -264,6 +267,10 @@
   /* margin-top: -85px; */
   position: absolute;
   top: 15px;
+}
+
+.cssload-speeding-wheel {
+  /* border: 1px solid #fff; */
 }
 
 .loadFail {

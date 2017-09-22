@@ -93,7 +93,7 @@
   line-height: 50px;
   background: rgb(255, 185, 0);
   border-radius: 3px;
-  color: #fff;
+  /* color: #fff; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,6 +123,11 @@
   word-break: break-word;
   line-height: 1.5;
   font-size: 14px;
+}
+
+.message .cardMsg .weChatNumber {
+  text-decoration: underline;
+  color: #337ab7;
 }
 
 .faceMsg {

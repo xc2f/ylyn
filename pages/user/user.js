@@ -30,12 +30,16 @@ Page({
     fetchNoticesEmpty: true,
     hasNewComment: false,
     showChatIcon: false,
+
+    envelopeAnimation: {}
   },
 
   getNoticeInterval: null,
 
   currentMomentPage: 1,
   currentNoticePage: 1,
+
+  envelopeRotate: false,
 
   // toMomentView只执行一次
   // initNotice: false,
@@ -54,7 +58,6 @@ Page({
 
     this.fetchUserInfo(options.user_id)
     this.fetchUserMoments(options.user_id)
-
   },
 
   fetchUserInfo(userId) {
@@ -447,10 +450,22 @@ Page({
     }
   },
 
+  shakeEnvelope(){
+    if (!this.envelopeRotate) {
+      this.envelopeRotate = true
+      setInterval(() => {
+        this.setData({
+          envelopeAnimation: this.basicAnimation(100).rotate(27).step().rotate(-27).step().rotate(0).step().export()
+        })
+      }, 1000)
+    }
+  },
+
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    this.shakeEnvelope()
     let that = this
     let hasStorage = wx.getStorageSync('chatWith' + this.data.currentUserId)
     if (hasStorage) {
@@ -481,7 +496,7 @@ Page({
         })
       }
     }
-
+    
     if (that.data.currentUserId && that.data.userId && that.data.currentUserId === that.data.userId) {
       that.getNoticeInterval = setInterval(() => {
         that.getNoticeStatus()
@@ -614,6 +629,20 @@ Page({
     wx.navigateTo({
       url: '/pages/shopDetail/shopDetail?store_id=' + storeId,
     })
+  },
+
+  toUser(e){
+    let idx = e.currentTarget.dataset.idx
+    let data = this.data.notices[idx]
+    if (data.f_user_id === data.store_id){
+      wx.navigateTo({
+        url: '/pages/shopDetail/shopDetail?store_id=' + data.store_id,
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/user/user?user_id=' + data.f_user_id,
+      })
+    }
   },
 
   toMoment(e) {

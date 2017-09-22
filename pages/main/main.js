@@ -458,7 +458,7 @@ Page({
       //   })
       // }, 10)
       this.setData({
-        filterAnimation: that.basicAnimation(300, 0).right(-100).step().export(),
+        filterAnimation: that.basicAnimation(300, 0).right(-50).step().export(),
         filterAngleAnimation: that.basicAnimation(300, 0).rotate(0).step().export()
       })
     } else {
@@ -490,16 +490,16 @@ Page({
 
   // 性别筛选总是返回第一页数据
   showGirl() {
-    this.currentGender = 2
-    this.toFetch(2)
+    this.currentGender = 1
+    this.toFetch(1)
     this.setData({
       filter: 'girl'
     })
   },
 
   showBoy() {
-    this.currentGender = 1
-    this.toFetch(1)
+    this.currentGender = 2
+    this.toFetch(2)
     this.setData({
       filter: 'boy'
     })
@@ -617,17 +617,15 @@ Page({
       })
     }
   },
+  closePrompt(){
+    this.setData({
+      showLayer: false,
+      showPrompt: false,
+    })
+  },
 
   callWaiterSubmit(e) {
     let that = this
-    let type = e.detail.target.dataset.type
-    if (type === 'cancle') {
-      this.setData({
-        showLayer: false,
-        showPrompt: false,
-      })
-      return
-    }
     wx.request({
       url: app.requestHost + 'User/call_waiter/',
       method: 'POST',

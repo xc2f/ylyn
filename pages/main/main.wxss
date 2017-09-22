@@ -14,7 +14,22 @@
   perspective: 300px;
   /*transform: scale(0.7);*/
 }
-
+.banner .shade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .3);
+  z-index: 2;
+}
+/* .banner .shopAvatar,
+.banner .shopName {
+  position: relative;
+  z-index: 3;
+} */
 .banner .wrap {
   width: 100%;
   height: 100%;
@@ -58,7 +73,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  opacity: 0.3;
+  /* opacity: 0.3; */
   width: 100%;
   height: 100%;
 }
@@ -89,27 +104,29 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  z-index: 3;
 }
 
 .shopName .line {
-  width: 30px;
+  width: 25px;
   height: 2px;
-  background: #333;
+  background: #fff;
 }
 
 .shopName .dot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: #333;
+  background: #fff;
   margin: 0 3px 0 3px;
 }
 
 .shopName text {
+  color: #fff;
   margin-left: 17px;
   margin-right: 17px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 15px;
   display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -333,6 +350,7 @@
   height: 25px;
   margin-top: 3px;
 }
+
 .toolBar .message.dyyj image {
   width: 30px;
   height: 30px;
@@ -399,6 +417,7 @@
 .newNotice {
   top: 0;
   right: -5px;
+  margin-top: 0!important;
 }
 
 .loading {
@@ -453,15 +472,15 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 /*提示输入框*/
 
 .wxapp-prompt {
-  width: 80%;
-  left: 10%;
+  width: 70%;
+  left: 15%;
   height: 160px;
   margin: auto;
-  background-color: #e7e7eb;
-  border: 1px #d2d2d3 solid;
-  border-radius: 2px;
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
   position: fixed;
-  top: 30%;
+  top: 20%;
   z-index: 2;
 }
 
@@ -469,22 +488,26 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
   height: 40px;
   line-height: 40px;
   padding-left: 10px;
-  font-size: 14PX;
+  font-size: 16px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
 }
 
 .wxapp-prompt .prompt-input {
-  height: 60px;
+  height: 130px;
   line-height: 60px;
-  padding: 10px 10px 0px 10px;
+  padding: 15px;
   background-color: #fff;
 }
 
-.wxapp-prompt .prompt-input input {
+.wxapp-prompt .prompt-input textarea {
+  width: calc(100% - 30px);
   border: 1px #eee solid;
-  border-radius: 3px;
-  padding-left: 5px;
-  font-size: 16px;
-  height: 50px;
+  padding: 15px;
+  background: #eee;
+  font-size: 14px;
+  height: 100px;
+  line-height: 14px;
 }
 
 .wxapp-prompt .prompt-input input:hover {
@@ -492,14 +515,44 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 }
 
 .wxapp-prompt .prompt-btns {
-  height: 60px;
-  line-height: 68px;
-  padding-right: 10px;
-  text-align: right;
+  height: 45px;
+  line-height: 50px;
+  text-align: center;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 15px;
 }
 
-.callWaiterSubmit {
-  margin-right: 10px;
+.wxapp-prompt .prompt-btns button {
+  width: 100%;
+  background: #ffc107;
+  color: #fff;
+  border-radius: 50px;
+  height: 30px;
+}
+
+.lineToCancle {
+  width: 1px;
+  height: 50px;
+  background: #fff;
+  position: relative;
+  left: 50%;
+}
+
+.cancleBtn {
+  position: relative;
+  left: calc(50% - 14px);
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border-radius: 50%;
+  color: #fff;
+  border: 2px solid #fff;
+  text-align: center;
+  line-height: 24px;
+  font-size: 16px;
 }
 
 .bgShadow {
@@ -515,44 +568,47 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
 }
 
 .filterBox {
-  width: 117px;
-  height: 60px;
+  width: 67px;
+  height: 125px;
   position: absolute;
-  right: -100px;
-  top: 60%;
+  right: -50px;
+  top: 40%;
   z-index: 2;
   justify-content: center;
   align-items: center;
-  /* box-shadow: 1px 2px 3px rgba(0, 0, 0, .3) *//* border: 1px solid #fff; */
-  background: #ffc107;
-  border-radius: 5px 0 0 5px;
-  color: #fff;
+  /* box-shadow: 1px 2px 3px rgba(0, 0, 0, .3) *//* border: 1px solid #fff; *//* background: #eee; */
+  color: #777;
   font-weight: bold;
   text-align: center;
   line-height: 50px;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3); */
   white-space: nowrap;
   overflow: hidden;
 }
 
- .filterBox .fa {
+.filterBox .left {
   width: 17px;
-  height: 60px;
+  height: 40px;
   float: left;
   font-size: 12px;
   font-weight: bold;
-  line-height: 60px;
-} 
+  line-height: 40px;
+  background: #eee;
+  border-radius: 7px 0 0 7px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+  margin-top: 40px;
+}
 
 .filterBox view.right {
-  background: #fff;
-  width: 100px;
-  height: 60px;
+  width: 50px;
+  height: 120px;
   float: left;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, .3);
+  background: #eee;
 }
 
 .filterBox view.item {
@@ -564,6 +620,10 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
   height: 60px;
 }
 
+.filterBox view.item:first-child {
+  margin-bottom: 5px;
+}
+
 .filterBox view.item > view {
   width: 50px;
   height: 60px;
@@ -572,19 +632,23 @@ button.needLogin[type="primary"][plain], button.retryToGetLocation {
   align-items: center;
   flex-direction: column;
 }
+
 .filterBox view.item > view text {
-  margin-top: 2px;
+  /* margin-top: 2px; */
   height: 20px;
   line-height: 20px;
   color: #222;
   font-size: 12px;
+  font-weight: normal
 }
 
 .filterBox image {
-  width: 30px;
+  width: 25px;
+  height: 30px;
+}
+.filterBox view.item:last-child image {
   height: 35px;
 }
-
 .filterBox .item .fa {
   color: #d9534f;
   font-size: 24px;

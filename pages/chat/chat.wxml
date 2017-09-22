@@ -36,8 +36,8 @@
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
             <text>{{item.content}}</text>
           </view>
-          <view wx:if="{{item.type === 'card'}}" class="cardMsg">
-            <text>{{item.content}}</text>
+          <view wx:if="{{item.type === 'card'}}" class="cardMsg" bindtap="copyWechatNumber" data-value='{{item.content}}'>
+            <view>我的微信号：<text class='weChatNumber'>{{item.content}}</text></view>
           </view>
           <view class="angle"></view>
         </view>
@@ -64,8 +64,8 @@
           <view wx:if="{{item.type === 'text'}}" class="multMsg">
             <text>{{item.content}}</text>
           </view>
-          <view wx:if="{{item.type === 'card'}}" class="cardMsg">
-            <text>{{item.content}}</text>
+          <view wx:if="{{item.type === 'card'}}" class="cardMsg" bindtap="copyWechatNumber" data-value='{{item.content}}'>
+            <view>我的微信号：<text class='weChatNumber'>{{item.content}}</text></view>
           </view>
           <view class="angle"></view>
         </view>

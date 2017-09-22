@@ -23,7 +23,7 @@
         <!-- end userBanner -->
       </view>
       <text class="setting fa fa-gear" wx:if="{{currentUserId && userId && (userId === currentUserId)}}" bindtap="toChatOrConfig" data-type='config'></text>
-      <text class="chat fa fa-envelope" wx:if="{{showChatIcon && currentUserId && userId && (userId !== currentUserId)}}" bindtap="toChatOrConfig" data-type='chat'></text>
+      <text class="chat fa fa-envelope" wx:if="{{showChatIcon && currentUserId && userId && (userId !== currentUserId)}}" bindtap="toChatOrConfig" data-type='chat' animation="{{envelopeAnimation}}"></text>
       <!-- end banner -->
     </view>
 
@@ -71,6 +71,7 @@
         <view class='moments' wx:if="{{showMoment}}">
           <block wx:for="{{moments}}" wx:key="notice_id">
             <view class='item' data-type="user" data-side="moment" catchtap='toMoment' data-idx="{{index}}">
+              <view class='time'>{{item.parseTime}}</view>
               <view class='content'>{{item.content}}</view>
               <text wx:if='{{item.unRead}}' class='newNotice'></text>
               <image src="{{item.image}}" mode='aspectFill' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" class='{{item.access ? "" : "notAllow"}}' style="height: {{momentImgHeight}}px"></image>
@@ -98,7 +99,7 @@
         <view class='notices' wx:if="{{showNotice}}">
           <view wx:for="{{notices}}" class='item' wx:key="evaluate_id">
             <view class='newReply'>
-              <text class='whoReply'>{{item.f_nickname}}: </text>
+              <text class='whoReply' bindtap='toUser' data-idx="{{index}}">{{item.f_nickname}}: </text>
               {{item.content}}
             </view>
             <view class='quote' catchtap='{{item.notice_info.is_delete===1 ? "" : "toMoment"}}' data-side='notice' data-idx='{{index}}'>

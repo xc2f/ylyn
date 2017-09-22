@@ -11,6 +11,23 @@
   overflow: hidden;
 }
 
+.banner .shade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .3);
+  z-index: 2;
+}
+.banner .shopAvatar,
+.banner .shopName {
+  position: relative;
+  z-index: 3;
+}
+
 .banner .wrap {
   position: relative;
 }
@@ -23,7 +40,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  opacity: 0.3;
+  /* opacity: 0.3; */
 }
 
 .shopBanner {
@@ -50,9 +67,9 @@
 }
 
 .shopBanner .shopName, .userBanner .shopName {
-  color: #222;
+  color: #fff;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 16px;
   margin-top: 7px;
 }
 
@@ -328,15 +345,16 @@
 
 .quit {
   position: fixed;
-  left: 17px;
-  bottom: 17px;
-  background: #ac2925;
+  right: 17px;
+  bottom: 100px;
+  /* background: RGB(251, 128, 114); */
+  background: #d9534f;
 }
 
 .toHere {
   position: fixed;
   right: 17px;
-  bottom: 17px;
+  bottom: 30px;
   z-index: 999;
   background: #286090;
 }
@@ -455,5 +473,8 @@
   transform: rotate(18deg);
 }
 .moment .hd text:last-child {
-  padding-left: 10px;
+  /* padding-left: 10px; */
+}
+.moment .content .image {
+  padding: 0!important;
 }

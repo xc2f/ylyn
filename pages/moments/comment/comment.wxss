@@ -82,6 +82,7 @@
   font-size: 14px;
   margin: 5px;
   align-self: flex-start;
+  /* color: #fff; */
 }
 
 .comments .cRow {
@@ -132,6 +133,8 @@
   color: #222;
   font-size: 13px;
   padding: 15px 0;
+  line-height: 1.7;
+  word-break: break-all;
 }
 
 .commentStatus {

@@ -46,7 +46,9 @@ page {
   border-bottom: 1px solid #eee;
   margin-bottom: 10px;
 }
-
+.moments .item.store {
+  /* margin-top: 0; */
+}
 .moments .item.user {
   padding-top: 7px;
 }

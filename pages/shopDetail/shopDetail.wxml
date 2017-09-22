@@ -14,6 +14,7 @@
     </view>
   </view>
   <view class="banner" style="background: url() no-repeat; background-size: 100% 100%; background-position: center center;">
+    <view class='shade'></view>
     <view wx:if="{{inSale}}" class="inSales">
       <text class="inSaleText">活动</text>
     </view>
@@ -42,10 +43,12 @@
   <!-- 商家动态 -->
   <view class='moments' wx:if="{{shop.notice_info}}">
     <view class='item moment'>
-      <view class="hd"><text class='fa fa-slack'></text><text>今日话题</text></view>
+      <view class="hd">
+      <!-- <text class='fa fa-slack'></text> -->
+      <text>今日话题</text></view>
       <view class='content' bindtap='toCommentPage' data-type='store' data-item="{{shop.notice_info}}">
         <!-- <picker range="{{['回复', '举报']}}" bindchange='pickChange' data-type="store"> -->
-        <view>{{shop.notice_info.content}}</view>
+        <view wx:if="{{shop.notice_info.content}}">{{shop.notice_info.content}}</view>
         <view class='image'>
           <block wx:for="{{shop.notice_info.image}}" wx:key=''>
             <image src="{{item}}" mode='aspectFill' data-type='store' catchtap='prevImg' data-idx='{{index}}' lazy-load="{{true}}" style="width: {{momentImgSize ? momentImgSize : ''}}px; height: {{momentImgSize ? momentImgSize * .8 : ''}}px; margin: 7px 2px 7px 0;"></image>

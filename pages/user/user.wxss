@@ -6,28 +6,40 @@
   background: #eee;
 }
 
-.container.girl .userBanner {
+.container.girl .userBanner, .container.girl .hd .active .border {
   background: RGB(255, 93, 111);
 }
 
-.container.girl .userAvatar .fa {
+.container.girl .userAvatar .fa, .container.girl .hd .active text {
   color: RGB(255, 93, 111);
 }
 
-.container.boy .userBanner {
+.container.girl .item .time {
+  border-color: RGB(255, 93, 111);
+}
+
+.container.boy .userBanner, .container.boy .hd .active .border {
   background: rgb(0, 172, 237);
 }
 
-.container.boy .userAvatar .fa {
+.container.boy .userAvatar .fa, .container.boy .hd .active text {
   color: rgb(0, 172, 237);
 }
 
-.container.default .userBanner {
+.container.boy .item .time {
+  border-color: rgb(0, 172, 237);
+}
+
+.container.default .userBanner, .container.default .hd .active .border {
   background: rgb(255, 193, 7);
 }
 
-.container.default .userAvatar .fa {
+.container.default .userAvatar .fa, .container.default .hd .active text {
   color: rgb(255, 193, 7);
+}
+
+.container.default .item .time {
+  border-color: rgb(255, 193, 7);
 }
 
 .scroll {
@@ -237,9 +249,20 @@
   border: none;
 }
 
+.moments .item .time {
+  font-size: 12px;
+  /* padding-left: 7px; */
+  /* font-style: italic; */
+  color: #777;
+  border-left-width: 2px;
+  border-left-style: solid;
+  padding-left: 7px;
+}
+
 .moments .item .content {
   font-size: 15px;
-  margin-bottom: 7px;
+  margin-bottom: 5px;
+  line-height: 1.5;
 }
 
 .moments .item image {
@@ -334,6 +357,7 @@ image.notAllow {
 .notices .item .newReply {
   font-size: 14px;
   color: #222;
+  line-height: 1.5;
 }
 
 .notices .item .time {
@@ -369,6 +393,8 @@ image.notAllow {
   position: absolute;
   top: 0;
   left: 55px;
+  display: block;
+  width: 80%;
 }
 
 .notices .quote .info .myReply.delete {
@@ -401,6 +427,7 @@ image.notAllow {
 
 .userMoments .hd .newNotice {
   right: -10px;
+  top: 0;
 }
 
 .moments .newNotice {

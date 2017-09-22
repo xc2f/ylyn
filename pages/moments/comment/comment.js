@@ -8,6 +8,7 @@ Page({
    */
   data: {
     moment: null,
+    momentType: 'user',
     imgIsArray: false,
     overText: false,
     textareaPlaceHolder: '说点什么',
@@ -73,6 +74,9 @@ Page({
     let source = options.from || null
     // 动态类型
     this.momentType = options.type
+    this.setData({
+      momentType: options.type
+    })
 
     // 可以从分享、用户页面入口进入
     this.setData({
@@ -209,6 +213,7 @@ Page({
     this.setData({
       content: value
     })
+    // this.data.content = value
     if (value.length > 50) {
       this.setData({
         overText: true
@@ -217,9 +222,9 @@ Page({
       this.setData({
         overText: false
       })
-      if (value.trim().length === 0) {
-        this.commented = null
-      }
+      // if (value.trim().length === 0) {
+      //   this.commented = null
+      // }
     }
   },
 
@@ -227,22 +232,27 @@ Page({
     if (!this.commented) {
       this.setData({
         textareaPlaceHolder: '50字以内',
-        makeTextareaFocus: true,
       })
     }
+    this.setData({
+      makeTextareaFocus: true,
+    })
   },
 
   textareaBlur() {
-    this.commented = null
-    this.setData({
-      textareaPlaceHolder: '有何高见',
-    })
+    if(this.data.content.length === 0){
+      this.commented = null
+      this.setData({
+        textareaPlaceHolder: '有何高见',
+      })
+    }
   },
 
   toComment() {
     if (this.data.content.trim() === '') {
       return
     }
+    console.log(this.commented)
     if (this.data.overText) {
       wx.showModal({
         showCancel: false,
@@ -335,6 +345,9 @@ Page({
 
   // 处理
   pickChange(e) {
+    this.setData({
+      content: '',
+    })
     let idx = e.currentTarget.dataset.idx
     let type = e.currentTarget.dataset.type
     let id = parseInt(e.detail.value)
@@ -346,7 +359,7 @@ Page({
           this.commented = data
           this.setData({
             textareaPlaceHolder: '回复' + this.commented.f_nickname,
-            makeTextareaFocus: true
+            makeTextareaFocus: true,
           })
         } else {
           this.setData({
@@ -561,6 +574,9 @@ Page({
   },
 
   toReport() {
+    if (!app.TOKEN) {
+      return
+    }
     let data = this.data.moment
     if (data.user_id && (data.user_id === app.globalData.userId)) {
       // del

@@ -665,13 +665,26 @@ Page({
         content: '发送微信号？',
         success: function (res) {
           if (res.confirm) {
-            that.handleMsg('card', '我的微信号：' + value)
+            that.handleMsg('card', value)
           } else {
             // console.log('用户点击取消')
           }
         }
       })
     }
+  },
+
+  copyWechatNumber(e){
+    let weChat = e.currentTarget.dataset.value
+    wx.setClipboardData({
+      data: weChat,
+      success: res => {
+        wx.showToast({
+          title: '已复制',
+          icon: 'success'
+        })
+      }
+    })
   },
 
 

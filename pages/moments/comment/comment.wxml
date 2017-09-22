@@ -1,9 +1,10 @@
 <!--pages/moments/comment/comment.wxml-->
 <view class='container moments'>
   <scroll-view scroll-y scroll-into-view="toView" class='scroll' bindscrolltolower="fetchMoreComment">
-    <view class='item'>
+    <view class="{{momentType==='user' ? 'item' : 'item store'}}">
       <view class='top'>
         <image src='{{moment.portrait || moment.logo}}' catchtap='toUserPage' data-type="moment"></image>
+        <text class='storeFlag' wx:if="{{momentType==='store'}}">商</text>
         <view class='info'>
           <text class='author' catchtap='toUserPage' data-type="moment">{{moment.name}}</text>
           <text class='time'>{{moment.parseTime}}</text>
@@ -23,7 +24,7 @@
         </block>
         <image wx:if="{{!imgIsArray}}" src="{{moment.image}}" mode='aspectFill' data-type="single" catchtap='prevImg'></image>
         <!-- </picker> -->
-        <view class='shopName' bindtap='toShop' wx:if="{{moment.user_id}}">
+        <view class='shopName' bindtap='toShop' wx:if="{{momentType==='user'}}">
           <text class='fa fa-location-arrow'></text>
           <text>{{moment.store_name || storeName}}</text>
         </view>
@@ -84,8 +85,7 @@
     </view>
   </scroll-view>
   <view class='post'>
-    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}" disabled="{{replyDisabled}}"
-      placeholder-style="font-size: 14px; line-height: 30px;"></textarea>
+    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}" disabled="{{replyDisabled}}" placeholder-style="font-size: 14px; line-height: 30px;"></textarea>
     <button class='baseColor center' bindtap='toComment' disabled="{{replyDisabled}}">发送</button>
   </view>
 </view>

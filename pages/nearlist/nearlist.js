@@ -388,7 +388,7 @@ Page({
       // console.log(res.target)
     }
     return {
-      title: '饮识——重新定义饮食',
+      title: '来这些地方，体验你从未体验过的秘密…',
       path: '/pages/nearlist/nearlist',
       imageUrl: '/images/logo.png',
       success: function (res) {

@@ -167,7 +167,8 @@
 }
 
 .shopList .item .distance {
-  text-align: right;
+  /* color: #777; */
+  text-align: left;
   flex: 1;
   /* position: absolute;
   right: 10px;

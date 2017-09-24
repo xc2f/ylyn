@@ -43,7 +43,7 @@
                   <text class="noWrap">{{item.store_status==1 ? "" : "[关店]"}}{{item.store_name}}</text>
                 </view>
                 <view class="wrapBottom">
-                  <view class="persons">
+                  <!-- <view class="persons">
                     <view class="boy">
                       <image src="/images/show_boy.png"></image>
                       <text>{{item.man_count}}</text>
@@ -52,7 +52,7 @@
                       <image src="/images/show_girl.png"></image>
                       <text>{{item.woman_count}}</text>
                     </view>
-                  </view>
+                  </view> -->
                   <view class="distance">
                     <image src="/images/run.png"></image>
                     <text>{{item.distance}}</text>

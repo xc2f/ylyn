@@ -31,14 +31,14 @@
       </view>
     </view>
   </view>
-  <view class="userCount">
+  <!-- <view class="userCount">
     <view class="total">
       <text class="num">{{shop.all_count}}</text>人数</view>
     <view class="man">
       <text class="num">{{shop.man_count}}</text>男士</view>
     <view class="female">
       <text class="num">{{shop.woman_count}}</text>女士</view>
-  </view>
+  </view> -->
 
   <!-- 商家动态 -->
   <view class='moments' wx:if="{{shop.notice_info}}">

@@ -434,6 +434,8 @@
 
 .loading text {
   /* align-self: flex-end; */
+  color: #777;
+  font-size: 14px;
 }
 
 .login {

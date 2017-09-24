@@ -14,7 +14,7 @@
           <text wx:if="{{userInfo.age}}" class='border'></text>
           <text wx:if="{{userInfo.age}}">{{userInfo.age}}岁</text>
           <text wx:if="{{userInfo.height}}" class='border'></text>
-          <text wx:if="{{userInfo.height}}">{{parseTall}}</text>
+          <text wx:if="{{userInfo.height}}">{{parseTall ? parseTall : ''}}</text>
         </view>
         <view wx:if="{{userInfo.introduction}}" class="introduction noWrap">{{userInfo.introduction}}</view>
         <!-- <view wx:if="{{currentUserId!==userId}}" class='toChat'>

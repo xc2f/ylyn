@@ -73,7 +73,7 @@ Page({
       success: (res) => {
         wx.hideLoading()
         wx.stopPullDownRefresh()
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           this.parseShopMoment(res.data.result)
         } else {
@@ -119,7 +119,7 @@ Page({
         page: page
       },
       success: (res) => {
-        console.log(page, res)
+        // console.log(page, res)
         wx.hideLoading()
         wx.stopPullDownRefresh()
         if (res.data.code === 201) {
@@ -277,7 +277,7 @@ Page({
         add_time: item.add_time
       },
       success: res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           let templist = this.data.userMoments.slice()
           templist.splice(idx, 1)
@@ -323,7 +323,7 @@ Page({
         type: 1
       },
       success: res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           this.reported = true
           wx.showModal({
@@ -430,6 +430,7 @@ Page({
    */
   onShow: function () {
     if (app.globalData.momentNeedToRefetch) {
+      this.currentPage = 1
       app.globalData.momentNeedToRefetch = false
       this.fetchMomentList()
       this.fetchShopMoment(app.globalData.storeInfo.storeId)

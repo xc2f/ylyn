@@ -79,8 +79,8 @@ Page({
     // 扫码
     that.setData({
       qrcodeInfo: {
-        store_id: options.store_id || '14b00ff3-f9f7-7337-a713-599d8f8d9c62',
-        table_id: options.table_id || 2
+        store_id: options.store_id,
+        table_id: options.table_id
       }
     })
 
@@ -310,10 +310,10 @@ Page({
       data: {
         // longitude: 108.8871237 || coordinate.longitude,
         // latitude: 34.1863376 || coordinate.latitude,
-        // longitude: coordinate.longitude,
-        // latitude: coordinate.latitude,
-        latitude: 34.2048991715,
-        longitude: 108.9146214724,
+        longitude: coordinate.longitude,
+        latitude: coordinate.latitude,
+        // latitude: 34.2048991715,
+        // longitude: 108.9146214724,
         token: app.TOKEN,
         store_id: that.data.qrcodeInfo.store_id,
         table_id: that.data.qrcodeInfo.table_id,
@@ -522,7 +522,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log(app.globalData.hasNewMoment, app.globalData.hasNewComment)
+    // console.log(app.globalData.hasNewMoment, app.globalData.hasNewComment)
     // 获取未读消息
     let that = this
     that.setData({
@@ -575,7 +575,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   scrollToEnd: function () {
-    console.log(this.fetchTableListOk, this.currentPage)
+    // console.log(this.fetchTableListOk, this.currentPage)
     if (this.fetchTableListOk) {
       this.currentPage += 1
       this.toFetch(this.currentGender, this.currentPage)

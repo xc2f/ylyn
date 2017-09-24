@@ -55,7 +55,7 @@
         </view>
         <block wx:if="comments" wx:for="{{comments}}" wx:key="evaluate_id">
           <view class='cRow' wx:if="{{item.is_delete === 0}}">
-            <picker range="{{ item.del ? ['回复', '删除'] : ['回复', '举报']}}" bindchange='pickChange' data-idx="{{index}}" data-type="comment" disabled="{{replyDisabled}}">
+            <picker disabled='{{pickDisabled}}' range="{{item.del ? (replyDisabled ? ['删除'] : ['回复', '删除']) : (replyDisabled ? ['举报'] : ['回复', '举报'])}}" bindchange='pickChange' data-idx="{{index}}" data-type="comment">
               <view class='left'>
                 <image src="{{item.f_portrait}}" catchtap='toUserPage' data-type="comment" data-idx="{{index}}"></image>
               </view>
@@ -85,7 +85,8 @@
     </view>
   </scroll-view>
   <view class='post'>
-    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}" disabled="{{replyDisabled}}" placeholder-style="font-size: 14px; line-height: 30px;"></textarea>
+    <textarea placeholder='{{textareaPlaceHolder}}' auto-height bindinput='contentInput' class='{{overText ? "overText" : ""}}' bindfocus='textareaFocus' bindblur='textareaBlur' value="{{content}}" focus="{{makeTextareaFocus}}" disabled="{{replyDisabled}}"
+      placeholder-style="font-size: 14px; line-height: 30px;"></textarea>
     <button class='baseColor center' bindtap='toComment' disabled="{{replyDisabled}}">发送</button>
   </view>
 </view>

@@ -87,7 +87,7 @@ Page({
   },
 
   nameFocus() {
-    console.log(1111)
+    // console.log(1111)
     this.setData({
       nameBtnShow: true,
       nameFocus: true,
@@ -315,23 +315,27 @@ Page({
   },
   tallChange(e) {
     let tall = e.detail.value
-    let nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    if (tall.length === 3) {
-      let tall0 = Math.floor(tall / 100)
-      let tall1 = Math.floor(tall % 100 / 10)
-      let tall2 = tall % 100 % 10
-      if (nums.indexOf(tall0) !== -1 && nums.indexOf(tall1) !== -1 && nums.indexOf(tall2) !== -1) {
-        this.setData({
-          'userInfo.height': e.detail.value + 'cm',
-          'tallUnit': ''
-        })
-      }
-    } else {
+    // console.log(tall)
+    // let nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    // if (tall.length === 3) {
+    //   // let tall0 = Math.floor(tall / 100)
+    //   // let tall1 = Math.floor(tall % 100 / 10)
+    //   // let tall2 = tall % 100 % 10
+    //   let tall0 = parseInt(tall[0])
+    //   let tall1 = parseInt(tall[1])
+    //   let tall2 = parseInt(tall[2])
+    //   if (nums.indexOf(tall0) !== -1 && nums.indexOf(tall1) !== -1 && nums.indexOf(tall2) !== -1) {
+    //     this.setData({
+    //       'userInfo.height': e.detail.value + 'cm',
+    //       'tallUnit': ''
+    //     })
+    //   }
+    // } else {
       this.setData({
         'userInfo.height': e.detail.value,
         'tallUnit': ''
       })
-    }
+    // }
   },
   tallSubmit() {
     let that = this

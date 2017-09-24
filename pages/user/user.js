@@ -75,7 +75,7 @@ Page({
         token: app.TOKEN
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         // console.log(app.TOKEN)
         if (res.data.code === 201) {
           // 设置导航条
@@ -153,7 +153,7 @@ Page({
       },
       success: (res) => {
         wx.hideLoading()
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           this.setData({
             fetchMomentsFail: false,
@@ -161,12 +161,22 @@ Page({
           let result = res.data.result
           if (result.length === 0) {
             this.currentMomentPage = page - 1
+            if(page <=1 ){
+              this.setData({
+                moments: [],
+                fetchMomentsEmpty: true
+              })
+            }
           } else {
-            let list = this.data.moments.slice()
-            result.map(item => {
-              list.push(item)
-            })
-            this.parseMoment(list)
+            if(page <= 1){
+              this.parseMoment(result)
+            } else {
+              let list = this.data.moments.slice()
+              result.map(item => {
+                list.push(item)
+              })
+              this.parseMoment(list)
+            }
             this.setData({
               fetchMomentsEmpty: false
             })
@@ -226,7 +236,6 @@ Page({
         page: page
       },
       success: res => {
-        console.log(res)
         wx.hideLoading()
         if (res.data.code === 201) {
           this.setData({
@@ -395,12 +404,12 @@ Page({
   getNoticeStatus() {
     let that = this
     let globalData = app.globalData
-    console.log(globalData)
+    // console.log(globalData)
     if (globalData.hasNewMoment) {
       wx.getStorage({
         key: 'moments',
         success: function (res) {
-          console.log(res)
+          // console.log(res)
           let data = Array.from(new Set(res.data))
           if (data.length === 0) {
             app.globalData.hasNewMoment = false
@@ -473,7 +482,7 @@ Page({
         showChatIcon: true
       })
     } else {
-      if (app.globalData.login) {
+      if (app.globalData.storeInfo) {
         wx.request({
           url: app.requestHost + 'Chat/check_user/',
           method: 'POST',
@@ -502,6 +511,13 @@ Page({
         that.getNoticeStatus()
       }, 5000)
     }
+
+    if (app.globalData.momentNeedToRefetch){
+      this.currentMomentPage = 1
+      app.globalData.momentNeedToRefetch = false
+      this.fetchUserMoments(this.data.currentUserId)
+    }
+
     if (that.data.currentUserId === that.data.userId) {
       wx.request({
         url: app.requestHost + 'Store/get_tuser_info/',
@@ -660,7 +676,7 @@ Page({
       wx.getStorage({
         key: 'moments',
         success: function (res) {
-          console.log(res)
+          // console.log(res)
           // 去重
           let list = Array.from(new Set(res.data))
           list.map((notice_id, i) => {
@@ -778,7 +794,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   scrollToBottom() {
-    console.log(this.fetchDataAlready)
+    // console.log(this.fetchDataAlready)
     if (this.fetchDataAlready) {
       if (this.data.showMoment) {
         this.currentMomentPage++

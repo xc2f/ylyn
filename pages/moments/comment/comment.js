@@ -18,6 +18,7 @@ Page({
     content: '',
     makeTextareaFocus: false,
     replyDisabled: false,
+    pickDisabled: false,
     toView: '',
     showPanel: false,
   },
@@ -54,7 +55,12 @@ Page({
     }
     let storeInfo = app.globalData.storeInfo
     let data = JSON.parse(options.item)
-    console.log(data)
+    // console.log(data)
+    if (!app.TOKEN) {
+      this.setData({
+        pickDisabled: true,
+      })
+    }
     if (!storeInfo || (data.store_id !== storeInfo.storeId)) {
       this.setData({
         replyDisabled: true,
@@ -101,7 +107,7 @@ Page({
         page: page
       },
       success: res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.result.is_delete === 1) {
           wx.showModal({
             content: '动态已被删除',
@@ -139,9 +145,9 @@ Page({
             })
           }
           // if (source === 'user' || source === 'share' || source === 'detail') {
-            // user的相册，share的时间、点赞等等
-            delete data.evaluate_list
-            this.parseMoment(data)
+          // user的相册，share的时间、点赞等等
+          delete data.evaluate_list
+          this.parseMoment(data)
           // }
         } else {
           this.currentPage = page - 1
@@ -240,7 +246,7 @@ Page({
   },
 
   textareaBlur() {
-    if(this.data.content.length === 0){
+    if (this.data.content.length === 0) {
       this.commented = null
       this.setData({
         textareaPlaceHolder: '有何高见',
@@ -252,7 +258,7 @@ Page({
     if (this.data.content.trim() === '') {
       return
     }
-    console.log(this.commented)
+    // console.log(this.commented)
     if (this.data.overText) {
       wx.showModal({
         showCancel: false,
@@ -309,9 +315,9 @@ Page({
         type: type
       },
       success: res => {
-        console.log(this.momentType, t_user_id, e_id, last_e_id, type, this.commented)
+        // console.log(this.momentType, t_user_id, e_id, last_e_id, type, this.commented)
         this.initComment = true
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           this.setData({
             textareaPlaceHolder: '',
@@ -352,77 +358,77 @@ Page({
     let type = e.currentTarget.dataset.type
     let id = parseInt(e.detail.value)
     let data = type === 'comment' ? this.data.comments[idx] : this.data.moment
-    if (id === 0) {
+    if (id === 0 && !this.data.replyDisabled) {
       // 回复
-      if (type === 'comment') {
-        if (data.f_user_id !== app.globalData.userId) {
-          this.commented = data
-          this.setData({
-            textareaPlaceHolder: '回复' + this.commented.f_nickname,
-            makeTextareaFocus: true,
-          })
-        } else {
-          this.setData({
-            makeTextareaFocus: true
-          })
-        }
-      } else if (type === 'moment') {
-        // 点动态回复
+      // if (type === 'comment') {
+      if (data.f_user_id !== app.globalData.userId) {
+        this.commented = data
+        this.setData({
+          textareaPlaceHolder: '回复' + this.commented.f_nickname,
+          makeTextareaFocus: true,
+        })
+      } else {
         this.setData({
           makeTextareaFocus: true
         })
       }
-    } else if (id === 1) {
+      // } else if (type === 'moment') {
+      //   // 点动态回复
+      //   this.setData({
+      //     makeTextareaFocus: true
+      //   })
+      // }
+    } else if (id === 1 || this.data.replyDisabled) {
       // 删除或举报
-      if (type === 'comment') {
-        if (data.f_user_id && (data.f_user_id === app.globalData.userId)) {
-          // del
-          wx.showModal({
-            title: '提示',
-            content: '确认删除？',
-            success: res => {
-              if (res.confirm) {
-                this.delComment(data, idx)
-              }
+      // if (type === 'comment') {
+      if (data.f_user_id && (data.f_user_id === app.globalData.userId)) {
+        // del
+        wx.showModal({
+          title: '提示',
+          content: '确认删除？',
+          success: res => {
+            if (res.confirm) {
+              this.delComment(data, idx)
             }
-          })
-        } else {
-          // jubao
-          wx.showModal({
-            title: '提示',
-            content: '确认举报？',
-            success: res => {
-              if (res.confirm) {
-                this.report(data, type)
-              }
+          }
+        })
+      } else {
+        // jubao
+        wx.showModal({
+          title: '提示',
+          content: '确认举报？',
+          success: res => {
+            if (res.confirm) {
+              this.report(data, type)
             }
-          })
-        }
-      } else if (type === 'moment') {
-        if (data.user_id && (data.user_id === app.globalData.userId)) {
-          // del
-          wx.showModal({
-            title: '提示',
-            content: '确认删除？',
-            success: res => {
-              if (res.confirm) {
-                this.delMoment(data)
-              }
-            }
-          })
-        } else {
-          // jubao
-          wx.showModal({
-            title: '提示',
-            content: '确认举报？',
-            success: res => {
-              if (res.confirm) {
-                this.report(data, type)
-              }
-            }
-          })
-        }
+          }
+        })
       }
+      // } else if (type === 'moment') {
+      //   if (data.user_id && (data.user_id === app.globalData.userId)) {
+      //     // del
+      //     wx.showModal({
+      //       title: '提示',
+      //       content: '确认删除？',
+      //       success: res => {
+      //         if (res.confirm) {
+      //           this.delMoment(data)
+      //         }
+      //       }
+      //     })
+      //   } else {
+      //     // jubao
+      //     wx.showModal({
+      //       title: '提示',
+      //       content: '确认举报？',
+      //       success: res => {
+      //         if (res.confirm) {
+      //           this.report(data, type)
+      //         }
+      //       }
+      //     })
+      //   }
+      // }
     }
   },
 
@@ -433,12 +439,13 @@ Page({
       method: 'POST',
       data: {
         token: app.TOKEN,
-        store_id: app.globalData.storeInfo.storeId,
+        store_id: item.store_id,
         notice_id: item.notice_id,
         add_time: item.add_time
       },
       success: res => {
         if (res.data.code === 201) {
+          app.globalData.momentNeedToRefetch = true
           wx.navigateBack()
         } else if (res.data.code === 102) {
           wx.showModal({
@@ -471,7 +478,7 @@ Page({
         evaluate_id: item.evaluate_id
       },
       success: res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           let templist = this.data.comments.slice()
           templist.splice(idx, 1)
@@ -538,7 +545,7 @@ Page({
       method: 'POST',
       data: data,
       success: res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201) {
           wx.showModal({
             content: '举报成功',
@@ -643,7 +650,7 @@ Page({
         notice_id: moment.notice_id,
       },
       success: res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201 || res.data.code === 202) {
           app.globalData.momentNeedToRefetch = true
         }
@@ -657,7 +664,7 @@ Page({
   toUserPage(e) {
     let data = e.currentTarget.dataset
     let userId
-    console.log(this.momentType)
+    // console.log(this.momentType)
     // if(this.momentType === 'user'){
     if (data.type === 'moment') {
       if (this.momentType === 'user') {
@@ -778,7 +785,7 @@ Page({
     if (this.momentType === 'user') {
       data = this.data.moment
       data.store_name = data.store_name || this.data.storeName
-      console.log(this.momentType,data)
+      // console.log(this.momentType,data)
       title = data.name + ': ' + (data.content ? data.content : '[图片]') + (data.store_name ? (' --' + data.store_name) : '')
       image = (data.image instanceof Array) ? data.image[0] : data.image
       return {
@@ -788,7 +795,7 @@ Page({
       }
     } else {
       data = this.data.moment
-      console.log(data)
+      // console.log(data)
       title = data.name + ': ' + (data.content ? data.content : '[图片]')
       image = data.image[0]
       return {

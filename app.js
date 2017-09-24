@@ -47,7 +47,7 @@ App({
 
   onLaunch: function (e) {
     this.scene = e.scene
-    console.log(e.scene, this.scene)
+    // console.log(e.scene, this.scene)
     if (this.globalData.storeInfo) {
       let storeInfo = this.globalData.storeInfo
       wx.reLaunch({
@@ -122,8 +122,8 @@ App({
         table_id: that.globalData.storeInfo.tableId
       },
       success: function (res) {
-        console.log('========check location============')
-        console.log(res)
+        // console.log('========check location============')
+        // console.log(res)
         if (res.data.code === 201) {
           // console.log('位置正常')
         } else {
@@ -192,7 +192,7 @@ App({
     wx.getStorage({
       key: 'moments',
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if(res.data.length > 0){
           that.globalData.hasNewMoment = true
         } else {
@@ -200,14 +200,14 @@ App({
         }
       },
       fail: function () {
-        console.log('no moments')
+        // console.log('no moments')
         that.globalData.hasNewMoment = false
       }
     })
     wx.getStorage({
       key: 'comments',
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if(res.data.length > 0){
           that.globalData.hasNewComment = true
         } else {
@@ -215,7 +215,7 @@ App({
         }
       },
       fail: function () {
-        console.log('no comments')
+        // console.log('no comments')
         that.globalData.hasNewComment = false
       }
     })
@@ -262,7 +262,7 @@ App({
         // console.log('-------- socket msg ------------')
         // console.log(res)
         let data = JSON.parse(res.data)
-        console.log(data)
+        // console.log(data)
         if (data.type === 'init') {
           that.globalData.client_id = data.client_id
           if (connectType === 'manual') {
@@ -281,7 +281,7 @@ App({
                     type: 2
                   },
                   success: function (res) {
-                    console.log(res)
+                    // console.log(res)
                     if (res.data.code === 201) {
                       that.globalData.login = true
                       // console.log('重连成功！')
@@ -303,7 +303,7 @@ App({
                     type: 1
                   },
                   success: function (res) {
-                    console.log(res)
+                    // console.log(res)
                     if (res.data.code === 201) {
                       // console.log('重连成功！')
                       that.globalData.login = true
@@ -346,7 +346,7 @@ App({
   },
 
   pushNoticeMsg(type, data) {
-    console.log(data)
+    // console.log(data)
     if (type === 'moments') {
       this.globalData.hasNewMoment = true
     } else {
@@ -385,7 +385,7 @@ App({
         client_id: that.globalData.client_id
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if (res.data.code === 201 || res.data.code === 202) {
           if (res.data.code === 202) {
             that.TOKEN = res.data.result.token
@@ -449,7 +449,7 @@ App({
                 client_id: client_id
               },
               success: function (res) {
-                console.log(res)
+                // console.log(res)
                 if (res.data.code === 201) {
                   // 存储TOKEN
                   that.TOKEN = res.data.result.token
@@ -578,7 +578,7 @@ App({
   },
 
   handleNoticeStatus(comments, moments) {
-    console.log(comments, moments)
+    // console.log(comments, moments)
     if (moments.length > 0) {
       this.globalData.hasNewMoment = true
       wx.getStorage({
@@ -626,7 +626,7 @@ App({
   },
 
   loadMsg(msg) {
-    console.log(msg)
+    // console.log(msg)
     let that = this
     let messageList = wx.getStorageSync('chatWith' + msg.from_user_id)
     // 获取chatid

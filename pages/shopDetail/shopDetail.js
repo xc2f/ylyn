@@ -116,7 +116,7 @@ Page({
         latitude: coordinate ? coordinate.latitude : ''
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         wx.hideLoading()
         if (res.data.code === 201) {
           let result = res.data.result
@@ -230,7 +230,7 @@ Page({
   },
 
   like() {
-    if (!app.globalData.login){
+    if (!app.globalData.login) {
       return
     }
     let templist, shop
@@ -243,7 +243,7 @@ Page({
       shop.notice_info.is_thumbs = 1
       shop.notice_info.thumbs_num++
     }
-    
+
     this.setData({
       shop: shop
     })
@@ -264,7 +264,7 @@ Page({
     })
   },
 
-  prevImg(e){
+  prevImg(e) {
     let idx = e.currentTarget.dataset.idx
     let imgs = this.data.shop.notice_info.image
     wx.previewImage({
@@ -433,9 +433,10 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function (options) {
+    console.log(options)
     let that = this
     let shopName = this.data.shop.store_name
-    if (options.target.dataset.type === 'moment') {
+    if (options.from === 'button' && options.target.dataset.type === 'moment') {
       let data = this.data.shop.notice_info
       let title = shopName + ': ' + (data.content ? data.content : '[图片]')
       let image = data.image[0]
@@ -445,7 +446,7 @@ Page({
         imageUrl: image
       }
     }
-    let list = ['真的有意思！', '真的不一般！', '真的很独特！', '不知道咋说了🙃', '双击666！', '给你32个赞👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍', '很棒哦>_<', '😃😀😎']
+    let list = ['已经在使用饮识，你还有什么理由不来呢？', '真的有意思！', '真的不一般！', '真的很独特！', '不知道咋说了🙃', '双击666！', '给你32个赞👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍👍', '很棒哦>_<', '😃😀😎']
     let targetNum = Math.floor(Math.random() * (list.length + 1))
     let phrase = targetNum === list.length ? ('厉害了我的' + shopName + '！') : (shopName + '，' + list[targetNum])
     return {

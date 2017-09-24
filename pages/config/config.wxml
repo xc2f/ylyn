@@ -46,7 +46,7 @@
       <text>身高</text>
     </view>
     <view class="r">
-      <input value="{{userInfo.height}}" bindinput="tallChange" type="number" maxlength='5'  bindfocus="tallFocus" bindblur="tallBlur" focus='{{tallFocus}}'/>
+      <input value="{{userInfo.height}}" bindinput="tallChange" type="number" maxlength='3'  bindfocus="tallFocus" bindblur="tallBlur" focus='{{tallFocus}}' placeholder='cm'/>
     </view>
     <view class="s"  style="visibility:{{tallBtnShow ? 'visible': 'hidden'}}"><button type="primary" size="mini" catchtap="tallSubmit">确认</button></view>
   </view>

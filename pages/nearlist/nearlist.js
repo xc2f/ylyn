@@ -206,7 +206,7 @@ Page({
         page: page
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         wx.stopPullDownRefresh()
         if(res.data.code === 101){
           wx.hideLoading()
@@ -324,7 +324,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log(app.globalData.hasNewMoment, app.globalData.hasNewComment)
+    // console.log(app.globalData.hasNewMoment, app.globalData.hasNewComment)
     let that = this
     that.setData({
       hasNewMsg: !app.globalData.msgClean,
@@ -388,7 +388,7 @@ Page({
       // console.log(res.target)
     }
     return {
-      title: '来这些地方，体验你从未体验过的秘密…',
+      title: '让缘分变得更简单，用饮识认识Ta',
       path: '/pages/nearlist/nearlist',
       imageUrl: '/images/logo.png',
       success: function (res) {
